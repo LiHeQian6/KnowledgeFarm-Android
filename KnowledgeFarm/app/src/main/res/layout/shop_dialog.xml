@@ -37,6 +37,11 @@
             </TextView>
 
             <TextView
+                android:id="@+id/thisTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
                 android:id="@+id/thisPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -48,23 +53,25 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    android:id="@+id/imgBtnJian"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/jian">
+                    android:src="@drawable/jianhui">
                 </ImageView>
 
                 <EditText
+                    android:id="@+id/shopNum"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/edittext_solid">
-
+                    android:background="@drawable/edittext_solid"
+                    android:inputType="number">
                 </EditText>
 
                 <ImageView
+                    android:id="@+id/imgBtnPlus"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/plus">
-
                 </ImageView>
             </LinearLayout>
         </LinearLayout>
@@ -79,12 +86,14 @@
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/buy"
             android:text="取消"/>
 
         <Button
             android:id="@+id/buy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/buy"
             android:text="购买"/>
     </LinearLayout>
 </LinearLayout>

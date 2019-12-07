@@ -1,11 +1,14 @@
 package com.li.knowledgefarm.Shop;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
@@ -47,6 +51,9 @@ public class ShopActivity extends AppCompatActivity {
     private Handler messages;
     private ImageView imageView;
     private AlertDialog alertDialog;
+    private ImageView imgBtnJian;
+    private ImageView imgBtnPlus;
+    private EditText shopNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,7 @@ public class ShopActivity extends AppCompatActivity {
         getViews();
         getShopingsItems();
         setStatusBar();
+
 
         messages = new Handler(){
             @Override
@@ -73,6 +81,67 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+    }
+
+    /**
+     * @Description 设置加减数量选择器
+     * @Auther 孙建旺
+     * @Date 下午 6:56 2019/12/07
+     * @Param []
+     * @return void
+     */
+    private void setShopNumber(){
+        shopNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @SuppressLint("ResourceType")
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!shopNumber.getText().toString().equals("")) {
+                    if (Integer.parseInt(shopNumber.getText().toString()) >= 1)
+                        imgBtnJian.setImageDrawable(getDrawable(R.drawable.jian));
+                    if (Integer.parseInt(shopNumber.getText().toString()) <= 999)
+                        imgBtnPlus.setImageDrawable(getDrawable(R.drawable.plus));
+                }
+                if(!shopNumber.getText().toString().equals("")) {
+                    if (Integer.parseInt(shopNumber.getText().toString()) <= 0)
+                        shopNumber.setText(1+"");
+                    if (Integer.parseInt(shopNumber.getText().toString()) > 999)
+                        shopNumber.setText(999+"");
+                }
+            }
+        });
+
+        imgBtnJian.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!shopNumber.getText().toString().equals("")) {
+                    if (Integer.parseInt(shopNumber.getText().toString()) >= 2) {
+                        int num = Integer.parseInt(shopNumber.getText().toString()) - 1;
+                        shopNumber.setText(num+"");
+                    }
+                }
+            }
+        });
+
+        imgBtnPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!shopNumber.getText().toString().equals("")) {
+                    if (Integer.parseInt(shopNumber.getText().toString()) < 999) {
+                        int num = Integer.parseInt(shopNumber.getText().toString()) + 1;
+                        shopNumber.setText(num+"");
+                    }
+                }
             }
         });
     }
@@ -102,6 +171,7 @@ public class ShopActivity extends AppCompatActivity {
      * @Param [position]
      * @return void
      */
+    @SuppressLint("ResourceType")
     private void showSingleAlertDialog(int position){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -110,9 +180,16 @@ public class ShopActivity extends AppCompatActivity {
         Button cancel = layout.findViewById(R.id.btnCancel);
         TextView thisName = layout.findViewById(R.id.thisName);
         TextView thisPrice = layout.findViewById(R.id.thisPrice);
+        TextView thisTime = layout.findViewById(R.id.thisTime);
+        imgBtnJian = layout.findViewById(R.id.imgBtnJian);
+        imgBtnPlus = layout.findViewById(R.id.imgBtnPlus);
+        shopNumber = layout.findViewById(R.id.shopNum);
+        setShopNumber();
+        shopNumber.setText("1");
         alertBuilder.setView(layout);
         thisName.setText("名称："+shopList.get(position).getName());
         thisPrice.setText("价格："+shopList.get(position).getPrice()+"");
+        thisTime.setText("成熟时间："+shopList.get(position).getMatureTime()+"");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +206,7 @@ public class ShopActivity extends AppCompatActivity {
         alertDialog.show();
         WindowManager.LayoutParams attrs = alertDialog.getWindow().getAttributes();
         final float scale = this.getResources().getDisplayMetrics().density;
-        attrs.width = (int)(193*scale+0.5f);
+        attrs.width = (int)(300*scale+0.5f);
         attrs.height =(int)(200*scale+0.5f);
         alertDialog.getWindow().setAttributes(attrs);
     }
