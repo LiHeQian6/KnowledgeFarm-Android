@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.li.knowledgefarm.MainActivity;
 import com.li.knowledgefarm.R;
 
 public class MathActivity extends AppCompatActivity {
-    /** 返回按钮*/
-    private Button btnReturn;
+    /** 返回*/
+    private ImageView iv_return;
     /** 自定义点击事件监听器*/
     private CustomerListener listener;
 
@@ -32,7 +33,7 @@ public class MathActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case R.id.btnReturn:
+                case R.id.iv_return:
                     Intent intent = new Intent();
                     intent.setClass(MathActivity.this, SubjectListActivity.class);
                     startActivity(intent);
@@ -45,7 +46,7 @@ public class MathActivity extends AppCompatActivity {
      * 加载视图
      */
     private void getViews(){
-        btnReturn = findViewById(R.id.btnReturn);
+        iv_return = findViewById(R.id.iv_return);
     }
 
     /**
@@ -53,7 +54,7 @@ public class MathActivity extends AppCompatActivity {
      */
     private void registListener(){
         listener = new CustomerListener();
-        btnReturn.setOnClickListener(listener);
+        iv_return.setOnClickListener(listener);
     }
 
 }
