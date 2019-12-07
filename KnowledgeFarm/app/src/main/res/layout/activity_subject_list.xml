@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Study.SubjectListActivity"
-    android:background="@drawable/learnBack">
+    android:background="@drawable/learnback">
     <Button
         android:id="@+id/btnReturn"
         android:layout_width="100dp"
