@@ -5,33 +5,33 @@
     android:layout_height="match_parent"
     tools:context=".Study.SubjectListActivity"
     android:background="@drawable/learnback">
-    <Button
-        android:id="@+id/btnReturn"
+    <ImageView
+        android:id="@+id/iv_return"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:background="@drawable/jiantou"/>
+        android:src="@drawable/jiantou"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:paddingTop="50dp">
-        <Button
-            android:id="@+id/btnMath"
+        <ImageView
+            android:id="@+id/iv_math"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@drawable/math"/>
-        <Button
-            android:id="@+id/btnEnglish"
+            android:src="@drawable/math"/>
+        <ImageView
+            android:id="@+id/iv_english"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@drawable/english"
+            android:src="@drawable/english"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"/>
-        <Button
-            android:id="@+id/btnChinese"
+        <ImageView
+            android:id="@+id/chinese"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@drawable/chinese"/>
+            android:src="@drawable/chinese"/>
     </LinearLayout>
 </RelativeLayout>

@@ -1,18 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    android:padding="5dp"
     tools:context=".MainActivity">
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <GridLayout android:layout_width="match_parent"
+        android:layout_marginTop="120dp"
+        android:id="@+id/lands"
+        android:rowCount="3"
+        android:columnCount="6"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="100dp"
+        android:layout_height="match_parent">
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_column="0"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_column="1"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_column="2"
+            android:layout_height="60dp"/>
+    </GridLayout>
+    <ImageView android:layout_width="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/dog"
+        android:layout_height="200dp"/>
+    <RelativeLayout android:layout_width="match_parent"
+                  android:gravity="center_vertical"
+                  android:layout_height="wrap_content">
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_alignParentLeft="true"
+                      android:id="@+id/userInfo"
+                      android:gravity="center_vertical"
+                      android:layout_height="wrap_content">
+            <ImageView android:layout_width="50dp"
+                       android:id="@+id/photo"
+                       android:src="@drawable/photo"
+                       android:layout_height="50dp"/>
+            <LinearLayout android:layout_width="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_height="wrap_content">
+                <TextView android:layout_width="wrap_content"
+                          android:text="昵称:景宝宝"
+                          android:id="@+id/nickName"
+                          android:textSize="20sp"
+                          android:layout_height="wrap_content"/>
+                <TextView android:layout_width="wrap_content"
+                          android:text="lv:16"
+                          android:id="@+id/level"
+                          android:layout_height="wrap_content"/>
+                <TextView android:layout_width="wrap_content"
+                          android:text="账号：26415161"
+                          android:textSize="12sp"
+                          android:id="@+id/account"
+                          android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <TextView android:layout_width="wrap_content"
+                  android:text="金币：6666"
+                  android:layout_margin="5dp"
+                  android:layout_toRightOf="@+id/userInfo"
+                  android:id="@+id/money"
+                  android:layout_height="wrap_content"/>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_alignParentRight="true"
+                      android:layout_height="wrap_content">
+            <LinearLayout android:layout_width="wrap_content"
+                          android:orientation="vertical"
+                          android:gravity="center"
+                          android:layout_marginRight="20dp"
+                          android:layout_height="wrap_content">
+                <ImageView android:layout_width="50dp"
+                           android:src="@drawable/shop"
+                           android:id="@+id/shop"
+                           android:layout_height="50dp"/>
+                <TextView android:layout_width="wrap_content"
+                          android:text="商店"
+                          android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content"
+                         android:orientation="vertical"
+                         android:gravity="center"
+                         android:layout_marginRight="20dp"
+                         android:layout_height="wrap_content">
+                <ImageView android:layout_width="50dp"
+                           android:src="@drawable/pet"
+                           android:id="@+id/pet"
+                           android:layout_height="50dp"/>
+                <TextView android:layout_width="wrap_content"
+                          android:text="宠物"
+                          android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content"
+                         android:orientation="vertical"
+                         android:gravity="center"
+                         android:layout_marginRight="20dp"
+                         android:layout_height="wrap_content">
+                <ImageView android:layout_width="50dp"
+                           android:src="@drawable/setting"
+                           android:id="@+id/setting"
+                           android:layout_height="50dp"/>
+                <TextView android:layout_width="wrap_content"
+                          android:text="设置"
+                          android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:gravity="bottom"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="wrap_content">
+        <LinearLayout android:layout_width="wrap_content"
+                      android:orientation="vertical"
+                      android:gravity="center"
+                      android:layout_marginRight="20dp"
+                      android:layout_height="wrap_content">
+            <ImageView android:layout_width="100dp"
+                       android:src="@drawable/learn"
+                       android:id="@+id/learn"
+                       android:layout_height="80dp"/>
+            <TextView android:layout_width="wrap_content"
+                      android:text="学习中心"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:orientation="vertical"
+                      android:gravity="center"
+                      android:layout_marginRight="20dp"
+                      android:layout_height="wrap_content">
+            <ImageView android:layout_width="50dp"
+                       android:src="@drawable/shuihu"
+                       android:id="@+id/water"
+                       android:layout_height="50dp"/>
+            <TextView android:layout_width="wrap_content"
+                      android:text="水"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:orientation="vertical"
+                      android:gravity="center"
+                      android:layout_marginRight="20dp"
+                      android:layout_height="wrap_content">
+            <ImageView android:layout_width="50dp"
+                       android:src="@drawable/huafei"
+                       android:id="@+id/fertilizer"
+                       android:layout_height="50dp"/>
+            <TextView android:layout_width="wrap_content"
+                      android:text="肥料"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:orientation="vertical"
+                      android:gravity="center"
+                      android:layout_marginRight="20dp"
+                      android:layout_height="wrap_content">
+            <ImageView android:layout_width="50dp"
+                       android:src="@drawable/beibao"
+                       android:id="@+id/bag"
+                       android:layout_height="50dp"/>
+            <TextView android:layout_width="wrap_content"
+                      android:text="背包"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
