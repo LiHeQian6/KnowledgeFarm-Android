@@ -1,12 +1,16 @@
 package com.li.knowledgefarm.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.li.knowledgefarm.Login.Interpolator.JellyInterpolator;
+import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
+import com.li.knowledgefarm.Login.dialog.RegistAccountDialog;
 import com.li.knowledgefarm.R;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -35,6 +39,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
 
     private LinearLayout mName, mPsw;
 
+    private TextView registAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +61,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mInputLayout = findViewById(R.id.input_layout);
         mName = findViewById(R.id.input_layout_name);
         mPsw = findViewById(R.id.input_layout_psw);
+        registAccount = findViewById(R.id.registAccount);
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +87,23 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 timer.schedule(task, 5000);
             }
         });
+
+        registAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showRegistDialog();
+            }
+        });
+    }
+    private void showRegistDialog() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        RegistAccountDialog registAccountDialog = new RegistAccountDialog();
+        if(!registAccountDialog.isAdded()){
+            transaction.add(registAccountDialog,"notify");
+        }
+        transaction.show(registAccountDialog);
+        transaction.commit();
     }
 
     /**

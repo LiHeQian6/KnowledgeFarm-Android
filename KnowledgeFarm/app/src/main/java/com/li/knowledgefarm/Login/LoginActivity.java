@@ -71,7 +71,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private Button btnQQ;
     private Button btnAccount;
-    private TextView registAccount;
     /**
      * 点击注销按钮
      */
@@ -162,7 +161,6 @@ public class LoginActivity extends AppCompatActivity {
         btnStart = findViewById(R.id.btnStart);
         btnQQ = findViewById(R.id.btnQQ);
         btnAccount = findViewById(R.id.btnAccount);
-        registAccount = findViewById(R.id.registAccount);
         tvUserName = findViewById(R.id.tvUserName);
         ivUserImage = findViewById(R.id.ivUserImage);
         linearUser = findViewById(R.id.linearUser);
@@ -180,7 +178,6 @@ public class LoginActivity extends AppCompatActivity {
         btnQQ.setOnClickListener(listener);
         btnStart.setOnClickListener(listener);
         btnAccount.setOnClickListener(listener);
-        registAccount.setOnClickListener(listener);
     }
 
     /**
