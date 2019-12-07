@@ -3,13 +3,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DDDDDD">
-
+    <ImageView
+        android:id="@+id/iv_return"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:src="@drawable/jiantou"/>
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@+id/iv_return"
+        android:layout_marginTop="5dp"
         android:textSize="25dp"
         android:text="修改昵称"/>
-
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="#FF0000"
+        android:textSize="25dp"
+        android:text="保存"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_return"
+        android:layout_marginLeft="20dp">
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:textSize="20dp"
+            android:text="我的昵称"/>
+        <EditText
+            android:id="@+id/edtNickName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="10dp"
+            android:maxLength="20"
+            android:hint="记得填写昵称哦"/>
+        <TextView
+            android:id="@+id/tv_nickName_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edtNickName"
+            android:textSize="18dp"
+            android:text="10/20"/>
+    </RelativeLayout>
 </RelativeLayout>

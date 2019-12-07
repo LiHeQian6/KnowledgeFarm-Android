@@ -1,4 +1,7 @@
 package com.li.knowledgefarm.Settings;
 
-public class UpdateGradeDialog {
+import android.widget.PopupWindow;
+
+public class UpdateGradeDialog extends PopupWindow {
+
 }

@@ -14,10 +14,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.MainActivity;
@@ -41,10 +43,10 @@ public class SettingActivity extends AppCompatActivity {
     /** 切换账号*/
     private Button btnRegout;
     /** OKHttpClient*/
-    OkHttpClient okHttpClient = new OkHttpClient();
-    String ip = "10.7.87.220";
+    private OkHttpClient okHttpClient;
     /** 自定义点击事件监听器*/
     private CustomerListener listener;
+    private String ip = "10.7.87.220";
     /** 线程服务端返回处理*/
     private Handler handler = new Handler(){
         @Override
@@ -91,6 +93,7 @@ public class SettingActivity extends AppCompatActivity {
         /** 注册点击事件监听器*/
         registListener();
         setStatusBar();
+        okHttpClient = new OkHttpClient();
     }
 
     class CustomerListener implements View.OnClickListener{
@@ -104,7 +107,7 @@ public class SettingActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.btnUpdateNickName:
-                        updateNickName();
+                        popupWindow();
                     break;
                 case R.id.btnUpdateGrade:
                     updateGrade();
@@ -123,6 +126,27 @@ public class SettingActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    //弹出购物车窗口
+    private void popupWindow(){
+        UpdateNickNameDialog popupDialogShopCar = new UpdateNickNameDialog(getApplicationContext(),"71007839");
+        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateNickName), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
+        backgroundAlpha(0.3f);
+        //监听弹出框关闭时，屏幕透明度变回原样
+        popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1f);
+            }
+        });
+    }
+
+    //设置添加屏幕的背景透明度
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = bgAlpha;
+        getWindow().setAttributes(lp);
     }
 
     /**
