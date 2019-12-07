@@ -1,13 +1,20 @@
 package com.li.knowledgefarm.Shop;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -22,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,6 +44,8 @@ public class ShopActivity extends AppCompatActivity {
     private List<ShopItemBean> shopList;
     private GridView gridView;
     private Handler messages;
+    private ImageView imageView;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +67,13 @@ public class ShopActivity extends AppCompatActivity {
                 setAdapter();
             }
         };
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     /**
@@ -69,7 +86,31 @@ public class ShopActivity extends AppCompatActivity {
     private void setAdapter() {
         ShopItemAdapter itemAdapter = new ShopItemAdapter(this,shopList,R.layout.shopitem_girdview);
         gridView.setAdapter(itemAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showSingleAlertDialog(position);
+            }
+        });
     }
+
+    private void showSingleAlertDialog(int position){
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.shop_dialog, null);
+        Button button = layout.findViewById(R.id.buy);
+        alertBuilder.setView(layout);
+        alertBuilder.setTitle("购买");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = alertBuilder.create();
+        alertDialog.show();
+    }
+
 
     /**
      * @Description 获取控件ID及初始化
@@ -83,6 +124,7 @@ public class ShopActivity extends AppCompatActivity {
         gson = new Gson();
         shopList = new ArrayList<>();
         gridView = findViewById(R.id.gird_view);
+        imageView = findViewById(R.id.goBack);
     }
 
 

@@ -61,14 +61,14 @@ public class ShopItemAdapter extends BaseAdapter {
         }
 
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.meigui)
+                .placeholder(R.drawable.huancun)
                 .error(R.drawable.meigui)
                 .fallback(R.drawable.meigui)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(holder.imageView);
         ShopItemBean bean = list.get(position);
         holder.name.setText(bean.getName());
-        //holder.price.setText(bean.getPrice());
+        holder.price.setText(bean.getPrice()+"");
         notifyDataSetChanged();
         return convertView;
     }
