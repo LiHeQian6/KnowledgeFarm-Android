@@ -61,7 +61,7 @@ public class ShopItemAdapter extends BaseAdapter {
         }
 
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.meigui)
+                .placeholder(R.drawable.huancun)
                 .error(R.drawable.meigui)
                 .fallback(R.drawable.meigui)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);

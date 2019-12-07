@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -36,6 +39,8 @@ public class ShopActivity extends AppCompatActivity {
     private List<ShopItemBean> shopList;
     private GridView gridView;
     private Handler messages;
+    private ImageView imageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,13 @@ public class ShopActivity extends AppCompatActivity {
                 setAdapter();
             }
         };
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     /**
@@ -69,6 +81,12 @@ public class ShopActivity extends AppCompatActivity {
     private void setAdapter() {
         ShopItemAdapter itemAdapter = new ShopItemAdapter(this,shopList,R.layout.shopitem_girdview);
         gridView.setAdapter(itemAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
     }
 
     /**
@@ -83,6 +101,7 @@ public class ShopActivity extends AppCompatActivity {
         gson = new Gson();
         shopList = new ArrayList<>();
         gridView = findViewById(R.id.gird_view);
+        imageView = findViewById(R.id.goBack);
     }
 
 
