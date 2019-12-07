@@ -11,41 +11,25 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-
-        <!-- 数学题Activity -->
-        <activity android:name=".Study.MathActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/customApp"></activity>
-        <!-- 选择学科Activity -->
-        <activity android:name=".Study.SubjectListActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/customApp"/>
-        <!-- 设置Activity -->
-        <activity
-            android:name=".Settings.SettingActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/customApp" >
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".Shop.ShopActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".MainActivity" android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- 作物商店Activity -->
+        <activity android:name=".Study.MathActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/customApp"></activity>
+        <activity android:name=".Study.SubjectListActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/customApp"/>
         <activity
-            android:name=".Shop.ShopActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="landscape">
-            <intent-filter>
-
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".Settings.SettingActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/customApp" />
     </application>
-
 </manifest>
