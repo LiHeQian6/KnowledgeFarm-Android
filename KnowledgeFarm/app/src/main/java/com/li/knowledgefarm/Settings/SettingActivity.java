@@ -3,8 +3,10 @@ package com.li.knowledgefarm.Settings;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -26,6 +28,7 @@ public class SettingActivity extends AppCompatActivity {
         getViews();
         /** 注册点击事件监听器*/
         registListener();
+        setStatusBar();
     }
 
     class CustomerListener implements View.OnClickListener{
@@ -55,5 +58,12 @@ public class SettingActivity extends AppCompatActivity {
     private void registListener(){
         listener = new CustomerListener();
         iv_return.setOnClickListener(listener);
+    }
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
+        }
     }
 }

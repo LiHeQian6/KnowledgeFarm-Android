@@ -4,9 +4,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
-    android:padding="15dp"
+    android:padding="5dp"
     tools:context=".MainActivity">
 
+    <GridLayout android:layout_width="match_parent"
+        android:layout_marginTop="120dp"
+        android:id="@+id/lands"
+        android:rowCount="3"
+        android:columnCount="6"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="100dp"
+        android:layout_height="match_parent">
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_column="0"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_column="1"
+            android:layout_height="60dp"/>
+        <ImageView android:layout_width="60dp"
+            android:src="@drawable/land"
+            android:layout_column="2"
+            android:layout_height="60dp"/>
+    </GridLayout>
+    <ImageView android:layout_width="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/dog"
+        android:layout_height="200dp"/>
     <RelativeLayout android:layout_width="match_parent"
                   android:gravity="center_vertical"
                   android:layout_height="wrap_content">
@@ -148,19 +183,5 @@
                       android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
-    <ImageView android:layout_width="100dp"
-               android:layout_alignParentBottom="true"
-               android:layout_alignParentRight="true"
-               android:src="@drawable/dog"
-               android:layout_height="200dp"/>
-    <GridLayout android:layout_width="match_parent"
-          android:layout_marginTop="120dp"
-          android:id="@+id/lands"
-          android:layout_marginLeft="80dp"
-          android:layout_marginRight="100dp"
-          android:layout_height="match_parent">
-        <ImageView android:layout_width="100dp"
-                   android:src="@drawable/land"
-                   android:layout_height="60dp"/>
-    </GridLayout>
+
 </RelativeLayout>
