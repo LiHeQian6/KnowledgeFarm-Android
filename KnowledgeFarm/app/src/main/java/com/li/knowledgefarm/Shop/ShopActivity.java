@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -94,14 +95,31 @@ public class ShopActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * @Description  点击商品弹出框
+     * @Auther 孙建旺
+     * @Date 下午 5:04 2019/12/07
+     * @Param [position]
+     * @return void
+     */
     private void showSingleAlertDialog(int position){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.shop_dialog, null);
         Button button = layout.findViewById(R.id.buy);
+        Button cancel = layout.findViewById(R.id.btnCancel);
+        TextView thisName = layout.findViewById(R.id.thisName);
+        TextView thisPrice = layout.findViewById(R.id.thisPrice);
         alertBuilder.setView(layout);
-        alertBuilder.setTitle("购买");
+        thisName.setText("名称："+shopList.get(position).getName());
+        thisPrice.setText("价格："+shopList.get(position).getPrice()+"");
         button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
@@ -109,6 +127,11 @@ public class ShopActivity extends AppCompatActivity {
         });
         alertDialog = alertBuilder.create();
         alertDialog.show();
+        WindowManager.LayoutParams attrs = alertDialog.getWindow().getAttributes();
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(193*scale+0.5f);
+        attrs.height =(int)(200*scale+0.5f);
+        alertDialog.getWindow().setAttributes(attrs);
     }
 
 
