@@ -52,20 +52,6 @@ public class SettingActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 1: // 修改昵称判断
-                    if(msg.obj.equals("true")){
-                        Toast.makeText(getApplicationContext(),"昵称修改成功",Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"昵称修改失败",Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case 2: //修改年级判断
-                    if(msg.obj.equals("0")){
-                        Toast.makeText(getApplicationContext(),"年级修改成功",Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(getApplicationContext(), "年级修改失败", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
                 case 3: //修改密码判断
                     switch ((String)msg.obj){
                         case "0":
@@ -107,10 +93,10 @@ public class SettingActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.btnUpdateNickName:
-                        popupWindow();
+                    popupWindow_update_nickName();
                     break;
                 case R.id.btnUpdateGrade:
-                    updateGrade();
+                    popupWindow_update_grade();
                     break;
                 case R.id.btnUpdatePassword:
                     updatePassword();
@@ -128,8 +114,10 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
-    //弹出购物车窗口
-    private void popupWindow(){
+    /**
+     * 弹出修改昵称窗口
+     */
+    private void popupWindow_update_nickName(){
         UpdateNickNameDialog popupDialogShopCar = new UpdateNickNameDialog(getApplicationContext(),"71007839");
         popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateNickName), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
         backgroundAlpha(0.3f);
@@ -142,63 +130,29 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    //设置添加屏幕的背景透明度
+    /**
+     * 弹出修改年级窗口
+     */
+    private void popupWindow_update_grade(){
+        UpdateGradeDialog popupDialogShopCar = new UpdateGradeDialog(getApplicationContext(),"1");
+        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateGrade), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
+        backgroundAlpha(0.3f);
+        //监听弹出框关闭时，屏幕透明度变回原样
+        popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1f);
+            }
+        });
+    }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     */
     public void backgroundAlpha(float bgAlpha) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         lp.alpha = bgAlpha;
         getWindow().setAttributes(lp);
-    }
-
-    /**
-     * 修改用户昵称
-     */
-    private void updateNickName(){
-        new Thread(){
-            @Override
-            public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","71007839").add("nickName","71007839").build();
-                final Request request = new Request.Builder().post(formBody).url("http://"+ip+":8080/FarmKnowledge/user/updateUserNickName").build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.i("lww","请求失败");
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String result = response.body().string();
-                        sendMessage(1,result);
-                    }
-                });
-            }
-        }.start();
-    }
-
-    /**
-     * 修改用户年级
-     */
-    private void updateGrade(){
-        new Thread(){
-            @Override
-            public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","71007839").add("grade","2").build();
-                final Request request = new Request.Builder().post(formBody).url("http://"+ip+":8080/FarmKnowledge/user/updateUserGrade").build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.i("lww","请求失败");
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String result = response.body().string();
-                        sendMessage(2,result);
-                    }
-                });
-            }
-        }.start();
     }
 
     /**
