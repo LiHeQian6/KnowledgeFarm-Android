@@ -64,6 +64,40 @@ public class UserDao {
 		}
 		return succeed;
 	}
+	//修改用户昵称，根据账号查询到
+	public boolean updateUserNickName(String accout, String nickName) {
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		boolean succeed = false;
+		if(list.size() != 0) {
+			succeed = list.get(0).set("nickName", nickName).update();
+		}
+		return succeed;
+	}
+	//修改用户年级，根据账号查询到
+	public boolean updateUserGrade(String accout, int grade) {
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		boolean succeed = false;
+		if(list.size() != 0) {
+			succeed = list.get(0).set("grade", grade).update();
+		}
+		return succeed;
+	}	
+	//修改用户密码，根据账号查询到
+	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			User user = list.get(0);
+			if(oldPassword.equals(user.get("password"))) {
+				boolean succeed = user.set("password", newPassword).update();
+				if(succeed) {
+					return 1;
+				}
+				return 2;
+			}
+			return 0;
+		}
+		return -1;
+	}
 	//购买作物后，减少金币
 	public boolean decreaseMoney(int id, int money) {
 		User user = User.dao.findById(id);
@@ -203,6 +237,14 @@ public class UserDao {
 		}else {
 			return false;
 		}
+	}
+	//根据账号查询用户id
+	public int getUserIdByAccout(String accout) {
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			return list.get(0).getInt("id");
+		}
+		return 0;
 	}
 	//获得User表最后一条数据的userId
 	public int getLastUserId(){

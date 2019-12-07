@@ -1,8 +1,18 @@
 package com.li.knowledgefarm.Shop;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.li.knowledgefarm.R;
+
+import java.util.List;
 
 /**
  * @auther 孙建旺
@@ -10,23 +20,62 @@ import android.widget.BaseAdapter;
  * @date 2019/12/07 上午 10:33
  */
 public class ShopItemAdapter extends BaseAdapter {
+
+    private Context context;
+    private List<ShopItemBean> list;
+    private int resource;
+
+    public ShopItemAdapter(Context context, List<ShopItemBean> list, int resource) {
+        this.context = context;
+        this.list = list;
+        this.resource = resource;
+    }
+
     @Override
     public int getCount() {
-        return 0;
+        return list.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return list.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        ViewHolder holder;
+        if(convertView == null){
+            convertView = View.inflate(context,resource,null);
+            holder = new ViewHolder();
+            holder.name = convertView.findViewById(R.id.flowerName);
+            holder.imageView = convertView.findViewById(R.id.flowerImage);
+            holder.price = convertView.findViewById(R.id.flowerPrice);
+            convertView.setTag(holder);
+        }else{
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.huancun)
+                .error(R.drawable.meigui)
+                .fallback(R.drawable.meigui)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(holder.imageView);
+        ShopItemBean bean = list.get(position);
+        holder.name.setText(bean.getName());
+        holder.price.setText(bean.getPrice()+"");
+        notifyDataSetChanged();
+        return convertView;
+    }
+
+    private class ViewHolder{
+        TextView name;
+        ImageView imageView;
+        TextView price;
     }
 }

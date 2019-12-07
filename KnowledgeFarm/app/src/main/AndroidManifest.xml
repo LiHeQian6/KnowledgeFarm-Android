@@ -14,11 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
-        android:theme="@style/customApp"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".Shop.ShopActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".MainActivity" android:screenOrientation="landscape">
         <activity android:name=".Login.LoginByAccountActivity"
             android:screenOrientation="landscape"></activity>
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -31,12 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Shop.ShopActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="landscape"></activity>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -54,6 +49,16 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".Study.MathActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/customApp"></activity>
+        <activity android:name=".Study.SubjectListActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/customApp"/>
+        <activity
+            android:name=".Settings.SettingActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/customApp" />
     </application>
 
 </manifest>

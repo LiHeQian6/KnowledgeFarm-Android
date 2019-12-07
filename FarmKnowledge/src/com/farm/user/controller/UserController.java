@@ -42,14 +42,63 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//根据openId查询用户信息
+	//Token未到期，根据openId查询用户信息
 	public void findByOpenId() {
 		String jsonStr =  HttpKit.readData(getRequest());
 		JSONObject jsonObject = new JSONObject(jsonStr);
 		String openId = jsonObject.getString("openId");
 		
-		User user = new UserService().findUserByOpenId(openId);
-		renderJson(user);
+		UserService service = new UserService();
+		if(service.isExistUserByOpenId(openId)) { //有效openId存在，可登录
+			User user = new UserService().findUserByOpenId(openId);
+			renderJson(user);
+		}else { //已被封号，有效的openId不存在
+			renderJson("fail");
+		}
+		
+	}
+	
+	//修改用户昵称
+	public void updateUserNickName() {
+		String accout = get("accout");
+		String nickName = get("nickName");
+		
+		boolean succeed = new UserService().updateUserNickName(accout, nickName);
+		renderJson(""+succeed);
+	}
+	
+	//修改用户年级
+	public void updateUserGrade() {
+		String accout = get("accout");
+		int grade = getInt("grade");
+		
+		boolean succeed = new UserService().updateUserGrade(accout, grade);
+		renderJson(""+succeed);
+	}
+	
+	//修改密码
+	public void updateUserPassword() {
+		String oldPassword = get("oldPassword");
+		String newPassword = get("newPassword");
+		String accout = get("accout");
+		
+		//返回0说明旧密码错误，返回1说明修改成功，返回2说明修改失败
+		int flag = new UserService().updateUserPassword(oldPassword, newPassword, accout);
+		renderJson(flag);
+	}
+	
+	//绑定账号
+	public void bindingAccout() {
+		String accout = get("accout");
+		String openId = get("openId");
+		
+		UserService service = new UserService();
+		if(!service.isExistUserByOpenIdAll(openId)) {
+			boolean succeed = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ");
+			renderJson(""+succeed);
+		}else { //该QQ号已被绑定
+			renderJson("already");
+		}
 	}
 	
 	//增加浇水、施肥次数（userId，数量）

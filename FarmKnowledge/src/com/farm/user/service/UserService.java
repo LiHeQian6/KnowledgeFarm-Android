@@ -40,6 +40,10 @@ public class UserService {
 		});
 		return succeed;
     }
+	//UserAuthority表内插入userId、openId、type
+	public boolean addUserAuthority(int userId, String openId, String type){
+		return new UserDao().addUserAuthority(userId, openId, type);
+	}
 	
 	
 	
@@ -65,6 +69,18 @@ public class UserService {
 	//修改用户信息（账号、别名、头像）根据修改前账号索引到
 	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName) {
 		return new UserDao().updateUser(oldAccout, newAccout, nickName, photo, photoName);
+	}
+	//修改用户昵称，根据账号查询到
+	public boolean updateUserNickName(String accout, String nickName) {
+		return new UserDao().updateUserNickName(accout, nickName);
+	}
+	//修改用户年级，根据账号查询到
+	public boolean updateUserGrade(String accout, int grade) {
+		return new UserDao().updateUserGrade(accout, grade);
+	}
+	//修改用户密码，根据账号查询到
+	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
+		return new UserDao().updateUserPassword(oldPassword, newPassword, accout);
 	}
 	//购买作物后，减少金币
 	public boolean decreaseMoney(int id, int money) {
@@ -159,6 +175,10 @@ public class UserService {
 	//根据用户id获取到要修改的用户信息（账号、别名、头像）
 	public User getUpdateUserInfo(int id) {
 		return new UserDao().getUpdateUserInfo(id);
+	}
+	//根据账号查询用户id
+	public int getUserIdByAccout(String accout) {
+		return new UserDao().getUserIdByAccout(accout);
 	}
 	//根据userId，landId查询userCropId
 	public int findUcId(int userId,String landNumber) {
