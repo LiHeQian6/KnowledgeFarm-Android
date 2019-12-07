@@ -9,18 +9,21 @@
         android:gravity="center">
 
         <TextView
+            android:id="@+id/flowerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="玫瑰花">
-
         </TextView>
+
         <ImageView
+            android:id="@+id/flowerImage"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/meigui">
         </ImageView>
         
         <TextView
+            android:id="@+id/flowerPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="500金币"></TextView>

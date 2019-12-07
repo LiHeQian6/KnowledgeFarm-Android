@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KnowledgeFarm</string>
+    <string name="IP">10.7.87.220</string>
 </resources>
