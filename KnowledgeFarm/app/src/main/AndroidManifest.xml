@@ -13,16 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+        <!-- 数学题Activity -->
         <activity android:name=".Study.MathActivity"
             android:screenOrientation="landscape"
             android:theme="@style/customApp"></activity>
+        <!-- 选择学科Activity -->
         <activity android:name=".Study.SubjectListActivity"
             android:screenOrientation="landscape"
             android:theme="@style/customApp"/>
+        <!-- 设置Activity -->
         <activity
             android:name=".Settings.SettingActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/customApp" />
+            android:theme="@style/customApp" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 作物商店Activity -->
         <activity
             android:name=".Shop.ShopActivity"
             android:screenOrientation="landscape" />
@@ -30,7 +41,7 @@
             android:name=".MainActivity"
             android:screenOrientation="landscape">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
