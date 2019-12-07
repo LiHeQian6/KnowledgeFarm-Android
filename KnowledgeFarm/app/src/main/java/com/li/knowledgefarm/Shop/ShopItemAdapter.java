@@ -68,7 +68,7 @@ public class ShopItemAdapter extends BaseAdapter {
         Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(holder.imageView);
         ShopItemBean bean = list.get(position);
         holder.name.setText(bean.getName());
-        //holder.price.setText(bean.getPrice());
+        holder.price.setText(bean.getPrice()+"");
         notifyDataSetChanged();
         return convertView;
     }
