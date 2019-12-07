@@ -3,8 +3,13 @@ package com.li.knowledgefarm;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridLayout;
@@ -34,9 +39,53 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setStatusBar();
         getViews();
         addListener();
-        setStatusBar();
+        showLand();
+    }
+
+    private void showLand() {
+//        ImageView land1=findViewById(R.id.land1);
+//        ImageView land2=findViewById(R.id.land2);
+//        land2.setDrawingCacheEnabled(true);
+//        land2.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                Log.e("点击了",""+motionEvent.getAction());
+//                Log.e("点击了",""+(int) motionEvent.getY());
+//                if(motionEvent.getAction()==MotionEvent.ACTION_UP){
+//                    Bitmap bmp = Bitmap.createBitmap(view.getDrawingCache());
+//                    int color = bmp.getPixel((int) motionEvent.getX(), (int) motionEvent.getY());
+//                    if (color == Color.TRANSPARENT){
+//                        Log.e("点击了","land2");
+//                        return false;
+//                    }
+//
+//                    else {
+//                        Log.e("点击了","land2");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
+//        land1.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                if(motionEvent.getAction()==MotionEvent.ACTION_UP){
+//                    Bitmap bmp = Bitmap.createBitmap(view.getDrawingCache());
+//                    int color = bmp.getPixel((int) motionEvent.getX(), (int) motionEvent.getY());
+//                    if (color == Color.TRANSPARENT)
+//                        return false;
+//                    else {
+//                        Log.e("点击了","land1");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
     }
 
     private void addListener() {
@@ -61,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         nickName=findViewById(R.id.nickName);
         level=findViewById(R.id.level);
         money=findViewById(R.id.money);
-        lands=findViewById(R.id.lands);
+        //lands=findViewById(R.id.lands);
     }
     class MainListener implements View.OnClickListener {
 

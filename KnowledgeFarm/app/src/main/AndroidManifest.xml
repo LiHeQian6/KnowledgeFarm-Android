@@ -47,7 +47,6 @@
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".Study.MathActivity"
             android:screenOrientation="landscape"
