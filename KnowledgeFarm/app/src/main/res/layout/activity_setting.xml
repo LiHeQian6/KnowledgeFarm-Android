@@ -10,6 +10,15 @@
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:src="@drawable/jiantou"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_return"
+        android:layout_marginTop="5dp"
+        android:textSize="30dp"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:text="设置"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +54,6 @@
             android:id="@+id/btnRegout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="退出登陆"/>
+            android:text="切换账号"/>
     </LinearLayout>
 </RelativeLayout>
