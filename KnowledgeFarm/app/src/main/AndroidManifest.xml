@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".Shop.ShopActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".MainActivity" android:screenOrientation="landscape">
             <intent-filter>
