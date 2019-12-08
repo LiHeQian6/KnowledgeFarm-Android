@@ -72,22 +72,6 @@ public class MainActivity extends AppCompatActivity {
         getViews();
         addListener();
         showLand();
-
-        bagMessagesHandler = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String messages = (String)msg.obj;
-                if(!messages.equals("Fail")){
-                    Type type = new TypeToken<List<BagMessagesBean>>(){}.getType();
-                    dataList = gson.fromJson(messages,type);
-                    showSingleAlertDialog();
-                }else{
-                    Toast toast = Toast.makeText(MainActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
     }
 
     private void showLand() {
@@ -173,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.fertilizer:
                     break;
                 case R.id.bag:
-                    getBagMessages();
+                    showSingleAlertDialog();
                     break;
                 case R.id.shop:
                     intent = new Intent();
@@ -234,15 +218,30 @@ public class MainActivity extends AppCompatActivity {
      * @return void
      */
     private void showSingleAlertDialog(){
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.bag_girdview, null);
-        GridView gridView = layout.findViewById(R.id.bag_grid_view);
-        BagCustomerAdapter customerAdapter = new BagCustomerAdapter(alertBuilder.getContext(),dataList,R.layout.gird_adapteritem);
-        gridView.setAdapter(customerAdapter);
+        final GridView gridView = layout.findViewById(R.id.bag_grid_view);
         alertBuilder.setView(layout);
         bagDialog = alertBuilder.create();
         bagDialog.show();
+        getBagMessages();
+        bagMessagesHandler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String messages = (String)msg.obj;
+                if(!messages.equals("Fail")){
+                    Type type = new TypeToken<List<BagMessagesBean>>(){}.getType();
+                    dataList = gson.fromJson(messages,type);
+                    BagCustomerAdapter customerAdapter = new BagCustomerAdapter(alertBuilder.getContext(),dataList,R.layout.gird_adapteritem);
+                    gridView.setAdapter(customerAdapter);
+                }else{
+                    Toast toast = Toast.makeText(MainActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
         WindowManager.LayoutParams attrs = bagDialog.getWindow().getAttributes();
         attrs.gravity = Gravity.RIGHT;
         final float scale = this.getResources().getDisplayMetrics().density;
