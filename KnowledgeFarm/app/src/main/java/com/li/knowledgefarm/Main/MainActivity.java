@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         attrs.gravity = Gravity.RIGHT;
         final float scale = this.getResources().getDisplayMetrics().density;
         attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(300*scale+0.5f);
+        attrs.height =(int)(400*scale+0.5f);
         bagDialog.getWindow().setAttributes(attrs);
     }
 
