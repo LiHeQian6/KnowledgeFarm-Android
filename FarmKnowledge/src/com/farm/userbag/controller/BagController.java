@@ -15,13 +15,20 @@ public class BagController extends Controller{
 		int userId = getInt("userId");
 		
 		List<Integer> cropIdList = new BagService().getCropIdByUserId(userId);
-		List<Crop> list = new ArrayList<Crop>();
-		CropService service = new CropService();
-		for(int cropId : cropIdList) {
-			Crop crop = service.getUpdateCropInfo(cropId);
-			list.add(crop);
+		if(cropIdList != null) {
+			List<Crop> list = new ArrayList<Crop>();
+			CropService service = new CropService();
+			for(int cropId : cropIdList) {
+				Crop crop = service.getUpdateCropInfo(cropId);
+				list.add(crop);
+			}
+			renderJson(list);
+		}else {
+			renderJson("[]");
 		}
-		renderJson(list);
+		
+		
+		
 	}
 
 }
