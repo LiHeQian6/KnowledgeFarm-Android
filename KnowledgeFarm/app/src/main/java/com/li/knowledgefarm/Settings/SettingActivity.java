@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.tencent.connect.UserInfo;
@@ -81,7 +82,6 @@ public class SettingActivity extends AppCompatActivity {
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
                             break;
                         case "false":
-
                             break;
                     }
                     break;
@@ -155,7 +155,7 @@ public class SettingActivity extends AppCompatActivity {
                     unBindingQQ();
                     break;
                 case R.id.btnRegout:
-                    Toast.makeText(getApplicationContext(),"功能尚在开放",Toast.LENGTH_SHORT).show();
+                    regout();
                     break;
             }
         }
@@ -244,7 +244,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","").build();
+                FormBody formBody = new FormBody.Builder().add("accout","78317468").build();
                 final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/isBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -264,7 +264,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     /**
-     * 拉起QQ登陆
+     * 拉起QQ登陆，返回登录信息，存入SharedPreferences
      */
     private void bindingQQ(){
         if (!mTencent.isSessionValid()) {
@@ -353,7 +353,7 @@ public class SettingActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("accout","").add("openId",openId).add("photo",Path).build();
+                            FormBody formBody = new FormBody.Builder().add("accout","78317468").add("openId",openId).add("photo",Path).build();
                             final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -391,7 +391,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","").add("openId",openId).build();
+                FormBody formBody = new FormBody.Builder().add("accout","78317468").add("openId",openId).build();
                 final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -408,6 +408,24 @@ public class SettingActivity extends AppCompatActivity {
                 });
             }
         }.start();
+    }
+
+    /**
+     * 切换账号
+     */
+    private void regout() {
+        mTencent.logout(getApplicationContext());
+
+        /** 删除SharedPreferences内Token信息*/
+        SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
+
+        /** 跳转到登录页面*/
+        Intent intent = new Intent();
+        intent.setClass(SettingActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 
     /**
