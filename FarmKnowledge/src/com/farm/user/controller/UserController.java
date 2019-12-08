@@ -31,32 +31,20 @@ public class UserController extends Controller{
 		if(service.isExistUserByOpenId(openId)) { //已存在该用户，查询用户信息
 			User user = service.findUserByOpenId(openId);
 			renderJson(user);
-		}else { 						  //不存在该用户，添加用户
-			boolean addUser = service.addUser(openId, nickName, photo, "QQ", openId);
-			if(addUser) { 				  //添加新用户成功
-				User user = service.findUserByOpenId(openId);
-				renderJson(user);
-			}else { 					  //添加新用户失败
+		}else { 						  
+			if(!service.isExistUserByOpenIdAll(openId)) { //不存在该用户，添加用户
+				boolean addUser = service.addUser(openId, nickName, photo, "QQ", openId);
+				if(addUser) { //添加新用户成功
+					User user = service.findUserByOpenId(openId);
+					renderJson(user);
+				}else { 	  //添加新用户失败
+					renderJson("error");
+				}
+			}else { //exist=0;
 				renderJson("fail");
 			}
 		}
-	}
-	
-	//Token未到期，根据openId查询用户信息
-	public void findByOpenId() {
-		String jsonStr =  HttpKit.readData(getRequest());
-		JSONObject jsonObject = new JSONObject(jsonStr);
-		String openId = jsonObject.getString("openId");
-		
-		UserService service = new UserService();
-		if(service.isExistUserByOpenId(openId)) { //有效openId存在，可登录
-			User user = new UserService().findUserByOpenId(openId);
-			renderJson(user);
-		}else { //已被封号，有效的openId不存在
-			renderJson("fail");
-		}
-		
-	}
+	}		
 	
 	//修改用户昵称
 	public void updateUserNickName() {
@@ -87,8 +75,16 @@ public class UserController extends Controller{
 		renderJson(flag);
 	}
 	
-	//绑定账号
-	public void bindingAccout() {
+	//验证是否已经绑定QQ
+	public void isBindingQQ() {
+		String accout = get("accout");
+		
+		boolean succeed = new UserService().isBindingQQ(accout);
+		renderJson(""+succeed);
+	}
+	
+	//绑定QQ
+	public void bindingQQ() {
 		String accout = get("accout");
 		String openId = get("openId");
 		
@@ -99,6 +95,14 @@ public class UserController extends Controller{
 		}else { //该QQ号已被绑定
 			renderJson("already");
 		}
+	}
+	
+	//解绑QQ
+	public void unBindingQQ() {
+		String openId = get("openId");
+		
+		boolean succeed = new UserService().deleteOpenId(openId);
+		renderJson(""+succeed);
 	}
 	
 	//增加浇水、施肥次数（userId，数量）

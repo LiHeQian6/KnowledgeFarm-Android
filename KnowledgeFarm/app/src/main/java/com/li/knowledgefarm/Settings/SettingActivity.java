@@ -99,7 +99,7 @@ public class SettingActivity extends AppCompatActivity {
                     popupWindow_update_grade();
                     break;
                 case R.id.btnUpdatePassword:
-                    updatePassword();
+                    popupWindow_update_password();
                     break;
                 case R.id.btnUpdatePhoto:
                     Toast.makeText(getApplicationContext(),"功能尚在开放",Toast.LENGTH_SHORT).show();
@@ -136,6 +136,22 @@ public class SettingActivity extends AppCompatActivity {
     private void popupWindow_update_grade(){
         UpdateGradeDialog popupDialogShopCar = new UpdateGradeDialog(getApplicationContext(),"1");
         popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateGrade), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
+        backgroundAlpha(0.3f);
+        //监听弹出框关闭时，屏幕透明度变回原样
+        popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1f);
+            }
+        });
+    }
+
+    /**
+     * 弹出修改密码窗口
+     */
+    private void popupWindow_update_password(){
+        UpdatePasswordDialog popupDialogShopCar = new UpdatePasswordDialog(getApplicationContext());
+        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdatePassword), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
         backgroundAlpha(0.3f);
         //监听弹出框关闭时，屏幕透明度变回原样
         popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){

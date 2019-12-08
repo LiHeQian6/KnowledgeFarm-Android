@@ -182,7 +182,7 @@ public class CropController extends Controller{
 							break;
 					}	
 				}else {
-					String cropPhotoName = service.generateCropPhotoName();
+					String cropPhotoName = service.generateCropPhotoName() + fi.getName();
 					realPath[count] = Strings.photoUrl + count + cropPhotoName;
 					File file = new File(Strings.filePath + count + cropPhotoName);
 					fi.write(file);

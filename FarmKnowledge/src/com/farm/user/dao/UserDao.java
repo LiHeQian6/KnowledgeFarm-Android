@@ -33,12 +33,20 @@ public class UserDao {
 	 * 	删
 	 * @throws
 	 */
+	//删除openId信息
+	public boolean deleteOpenId(String openId) {
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where openId=?",openId);
+		if(list.size() != 0) {
+			boolean succeed = UserAuthority.dao.deleteById(list.get(0).getInt("id"));
+			return succeed;
+		}
+		return false;
+	}
 	//彻底删除User表内用户信息（User表delete）
 	public boolean deleteThoroughUser(int userId) {
 		boolean succeed = User.dao.deleteById(userId);
 		return succeed;
 	}
-	
 	//彻底删除UserAuthority表内授权信息（User表delete）
 	public boolean deleteThoroughUserAuthority(int userId) {
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
@@ -48,6 +56,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
+	
 	
 	
 	
@@ -240,11 +249,8 @@ public class UserDao {
 	}
 	//根据账号查询用户id
 	public int getUserIdByAccout(String accout) {
-		List<User> list = User.dao.find("select * from user where accout=?",accout);
-		if(list.size() != 0) {
-			return list.get(0).getInt("id");
-		}
-		return 0;
+		int userId = Db.queryInt("select id from user where accout=?",accout);
+		return userId;
 	}
 	//获得User表最后一条数据的userId
 	public int getLastUserId(){
@@ -273,7 +279,9 @@ public class UserDao {
 		if(user != null) {
 			for(int i = 1;i < 19;i++) {
 				int userCropId = user.getInt("land"+i);
-				list.add(userCropId);
+				if(userCropId > 0) {
+					list.add(userCropId);
+				}
 			}
 			return list;
 		}
@@ -295,6 +303,15 @@ public class UserDao {
 			return user.getInt("rewardCount");
 		}
 		return -1;
+	}
+	//判断账号是否绑定QQ
+	public boolean isBindingQQ(String accout) {
+		int userId = getUserIdByAccout(accout);
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
+		if(list.size() != 0) {
+			return true;
+		}
+		return false;
 	}
 
 }
