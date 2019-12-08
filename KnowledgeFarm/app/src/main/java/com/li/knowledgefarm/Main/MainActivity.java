@@ -1,12 +1,20 @@
 package com.li.knowledgefarm.Main;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +22,20 @@ import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView learn;
@@ -34,15 +51,38 @@ public class MainActivity extends AppCompatActivity {
     private TextView money;
     private GridLayout lands;
     private Dialog bagDialog;
+    private OkHttpClient okHttpClient;
+    private String bagMessages;
+    private Handler bagMessagesHandler;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        okHttpClient = new OkHttpClient();
+        gson = new Gson();
+
         setStatusBar();
         getViews();
         addListener();
         showLand();
+
+        bagMessagesHandler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String messages = (String)msg.obj;
+                if(!messages.equals("Fail")){
+                    Type type = new TypeToken<List<BagMessagesBean>>(){}.getType();
+                    List<BagMessagesBean> bagList = gson.fromJson(messages,type);
+                }else{
+                    Toast toast = Toast.makeText(MainActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
     }
 
     private void showLand() {
@@ -127,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.fertilizer:
                     break;
                 case R.id.bag:
+                    getBagMessages();
                     break;
                 case R.id.shop:
                     intent = new Intent();
@@ -142,6 +183,41 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    /**
+     * @Description 获取背包信息数据
+     * @Auther 孙建旺
+     * @Date 下午 2:38 2019/12/08
+     * @Param []
+     * @return void
+     */
+    private void getBagMessages(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url("http://10.7.87.220:8080/FarmKnowledge/bag/initUserBag?userId=37").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        bagMessages = "Fail";
+                        Message message = Message.obtain();
+                        message.obj = bagMessages;
+                        bagMessagesHandler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        bagMessages = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = bagMessages;
+                        bagMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
     }
 
     /**
