@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Shop;
+package com.li.knowledgefarm.Main;
 
 import android.content.Context;
 import android.view.View;
@@ -16,29 +16,30 @@ import java.util.List;
 
 /**
  * @auther 孙建旺
- * @description 商店商品Adapter
- * @date 2019/12/07 上午 10:33
+ * @description 背包信息自定义Adapter
+ * @date 2019/12/08 下午 2:21
  */
-public class ShopItemAdapter extends BaseAdapter {
+
+public class BagCustomerAdapter extends BaseAdapter {
 
     private Context context;
-    private List<ShopItemBean> list;
+    private List<BagMessagesBean> dataList;
     private int resource;
 
-    public ShopItemAdapter(Context context, List<ShopItemBean> list, int resource) {
+    public BagCustomerAdapter(Context context, List<BagMessagesBean> dataList, int resource) {
         this.context = context;
-        this.list = list;
+        this.dataList = dataList;
         this.resource = resource;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return dataList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return dataList.get(position);
     }
 
     @Override
@@ -48,32 +49,28 @@ public class ShopItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        ViewHolder viewHolder = null;
         if(convertView == null){
             convertView = View.inflate(context,resource,null);
-            holder = new ViewHolder();
-            holder.name = convertView.findViewById(R.id.flowerName);
-            holder.imageView = convertView.findViewById(R.id.flowerImage);
-            holder.price = convertView.findViewById(R.id.flowerPrice);
-            convertView.setTag(holder);
+            viewHolder = new ViewHolder();
+            viewHolder.flowerImg = convertView.findViewById(R.id.bag_flower_img);
+            viewHolder.name = convertView.findViewById(R.id.bag_flower_name);
+            convertView.setTag(viewHolder);
         }else{
-            holder = (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder)convertView.getTag();
         }
 
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.loading)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(holder.imageView);
-        ShopItemBean bean = list.get(position);
-        holder.name.setText(bean.getName());
-        holder.price.setText(bean.getPrice()+"");
+        Glide.with(context).load(dataList.get(position).getImg1()).apply(requestOptions).into(viewHolder.flowerImg);
+        viewHolder.name.setText(dataList.get(position).getName());
         notifyDataSetChanged();
         return convertView;
     }
 
     private class ViewHolder{
-        TextView name;
-        ImageView imageView;
-        TextView price;
+        private ImageView flowerImg;
+        private TextView name;
     }
 }

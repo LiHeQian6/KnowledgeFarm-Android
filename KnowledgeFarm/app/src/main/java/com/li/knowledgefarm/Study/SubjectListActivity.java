@@ -3,17 +3,14 @@ package com.li.knowledgefarm.Study;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.li.knowledgefarm.MainActivity;
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.Settings.SettingActivity;
 
 public class SubjectListActivity extends AppCompatActivity {
     /** 返回*/

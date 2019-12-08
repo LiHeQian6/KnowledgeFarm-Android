@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import com.li.knowledgefarm.MainActivity;
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.IUiListener;
