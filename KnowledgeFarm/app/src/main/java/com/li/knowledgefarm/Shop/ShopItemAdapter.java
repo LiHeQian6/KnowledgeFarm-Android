@@ -61,9 +61,7 @@ public class ShopItemAdapter extends BaseAdapter {
         }
 
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.huancun)
-                .error(R.drawable.meigui)
-                .fallback(R.drawable.meigui)
+                .placeholder(R.drawable.loading)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(holder.imageView);
         ShopItemBean bean = list.get(position);

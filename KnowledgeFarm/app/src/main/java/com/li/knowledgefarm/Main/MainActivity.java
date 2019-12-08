@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private String bagMessages;
     private Handler bagMessagesHandler;
     private Gson gson;
+    private List<BagMessagesBean> dataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         okHttpClient = new OkHttpClient();
         gson = new Gson();
+        dataList = new ArrayList<>();
 
         setStatusBar();
         getViews();
@@ -76,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 String messages = (String)msg.obj;
                 if(!messages.equals("Fail")){
                     Type type = new TypeToken<List<BagMessagesBean>>(){}.getType();
-                    List<BagMessagesBean> bagList = gson.fromJson(messages,type);
+                    dataList = gson.fromJson(messages,type);
+                    showSingleAlertDialog();
                 }else{
                     Toast toast = Toast.makeText(MainActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);
                     toast.show();
@@ -152,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         money=findViewById(R.id.money);
         //lands=findViewById(R.id.lands);
     }
+
     class MainListener implements View.OnClickListener {
 
         @Override
@@ -227,15 +233,18 @@ public class MainActivity extends AppCompatActivity {
      * @Param [position]
      * @return void
      */
-    private void showSingleAlertDialog(int position){
+    private void showSingleAlertDialog(){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
         LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.shop_dialog, null);
+        View layout = inflater.inflate(R.layout.bag_girdview, null);
+        GridView gridView = layout.findViewById(R.id.bag_grid_view);
+        BagCustomerAdapter customerAdapter = new BagCustomerAdapter(alertBuilder.getContext(),dataList,R.layout.gird_adapteritem);
+        gridView.setAdapter(customerAdapter);
         alertBuilder.setView(layout);
         bagDialog = alertBuilder.create();
         bagDialog.show();
         WindowManager.LayoutParams attrs = bagDialog.getWindow().getAttributes();
-        attrs.gravity = Gravity.CENTER;
+        attrs.gravity = Gravity.RIGHT;
         final float scale = this.getResources().getDisplayMetrics().density;
         attrs.width = (int)(300*scale+0.5f);
         attrs.height =(int)(300*scale+0.5f);
