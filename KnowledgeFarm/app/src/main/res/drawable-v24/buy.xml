@@ -5,7 +5,6 @@
         <shape>
             <gradient android:startColor="#FFFFff" android:endColor="#C0C0C0"
                 android:angle="0"/>
-            <stroke android:width="4dip" android:color="#b0000000"/>
             <corners android:radius="10dp"/>
             <padding android:left="1dp" android:top="1dp" android:right="1dp"
                 android:bottom="1dp"/>
@@ -17,7 +16,6 @@
         <shape>
             <gradient android:startColor="#FFFFFFFF" android:endColor="#00000000"
                 android:angle="270"/>
-            <stroke android:width="4dip" android:color="#00000000"/>
             <corners android:radius="10dp"/>
             <padding android:left="1dp" android:top="1dp" android:right="1dp"
                 android:bottom="1dp"/>
@@ -29,7 +27,6 @@
         <shape>
             <gradient android:startColor="#00a0e9" android:endColor="#00000000"
                 android:angle="90"/>
-            <stroke android:width="4dip" android:color="#00000000"/>
             <corners android:radius="10dp"/>
             <padding android:left="1dp" android:top="1dp" android:right="1dp"
                 android:bottom="1dp"/>

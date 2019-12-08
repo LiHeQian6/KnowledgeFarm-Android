@@ -4,101 +4,119 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@drawable/diologback"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/thisFlower"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/meigui">
-
-            </ImageView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/thisName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blackTextColor">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/thisTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blackTextColor"/>
-
-            <TextView
-                android:id="@+id/thisPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blackTextColor">
-
-            </TextView>
-
+            android:orientation="vertical"
+            android:gravity="top">
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/imgBtnJian"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/jianhui">
-                </ImageView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/shopNum"
-                    android:layout_width="30dp"
+                    <ImageView
+                        android:id="@+id/thisFlower"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/meigui">
+
+                    </ImageView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/edittext_solid"
-                    android:inputType="number"
-                    android:textColor="@color/blackTextColor">
-                </EditText>
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/imgBtnPlus"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/plus">
-                </ImageView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/thisName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blackTextColor">
+
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/thisTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blackTextColor"/>
+
+                        <TextView
+                            android:id="@+id/thisPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blackTextColor">
+
+                        </TextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imgBtnJian"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/jianhui">
+                        </ImageView>
+
+                        <EditText
+                            android:id="@+id/shopNum"
+                            android:layout_width="60dp"
+                            android:textAlignment="center"
+                            android:layout_height="40dp"
+                            android:background="@drawable/edittext_solid"
+                            android:inputType="number"
+                            android:textColor="@color/blackTextColor">
+                        </EditText>
+
+                        <ImageView
+                            android:id="@+id/imgBtnPlus"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/plus">
+                        </ImageView>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/buy"
+                    android:text="取消"/>
+
+                <Button
+                    android:id="@+id/buy"
+                    android:layout_width="100dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/buy"
+                    android:text="购买"/>
             </LinearLayout>
         </LinearLayout>
 
-</LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/buy"
-            android:text="取消"/>
-
-        <Button
-            android:id="@+id/buy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/buy"
-            android:text="购买"/>
-    </LinearLayout>
 </LinearLayout>
