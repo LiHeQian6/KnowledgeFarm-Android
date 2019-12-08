@@ -38,9 +38,6 @@ public class SubjectListActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    Intent intent = new Intent();
-                    intent.setClass(SubjectListActivity.this, MainActivity.class);
-                    startActivity(intent);
                     finish();
                     break;
                 case R.id.iv_math:
