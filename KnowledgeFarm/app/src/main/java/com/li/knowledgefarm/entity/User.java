@@ -299,6 +299,68 @@ public class User {
         this.land18 = land18;
     }
 
+    public int getLandStauts(int land) {
+        int status=-1;
+        switch (land){
+            case 1:
+                status=land1;
+                break;
+            case 2:
+                status=land2;
+                break;
+            case 3:
+                status=land3;
+                break;
+            case 4:
+                status=land4;
+                break;
+            case 5:
+                status=land5;
+                break;
+            case 6:
+                status=land6;
+                break;
+            case 7:
+                status=land7;
+                break;
+            case 8:
+                status=land8;
+                break;
+            case 9:
+                status=land9;
+                break;
+            case 10:
+                status=land10;
+                break;
+            case 11:
+                status=land11;
+                break;
+            case 12:
+                status=land12;
+                break;
+            case 13:
+                status=land13;
+                break;
+            case 14:
+                status=land14;
+                break;
+            case 15:
+                status=land15;
+                break;
+            case 16:
+                status=land16;
+                break;
+            case 17:
+                status=land17;
+                break;
+            case 18:
+                status=land18;
+                break;
+        }
+        return status;
+    }
+
+
     @Override
     public String toString() {
         return "User{" +
