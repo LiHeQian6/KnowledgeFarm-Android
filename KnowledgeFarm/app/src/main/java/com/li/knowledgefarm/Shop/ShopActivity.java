@@ -10,6 +10,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -173,7 +174,7 @@ public class ShopActivity extends AppCompatActivity {
      */
     @SuppressLint("ResourceType")
     private void showSingleAlertDialog(int position){
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.shop_dialog, null);
         Button button = layout.findViewById(R.id.buy);
@@ -196,6 +197,7 @@ public class ShopActivity extends AppCompatActivity {
 
             }
         });
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,9 +207,10 @@ public class ShopActivity extends AppCompatActivity {
         alertDialog = alertBuilder.create();
         alertDialog.show();
         WindowManager.LayoutParams attrs = alertDialog.getWindow().getAttributes();
+        attrs.gravity = Gravity.CENTER;
         final float scale = this.getResources().getDisplayMetrics().density;
         attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(200*scale+0.5f);
+        attrs.height =(int)(300*scale+0.5f);
         alertDialog.getWindow().setAttributes(attrs);
     }
 

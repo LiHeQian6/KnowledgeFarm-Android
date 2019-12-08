@@ -15,6 +15,7 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
+        android:fitsSystemWindows="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".Shop.ShopActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".MainActivity" android:screenOrientation="landscape"/>
