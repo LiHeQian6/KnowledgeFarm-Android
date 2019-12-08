@@ -21,15 +21,11 @@ public class UserController extends Controller{
 	//用户登录
 	public void loginByOpenId() {
 		String jsonStr =  HttpKit.readData(getRequest());
-		System.out.print(jsonStr);
 		JSONObject jsonObject = new JSONObject(jsonStr);
 		
 		String openId = jsonObject.getString("openId");
 		String nickName = jsonObject.getString("nickName");
 		String photo = URLDecoder.decode(jsonObject.getString("photo"));
-		
-		System.out.println(jsonStr);
-		System.out.println(jsonObject.toString());
 		
 		UserService service = new UserService();
 		if(service.isExistUserByOpenId(openId)) { //已存在该用户，查询用户信息
@@ -99,8 +95,8 @@ public class UserController extends Controller{
 			boolean succeed = Db.tx(new IAtom() {
 				@Override
 				public boolean run() throws SQLException {
-					boolean a1 = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ");
-					boolean a2 = service.updateUserPhoto(accout, photo);
+					boolean a1 = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ"); //添加到授权表
+					boolean a2 = service.updateUserPhoto(accout, photo); //修改成QQ头像
 					if(a1 && a2) {
 						return true;
 					}
@@ -123,8 +119,8 @@ public class UserController extends Controller{
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				boolean a1 = new UserService().deleteOpenId(openId);
-				boolean a2 = new UserService().updateUserPhoto(accout, Strings.photoUrl+"0.png");
+				boolean a1 = new UserService().deleteOpenId(openId); //从授权表删除
+				boolean a2 = new UserService().updateUserPhoto(accout, Strings.userPhotoUrl+"0.png"); //修改成默认头像
 				if(a1 && a2) {
 					return true;
 				}
