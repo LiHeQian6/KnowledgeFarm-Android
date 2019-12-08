@@ -32,7 +32,7 @@ public class UpdatePasswordDialog extends PopupWindow {
     private ImageView iv_return;
     private EditText edtOldPassword,edtNemPassword,edtNewPasswordTest;
     /** 保存*/
-    private TextView tv_save;
+    private TextView tv_save;//ll
     /** OKHttpClient*/
     private OkHttpClient okHttpClient;
     private String ip = "10.7.87.220";

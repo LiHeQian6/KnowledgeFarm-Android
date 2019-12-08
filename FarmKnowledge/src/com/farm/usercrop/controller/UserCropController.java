@@ -1,6 +1,5 @@
 package com.farm.usercrop.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,26 +19,19 @@ public class UserCropController extends Controller{
 		
 		//根据用户Id获得userCropId列表
 		List<Integer> userCropIdList = new UserService().getUserCropIdById(userId);
-		List<Map<Integer,Crop>> cropList = new ArrayList<Map<Integer,Crop>>();		
+		Map<Integer,Crop> cropMap = new HashMap<>();	
 		UserCropService userCropService =  new UserCropService();
 		CropService service = new CropService();
 		
 		for(int userCropId : userCropIdList) {
-			if(userCropId != -1 && userCropId != 0) { 
-				Map<Integer,Crop> map = new HashMap<Integer, Crop>();
-				//根据userCropId查询cropId
-				int cropId = userCropService.getCropIdByUserCropId(userCropId);
-				//根据cropId获得crop作物信息
-				Crop crop = service.getUpdateCropInfo(cropId);
-				map.put(userCropId, crop);
-				cropList.add(map);
-			}else { //如果土地未开垦(-1)或者未种植作物(0)，则Crop作物对象为null
-				Map<Integer,Crop> map = new HashMap<Integer, Crop>();
-				map.put(userCropId, null);
-			}
+			//根据userCropId查询cropId
+			int cropId = userCropService.getCropIdByUserCropId(userCropId);
+			//根据cropId获得crop作物信息
+			Crop crop = service.getUpdateCropInfo(cropId);
+			cropMap.put(userCropId, crop);
 		}
 		
-		renderJson(cropList);
+		renderJson(cropMap);
 	}
 	
 	//查看作物进度

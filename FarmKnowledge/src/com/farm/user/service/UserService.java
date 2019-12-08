@@ -51,6 +51,10 @@ public class UserService {
 	 * 	删
 	 * @throws
 	 */
+	//删除openId信息
+	public boolean deleteOpenId(String openId) {
+		return new UserDao().deleteOpenId(openId);
+	}
 	//彻底删除User表内用户信息（User表delete）
 	public boolean deleteThoroughUser(int userId) {
 		return new UserDao().deleteThoroughUser(userId);
@@ -191,6 +195,10 @@ public class UserService {
 	//User表查询剩余奖励次数
 	public int getRewardCount(int id) {
 		return new UserDao().getRewardCount(id);
+	}
+	//判断账号是否绑定QQ
+	public boolean isBindingQQ(String accout) {
+		return new UserDao().isBindingQQ(accout);
 	}
 	
 	//生成账号
