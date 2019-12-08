@@ -34,8 +34,8 @@ public class UserDao {
 	 * @throws
 	 */
 	//É¾³ýopenIdÐÅÏ¢
-	public boolean deleteOpenId(String openId) {
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where openId=?",openId);
+	public boolean deleteOpenIdByUserId(int userId) {
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
 		if(list.size() != 0) {
 			boolean succeed = UserAuthority.dao.deleteById(list.get(0).getInt("id"));
 			return succeed;

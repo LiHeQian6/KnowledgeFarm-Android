@@ -52,8 +52,8 @@ public class UserService {
 	 * @throws
 	 */
 	//删除openId信息
-	public boolean deleteOpenId(String openId) {
-		return new UserDao().deleteOpenId(openId);
+	public boolean deleteOpenIdByUserId(int userId) {
+		return new UserDao().deleteOpenIdByUserId(userId);
 	}
 	//彻底删除User表内用户信息（User表delete）
 	public boolean deleteThoroughUser(int userId) {

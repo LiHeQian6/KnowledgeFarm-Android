@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -30,14 +31,14 @@ import okhttp3.Response;
 public class UpdateNickNameDialog extends PopupWindow {
     private View view;
     private Context context;
-    /** 返回*/
-    private ImageView iv_return;
+    /** 取消*/
+    private Button btnReturn;
     /** 昵称输入框*/
     private EditText edtNickName;
     /** 字符长度*/
     private TextView tv_nickName_length;
     /** 保存*/
-    private TextView tv_save;
+    private Button btnSave;
     /** OKHttpClient*/
     private OkHttpClient okHttpClient;
     /** 线程服务端返回处理*/
@@ -78,11 +79,7 @@ public class UpdateNickNameDialog extends PopupWindow {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String nickName = edtNickName.getText().toString().trim();
                 tv_nickName_length.setText(nickName.length()+"/20");
-                if(nickName.length() != 0){
-                    tv_save.setTextColor(Color.parseColor("#FF0000"));
-                }else{
-                    tv_save.setTextColor(Color.parseColor("#AAAAAA"));
-                }
+
                 if(nickName.length() == 20){
                     Toast.makeText(context,"最多输入20个字符",Toast.LENGTH_SHORT).show();
                 }
@@ -95,15 +92,15 @@ public class UpdateNickNameDialog extends PopupWindow {
         });
 
         /** 点击保存*/
-        tv_save.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 save();
             }
         });
 
-        /** 点击返回*/
-        iv_return.setOnClickListener(new View.OnClickListener() {
+        /** 点击取消*/
+        btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -146,10 +143,10 @@ public class UpdateNickNameDialog extends PopupWindow {
      * 初始化
      */
     private void init(String nickName){
-        iv_return = view.findViewById(R.id.iv_return);
+        btnReturn = view.findViewById(R.id.btnReturn);
         edtNickName = view.findViewById(R.id.edtNickName);
         tv_nickName_length = view.findViewById(R.id.tv_nickName_length);
-        tv_save = view.findViewById(R.id.tv_save);
+        btnSave = view.findViewById(R.id.btnSave);
         edtNickName.setText(nickName);
         tv_nickName_length.setText(nickName.length()+"/20");
         okHttpClient = new OkHttpClient();
@@ -164,8 +161,8 @@ public class UpdateNickNameDialog extends PopupWindow {
         //this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
         this.setFocusable(true);
         this.setAnimationStyle(R.style.pop_animation);
-        ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
-        //ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
+        //ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
+        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
         this.setBackgroundDrawable(d);
     }
 

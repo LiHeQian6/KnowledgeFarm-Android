@@ -114,12 +114,12 @@ public class UserController extends Controller{
 	//解绑QQ
 	public void unBindingQQ() {
 		String accout = get("accout");
-		String openId = get("openId");
 		
+		UserService service = new UserService();
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				boolean a1 = new UserService().deleteOpenId(openId); //从授权表删除
+				boolean a1 = service.deleteOpenIdByUserId(service.getUserIdByAccout(accout)); //从授权表删除
 				boolean a2 = new UserService().updateUserPhoto(accout, Strings.userPhotoUrl+"0.png"); //修改成默认头像
 				if(a1 && a2) {
 					return true;

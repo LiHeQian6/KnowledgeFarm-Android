@@ -199,7 +199,7 @@ public class SettingActivity extends AppCompatActivity {
         popupDialogShopCar.setWidth(getSyetemWidth()*1/2);
         popupDialogShopCar.setHeight(getSyetemHeight()*3/4);
         popupDialogShopCar.showAtLocation(btnUpdateNickName, Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
-        //backgroundAlpha(0.3f);
+        backgroundAlpha(0.3f);
         //监听弹出框关闭时，屏幕透明度变回原样
         popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
             @Override
@@ -214,7 +214,9 @@ public class SettingActivity extends AppCompatActivity {
      */
     private void popupWindow_update_grade(){
         UpdateGradeDialog popupDialogShopCar = new UpdateGradeDialog(getApplicationContext(),"1");
-        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateGrade), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
+        popupDialogShopCar.setWidth(getSyetemWidth()*1/2);
+        popupDialogShopCar.setHeight(getSyetemHeight()*3/4);
+        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateGrade), Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
         backgroundAlpha(0.3f);
         //监听弹出框关闭时，屏幕透明度变回原样
         popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
@@ -230,7 +232,7 @@ public class SettingActivity extends AppCompatActivity {
      */
     private void popupWindow_update_password(){
         UpdatePasswordDialog popupDialogShopCar = new UpdatePasswordDialog(getApplicationContext());
-        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdatePassword), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
+        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdatePassword), Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
         backgroundAlpha(0.3f);
         //监听弹出框关闭时，屏幕透明度变回原样
         popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
@@ -248,7 +250,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","78317468").build();
+                FormBody formBody = new FormBody.Builder().add("accout","89838845").build();
                 final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/isBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -281,7 +283,6 @@ public class SettingActivity extends AppCompatActivity {
                     try {
                         int ret = response.getInt("ret");
                         if (ret == 0) {
-                            Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
                             openId = response.getString("openid");
                             String accessToken = response.getString("access_token");
                             String expires = response.getString("expires_in");
@@ -357,7 +358,7 @@ public class SettingActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("accout","78317468").add("openId",openId).add("photo",Path).build();
+                            FormBody formBody = new FormBody.Builder().add("accout","89838845").add("openId",openId).add("photo",Path).build();
                             final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -395,7 +396,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","78317468").build();
+                FormBody formBody = new FormBody.Builder().add("accout","89838845").build();
                 final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
