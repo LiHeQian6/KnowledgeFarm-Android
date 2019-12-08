@@ -32,10 +32,9 @@ public class UpdatePasswordDialog extends PopupWindow {
     private ImageView iv_return;
     private EditText edtOldPassword,edtNemPassword,edtNewPasswordTest;
     /** 保存*/
-    private TextView tv_save;//ll
+    private TextView tv_save;
     /** OKHttpClient*/
     private OkHttpClient okHttpClient;
-    private String ip = "10.7.87.220";
     /** 线程服务端返回处理*/
     private Handler handler = new Handler(){
         @Override
@@ -66,13 +65,8 @@ public class UpdatePasswordDialog extends PopupWindow {
         /** 设置设置popupWindow样式*/
         setpopupWndow();
 
-        /** 初始化页面*/
-        iv_return = view.findViewById(R.id.iv_return);
-        edtOldPassword = view.findViewById(R.id.edtOldPassword);
-        edtNemPassword = view.findViewById(R.id.edtNewPassword);
-        edtNewPasswordTest = view.findViewById(R.id.edtNewPasswordTest);
-        tv_save = view.findViewById(R.id.iv_return);
-        okHttpClient = new OkHttpClient();
+        /** 初始化*/
+        init();
 
         /** 点击保存*/
         tv_save.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +85,9 @@ public class UpdatePasswordDialog extends PopupWindow {
         });
     }
 
+    /**
+     * 保存
+     */
     private void save(){
         final String oldPassword = edtOldPassword.getText().toString().trim();
         final String newPassword = edtNemPassword.getText().toString().trim();
@@ -105,7 +102,7 @@ public class UpdatePasswordDialog extends PopupWindow {
                 @Override
                 public void run() {
                     FormBody formBody = new FormBody.Builder().add("accout","71007839").add("oldPassword",oldPassword).add("newPassword",newPassword).build();
-                    final Request request = new Request.Builder().post(formBody).url("http://"+ip+":8080/FarmKnowledge/user/updateUserPassword").build();
+                    final Request request = new Request.Builder().post(formBody).url("http://"+context.getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/updateUserPassword").build();
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {
                         @Override
@@ -122,6 +119,18 @@ public class UpdatePasswordDialog extends PopupWindow {
                 }
             }.start();
         }
+    }
+
+    /**
+     * 初始化
+     */
+    private void init(){
+        iv_return = view.findViewById(R.id.iv_return);
+        edtOldPassword = view.findViewById(R.id.edtOldPassword);
+        edtNemPassword = view.findViewById(R.id.edtNewPassword);
+        edtNewPasswordTest = view.findViewById(R.id.edtNewPasswordTest);
+        tv_save = view.findViewById(R.id.tv_save);
+        okHttpClient = new OkHttpClient();
     }
 
     /**

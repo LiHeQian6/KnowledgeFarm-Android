@@ -36,7 +36,7 @@ public class UpdateGradeDialog extends PopupWindow {
     /** 保存*/
     private TextView tv_save;
     private OkHttpClient okHttpClient;
-    private String ip = "10.7.87.220";
+    private String spin[] = {"一年级上","一年级下","二年级上","二年级下","三年级上","三年级下"};;
     private ArrayAdapter<String> arrayAdapter;
     /** 选中的年级*/
     private String newGrade;
@@ -64,14 +64,8 @@ public class UpdateGradeDialog extends PopupWindow {
         /** 设置设置popupWindow样式*/
         setpopupWndow();
 
-        /** 初始化页面*/
-        iv_return = view.findViewById(R.id.iv_return);
-        spinner = view.findViewById(R.id.spinner);
-        tv_save = view.findViewById(R.id.tv_save);
-        final String spin[] = {"一年级上","一年级下","二年级上","二年级下","三年级上","三年级下"};
-        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_expandable_list_item_1, spin);
-        spinner.setAdapter(arrayAdapter);
-        okHttpClient = new OkHttpClient();
+        /** 初始化*/
+        init();
 
         /** 得出当前年级的position值，并设置*/
         int position = Integer.parseInt(grade) - 1;
@@ -122,6 +116,18 @@ public class UpdateGradeDialog extends PopupWindow {
     }
 
     /**
+     * 初始化
+     */
+    private void init(){
+        iv_return = view.findViewById(R.id.iv_return);
+        spinner = view.findViewById(R.id.spinner);
+        tv_save = view.findViewById(R.id.tv_save);
+        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_expandable_list_item_1, spin);
+        spinner.setAdapter(arrayAdapter);
+        okHttpClient = new OkHttpClient();
+    }
+
+    /**
      * 保存
      */
     private void save(){
@@ -130,7 +136,7 @@ public class UpdateGradeDialog extends PopupWindow {
             public void run() {
 
                 FormBody formBody = new FormBody.Builder().add("accout","71007839").add("grade",""+transmit(newGrade)).build();
-                final Request request = new Request.Builder().post(formBody).url("http://"+ip+":8080/FarmKnowledge/user/updateUserGrade").build();
+                final Request request = new Request.Builder().post(formBody).url("http://"+context.getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/updateUserGrade").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -149,17 +155,7 @@ public class UpdateGradeDialog extends PopupWindow {
     }
 
     /**
-     * handler发送message
-     */
-    private void sendMessage(int what ,Object obj){
-        Message message = new Message();
-        message.what = what;
-        message.obj = obj;
-        handler.sendMessage(message);
-    }
-
-    /**
-     * 年级转换形式(string -> double)
+     * 年级形式转换(string -> double)
      */
     private int transmit(String grade){
         switch (grade){
@@ -177,6 +173,16 @@ public class UpdateGradeDialog extends PopupWindow {
                 return 6;
         }
         return 0;
+    }
+
+    /**
+     * handler发送message
+     */
+    private void sendMessage(int what ,Object obj){
+        Message message = new Message();
+        message.what = what;
+        message.obj = obj;
+        handler.sendMessage(message);
     }
 
 }

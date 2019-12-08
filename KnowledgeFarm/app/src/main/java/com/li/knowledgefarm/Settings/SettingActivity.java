@@ -172,32 +172,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     /**
-     * 修改用户密码
-     */
-    public void updatePassword(){
-        new Thread(){
-            @Override
-            public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","71007839").add("oldPassword","123").add("newPassword","1234").build();
-                final Request request = new Request.Builder().post(formBody).url("http://"+ip+":8080/FarmKnowledge/user/updateUserPassword").build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.i("lww","请求失败");
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String result = response.body().string();
-                        sendMessage(3,result);
-                    }
-                });
-            }
-        }.start();
-    }
-
-    /**
      * handler发送message
      */
     private void sendMessage(int what ,Object obj){
