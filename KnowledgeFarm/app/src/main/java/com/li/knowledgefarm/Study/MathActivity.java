@@ -38,6 +38,7 @@ public class MathActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.setClass(MathActivity.this, SubjectListActivity.class);
                     startActivity(intent);
+                    finish();
                     break;
             }
         }

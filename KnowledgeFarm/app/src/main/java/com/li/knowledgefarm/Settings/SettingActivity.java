@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -138,6 +139,7 @@ public class SettingActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.setClass(SettingActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                     break;
                 case R.id.btnUpdateNickName:
                     popupWindow_update_nickName();
@@ -194,8 +196,10 @@ public class SettingActivity extends AppCompatActivity {
      */
     private void popupWindow_update_nickName(){
         UpdateNickNameDialog popupDialogShopCar = new UpdateNickNameDialog(getApplicationContext(),"71007839");
-        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateNickName), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
-        backgroundAlpha(0.3f);
+        popupDialogShopCar.setWidth(getSyetemWidth()*1/2);
+        popupDialogShopCar.setHeight(getSyetemHeight()*3/4);
+        popupDialogShopCar.showAtLocation(btnUpdateNickName, Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
+        //backgroundAlpha(0.3f);
         //监听弹出框关闭时，屏幕透明度变回原样
         popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
             @Override
@@ -391,7 +395,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","78317468").add("openId",openId).build();
+                FormBody formBody = new FormBody.Builder().add("accout","78317468").build();
                 final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -456,5 +460,24 @@ public class SettingActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
+    }
+
+    //获取系统宽度
+    private int getSyetemWidth(){
+        return getResources().getDisplayMetrics().widthPixels;
+    }
+    //获取系统高度
+    private int getSyetemHeight(){
+        return getResources().getDisplayMetrics().heightPixels;
+    }
+    //获取Activity宽度
+    private int getActivityWidth(){
+        WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        return manager.getDefaultDisplay().getWidth();
+    }
+    //获取Activity高度
+    private int getActivityHeight(){
+        WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        return manager.getDefaultDisplay().getHeight();
     }
 }

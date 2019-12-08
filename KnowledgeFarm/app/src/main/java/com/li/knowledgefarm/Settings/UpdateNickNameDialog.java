@@ -1,6 +1,5 @@
 package com.li.knowledgefarm.Settings;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -161,12 +160,12 @@ public class UpdateNickNameDialog extends PopupWindow {
      */
     private void setpopupWndow(){
         this.setContentView(view);
-        this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
+        //this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
+        //this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
         this.setFocusable(true);
-        //this.setAnimationStyle(R.style.pop_animation);
-        //ColorDrawable dw = new ColorDrawable(0xb0000000);//背景半透明
-        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
+        this.setAnimationStyle(R.style.pop_animation);
+        ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
+        //ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
         this.setBackgroundDrawable(d);
     }
 

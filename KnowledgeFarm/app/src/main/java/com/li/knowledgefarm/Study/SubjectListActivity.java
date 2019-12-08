@@ -41,6 +41,7 @@ public class SubjectListActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.setClass(SubjectListActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                     break;
                 case R.id.iv_math:
                     Intent intent1 = new Intent();
