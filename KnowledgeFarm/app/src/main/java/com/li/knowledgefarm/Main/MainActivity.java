@@ -1,21 +1,21 @@
-package com.li.knowledgefarm;
+package com.li.knowledgefarm.Main;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView level;
     private TextView money;
     private GridLayout lands;
-
+    private Dialog bagDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +143,29 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * @Description 背包弹出框
+     * @Auther 孙建旺
+     * @Date 下午 2:01 2019/12/08
+     * @Param [position]
+     * @return void
+     */
+    private void showSingleAlertDialog(int position){
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.shop_dialog, null);
+        alertBuilder.setView(layout);
+        bagDialog = alertBuilder.create();
+        bagDialog.show();
+        WindowManager.LayoutParams attrs = bagDialog.getWindow().getAttributes();
+        attrs.gravity = Gravity.CENTER;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(300*scale+0.5f);
+        attrs.height =(int)(300*scale+0.5f);
+        bagDialog.getWindow().setAttributes(attrs);
+    }
+
     protected void setStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体

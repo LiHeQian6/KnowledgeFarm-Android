@@ -2,7 +2,6 @@ package com.li.knowledgefarm.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -27,8 +26,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
-import com.li.knowledgefarm.MainActivity;
-import com.li.knowledgefarm.Shop.ShopActivity;
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -49,7 +47,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
-import android.os.Bundle;
 
 import com.li.knowledgefarm.R;
 

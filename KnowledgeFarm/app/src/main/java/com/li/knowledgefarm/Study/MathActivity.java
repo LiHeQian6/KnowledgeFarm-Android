@@ -7,10 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.li.knowledgefarm.MainActivity;
 import com.li.knowledgefarm.R;
 
 public class MathActivity extends AppCompatActivity {
