@@ -29,7 +29,9 @@ import okhttp3.Response;
 public class UpdatePasswordDialog extends PopupWindow {
     private View view;
     private Context context;
+    /** 返回*/
     private ImageView iv_return;
+    /** 旧密码、新密码、确认密码输入框*/
     private EditText edtOldPassword,edtNemPassword,edtNewPasswordTest;
     /** 保存*/
     private TextView tv_save;

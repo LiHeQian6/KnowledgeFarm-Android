@@ -41,15 +41,16 @@
             android:layout_height="wrap_content"
             android:text="修改密码"/>
         <Button
-            android:id="@+id/btnUpdatePhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="修改头像"/>
-        <Button
             android:id="@+id/btnBindingQQ"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="绑定QQ"/>
+        <Button
+            android:id="@+id/btnUnBindingQQ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="解绑QQ"
+            android:visibility="gone"/>
         <Button
             android:id="@+id/btnRegout"
             android:layout_width="wrap_content"

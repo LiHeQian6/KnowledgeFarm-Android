@@ -31,7 +31,9 @@ import okhttp3.Response;
 public class UpdateNickNameDialog extends PopupWindow {
     private View view;
     private Context context;
+    /** 返回*/
     private ImageView iv_return;
+    /** 昵称输入框*/
     private EditText edtNickName;
     /** 字符长度*/
     private TextView tv_nickName_length;

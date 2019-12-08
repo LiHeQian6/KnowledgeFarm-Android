@@ -31,12 +31,17 @@ import okhttp3.Response;
 public class UpdateGradeDialog extends PopupWindow {
     private View view;
     private Context context;
+    /** 返回*/
     private ImageView iv_return;
+    /** 下拉选框*/
     private Spinner spinner;
     /** 保存*/
     private TextView tv_save;
+    /** OkHttpClient*/
     private OkHttpClient okHttpClient;
-    private String spin[] = {"一年级上","一年级下","二年级上","二年级下","三年级上","三年级下"};;
+    /** 下拉选框数据源*/
+    private String spin[] = {"一年级上","一年级下","二年级上","二年级下","三年级上","三年级下"};
+    /** 适配器*/
     private ArrayAdapter<String> arrayAdapter;
     /** 选中的年级*/
     private String newGrade;
@@ -134,7 +139,6 @@ public class UpdateGradeDialog extends PopupWindow {
         new Thread(){
             @Override
             public void run() {
-
                 FormBody formBody = new FormBody.Builder().add("accout","71007839").add("grade",""+transmit(newGrade)).build();
                 final Request request = new Request.Builder().post(formBody).url("http://"+context.getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/updateUserGrade").build();
                 Call call = okHttpClient.newCall(request);
