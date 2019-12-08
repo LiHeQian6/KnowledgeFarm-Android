@@ -11,13 +11,21 @@ import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.os.Message;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.GridView;
@@ -25,6 +33,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
@@ -39,10 +51,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
     private ImageView learn;
     private ImageView water;
+    private TextView waterCount;
     private ImageView fertilizer;
+    private TextView fertilizerCount;
     private ImageView bag;
     private ImageView shop;
     private ImageView pet;
@@ -50,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView photo;
     private TextView nickName;
     private TextView level;
+    private TextView account;
     private TextView money;
     private GridLayout lands;
     private Dialog bagDialog;
@@ -74,47 +93,43 @@ public class MainActivity extends AppCompatActivity {
         showLand();
     }
 
+    private void showUserInfo() {
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.huancun)
+                .error(R.drawable.meigui)
+                .fallback(R.drawable.meigui)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        Glide.with(this).load(LoginActivity.user.getPhoto()).apply(requestOptions).into(photo);
+        nickName.setText(LoginActivity.user.getNickName());
+        account.setText("账号"+LoginActivity.user.getAccout());
+        level.setText("Lv:"+LoginActivity.user.getLevel());
+        money.setText("金币:"+LoginActivity.user.getMoney());
+        waterCount.setText(LoginActivity.user.getWater()+"");
+        fertilizerCount.setText(LoginActivity.user.getFertilizer()+"");
+    }
+
     private void showLand() {
-//        ImageView land1=findViewById(R.id.land1);
-//        ImageView land2=findViewById(R.id.land2);
-//        land2.setDrawingCacheEnabled(true);
-//        land2.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                Log.e("点击了",""+motionEvent.getAction());
-//                Log.e("点击了",""+(int) motionEvent.getY());
-//                if(motionEvent.getAction()==MotionEvent.ACTION_UP){
-//                    Bitmap bmp = Bitmap.createBitmap(view.getDrawingCache());
-//                    int color = bmp.getPixel((int) motionEvent.getX(), (int) motionEvent.getY());
-//                    if (color == Color.TRANSPARENT){
-//                        Log.e("点击了","land2");
-//                        return false;
-//                    }
-//
-//                    else {
-//                        Log.e("点击了","land2");
-//                        return true;
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-//        land1.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                if(motionEvent.getAction()==MotionEvent.ACTION_UP){
-//                    Bitmap bmp = Bitmap.createBitmap(view.getDrawingCache());
-//                    int color = bmp.getPixel((int) motionEvent.getX(), (int) motionEvent.getY());
-//                    if (color == Color.TRANSPARENT)
-//                        return false;
-//                    else {
-//                        Log.e("点击了","land1");
-//                        return true;
-//                    }
-//                }
-//                return false;
-//            }
-//        });
+        for (int i=1;i<19;i++){
+            ImageView land = new ImageView(this);
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(200,200);
+            land.setLayoutParams(lp);
+            land.setImageResource(R.drawable.land);
+            final int finalI = i;
+            land.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e("aaaa","点击了land"+ finalI);
+                }
+            });
+            lands.addView(land);
+        }
+        //lands.setPivotY(0);
+        //lands.setPivotX(0);
+        lands.setRotationX(30);
+        //lands.setCameraDistance(4000);
+        //lands.setRotationY(10);
+        lands.setRotation(15);
+
     }
 
     private void addListener() {
@@ -130,7 +145,9 @@ public class MainActivity extends AppCompatActivity {
     private void getViews() {
         learn=findViewById(R.id.learn);
         water=findViewById(R.id.water);
+        waterCount=findViewById(R.id.waterCount);
         fertilizer=findViewById(R.id.fertilizer);
+        fertilizerCount=findViewById(R.id.fertilizerCount);
         bag=findViewById(R.id.bag);
         shop=findViewById(R.id.shop);
         pet=findViewById(R.id.pet);
@@ -139,9 +156,9 @@ public class MainActivity extends AppCompatActivity {
         nickName=findViewById(R.id.nickName);
         level=findViewById(R.id.level);
         money=findViewById(R.id.money);
-        //lands=findViewById(R.id.lands);
+        account=findViewById(R.id.account);
+        lands=findViewById(R.id.lands);
     }
-
     class MainListener implements View.OnClickListener {
 
         @Override

@@ -8,52 +8,13 @@
     android:padding="5dp"
     tools:context=".Main.MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-        android:layout_marginTop="120dp"
+    <GridLayout android:layout_width="540dp"
         android:id="@+id/lands"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="100dp"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/land1"
-            android:layout_width="120dp"
-            android:layout_height="72dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="80dp"
-            android:src="@drawable/land0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <ImageView
-            android:id="@+id/land2"
-            android:layout_width="120dp"
-            android:layout_height="72dp"
-            android:layout_marginStart="68dp"
-            android:layout_marginLeft="68dp"
-            android:layout_marginTop="48dp"
-            android:src="@drawable/land0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <ImageView
-            android:id="@+id/land3"
-            android:layout_width="120dp"
-            android:layout_height="72dp"
-            android:layout_marginStart="128dp"
-            android:layout_marginLeft="128dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/land0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:rowCount="3"
+        android:columnCount="6"
+        android:layout_centerInParent="true"
+        android:layout_height="300dp">
+    </GridLayout>
     <ImageView android:layout_width="100dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -65,6 +26,7 @@
         <LinearLayout android:layout_width="wrap_content"
                       android:layout_alignParentLeft="true"
                       android:id="@+id/userInfo"
+                      android:background="@color/colorPrimary"
                       android:gravity="center_vertical"
                       android:layout_height="wrap_content">
             <ImageView android:layout_width="50dp"
@@ -73,6 +35,7 @@
                        android:layout_height="50dp"/>
             <LinearLayout android:layout_width="wrap_content"
                           android:orientation="vertical"
+                          android:padding="5dp"
                           android:layout_height="wrap_content">
                 <TextView android:layout_width="wrap_content"
                           android:text="昵称:景宝宝"
@@ -165,10 +128,23 @@
                       android:gravity="center"
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
-            <ImageView android:layout_width="50dp"
-                       android:src="@drawable/shuihu"
-                       android:id="@+id/water"
-                       android:layout_height="50dp"/>
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp">
+                <ImageView android:layout_width="50dp"
+                    android:src="@drawable/shuihu"
+                    android:id="@+id/water"
+                    android:layout_height="50dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="16"
+                    android:textColor="#000"
+                    android:id="@+id/waterCount"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
             <TextView android:layout_width="wrap_content"
                       android:text="水"
                       android:layout_height="wrap_content"/>
@@ -178,10 +154,23 @@
                       android:gravity="center"
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
-            <ImageView android:layout_width="50dp"
-                       android:src="@drawable/huafei"
-                       android:id="@+id/fertilizer"
-                       android:layout_height="50dp"/>
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp">
+                <ImageView android:layout_width="50dp"
+                    android:src="@drawable/huafei"
+                    android:id="@+id/fertilizer"
+                    android:layout_height="50dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="16"
+                    android:textColor="#000"
+                    android:id="@+id/fertilizerCount"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
             <TextView android:layout_width="wrap_content"
                       android:text="肥料"
                       android:layout_height="wrap_content"/>
