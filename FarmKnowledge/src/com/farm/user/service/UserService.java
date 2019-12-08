@@ -86,6 +86,10 @@ public class UserService {
 	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
 		return new UserDao().updateUserPassword(oldPassword, newPassword, accout);
 	}
+	//修改用户的头像，根据账号查询到
+	public boolean updateUserPhoto(String accout, String photo) {
+		return new UserDao().updateUserPhoto(accout, photo);
+	}
 	//购买作物后，减少金币
 	public boolean decreaseMoney(int id, int money) {
 		return new UserDao().decreaseMoney(id, money);

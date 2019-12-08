@@ -1,16 +1,20 @@
 package com.farm.user.controller;
 
 import java.net.URLDecoder;
+import java.sql.SQLException;
 
 import org.json.JSONObject;
 
 import com.farm.crop.service.CropService;
+import com.farm.entity.Strings;
 import com.farm.model.User;
 import com.farm.user.service.UserService;
 import com.farm.userbag.service.BagService;
 import com.farm.usercrop.service.UserCropService;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.HttpKit;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.IAtom;
 
 public class UserController extends Controller{
 	
@@ -33,7 +37,7 @@ public class UserController extends Controller{
 			renderJson(user);
 		}else { 						  
 			if(!service.isExistUserByOpenIdAll(openId)) { //不存在该用户，添加用户
-				boolean addUser = service.addUser(openId, nickName, photo, "QQ", openId);
+				boolean addUser = service.addUser(openId, nickName, photo, "QQ", "");
 				if(addUser) { //添加新用户成功
 					User user = service.findUserByOpenId(openId);
 					renderJson(user);
@@ -87,11 +91,25 @@ public class UserController extends Controller{
 	public void bindingQQ() {
 		String accout = get("accout");
 		String openId = get("openId");
+		String photo = URLDecoder.decode(get("photo"));
 		
 		UserService service = new UserService();
 		if(!service.isExistUserByOpenIdAll(openId)) {
-			boolean succeed = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ");
+			
+			boolean succeed = Db.tx(new IAtom() {
+				@Override
+				public boolean run() throws SQLException {
+					boolean a1 = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ");
+					boolean a2 = service.updateUserPhoto(accout, photo);
+					if(a1 && a2) {
+						return true;
+					}
+					return false;
+				}
+			});
+			
 			renderJson(""+succeed);
+			
 		}else { //该QQ号已被绑定
 			renderJson("already");
 		}
@@ -99,9 +117,21 @@ public class UserController extends Controller{
 	
 	//解绑QQ
 	public void unBindingQQ() {
+		String accout = get("accout");
 		String openId = get("openId");
 		
-		boolean succeed = new UserService().deleteOpenId(openId);
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				boolean a1 = new UserService().deleteOpenId(openId);
+				boolean a2 = new UserService().updateUserPhoto(accout, Strings.photoUrl+"0.png");
+				if(a1 && a2) {
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		renderJson(""+succeed);
 	}
 	

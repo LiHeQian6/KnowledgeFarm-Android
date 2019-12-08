@@ -152,7 +152,7 @@ public class SettingActivity extends AppCompatActivity {
                     bindingQQ();
                     break;
                 case R.id.btnUnBindingQQ:
-
+                    unBindingQQ();
                     break;
                 case R.id.btnRegout:
                     Toast.makeText(getApplicationContext(),"功能尚在开放",Toast.LENGTH_SHORT).show();
