@@ -28,7 +28,7 @@
         <activity android:name=".Login.LoginActivity"
             android:screenOrientation="landscape">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -58,7 +58,13 @@
         <activity
             android:name=".Settings.SettingActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/customApp" />
+            android:theme="@style/customApp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

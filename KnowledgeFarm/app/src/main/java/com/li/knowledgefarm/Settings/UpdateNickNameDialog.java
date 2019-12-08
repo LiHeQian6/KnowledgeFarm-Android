@@ -39,7 +39,6 @@ public class UpdateNickNameDialog extends PopupWindow {
     private TextView tv_save;
     /** OKHttpClient*/
     private OkHttpClient okHttpClient;
-    private String ip = "10.7.87.220";
     /** 线程服务端返回处理*/
     private Handler handler = new Handler(){
         @Override
@@ -64,14 +63,8 @@ public class UpdateNickNameDialog extends PopupWindow {
         /** 设置设置popupWindow样式*/
         setpopupWndow();
 
-        /** 初始化页面*/
-        iv_return = view.findViewById(R.id.iv_return);
-        edtNickName = view.findViewById(R.id.edtNickName);
-        tv_nickName_length = view.findViewById(R.id.tv_nickName_length);
-        tv_save = view.findViewById(R.id.tv_save);
-        edtNickName.setText(nickName);
-        tv_nickName_length.setText(nickName.length()+"/20");
-        okHttpClient = new OkHttpClient();
+        /** 初始化*/
+        init(nickName);
 
         /** 监听输入框*/
         edtNickName.addTextChangedListener(new TextWatcher() {
@@ -129,7 +122,7 @@ public class UpdateNickNameDialog extends PopupWindow {
                 @Override
                 public void run() {
                     FormBody formBody = new FormBody.Builder().add("accout","71007839").add("nickName",nickName).build();
-                    final Request request = new Request.Builder().post(formBody).url("http://"+ip+":8080/FarmKnowledge/user/updateUserNickName").build();
+                    final Request request = new Request.Builder().post(formBody).url("http://"+context.getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/updateUserNickName").build();
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {
                         @Override
@@ -146,6 +139,19 @@ public class UpdateNickNameDialog extends PopupWindow {
                 }
             }.start();
         }
+    }
+
+    /**
+     * 初始化
+     */
+    private void init(String nickName){
+        iv_return = view.findViewById(R.id.iv_return);
+        edtNickName = view.findViewById(R.id.edtNickName);
+        tv_nickName_length = view.findViewById(R.id.tv_nickName_length);
+        tv_save = view.findViewById(R.id.tv_save);
+        edtNickName.setText(nickName);
+        tv_nickName_length.setText(nickName.length()+"/20");
+        okHttpClient = new OkHttpClient();
     }
 
     /**
