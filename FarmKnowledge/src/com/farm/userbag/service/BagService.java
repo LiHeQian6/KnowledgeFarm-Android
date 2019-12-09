@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.farm.crop.service.CropService;
+import com.farm.entity.CropItem;
 import com.farm.user.service.UserService;
 import com.farm.userbag.dao.BagDao;
 import com.jfinal.plugin.activerecord.Db;
@@ -81,7 +82,7 @@ public class BagService {
 		return new BagDao().isExistCrop(userId, cropId);
 	}
 	//根据userId查询用户背包cropId列表
-	public List<Integer> getCropIdByUserId(int userId){
+	public List<CropItem> getCropIdByUserId(int userId){
 		return new BagDao().getCropIdByUserId(userId);
 	}
 	

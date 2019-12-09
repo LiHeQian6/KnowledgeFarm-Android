@@ -214,7 +214,7 @@ public class UserController extends Controller{
 						File file = new File(Strings.filePath + photoName);
 						fi.write(file);
 					
-						boolean succeed = new UserService().addUser(openId, nickName, photo, type, photoName);
+						boolean succeed = service.addUser(openId, nickName, "", photo, photoName, "", 1, type);
 						if(succeed == true) {
 							renderText("succeed");
 						}else {

@@ -1,8 +1,19 @@
 package  com.farm.user.service;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import com.farm.model.User;
 import com.farm.user.dao.UserDao;
@@ -18,14 +29,14 @@ public class UserService {
 	 * @throws
 	 */
 	//添加用户信息（授权id、账号、别名、头像、登陆类型）（User表、UserAuthority表）
-	public boolean addUser(String openId, String nickName, String photo,String type, String photoName){
+	public boolean addUser(String openId, String nickName, String password, String photo, String photoName, String email, int grade, String type){
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
 				UserDao userDao = new UserDao();
 				
 				//user表插入别名、头像
-				boolean a1 = userDao.addUser(generateAccout(), nickName, photo, photoName);
+				boolean a1 = userDao.addUser(generateAccout(), nickName, password, photo, photoName, email, grade);
 				//获得user表刚插入数据的userId
 				int userId = userDao.getLastUserId();
 				//UserAuthority表内插入userId、openId、token
@@ -40,6 +51,10 @@ public class UserService {
 		});
 		return succeed;
     }
+	//User表插入账号、别名、头像（accout、nickName、photo）
+	public boolean addUser(String accout, String nickName, String password, String photo, String photoName, String email, int grade){
+		return new UserDao().addUser(accout, nickName, password, photo, photoName, email, grade);
+	}
 	//UserAuthority表内插入userId、openId、type
 	public boolean addUserAuthority(int userId, String openId, String type){
 		return new UserDao().addUserAuthority(userId, openId, type);
@@ -164,6 +179,10 @@ public class UserService {
 	public User findUserByOpenId(String openId){
         return new UserDao().findUserByOpenId(openId);
     }
+	//根据账号查询User表内用户信息
+	public User findUserByAccout(String accout){
+		return new UserDao().findUserByAccout(accout);
+	}
 	//根据openId判断UserAuthority表内是否存在该用户exist=1（UserAuthority表）
 	public boolean isExistUserByOpenId(String openId){
         return new UserDao().isExistUserByOpenId(openId);
@@ -172,14 +191,22 @@ public class UserService {
 	public boolean isExistUserByOpenIdAll(String openId){
 		return new UserDao().isExistUserByOpenIdAll(openId);
 	}
-	//根据账号判断User表内是否存在该用户（User表）
+	//根据账号判断User表内是否存在该用户exist=1（User表）
 	public boolean isExistUserByAccout(String accout){
         return new UserDao().isExistUserByAccout(accout);
+    }
+	//根据账号判断User表内是否存在该用户（User表）
+	public boolean isExistUserByAccoutAll(String accout){
+        return new UserDao().isExistUserByAccoutAll(accout);
     }
 	//根据账号判断User表内是否存在该用户，除指定账号外（User表）
 	public boolean isExistUserByAccout(String accout1,String accout2){
         return new UserDao().isExistUserByAccout(accout1,accout2);
     }
+	//账号密码判断正误
+	public User findUserByAccountPassword(String account,String pwd){
+		return new UserDao().findUserByAccountPassword(account, pwd);
+	}
 	//根据用户id获取到要修改的用户信息（账号、别名、头像）
 	public User getUpdateUserInfo(int id) {
 		return new UserDao().getUpdateUserInfo(id);
@@ -212,9 +239,48 @@ public class UserService {
 			for(int n = 1;n < 9;n++) {
 				accout += (int)(Math.random()*10);
 			}
-		}while(isExistUserByAccout(accout) || accout.charAt(0) == '0' || 
+		}while(isExistUserByAccoutAll(accout) || accout.charAt(0) == '0' || 
 				accout.charAt(accout.length()-1) == '0');
 		return accout;
+	}
+	
+	//发送邮件
+	public void sendEmail(String email, String text) {
+		// Get system properties
+		Properties props = System.getProperties();
+		// Setup mail server
+		props.put("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.host", "smtp.qq.com");
+		props.put("mail.smtp.auth", "true");
+		
+		//设置端口号
+		props.put("mail.smtp.port","25");
+		props.put("mail.smtp.starttls.enable","true");
+
+		// Get Session
+		Session session = Session.getInstance(props, new Authenticator() {
+			public PasswordAuthentication getPasswordAuthentication() { /* 若服务器需要身份认证，Session会自动调用这个方法 */
+				return new PasswordAuthentication("1764056039@qq.com", "xdpafsunbhcbhbfa");
+			}
+		});
+
+		// Define message
+		Message message = new MimeMessage(session);
+		try {
+			message.setFrom(new InternetAddress("1764056039@qq.com"));
+			//设置收件人,to为收件人,cc为抄送,bcc为密送
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));//18395612156@163.com
+			message.setSubject("【知识农场】");
+			message.setText(text);
+			// send message
+			message.setHeader("X-Mailer", "smtpsend");
+			message.setSentDate(new Date());
+			Transport.send(message);
+		} catch (AddressException e) {
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

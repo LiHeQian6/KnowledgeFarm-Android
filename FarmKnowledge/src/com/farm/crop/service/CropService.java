@@ -79,6 +79,18 @@ public class CropService {
 		}while(cropDao.isExistCropPhotoName(cropPhotoName));
 		return cropPhotoName;
 	}
+	
+	//生成imgUrl末尾随机数
+	public String generateCropPhotoUrlLast(String path) {
+		CropDao cropDao = new CropDao();
+		String cropPhotoUrlLast = "";
+		do{
+			cropPhotoUrlLast = "";
+			cropPhotoUrlLast = generateShortUuid();
+		}while(cropPhotoUrlLast.equals("path"));
+		return cropPhotoUrlLast;
+	}
+	
 	public static String[] chars = new String[] { "a", "b", "c", "d", "e", "f",
 			"g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
 			"t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5",

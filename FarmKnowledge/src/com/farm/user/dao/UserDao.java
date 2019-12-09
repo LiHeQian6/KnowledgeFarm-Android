@@ -16,15 +16,15 @@ public class UserDao {
 	 * @throws
 	 */
 	//User表插入账号、别名、头像（accout、nickName、photo）
-	public boolean addUser(String accout, String nickName, String photo, String photoName){
-		boolean succeed =  new User().set("accout", accout).set("nickName", nickName).set("photo", photo).set("photoName", photoName).save();
+	public boolean addUser(String accout, String nickName, String password, String photo, String photoName, String email, int grade){
+		boolean succeed =  new User().set("accout", accout).set("nickName", nickName).set("photo", photo).set("photoName", photoName).set("email", email).set("grade", grade).save();
 		return succeed;
 	}
 	//UserAuthority表内插入userId、openId、type
 	public boolean addUserAuthority(int userId, String openId, String type){
 		boolean succeed =  new UserAuthority().set("userId", userId).set("openId", openId).set("type", type).save();
 		return succeed;
-	}	
+	}
 	
 	
 	
@@ -220,6 +220,16 @@ public class UserDao {
 		}
 		return null;
 	}
+	//根据账号查询User表内用户信息
+	public User findUserByAccout(String accout){
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			User user = list.get(0);
+			user.set("photo", URLEncoder.encode(user.getStr("photo")));
+			return list.get(0);
+		}
+		return null;
+	}
 	//根据openId判断UserAuthority表内是否存在该用户exist=1
 	public boolean isExistUserByOpenId(String openId){
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where openId=? and exist=1",openId);
@@ -240,6 +250,15 @@ public class UserDao {
 	}
 	//根据账号判断User表内是否存在该用户（User表）
 	public boolean isExistUserByAccout(String accout){
+		List<User> list = User.dao.find("select * from user where accout=? and exist=1",accout);
+		if(list.size() != 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	//根据账号判断User表内是否存在该用户（User表）
+	public boolean isExistUserByAccoutAll(String accout){
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
 			return true;
@@ -256,6 +275,16 @@ public class UserDao {
 			return false;
 		}
 	}
+	//账号密码判断正误
+	public User findUserByAccountPassword(String account,String pwd){
+		List<User> list = User.dao.find("select * from user where accout=? and password=?",account,pwd);
+		if(list.size() != 0) {
+			User user = list.get(0);
+			return user;
+		}
+		return null;
+	}
+
 	//根据账号查询用户id
 	public int getUserIdByAccout(String accout) {
 		int userId = Db.queryInt("select id from user where accout=?",accout);

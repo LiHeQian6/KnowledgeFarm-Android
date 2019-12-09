@@ -183,7 +183,7 @@ public class CropController extends Controller{
 					}	
 				}else {
 					String cropPhotoName = service.generateCropPhotoName() + fi.getName();
-					realPath[count] = Strings.photoUrl + count + cropPhotoName;
+					realPath[count] = Strings.photoUrl + count + cropPhotoName + "?" + service.generateCropPhotoUrlLast("");
 					File file = new File(Strings.filePath + count + cropPhotoName);
 					fi.write(file);
 					
@@ -285,7 +285,17 @@ public class CropController extends Controller{
 								break;
 						}
 					}else {
-						realPath[count] = Strings.photoUrl + count + cropPhotoName;
+						switch (count) {
+							case 0:
+								realPath[count] = Strings.photoUrl + count + cropPhotoName + "?" + service.generateCropPhotoUrlLast(img1);
+								break;
+							case 1:
+								realPath[count] = Strings.photoUrl + count + cropPhotoName + "?" + service.generateCropPhotoUrlLast(img2);
+								break;
+							case 2:
+								realPath[count] = Strings.photoUrl + count + cropPhotoName + "?" + service.generateCropPhotoUrlLast(img3);
+								break;
+						}
 						File file = new File(Strings.filePath + count + cropPhotoName);
 						fi.write(file);
 					}
