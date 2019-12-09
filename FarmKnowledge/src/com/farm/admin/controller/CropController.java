@@ -164,21 +164,22 @@ public class CropController extends Controller{
 			}
 			for(FileItem fi : items) {
 				if(fi.isFormField()) {
+					String aString = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
 					switch (fi.getFieldName()) {
 						case "name":
-							name = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							name = aString;
 							break;
 						case "price":
-							price = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							price = Integer.parseInt(aString);
 							break;
 						case "matureTime":
-							matureTime = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							matureTime = Integer.parseInt(aString);
 							break;
 						case "value":
-							value = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							value = Integer.parseInt(aString);
 							break;
 						case "experience":
-							experience = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							experience = Integer.parseInt(aString);
 							break;
 					}	
 				}else {
@@ -238,37 +239,38 @@ public class CropController extends Controller{
 		try {
 			List<FileItem> items = upload.parseRequest(request);
 			for(FileItem fi : items) {
+				String aString = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
 				if(fi.isFormField()) {
 					switch (fi.getFieldName()) {
 						case "id":
-							id = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							id = Integer.parseInt(aString);
 							break;
 						case "img1":
-							img1 = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							img1 = aString;
 							break;
 						case "img2":
-							img2 = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							img2 = aString;
 							break;
 						case "img3":
-							img3 = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							img3 = aString;
 							break;
 						case "cropPhotoName":
-							cropPhotoName = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							cropPhotoName = aString;
 							break;
 						case "name":
-							name = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							name = aString;
 							break;
 						case "price":
-							price = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							price = Integer.parseInt(aString);
 							break;
 						case "matureTime":
-							matureTime = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							matureTime = Integer.parseInt(aString);
 							break;
 						case "value":
-							value = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							value = Integer.parseInt(aString);
 							break;
 						case "experience":
-							experience = Integer.parseInt(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							experience = Integer.parseInt(aString);
 							break;
 					}	
 				}else {
