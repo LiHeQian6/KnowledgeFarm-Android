@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/touch"
     android:background="@drawable/main_background"
     android:padding="5dp"
     tools:context=".Main.MainActivity">
@@ -13,7 +14,6 @@
         android:rowCount="3"
         android:columnCount="6"
         android:rotationX="30"
-        android:rotation="10"
         android:layout_marginLeft="160dp"
         android:layout_marginTop="130dp"
         android:layout_height="wrap_content">
