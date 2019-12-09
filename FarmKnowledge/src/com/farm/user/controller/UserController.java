@@ -18,33 +18,103 @@ import com.jfinal.plugin.activerecord.IAtom;
 
 public class UserController extends Controller{
 	
-	//用户登录
+	//用户登录(QQ)
 	public void loginByOpenId() {
 		String jsonStr =  HttpKit.readData(getRequest());
 		JSONObject jsonObject = new JSONObject(jsonStr);
-		
 		String openId = jsonObject.getString("openId");
-		String nickName = jsonObject.getString("nickName");
-		String photo = URLDecoder.decode(jsonObject.getString("photo"));
 		
 		UserService service = new UserService();
-		if(service.isExistUserByOpenId(openId)) { //已存在该用户，查询用户信息
+		if(service.isExistUserByOpenIdAll(openId)) { //存在该openId用户
+			if(service.isExistUserByOpenId(openId)) { //存在有效用户，查询用户信息
+				User user = service.findUserByOpenId(openId);
+				renderJson(user);
+			}else { //存在非有效的openId用户
+				renderJson("notEffect");
+			}
+		}else { //不存在该openId用户
+			renderJson("notExist");
+		}
+	}	
+	
+	//发送验证码，并返回客户端
+	public void sendTestCode() {
+		String email = get("email");
+		
+		UserService service = new UserService();
+		String testCode = "";
+		for(int i = 0;i < 4;i++) {
+			testCode = "" + (int)(Math.random()*10);
+		}
+		String text = "您用于绑定邮箱的验证码为" + testCode + "，1分钟内有效，请妥善保管，切勿告诉他人";
+		service.sendEmail(email, text);
+		renderJson(testCode);
+	}
+	
+	//用户第一次登录QQ，添加用户
+	public void addQQUser() {
+		String openId = get("openId");
+		String nickName = get("nickName");
+		String photo = URLDecoder.decode(get("photo"));
+		int grade = getInt("grade");
+		String email = get("email");
+		String password = get("password");
+		
+		UserService service = new UserService();
+		if(email == null) {
+			email = "";
+		}
+		if(service.addUser(openId, nickName, password, photo, "", email, grade, "QQ")) {
 			User user = service.findUserByOpenId(openId);
 			renderJson(user);
-		}else { 						  
-			if(!service.isExistUserByOpenIdAll(openId)) { //不存在该用户，添加用户
-				boolean addUser = service.addUser(openId, nickName, photo, "QQ", "");
-				if(addUser) { //添加新用户成功
-					User user = service.findUserByOpenId(openId);
-					renderJson(user);
-				}else { 	  //添加新用户失败
-					renderJson("error");
-				}
-			}else { //exist=0;
-				renderJson("fail");
-			}
+		}else {
+			renderJson("fail");
 		}
-	}		
+	}
+	
+	//根据账号登录
+	public void loginByAccount() {
+
+		String account = get("account");
+		String pwd = get("pwd");
+		
+		UserService service = new UserService();
+		if(service.isExistUserByAccoutAll(account)) { //存在该账号
+			if(service.isExistUserByAccout(account)) { //存在有效的账号
+				User user = service.findUserByAccountPassword(account, pwd);
+				if(user != null) {
+					renderJson(user);
+				}else {
+					renderJson("PasswordError");
+				}
+			}else { //存在非有效的账号
+				renderJson("notEffect");
+			}
+		}else { //不存在该账号
+			renderJson("notExist");
+		}
+	}
+	
+	//注册账号
+	public void registAccout() {
+		String nickName = get("nickName");
+		String photo = URLDecoder.decode(get("photo"));
+		int grade = getInt("grade");
+		String email = get("email");
+		String password = get("password");
+		
+		UserService service = new UserService();
+		if(email == null) {
+			email = "";
+		}
+		String accout = service.generateAccout();
+		if(service.addUser(accout, nickName, password, photo, "", email, grade)) {
+			User user = service.findUserByAccout(accout);
+			renderJson(user);
+		}else {
+			renderJson("fail");
+		}
+	}
 	
 	//修改用户昵称
 	public void updateUserNickName() {

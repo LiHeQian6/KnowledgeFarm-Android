@@ -13,12 +13,10 @@ import javax.servlet.http.HttpSession;
 
 import com.farm.model.Admin;
 
-import sun.util.logging.resources.logging;
-
 /**
  * Servlet Filter implementation class LoginFilter
  */
-@WebFilter("/admin/*")
+//@WebFilter("/admin/*")
 public class LoginFilter implements Filter {
 
     /**

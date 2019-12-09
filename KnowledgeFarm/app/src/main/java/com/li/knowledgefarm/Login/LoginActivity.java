@@ -333,7 +333,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                doJsonPost(getResources().getString(R.string.URL)+"/user/loginByOpenId",
+                asyncAutoLogin(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                         jsonObject.toString());
             }
         }.start();
@@ -357,22 +357,22 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject json = (JSONObject) response;
                     Log.i("lww", "返回用户消息：" + response.toString());
                     /** 昵称*/
-                    String nickname = null;
+                    String nkname = null;
                     try {
-                        nickname = ((JSONObject) response).getString("nickname");
+                        nkname = ((JSONObject) response).getString("nickname");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     /** 头像*/
-                    String path = null;
+                    String npath = null;
                     try {
-                        path = json.getString("figureurl_qq_2");
+                        npath = json.getString("figureurl_qq_2");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    final String Nickname = nickname;
-                    final String Path = URLEncoder.encode(path);
+                    final String Nickname = nkname;
+                    final String Path = URLEncoder.encode(npath);
                     new Thread() {
                         @Override
                         public void run() {
@@ -384,7 +384,7 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            doJsonPost(getResources().getString(R.string.URL)+"/user/loginByOpenId",
+                            asyncByJson(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                                     jsonObject.toString());
                         }
                     }.start();
@@ -440,179 +440,45 @@ public class LoginActivity extends AppCompatActivity {
         }.start();
 
     }
-    private String doJsonPost(String urlPath, String Json) {
-        // HttpClient 6.0被抛弃了
-        String result = "";
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(urlPath);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("Charset", "UTF-8");
-            // 设置文件类型:
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            // 设置接收类型否则返回415错误
-            //conn.setRequestProperty("accept","*/*")此处为暴力方法设置接受所有类型，以此来防范返回415;
-            conn.setRequestProperty("accept", "application/json");
-            // 往服务器里面发送数据
-            if (Json != null && !TextUtils.isEmpty(Json)) {
-                byte[] writebytes = Json.getBytes();
-                // 设置文件长度
-                conn.setRequestProperty("Content-Length", String.valueOf(writebytes.length));
-                OutputStream out = conn.getOutputStream();
-                out.write(Json.getBytes());
-                out.flush();
-                out.close();
-            }
-            if (conn.getResponseCode() == 200) {
-                reader = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream()));
-                result = reader.readLine();
-                Log.e("re", result);
-                Log.e("result", URLDecoder.decode(result));
-                Message message = new Message();
-                if (result.equals("false")) {
-                    message.what = 0;
-                    mHandler.sendMessage(message);
-                } else {
-                    message.what = 1;
-                    message.obj = parsr(URLDecoder.decode(result), User.class);
-                    user = (User) message.obj;
-                    mHandler.sendMessage(message);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
-        return result;
+    private void asyncAutoLogin(final String urlPath, final String Json) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                MediaType type = MediaType.parse("text/plain");
+                RequestBody body = RequestBody.create(Json,type);
+                Request request = new Request.Builder()
+                        .url(urlPath)
+                        .post(body)
+                        .build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e("jing", "请求失败");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result =  response.body().string();
+                        Message message = new Message();
+                        if (result.equals("false")) {
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        } else {
+                            message.what = 3;
+                            message.obj = parsr(URLDecoder.decode(result), User.class);
+                            user = (User) message.obj;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
+            }
+        }.start();
+
     }
-
-    private String doJsonPost2(String urlPath, String Json) {
-        // HttpClient 6.0被抛弃了
-        String result = "";
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(urlPath);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("Charset", "UTF-8");
-            // 设置文件类型:
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            // 设置接收类型否则返回415错误
-            //conn.setRequestProperty("accept","*/*")此处为暴力方法设置接受所有类型，以此来防范返回415;
-            conn.setRequestProperty("accept", "application/json");
-            // 往服务器里面发送数据
-            if (Json != null && !TextUtils.isEmpty(Json)) {
-                byte[] writebytes = Json.getBytes();
-                // 设置文件长度
-                conn.setRequestProperty("Content-Length", String.valueOf(writebytes.length));
-                OutputStream out = conn.getOutputStream();
-                out.write(Json.getBytes());
-                out.flush();
-                out.close();
-            }
-            if (conn.getResponseCode() == 200) {
-                reader = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream()));
-                result = reader.readLine();
-                Log.e("re", result);
-                Log.e("result", URLDecoder.decode(result));
-                Message message = new Message();
-                if (result.equals("false")) {
-                    message.what = 0;
-                    mHandler.sendMessage(message);
-                } else {
-                    message.what = 3;
-                    message.obj = parsr(URLDecoder.decode(result), User.class);
-                    user = (User) message.obj;
-                    mHandler.sendMessage(message);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return result;
-    }
-
-//    /**
-//     * 注销
-//     */
-//    private void regout() {
-//        //注销登陆
-//        mTencent.logout(getApplicationContext());
-//
-//        SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        editor.clear();
-//        editor.commit();
-//        user = null;
-//        //更新视图
-//        logo.setVisibility(View.VISIBLE);
-//        linearUser.setVisibility(View.INVISIBLE);
-//        linearQQ.setVisibility(View.VISIBLE);
-//        linearStart.setVisibility(View.INVISIBLE);
-//    }
-
-
-//    /**
-//     * 开启线程，根据头像的url获取bitmap
-//     */
-//    public void urlToImgBitmap(final String imageUrl) {
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                //显示网络上的图片
-//                Bitmap bitmap = null;
-//                HttpURLConnection conn = null;
-//                InputStream is = null;
-//                try {
-//                    URL myFileUrl = new URL(imageUrl);
-//                    conn = (HttpURLConnection) myFileUrl.openConnection();
-//                    conn.setDoInput(true);
-//                    conn.connect();
-//                    is = conn.getInputStream();
-//                    bitmap = BitmapFactory.decodeStream(is);
-//                    is.close();
-//                    Message message = new Message();
-//                    message.obj = bitmap;
-//                    message.what = 2;
-//                    mHandler.sendMessage(message);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    conn.disconnect();
-//                }
-//            }
-//        }.start();
-//    }
-
-
     /**
      * Json转换为对象
      */
@@ -638,16 +504,6 @@ public class LoginActivity extends AppCompatActivity {
                 mTencent.handleResultData(data, loginListener);
             }
         }
-    }
-    private void showNotifyDialog() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        NotifyAccountDialog notifyAccountDialog = new NotifyAccountDialog();
-        if(!notifyAccountDialog.isAdded()){
-            transaction.add(notifyAccountDialog,"notify");
-        }
-        transaction.show(notifyAccountDialog);
-        transaction.commitAllowingStateLoss();
     }
 
     /**
