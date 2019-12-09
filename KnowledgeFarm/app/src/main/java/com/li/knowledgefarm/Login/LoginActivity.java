@@ -5,6 +5,14 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -20,6 +28,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -64,14 +73,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private TextView logo;
     /**
-     * 用户昵称
-     */
-    private TextView tvUserName;
-    /**
-     * 用户头像
-     */
-    private ImageView ivUserImage;
-    /**
      * 点击第三方登陆按钮
      */
     private Button btnQQ;
@@ -79,11 +80,9 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 点击注销按钮
      */
-    private Button btnRegout;
     private LinearLayout linearUser;
     private LinearLayout linearQQ;
     private LinearLayout linearStart;
-    private Button btnStart;
     /**
      * 用户信息
      */
@@ -95,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI
      */
-    private Tencent mTencent;
+    public static Tencent mTencent;
     /**
      * 其中mAppId是分配给第三方应用的appid，类型为String
      */
@@ -115,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
     public static User user;
     private String openID;
     private String accessToken;
-    private RelativeLayout loginRelative;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -124,30 +122,51 @@ public class LoginActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1:       //登录成功
                     Log.e("jing","noVisibility");
-                    logo.setVisibility(View.INVISIBLE);
-                    linearUser.setVisibility(View.VISIBLE);
-                    linearQQ.setVisibility(View.INVISIBLE);
-                    linearStart.setVisibility(View.VISIBLE);
-                    Log.e("jing","noVisibility2");
                     user = (User) msg.obj;
-                    tvUserName.setText(user.getNickName());
-                    urlToImgBitmap(user.getPhoto());
-                    showNotifyDialog();
+                    if(user.getExist()==0){
+                        Toast.makeText(getApplicationContext(),"账号已不存在！",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Intent intentToStart = new Intent(LoginActivity.this,StartActivity.class);
+                        intentToStart.setAction("QQLogin");
+                        startActivity(intentToStart);
+                        finish();
+
+//                        logo.setVisibility(View.INVISIBLE);
+//                        linearUser.setVisibility(View.VISIBLE);
+//                        linearQQ.setVisibility(View.INVISIBLE);
+//                        linearStart.setVisibility(View.VISIBLE);
+//                        Log.e("jing","noVisibility2");
+//                        tvUserName.setText(user.getNickName());
+//                        urlToImgBitmap(user.getPhoto());
+//                        showNotifyDialog();
+                    }
                     break;
-                case 2:     //返回头像的Bitmap
-                    Bitmap bitmap = (Bitmap) msg.obj;
-                    ivUserImage.setImageBitmap(bitmap);
-                    break;
+//                case 2:     //返回头像的Bitmap
+//                    Bitmap bitmap = (Bitmap) msg.obj;
+//                    ivUserImage.setImageBitmap(bitmap);
+//                    break;
                 case 3:
-                    logo.setVisibility(View.INVISIBLE);
-                    linearUser.setVisibility(View.VISIBLE);
-                    linearQQ.setVisibility(View.INVISIBLE);
-                    linearStart.setVisibility(View.VISIBLE);
                     user = (User) msg.obj;
-                    tvUserName.setText(user.getNickName());
-                    urlToImgBitmap(user.getPhoto());
+                    if(user.getExist()==0){
+                        Toast.makeText(getApplicationContext(),"账号已不存在！",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Intent autoToStart = new Intent(LoginActivity.this,StartActivity.class);
+                        autoToStart.setAction("autoLogin");
+                        startActivity(autoToStart);
+                        finish();
+//                        logo.setVisibility(View.INVISIBLE);
+//                        linearUser.setVisibility(View.VISIBLE);
+//                        linearQQ.setVisibility(View.INVISIBLE);
+//                        linearStart.setVisibility(View.VISIBLE);
+//
+//                        tvUserName.setText(user.getNickName());
+//                        urlToImgBitmap(user.getPhoto());
+                    }
+
                     break;
                 case 0:     //登录失败
+                    Toast.makeText(getApplicationContext(),"登录失败！",Toast.LENGTH_SHORT).show();
+
                     break;
 
             }
@@ -175,13 +194,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void getViews() {
         logo = findViewById(R.id.logo);
-        btnRegout = findViewById(R.id.btnRegout);
-        btnStart = findViewById(R.id.btnStart);
         btnQQ = findViewById(R.id.btnQQ);
         btnAccount = findViewById(R.id.btnAccount);
-        tvUserName = findViewById(R.id.tvUserName);
-        ivUserImage = findViewById(R.id.ivUserImage);
-        loginRelative = findViewById(R.id.loginRelative);
         linearUser = findViewById(R.id.linearUser);
         linearQQ = findViewById(R.id.linearQQ);
         linearStart = findViewById(R.id.linearStart);
@@ -193,9 +207,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void registListener() {
         listener = new CustomerListener();
-        btnRegout.setOnClickListener(listener);
         btnQQ.setOnClickListener(listener);
-        btnStart.setOnClickListener(listener);
         btnAccount.setOnClickListener(listener);
     }
 
@@ -211,23 +223,38 @@ public class LoginActivity extends AppCompatActivity {
                 case R.id.btnQQ:
                     onClickLogin();
                     break;
-                /** 点击注销*/
-                case R.id.btnRegout:
-                    regout();
-                    break;
-                case R.id.btnStart:
-                    Intent intentStartGame = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intentStartGame);
-                    break;
+
                 case R.id.btnAccount:
                     Intent intentLoginByAccount = new Intent(LoginActivity.this, LoginByAccountActivity.class);
                     startActivity(intentLoginByAccount);
                     break;
-                case R.id.registAccount:
-                    break;
             }
         }
     }
+    //退出时的时间
+    private long mExitTime;
+    //对返回键进行监听
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+
+            exit();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void exit() {
+        if ((System.currentTimeMillis() - mExitTime) > 2000) {
+            Toast.makeText(LoginActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+        } else {
+            finish();
+            System.exit(0);
+        }
+    }
+
 
     private void autoLogin(){
         SharedPreferences sp = getSharedPreferences("token", MODE_PRIVATE);
@@ -378,6 +405,44 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void asyncByJson(final String urlPath, final String Json) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                MediaType type = MediaType.parse("text/plain");
+                RequestBody body = RequestBody.create(Json,type);
+                Request request = new Request.Builder()
+                        .url(urlPath)
+                        .post(body)
+                        .build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e("jing", "请求失败");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result =  response.body().string();
+                        Message message = new Message();
+                        if (result.equals("false")) {
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        } else {
+                            message.what = 1;
+                            message.obj = parsr(URLDecoder.decode(result), User.class);
+                            user = (User) message.obj;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
+            }
+        }.start();
+
+    }
     private String doJsonPost(String urlPath, String Json) {
         // HttpClient 6.0被抛弃了
         String result = "";
@@ -498,57 +563,57 @@ public class LoginActivity extends AppCompatActivity {
         return result;
     }
 
-    /**
-     * 注销
-     */
-    private void regout() {
-        //注销登陆
-        mTencent.logout(getApplicationContext());
+//    /**
+//     * 注销
+//     */
+//    private void regout() {
+//        //注销登陆
+//        mTencent.logout(getApplicationContext());
+//
+//        SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sp.edit();
+//        editor.clear();
+//        editor.commit();
+//        user = null;
+//        //更新视图
+//        logo.setVisibility(View.VISIBLE);
+//        linearUser.setVisibility(View.INVISIBLE);
+//        linearQQ.setVisibility(View.VISIBLE);
+//        linearStart.setVisibility(View.INVISIBLE);
+//    }
 
-        SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.commit();
-        user = null;
-        //更新视图
-        logo.setVisibility(View.VISIBLE);
-        linearUser.setVisibility(View.INVISIBLE);
-        linearQQ.setVisibility(View.VISIBLE);
-        linearStart.setVisibility(View.INVISIBLE);
-    }
 
-
-    /**
-     * 开启线程，根据头像的url获取bitmap
-     */
-    public void urlToImgBitmap(final String imageUrl) {
-        new Thread(){
-            @Override
-            public void run() {
-                //显示网络上的图片
-                Bitmap bitmap = null;
-                HttpURLConnection conn = null;
-                InputStream is = null;
-                try {
-                    URL myFileUrl = new URL(imageUrl);
-                    conn = (HttpURLConnection) myFileUrl.openConnection();
-                    conn.setDoInput(true);
-                    conn.connect();
-                    is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                    is.close();
-                    Message message = new Message();
-                    message.obj = bitmap;
-                    message.what = 2;
-                    mHandler.sendMessage(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    conn.disconnect();
-                }
-            }
-        }.start();
-    }
+//    /**
+//     * 开启线程，根据头像的url获取bitmap
+//     */
+//    public void urlToImgBitmap(final String imageUrl) {
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                //显示网络上的图片
+//                Bitmap bitmap = null;
+//                HttpURLConnection conn = null;
+//                InputStream is = null;
+//                try {
+//                    URL myFileUrl = new URL(imageUrl);
+//                    conn = (HttpURLConnection) myFileUrl.openConnection();
+//                    conn.setDoInput(true);
+//                    conn.connect();
+//                    is = conn.getInputStream();
+//                    bitmap = BitmapFactory.decodeStream(is);
+//                    is.close();
+//                    Message message = new Message();
+//                    message.obj = bitmap;
+//                    message.what = 2;
+//                    mHandler.sendMessage(message);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    conn.disconnect();
+//                }
+//            }
+//        }.start();
+//    }
 
 
     /**
@@ -603,4 +668,5 @@ public class LoginActivity extends AppCompatActivity {
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
     }
+
 }

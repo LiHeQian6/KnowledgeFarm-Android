@@ -1,9 +1,17 @@
 package com.li.knowledgefarm.Login;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,20 +20,30 @@ import com.li.knowledgefarm.Login.Interpolator.JellyInterpolator;
 import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
 import com.li.knowledgefarm.Login.dialog.RegistAccountDialog;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.User;
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.li.knowledgefarm.Login.LoginActivity.parsr;
 
 public class LoginByAccountActivity extends AppCompatActivity {
 
@@ -38,8 +56,22 @@ public class LoginByAccountActivity extends AppCompatActivity {
     private float mWidth, mHeight;
 
     private LinearLayout mName, mPsw;
+    private String accountStr;
+    private String pwdStr;
 
     private TextView registAccount;
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 5:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +94,10 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mName = findViewById(R.id.input_layout_name);
         mPsw = findViewById(R.id.input_layout_psw);
         registAccount = findViewById(R.id.registAccount);
+        EditText edtCount = findViewById(R.id.accout);
+        EditText pwd = findViewById(R.id.pwd);
+        accountStr = edtCount.getText().toString();
+        pwdStr = pwd.getText().toString();
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +117,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                         /**
                          *要执行的操作
                          */
+                        loginByAccount();
                     }
                 };
                 Timer timer = new Timer();
@@ -95,6 +132,34 @@ public class LoginByAccountActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void loginByAccount() {
+        //Request对象(Post、FormBody)
+        FormBody formBody = new FormBody.Builder()
+                .add("account",accountStr)
+                .add("pwd",pwdStr)
+                .build();
+        Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/loginByOpenId").build();
+        //Call
+        Call call = new OkHttpClient().newCall(request);
+        //异步请求
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("jing", "请求失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.i("jing", response.body().string());
+                Message message = new Message();
+                message.what = 5;
+                message.obj = parsr(URLDecoder.decode(response.body().string()), User.class);
+                handler.sendMessage(message);
+            }
+        });
+    }
+
     private void showRegistDialog() {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
