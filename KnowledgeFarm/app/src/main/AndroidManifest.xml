@@ -6,31 +6,39 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:allowBackup="true"
+        android:fitsSystemWindows="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".Login.StartActivity"
+            android:screenOrientation="landscape"
         android:fitsSystemWindows="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
+        android:theme="@style/AppTheme"/>
         <activity android:name=".Shop.ShopActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".Main.MainActivity" android:screenOrientation="landscape"/>
         <activity android:name=".Login.LoginByAccountActivity"
             android:screenOrientation="landscape"></activity>
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".Login.LoginActivity"
+        <activity
+            android:name=".Login.LoginActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,18 +58,19 @@
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".Study.MathActivity"
+        <activity
+            android:name=".Study.MathActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/customApp"></activity>
-        <activity android:name=".Study.SubjectListActivity"
+            android:theme="@style/customApp" />
+        <activity
+            android:name=".Study.SubjectListActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/customApp"/>
+            android:theme="@style/customApp" />
         <activity
             android:name=".Settings.SettingActivity"
             android:screenOrientation="landscape"
             android:theme="@style/customApp">
             <intent-filter>
-
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

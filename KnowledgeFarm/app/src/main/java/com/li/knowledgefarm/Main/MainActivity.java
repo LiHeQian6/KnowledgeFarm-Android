@@ -11,20 +11,15 @@ import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.net.wifi.aware.DiscoverySession;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.os.Message;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -45,6 +40,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.Crop;
 
 import org.jetbrains.annotations.NotNull;
@@ -54,9 +50,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private Handler bagMessagesHandler;
     private Gson gson;
-    private List<BagMessagesBean> dataList;
+    private List<BagCropNumber> dataList;
     private Map<Integer, Crop> cropList;
     private Handler cropMessagesHandler=new Handler(){
         @Override
@@ -111,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         getViews();
         addListener();
         getCrop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         showUserInfo();
     }
 
@@ -119,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/usercrop/initUserCrop?userId="+LoginActivity.user.getId()).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/usercrop/initUserCrop?userId="+LoginActivity.user.getId()).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -162,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
             ImageView plant = new ImageView(this);
             RelativeLayout relativeLayout = new RelativeLayout(this);
             relativeLayout.addView(land);
-            relativeLayout.addView(plant);
             ViewGroup.LayoutParams lp = new RelativeLayout.LayoutParams(160,160);
             land.setLayoutParams(lp);
             plant.setLayoutParams(lp);
@@ -170,13 +167,27 @@ public class MainActivity extends AppCompatActivity {
             if(LoginActivity.user.getLandStauts(finalI)==-1) {
                 if(flag==0){
                     plant.setImageResource(R.drawable.kuojian);
+                    plant.setRotationX(-30);
+                    relativeLayout.addView(plant);
+                    plant.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //TODO 扩建土地
+                        }
+                    });
                     flag++;
                 }
                 land.setImageResource(R.drawable.land_green);
-                plant.setRotationX(-50);
             }
-            else if (LoginActivity.user.getLandStauts(finalI)==0)
+            else if (LoginActivity.user.getLandStauts(finalI)==0) {
                 land.setImageResource(R.drawable.land);
+                land.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO 种植
+                    }
+                });
+            }
             else {
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.huancun)
@@ -187,13 +198,14 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(this).load(cropList.get(LoginActivity.user.getLandStauts(finalI)).getImg1()).apply(requestOptions).into(plant);
                 plant.setRotation(-10);
                 plant.setRotationX(-30);
+                relativeLayout.addView(plant);
+                plant.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO 浇水施肥收获
+                    }
+                });
             }
-            land.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.e("aaaa","点击了land"+ finalI);
-                }
-            });
 
             lands.addView(relativeLayout);
         }
@@ -271,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/bag/initUserBag?userId="+LoginActivity.user.getId()).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/bag/initUserBag?userId="+LoginActivity.user.getId()).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -314,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 String messages = (String)msg.obj;
                 if(!messages.equals("Fail")){
-                    Type type = new TypeToken<List<BagMessagesBean>>(){}.getType();
+                    Type type = new TypeToken<List<BagCropNumber>>(){}.getType();
                     dataList = gson.fromJson(messages,type);
                     BagCustomerAdapter customerAdapter = new BagCustomerAdapter(alertBuilder.getContext(),dataList,R.layout.gird_adapteritem);
                     gridView.setAdapter(customerAdapter);
@@ -325,6 +337,10 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         WindowManager.LayoutParams attrs = bagDialog.getWindow().getAttributes();
+        if (bagDialog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            bagDialog.getWindow().setDimAmount(0f);//去除遮罩
+        }
         attrs.gravity = Gravity.RIGHT;
         final float scale = this.getResources().getDisplayMetrics().density;
         attrs.width = (int)(300*scale+0.5f);

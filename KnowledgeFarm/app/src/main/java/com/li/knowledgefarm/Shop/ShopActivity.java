@@ -1,8 +1,6 @@
 package com.li.knowledgefarm.Shop;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +22,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.ShopItemBean;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,6 +55,7 @@ public class ShopActivity extends AppCompatActivity {
     private ImageView imgBtnJian;
     private ImageView imgBtnPlus;
     private EditText shopNumber;
+    private Handler doAfterAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,8 +174,8 @@ public class ShopActivity extends AppCompatActivity {
      * @return void
      */
     @SuppressLint("ResourceType")
-    private void showSingleAlertDialog(int position){
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
+    private void showSingleAlertDialog(final int position){
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.shop_dialog, null);
         Button button = layout.findViewById(R.id.buy);
@@ -189,14 +190,38 @@ public class ShopActivity extends AppCompatActivity {
         shopNumber.setText("1");
         alertBuilder.setView(layout);
         thisName.setText("名称："+shopList.get(position).getName());
-        thisPrice.setText("价格："+shopList.get(position).getPrice()+"");
+        thisPrice.setText("单价："+shopList.get(position).getPrice()+"");
         thisTime.setText("成熟时间："+shopList.get(position).getMatureTime()+"");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                buyFlowers(
+                        LoginActivity.user.getId(),
+                        shopList.get(position).getId(),
+                        Integer.parseInt(shopNumber.getText().toString().trim())
+                );
             }
         });
+        doAfterAdd = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String addCallBack = (String)msg.obj;
+                if(addCallBack.equals("true")){
+                    int newMoney = LoginActivity.user.getMoney() - Integer.parseInt(shopNumber.getText().toString().trim())*shopList.get(position).getPrice();
+                    LoginActivity.user.setMoney(newMoney);
+                    Toast toast = Toast.makeText(alertBuilder.getContext(),"购买成功！",Toast.LENGTH_SHORT);
+                    toast.show();
+                    alertDialog.dismiss();
+                }else if(addCallBack.equals("notEnoughMoney")){
+                    Toast toast = Toast.makeText(alertBuilder.getContext(),"你的钱不够了哦！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }else{
+                    Toast toast = Toast.makeText(alertBuilder.getContext(),"添加失败！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +239,40 @@ public class ShopActivity extends AppCompatActivity {
         alertDialog.getWindow().setAttributes(attrs);
     }
 
+    /**
+     * @Description 上传购买种子信息
+     * @Auther 孙建旺
+     * @Date 下午 3:08 2019/12/09
+     * @Param []
+     * @return void
+     */
+    private void buyFlowers(final int userID, final int cropId, final int num){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/buyCrop?userId="+userID+"&cropId="+cropId+"&number="+num).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        String addCallback = "Fail";
+                        Message message = Message.obtain();
+                        message.obj = addCallback;
+                        doAfterAdd.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String addCallback = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = addCallback;
+                        doAfterAdd.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
 
     /**
      * @Description 获取控件ID及初始化
@@ -244,9 +303,8 @@ public class ShopActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/crop/initCrop")
+                        .url(getResources().getString(R.string.URL)+"/crop/initCrop")
                         .build();
-                Log.i("Ip","http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/crop/initCrop");
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override

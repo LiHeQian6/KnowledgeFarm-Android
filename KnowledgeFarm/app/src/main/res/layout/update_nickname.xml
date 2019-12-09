@@ -34,6 +34,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:maxLength="20"
+            android:imeOptions="flagNoExtractUi"
             android:hint="记得填写昵称哦"
             android:textColorHint="#808080"/>
         <TextView

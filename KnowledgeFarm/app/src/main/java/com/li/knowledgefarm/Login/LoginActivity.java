@@ -2,8 +2,17 @@ package com.li.knowledgefarm.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -12,12 +21,16 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,14 +73,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private TextView logo;
     /**
-     * 用户昵称
-     */
-    private TextView tvUserName;
-    /**
-     * 用户头像
-     */
-    private ImageView ivUserImage;
-    /**
      * 点击第三方登陆按钮
      */
     private Button btnQQ;
@@ -75,11 +80,9 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 点击注销按钮
      */
-    private Button btnRegout;
     private LinearLayout linearUser;
     private LinearLayout linearQQ;
     private LinearLayout linearStart;
-    private Button btnStart;
     /**
      * 用户信息
      */
@@ -91,12 +94,11 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI
      */
-    private Tencent mTencent;
+    public static Tencent mTencent;
     /**
      * 其中mAppId是分配给第三方应用的appid，类型为String
      */
     public String mAppId = "101827462";//101827370
-    public static String serverURL = "http://10.7.87.220:8080/FarmKnowledge/";
     /**
      * 授权登录监听器
      */
@@ -112,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
     public static User user;
     private String openID;
     private String accessToken;
-    private RelativeLayout loginRelative;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -121,30 +122,51 @@ public class LoginActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1:       //登录成功
                     Log.e("jing","noVisibility");
-                    logo.setVisibility(View.INVISIBLE);
-                    linearUser.setVisibility(View.VISIBLE);
-                    linearQQ.setVisibility(View.INVISIBLE);
-                    linearStart.setVisibility(View.VISIBLE);
-                    Log.e("jing","noVisibility2");
                     user = (User) msg.obj;
-                    tvUserName.setText(user.getNickName());
-                    urlToImgBitmap(user.getPhoto());
-                    showNotifyDialog();
+                    if(user.getExist()==0){
+                        Toast.makeText(getApplicationContext(),"账号已不存在！",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Intent intentToStart = new Intent(LoginActivity.this,StartActivity.class);
+                        intentToStart.setAction("QQLogin");
+                        startActivity(intentToStart);
+                        finish();
+
+//                        logo.setVisibility(View.INVISIBLE);
+//                        linearUser.setVisibility(View.VISIBLE);
+//                        linearQQ.setVisibility(View.INVISIBLE);
+//                        linearStart.setVisibility(View.VISIBLE);
+//                        Log.e("jing","noVisibility2");
+//                        tvUserName.setText(user.getNickName());
+//                        urlToImgBitmap(user.getPhoto());
+//                        showNotifyDialog();
+                    }
                     break;
-                case 2:     //返回头像的Bitmap
-                    Bitmap bitmap = (Bitmap) msg.obj;
-                    ivUserImage.setImageBitmap(bitmap);
-                    break;
+//                case 2:     //返回头像的Bitmap
+//                    Bitmap bitmap = (Bitmap) msg.obj;
+//                    ivUserImage.setImageBitmap(bitmap);
+//                    break;
                 case 3:
-                    logo.setVisibility(View.INVISIBLE);
-                    linearUser.setVisibility(View.VISIBLE);
-                    linearQQ.setVisibility(View.INVISIBLE);
-                    linearStart.setVisibility(View.VISIBLE);
                     user = (User) msg.obj;
-                    tvUserName.setText(user.getNickName());
-                    urlToImgBitmap(user.getPhoto());
+                    if(user.getExist()==0){
+                        Toast.makeText(getApplicationContext(),"账号已不存在！",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Intent autoToStart = new Intent(LoginActivity.this,StartActivity.class);
+                        autoToStart.setAction("autoLogin");
+                        startActivity(autoToStart);
+                        finish();
+//                        logo.setVisibility(View.INVISIBLE);
+//                        linearUser.setVisibility(View.VISIBLE);
+//                        linearQQ.setVisibility(View.INVISIBLE);
+//                        linearStart.setVisibility(View.VISIBLE);
+//
+//                        tvUserName.setText(user.getNickName());
+//                        urlToImgBitmap(user.getPhoto());
+                    }
+
                     break;
                 case 0:     //登录失败
+                    Toast.makeText(getApplicationContext(),"登录失败！",Toast.LENGTH_SHORT).show();
+
                     break;
 
             }
@@ -161,23 +183,19 @@ public class LoginActivity extends AppCompatActivity {
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-
+        setStatusBar();
         getViews();
         autoLogin();
         registListener();
     }
+
     /**
      * 初始化视图
      */
     private void getViews() {
         logo = findViewById(R.id.logo);
-        btnRegout = findViewById(R.id.btnRegout);
-        btnStart = findViewById(R.id.btnStart);
         btnQQ = findViewById(R.id.btnQQ);
         btnAccount = findViewById(R.id.btnAccount);
-        tvUserName = findViewById(R.id.tvUserName);
-        ivUserImage = findViewById(R.id.ivUserImage);
-        loginRelative = findViewById(R.id.loginRelative);
         linearUser = findViewById(R.id.linearUser);
         linearQQ = findViewById(R.id.linearQQ);
         linearStart = findViewById(R.id.linearStart);
@@ -189,9 +207,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void registListener() {
         listener = new CustomerListener();
-        btnRegout.setOnClickListener(listener);
         btnQQ.setOnClickListener(listener);
-        btnStart.setOnClickListener(listener);
         btnAccount.setOnClickListener(listener);
     }
 
@@ -207,23 +223,38 @@ public class LoginActivity extends AppCompatActivity {
                 case R.id.btnQQ:
                     onClickLogin();
                     break;
-                /** 点击注销*/
-                case R.id.btnRegout:
-                    regout();
-                    break;
-                case R.id.btnStart:
-                    Intent intentStartGame = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intentStartGame);
-                    break;
+
                 case R.id.btnAccount:
                     Intent intentLoginByAccount = new Intent(LoginActivity.this, LoginByAccountActivity.class);
                     startActivity(intentLoginByAccount);
                     break;
-                case R.id.registAccount:
-                    break;
             }
         }
     }
+    //退出时的时间
+    private long mExitTime;
+    //对返回键进行监听
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+
+            exit();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void exit() {
+        if ((System.currentTimeMillis() - mExitTime) > 2000) {
+            Toast.makeText(LoginActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+        } else {
+            finish();
+            System.exit(0);
+        }
+    }
+
 
     private void autoLogin(){
         SharedPreferences sp = getSharedPreferences("token", MODE_PRIVATE);
@@ -305,7 +336,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                doJsonPost2(serverURL+"user/loginByOpenId",
+                asyncAutoLogin(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                         jsonObject.toString());
             }
         }.start();
@@ -329,22 +360,22 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject json = (JSONObject) response;
                     Log.i("lww", "返回用户消息：" + response.toString());
                     /** 昵称*/
-                    String nickname = null;
+                    String nkname = null;
                     try {
-                        nickname = ((JSONObject) response).getString("nickname");
+                        nkname = ((JSONObject) response).getString("nickname");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     /** 头像*/
-                    String path = null;
+                    String npath = null;
                     try {
-                        path = json.getString("figureurl_qq_2");
+                        npath = json.getString("figureurl_qq_2");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    final String Nickname = nickname;
-                    final String Path = URLEncoder.encode(path);
+                    final String Nickname = nkname;
+                    final String Path = URLEncoder.encode(npath);
                     new Thread() {
                         @Override
                         public void run() {
@@ -356,7 +387,7 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            doJsonPost(serverURL+"user/loginByOpenId",
+                            asyncByJson(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                                     jsonObject.toString());
                         }
                     }.start();
@@ -374,179 +405,83 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private String doJsonPost(String urlPath, String Json) {
-        // HttpClient 6.0被抛弃了
-        String result = "";
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(urlPath);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("Charset", "UTF-8");
-            // 设置文件类型:
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            // 设置接收类型否则返回415错误
-            //conn.setRequestProperty("accept","*/*")此处为暴力方法设置接受所有类型，以此来防范返回415;
-            conn.setRequestProperty("accept", "application/json");
-            // 往服务器里面发送数据
-            if (Json != null && !TextUtils.isEmpty(Json)) {
-                byte[] writebytes = Json.getBytes();
-                // 设置文件长度
-                conn.setRequestProperty("Content-Length", String.valueOf(writebytes.length));
-                OutputStream out = conn.getOutputStream();
-                out.write(Json.getBytes());
-                out.flush();
-                out.close();
-            }
-            if (conn.getResponseCode() == 200) {
-                reader = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream()));
-                result = reader.readLine();
-                Log.e("re", result);
-                Log.e("result", URLDecoder.decode(result));
-                Message message = new Message();
-                if (result.equals("false")) {
-                    message.what = 0;
-                    mHandler.sendMessage(message);
-                } else {
-                    message.what = 1;
-                    message.obj = parsr(URLDecoder.decode(result), User.class);
-                    user = (User) message.obj;
-                    mHandler.sendMessage(message);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private String doJsonPost2(String urlPath, String Json) {
-        // HttpClient 6.0被抛弃了
-        String result = "";
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(urlPath);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("Charset", "UTF-8");
-            // 设置文件类型:
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            // 设置接收类型否则返回415错误
-            //conn.setRequestProperty("accept","*/*")此处为暴力方法设置接受所有类型，以此来防范返回415;
-            conn.setRequestProperty("accept", "application/json");
-            // 往服务器里面发送数据
-            if (Json != null && !TextUtils.isEmpty(Json)) {
-                byte[] writebytes = Json.getBytes();
-                // 设置文件长度
-                conn.setRequestProperty("Content-Length", String.valueOf(writebytes.length));
-                OutputStream out = conn.getOutputStream();
-                out.write(Json.getBytes());
-                out.flush();
-                out.close();
-            }
-            if (conn.getResponseCode() == 200) {
-                reader = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream()));
-                result = reader.readLine();
-                Log.e("re", result);
-                Log.e("result", URLDecoder.decode(result));
-                Message message = new Message();
-                if (result.equals("false")) {
-                    message.what = 0;
-                    mHandler.sendMessage(message);
-                } else {
-                    message.what = 3;
-                    message.obj = parsr(URLDecoder.decode(result), User.class);
-                    user = (User) message.obj;
-                    mHandler.sendMessage(message);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * 注销
-     */
-    private void regout() {
-        //注销登陆
-        mTencent.logout(getApplicationContext());
-
-        SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.commit();
-        user = null;
-        //更新视图
-        logo.setVisibility(View.VISIBLE);
-        linearUser.setVisibility(View.INVISIBLE);
-        linearQQ.setVisibility(View.VISIBLE);
-        linearStart.setVisibility(View.INVISIBLE);
-    }
-
-
-    /**
-     * 开启线程，根据头像的url获取bitmap
-     */
-    public void urlToImgBitmap(final String imageUrl) {
+    private void asyncByJson(final String urlPath, final String Json) {
         new Thread(){
             @Override
             public void run() {
-                //显示网络上的图片
-                Bitmap bitmap = null;
-                HttpURLConnection conn = null;
-                InputStream is = null;
-                try {
-                    URL myFileUrl = new URL(imageUrl);
-                    conn = (HttpURLConnection) myFileUrl.openConnection();
-                    conn.setDoInput(true);
-                    conn.connect();
-                    is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                    is.close();
-                    Message message = new Message();
-                    message.obj = bitmap;
-                    message.what = 2;
-                    mHandler.sendMessage(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    conn.disconnect();
-                }
+                super.run();
+                MediaType type = MediaType.parse("text/plain");
+                RequestBody body = RequestBody.create(Json,type);
+                Request request = new Request.Builder()
+                        .url(urlPath)
+                        .post(body)
+                        .build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e("jing", "请求失败");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result =  response.body().string();
+                        Message message = new Message();
+                        if (result.equals("false")) {
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        } else {
+                            message.what = 1;
+                            message.obj = parsr(URLDecoder.decode(result), User.class);
+                            user = (User) message.obj;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
         }.start();
+
     }
 
+    private void asyncAutoLogin(final String urlPath, final String Json) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                MediaType type = MediaType.parse("text/plain");
+                RequestBody body = RequestBody.create(Json,type);
+                Request request = new Request.Builder()
+                        .url(urlPath)
+                        .post(body)
+                        .build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e("jing", "请求失败");
+                        e.printStackTrace();
+                    }
 
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result =  response.body().string();
+                        Message message = new Message();
+                        if (result.equals("false")) {
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        } else {
+                            message.what = 3;
+                            message.obj = parsr(URLDecoder.decode(result), User.class);
+                            user = (User) message.obj;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
+            }
+        }.start();
+
+    }
     /**
      * Json转换为对象
      */
@@ -573,14 +508,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-    private void showNotifyDialog() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        NotifyAccountDialog notifyAccountDialog = new NotifyAccountDialog();
-        if(!notifyAccountDialog.isAdded()){
-            transaction.add(notifyAccountDialog,"notify");
+
+    /**
+     * @Description 设置状态栏
+     * @Auther 孙建旺
+     * @Date 下午 2:28 2019/12/09
+     * @Param []
+     * @return void
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
-        transaction.show(notifyAccountDialog);
-        transaction.commitAllowingStateLoss();
     }
+
 }

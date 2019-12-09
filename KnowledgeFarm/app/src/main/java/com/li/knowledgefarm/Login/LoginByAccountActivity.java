@@ -1,31 +1,51 @@
 package com.li.knowledgefarm.Login;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.li.knowledgefarm.Login.Interpolator.JellyInterpolator;
 import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
 import com.li.knowledgefarm.Login.dialog.RegistAccountDialog;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.User;
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.li.knowledgefarm.Login.LoginActivity.parsr;
 
 public class LoginByAccountActivity extends AppCompatActivity {
 
@@ -38,8 +58,22 @@ public class LoginByAccountActivity extends AppCompatActivity {
     private float mWidth, mHeight;
 
     private LinearLayout mName, mPsw;
+    private String accountStr;
+    private String pwdStr;
 
     private TextView registAccount;
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 5:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +85,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
+        setStatusBar();
         initView();
         recovery();
     }
@@ -62,6 +97,10 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mName = findViewById(R.id.input_layout_name);
         mPsw = findViewById(R.id.input_layout_psw);
         registAccount = findViewById(R.id.registAccount);
+        EditText edtCount = findViewById(R.id.accout);
+        EditText pwd = findViewById(R.id.pwd);
+        accountStr = edtCount.getText().toString();
+        pwdStr = pwd.getText().toString();
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,10 +120,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
                         /**
                          *要执行的操作
                          */
+                        loginByAccount();
                     }
                 };
                 Timer timer = new Timer();
-                timer.schedule(task, 5000);
+                timer.schedule(task, 4000);
             }
         });
 
@@ -95,6 +135,34 @@ public class LoginByAccountActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void loginByAccount() {
+        //Request对象(Post、FormBody)
+        FormBody formBody = new FormBody.Builder()
+                .add("account",accountStr)
+                .add("pwd",pwdStr)
+                .build();
+        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByOpenId").build();
+        //Call
+        Call call = new OkHttpClient().newCall(request);
+        //异步请求
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("jing", "请求失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.i("jing", response.body().string());
+                Message message = new Message();
+                message.what = 5;
+                message.obj = parsr(URLDecoder.decode(response.body().string()), User.class);
+                handler.sendMessage(message);
+            }
+        });
+    }
+
     private void showRegistDialog() {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -204,5 +272,21 @@ public class LoginByAccountActivity extends AppCompatActivity {
         animator2.setDuration(500);
         animator2.setInterpolator(new AccelerateDecelerateInterpolator());
         animator2.start();
+    }
+
+
+    /**
+     * @Description 设置状态栏
+     * @Auther 孙建旺
+     * @Date 下午 4:20 2019/12/09
+     * @Param []
+     * @return void
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
+        }
     }
 }

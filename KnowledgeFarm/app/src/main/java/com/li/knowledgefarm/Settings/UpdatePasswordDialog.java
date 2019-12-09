@@ -130,7 +130,7 @@ public class UpdatePasswordDialog extends PopupWindow {
                     @Override
                     public void run() {
                         FormBody formBody = new FormBody.Builder().add("accout", "71007839").add("oldPassword", oldPassword).add("newPassword", newPassword).build();
-                        final Request request = new Request.Builder().post(formBody).url("http://" + context.getResources().getString(R.string.IP) + ":8080/FarmKnowledge/user/updateUserPassword").build();
+                        final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
                         Call call = okHttpClient.newCall(request);
                         call.enqueue(new Callback() {
                             @Override
