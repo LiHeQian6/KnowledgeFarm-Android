@@ -45,6 +45,8 @@
                             android:id="@+id/thisName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:text="名称："
                             android:textColor="@color/blackTextColor">
 
                         </TextView>
@@ -53,12 +55,18 @@
                             android:id="@+id/thisTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="成熟时间："
+                            android:textSize="20sp"
+                            android:layout_marginTop="10dp"
                             android:textColor="@color/blackTextColor"/>
 
                         <TextView
                             android:id="@+id/thisPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:text="单价："
+                            android:layout_marginTop="10dp"
                             android:textColor="@color/blackTextColor">
 
                         </TextView>
@@ -66,7 +74,8 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
                         <ImageView
                             android:id="@+id/imgBtnJian"
@@ -82,6 +91,8 @@
                             android:layout_height="40dp"
                             android:background="@drawable/edittext_solid"
                             android:inputType="number"
+                            android:textSize="20dp"
+                            android:text="1"
                             android:imeOptions="flagNoExtractUi"
                             android:textColor="@color/blackTextColor">
                         </EditText>

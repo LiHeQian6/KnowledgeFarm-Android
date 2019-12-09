@@ -189,7 +189,7 @@ public class ShopActivity extends AppCompatActivity {
         shopNumber.setText("1");
         alertBuilder.setView(layout);
         thisName.setText("名称："+shopList.get(position).getName());
-        thisPrice.setText("价格："+shopList.get(position).getPrice()+"");
+        thisPrice.setText("单价："+shopList.get(position).getPrice()+"");
         thisTime.setText("成熟时间："+shopList.get(position).getMatureTime()+"");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
