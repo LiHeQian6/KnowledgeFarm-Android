@@ -11,6 +11,7 @@ import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -20,9 +21,11 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -167,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
             if(LoginActivity.user.getLandStauts(finalI)==-1) {
                 if(flag==0){
                     plant.setImageResource(R.drawable.kuojian);
-                    plant.setRotationX(-30);
                     relativeLayout.addView(plant);
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -346,6 +348,45 @@ public class MainActivity extends AppCompatActivity {
         attrs.width = (int)(300*scale+0.5f);
         attrs.height =(int)(400*scale+0.5f);
         bagDialog.getWindow().setAttributes(attrs);
+        planting(gridView);
+    }
+
+    private void planting(GridView gridView) {
+        final RelativeLayout touch = findViewById(R.id.touch);
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ImageView bagPlant = view.findViewById(R.id.bag_flower_img);
+                Log.e("aaa","发生了长按事件");
+                final DrawView drawView= new DrawView(getApplicationContext(),null);
+                drawView.setImageDrawable(bagPlant.getDrawable());
+
+                touch.addView(drawView);
+//                touch.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View view, MotionEvent motionEvent) {
+//                        switch (motionEvent.getAction()) {
+//                            case MotionEvent.ACTION_DOWN:
+//                                break;
+//                            case MotionEvent.ACTION_MOVE:
+//                                Log.e("aaa","移动");
+//                                ViewGroup.MarginLayoutParams margin9 = new ViewGroup.MarginLayoutParams(
+//                                        drawView.getLayoutParams());
+//                                margin9.setMargins((int) motionEvent.getX(), (int) motionEvent.getY(), 0, 0);//在左边距400像素，顶边距10像素的位置显示图片
+//                                RelativeLayout.LayoutParams layoutParams9 = new RelativeLayout.LayoutParams(margin9);
+//                                drawView.setLayoutParams(layoutParams9);
+//                                break;
+//                            case MotionEvent.ACTION_UP:
+//                                break;
+//                            case MotionEvent.ACTION_CANCEL:
+//                                break;
+//                        }
+//                        return true;
+//                    }
+//                });
+                return false;
+            }
+        });
     }
 
     protected void setStatusBar() {
