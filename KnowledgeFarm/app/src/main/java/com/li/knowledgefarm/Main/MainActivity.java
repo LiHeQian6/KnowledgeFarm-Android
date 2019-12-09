@@ -11,6 +11,8 @@ import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -102,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         getViews();
         addListener();
         getCrop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         showUserInfo();
     }
 
@@ -153,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
             ImageView plant = new ImageView(this);
             RelativeLayout relativeLayout = new RelativeLayout(this);
             relativeLayout.addView(land);
-            relativeLayout.addView(plant);
             ViewGroup.LayoutParams lp = new RelativeLayout.LayoutParams(160,160);
             land.setLayoutParams(lp);
             plant.setLayoutParams(lp);
@@ -161,13 +167,27 @@ public class MainActivity extends AppCompatActivity {
             if(LoginActivity.user.getLandStauts(finalI)==-1) {
                 if(flag==0){
                     plant.setImageResource(R.drawable.kuojian);
+                    plant.setRotationX(-30);
+                    relativeLayout.addView(plant);
+                    plant.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //TODO 扩建土地
+                        }
+                    });
                     flag++;
                 }
                 land.setImageResource(R.drawable.land_green);
-                plant.setRotationX(-50);
             }
-            else if (LoginActivity.user.getLandStauts(finalI)==0)
+            else if (LoginActivity.user.getLandStauts(finalI)==0) {
                 land.setImageResource(R.drawable.land);
+                land.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO 种植
+                    }
+                });
+            }
             else {
                 RequestOptions requestOptions = new RequestOptions()
                         .placeholder(R.drawable.huancun)
@@ -178,13 +198,14 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(this).load(cropList.get(LoginActivity.user.getLandStauts(finalI)).getImg1()).apply(requestOptions).into(plant);
                 plant.setRotation(-10);
                 plant.setRotationX(-30);
+                relativeLayout.addView(plant);
+                plant.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO 浇水施肥收获
+                    }
+                });
             }
-            land.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.e("aaaa","点击了land"+ finalI);
-                }
-            });
 
             lands.addView(relativeLayout);
         }
@@ -316,6 +337,10 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         WindowManager.LayoutParams attrs = bagDialog.getWindow().getAttributes();
+        if (bagDialog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            bagDialog.getWindow().setDimAmount(0f);//去除遮罩
+        }
         attrs.gravity = Gravity.RIGHT;
         final float scale = this.getResources().getDisplayMetrics().density;
         attrs.width = (int)(300*scale+0.5f);
