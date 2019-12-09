@@ -27,11 +27,12 @@
                 <!--android:src="@drawable/lock"-->/>
 
             <EditText
+                android:id="@+id/accout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
-                android:background="#00000000"
-                android:hint="账号/用户名/邮箱"
+                android:textColorHint="#cecece"
+                android:hint="账号"
                 android:padding="5dip"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -56,11 +57,13 @@
                 <!--android:src="@drawable/paw_left"--> />
 
             <EditText
+                android:id="@+id/pwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
                 android:background="#00000000"
                 android:hint="密码"
+                android:textColorHint="#cecece"
                 android:inputType="textPassword"
                 android:padding="5dip"
                 android:textSize="16sp" />

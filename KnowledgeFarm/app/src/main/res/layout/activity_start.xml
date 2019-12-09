@@ -2,28 +2,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/loginRelative"
-    android:background="@drawable/diologback"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/linearUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+        <ImageView
+            android:id="@+id/ivUserImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"/>
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="独角兽的荣耀"
+            android:layout_toLeftOf="@+id/ivSetting"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/btnRegout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注销"/>
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/relative1"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true">
-        <TextView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:visibility="visible"
-            android:text="知识农场"
-            android:textSize="50dp"/>
         <LinearLayout
-            android:id="@+id/linearQQ"
+            android:id="@+id/linearStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="visible"
             android:layout_below="@+id/logo"
             android:layout_marginTop="70dp">
             <TextView
@@ -31,33 +46,19 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
             <Button
-                android:id="@+id/btnQQ"
+                android:id="@+id/btnStart"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/shape_login"
-                android:text="QQ登录"
+                android:text="开始游戏"
                 android:textColor="#ffffff"
-                android:textSize="18dp"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <Button
-                android:id="@+id/btnAccount"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/shape_login2"
-                android:text="账号登录"
-                android:textColor="#ffffff"
-                android:textSize="18dp"/>
+                android:textSize="22dp"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
         </LinearLayout>
-
     </RelativeLayout>
 
 </RelativeLayout>
