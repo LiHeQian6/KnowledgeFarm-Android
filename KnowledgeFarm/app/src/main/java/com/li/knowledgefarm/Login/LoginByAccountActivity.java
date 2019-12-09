@@ -14,6 +14,7 @@ import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.li.knowledgefarm.Login.Interpolator.JellyInterpolator;
@@ -33,6 +34,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -83,6 +85,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
+        setStatusBar();
         initView();
         recovery();
     }
@@ -139,7 +142,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 .add("account",accountStr)
                 .add("pwd",pwdStr)
                 .build();
-        Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/loginByOpenId").build();
+        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByOpenId").build();
         //Call
         Call call = new OkHttpClient().newCall(request);
         //异步请求
@@ -269,5 +272,21 @@ public class LoginByAccountActivity extends AppCompatActivity {
         animator2.setDuration(500);
         animator2.setInterpolator(new AccelerateDecelerateInterpolator());
         animator2.start();
+    }
+
+
+    /**
+     * @Description 设置状态栏
+     * @Auther 孙建旺
+     * @Date 下午 4:20 2019/12/09
+     * @Param []
+     * @return void
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
+        }
     }
 }

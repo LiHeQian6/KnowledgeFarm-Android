@@ -1,8 +1,6 @@
 package com.li.knowledgefarm.Shop;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.ShopItemBean;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -209,6 +208,8 @@ public class ShopActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 String addCallBack = (String)msg.obj;
                 if(addCallBack.equals("true")){
+                    int newMoney = LoginActivity.user.getMoney() - Integer.parseInt(shopNumber.getText().toString().trim())*shopList.get(position).getPrice();
+                    LoginActivity.user.setMoney(newMoney);
                     Toast toast = Toast.makeText(alertBuilder.getContext(),"购买成功！",Toast.LENGTH_SHORT);
                     toast.show();
                     alertDialog.dismiss();

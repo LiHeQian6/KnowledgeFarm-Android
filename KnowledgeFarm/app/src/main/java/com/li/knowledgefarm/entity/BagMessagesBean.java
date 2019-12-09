@@ -1,13 +1,12 @@
-package com.li.knowledgefarm.Shop;
+package com.li.knowledgefarm.entity;
 
 /**
  * @auther 孙建旺
- * @description 商店商品信息实体类
- * @date 2019/12/07 上午 10:35
+ * @description 背包信息实体类
+ * @date 2019/12/08 下午 2:20
  */
 
-public class ShopItemBean {
-
+public class BagMessagesBean {
     private int exist;
     private String img3;
     private int matureTime;
@@ -19,7 +18,6 @@ public class ShopItemBean {
     private int value;
     private String img2;
     private String img1;
-
     public void setExist(int exist) {
         this.exist = exist;
     }

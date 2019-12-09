@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.BagMessagesBean;
 
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class BagCustomerAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.flowerImg = convertView.findViewById(R.id.bag_flower_img);
             viewHolder.name = convertView.findViewById(R.id.bag_flower_name);
+            viewHolder.number = convertView.findViewById(R.id.bag_flower_number);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
@@ -65,6 +67,7 @@ public class BagCustomerAdapter extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(dataList.get(position).getImg1()).apply(requestOptions).into(viewHolder.flowerImg);
         viewHolder.name.setText(dataList.get(position).getName());
+
         notifyDataSetChanged();
         return convertView;
     }
@@ -72,5 +75,6 @@ public class BagCustomerAdapter extends BaseAdapter {
     private class ViewHolder{
         private ImageView flowerImg;
         private TextView name;
+        private TextView number;
     }
 }

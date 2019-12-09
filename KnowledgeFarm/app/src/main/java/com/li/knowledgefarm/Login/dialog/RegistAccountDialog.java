@@ -89,7 +89,7 @@ public class RegistAccountDialog extends DialogFragment {
                 .add("pwd",password)
                 .add("email",email)
                 .build();
-        Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/loginByOpenId").build();
+        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByOpenId").build();
         //Call
         Call call = new OkHttpClient().newCall(request);
         //异步请求

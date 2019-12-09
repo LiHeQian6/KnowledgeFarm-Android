@@ -33,7 +33,7 @@
                 android:layout_marginLeft="10dip"
                 android:textColorHint="#cecece"
                 android:hint="账号"
-                android:padding="5dip"
+                android:imeOptions="flagNoExtractUi"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -65,7 +65,7 @@
                 android:hint="密码"
                 android:textColorHint="#cecece"
                 android:inputType="textPassword"
-                android:padding="5dip"
+                android:imeOptions="flagNoExtractUi"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>

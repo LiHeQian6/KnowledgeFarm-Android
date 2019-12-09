@@ -19,11 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Login.StartActivity"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme"/>
+        <activity android:name=".Login.StartActivity" android:fitsSystemWindows="true" />
         <activity android:name=".Shop.ShopActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".Main.MainActivity" android:screenOrientation="landscape"/>
         <activity android:name=".Login.LoginByAccountActivity"
