@@ -137,9 +137,10 @@
                         <th style="text-align:center;">密码</th>
                         <th style="text-align:center;">名称</th>
                         <th style="text-align:center;">头像</th>
+                        <th style="text-align:center;">年级</th>
+                        <th style="text-align:center;">邮箱</th>
                         <th style="text-align:center;">等级</th>
                         <th style="text-align:center;">经验</th>
-                        <th style="text-align:center;">年级</th>
                         <th style="text-align:center;">金币</th>
                         <th style="text-align:center;">是否在线</th>
                         <th style="text-align:center;">状态</th>
@@ -154,10 +155,24 @@
 	                        <td>${userPage.accout}</td>
 	                        <td>${userPage.password}</td>
 	                        <td>${userPage.nickName}</td>
-	                        <td><img style="width:50px;height:50px" src="${userPage.photo}" /></td>
+	                        <td>
+	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
+	                        		<img style="width:50px;height:50px;" src="${userPage.photo}"/>
+	                        	</div>
+	                        </td>
+	                        <td>
+	                        	<c:choose>
+	                        		<c:when test="${userPage.grade == '1'}">一年级上</c:when>
+	                        		<c:when test="${userPage.grade == '2'}">一年级下</c:when>
+	                        		<c:when test="${userPage.grade == '3'}">二年级上</c:when>
+	                        		<c:when test="${userPage.grade == '4'}">二年级下</c:when>
+	                        		<c:when test="${userPage.grade == '5'}">三年级上</c:when>
+	                        		<c:when test="${userPage.grade == '6'}">三年级下</c:when>
+	                        	</c:choose>
+	                        </td>
+	                        <td>${userPage.email}</td>
 	                        <td>${userPage.level}</td>
 	                        <td>${userPage.experience}</td>
-	                        <td>${userPage.grade}</td>
 	                        <td>${userPage.money}</td>
 	                        <td>
 	                        	<c:if test="${userPage.online == 1}">
@@ -171,7 +186,7 @@
 	                        	<span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
 	                        </td>
 	                        <td class="td-manage" align="center">
-	                            <a style="text-decoration:none"  onclick="getUpdateUserInfo(${userPage.id},'${ctx}/member-edit.jsp')" href="javascript:;" title="修改">
+	                            <a style="text-decoration:none" onclick="getUpdateUserInfo(${userPage.id},'${ctx}/member-edit.jsp')" href="javascript:;" title="修改">
 	                                <i class="layui-icon">&#xe642;</i>
 	                            </a>
 	                            <a title="删除" href="javascript:;" onclick="deleteOneUser(${userPage.id})" style="text-decoration:none">
