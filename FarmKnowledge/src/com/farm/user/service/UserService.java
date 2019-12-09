@@ -148,6 +148,23 @@ public class UserService {
 	public boolean updateLandCrop(int userId,String landNumber,int userCropId) {
 		return new UserDao().updateLandCrop(userId, landNumber, userCropId);
 	}
+	//扩建土地
+	public boolean extensionLand(int userId, String landNumber, int money) {
+		UserDao userDao = new UserDao();
+		boolean succeed = Db.tx(new IAtom() {
+			
+			@Override
+			public boolean run() throws SQLException {
+				boolean a1 = userDao.decreaseMoney(userId, money);
+				boolean a2 = userDao.extensionLand(userId, landNumber);
+				if(a1 && a2) {
+					return true;
+				}
+				return false;
+			}
+		});
+		return succeed;
+	}
 	//删除User表内单个用户信息（User表修改exist字段为0）
 	public boolean deleteOneUser(int userId) {
 		return new UserDao().deleteOneUser(userId);

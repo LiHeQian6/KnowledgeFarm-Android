@@ -4,7 +4,6 @@ import java.sql.SQLException;
 
 import com.farm.crop.service.CropService;
 import com.farm.model.Crop;
-import com.farm.model.User;
 import com.farm.user.dao.UserDao;
 import com.farm.user.service.UserService;
 import com.farm.userbag.service.BagService;
@@ -69,9 +68,11 @@ public class UserCropService {
 			
 			@Override
 			public boolean run() throws SQLException {
+				UserService service = new UserService();
 				boolean a1 = new UserCropDao().deleteCrop(ucId);
-				boolean a2 = new UserService().addEandM(userId, price, experience);
-				if(a1 == true && a2 == true) {
+				boolean a2 = service.addEandM(userId, price, experience);
+				boolean a3 = service.updateLandCrop(userId, landNumber, 0);
+				if(a1 == true && a2 == true && a3 == true) {
 					return true;
 				}
 				return false;

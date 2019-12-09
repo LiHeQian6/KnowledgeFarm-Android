@@ -281,5 +281,20 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
+	//À©½¨ÍÁµØ
+	public void extensionLand() {
+		int userId = getInt("userId");
+		String landNumber = get("landNumber");
+		
+		UserService service = new UserService();
+		int userMoney = new UserService().getUpdateUserInfo(userId).getInt("money");
+		if(userMoney >= 500) {
+			boolean succeed = service.extensionLand(userId, landNumber, 500);
+			renderJson(""+succeed);
+		}else {
+			renderJson("notEnoughMoney");
+		}
+	}
+	
 	
 }

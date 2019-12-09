@@ -167,6 +167,19 @@ public class UserDao {
 	public boolean updateLandCrop(int userId,String landNumber,int userCropId) {
 		return User.dao.findById(userId).set(landNumber, userCropId).update();
 	}
+	//设置奖励次数减少
+	public boolean lessRewardCount(int id) {
+		User user = User.dao.findById(id);
+		if(user != null) {
+			return User.dao.findById(id).set("rewardCount", user.getInt("rewardCount")-1).update();
+		}
+		return false;
+	}
+	//扩建土地
+	public boolean extensionLand(int userId, String landNumber) {
+		boolean succeed = User.dao.findById(userId).set(landNumber, 0).update();
+		return succeed;
+	}
 	//删除User表内单个用户信息（User表修改exist字段为0）
 	public boolean deleteOneUser(int userId) {
 		boolean succeed = User.dao.findById(userId).set("exist", 0).update();
@@ -194,14 +207,6 @@ public class UserDao {
 			succeed = list.get(0).set("exist", 1).update();
 		}
 		return succeed;
-	}
-	//设置奖励次数减少
-	public boolean lessRewardCount(int id) {
-		User user = User.dao.findById(id);
-		if(user != null) {
-			return User.dao.findById(id).set("rewardCount", user.getInt("rewardCount")-1).update();
-		}
-		return false;
 	}
 	
 	
