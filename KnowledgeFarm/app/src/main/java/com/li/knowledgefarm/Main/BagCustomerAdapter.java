@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.entity.BagMessagesBean;
+import com.li.knowledgefarm.entity.BagCropNumber;
 
 import java.util.List;
 
@@ -24,10 +24,10 @@ import java.util.List;
 public class BagCustomerAdapter extends BaseAdapter {
 
     private Context context;
-    private List<BagMessagesBean> dataList;
+    private List<BagCropNumber> dataList;
     private int resource;
 
-    public BagCustomerAdapter(Context context, List<BagMessagesBean> dataList, int resource) {
+    public BagCustomerAdapter(Context context, List<BagCropNumber> dataList, int resource) {
         this.context = context;
         this.dataList = dataList;
         this.resource = resource;
@@ -65,9 +65,9 @@ public class BagCustomerAdapter extends BaseAdapter {
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.loading)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(context).load(dataList.get(position).getImg1()).apply(requestOptions).into(viewHolder.flowerImg);
-        viewHolder.name.setText(dataList.get(position).getName());
-
+        Glide.with(context).load(dataList.get(position).getCrop().getImg1()).apply(requestOptions).into(viewHolder.flowerImg);
+        viewHolder.name.setText(dataList.get(position).getCrop().getName());
+        viewHolder.number.setText("*"+dataList.get(position).getNumber());
         notifyDataSetChanged();
         return convertView;
     }

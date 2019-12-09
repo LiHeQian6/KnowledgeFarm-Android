@@ -38,7 +38,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
-import com.li.knowledgefarm.entity.BagMessagesBean;
+import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.Crop;
 
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private Handler bagMessagesHandler;
     private Gson gson;
-    private List<BagMessagesBean> dataList;
+    private List<BagCropNumber> dataList;
     private Map<Integer, Crop> cropList;
     private Handler cropMessagesHandler=new Handler(){
         @Override
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 String messages = (String)msg.obj;
                 if(!messages.equals("Fail")){
-                    Type type = new TypeToken<List<BagMessagesBean>>(){}.getType();
+                    Type type = new TypeToken<List<BagCropNumber>>(){}.getType();
                     dataList = gson.fromJson(messages,type);
                     BagCustomerAdapter customerAdapter = new BagCustomerAdapter(alertBuilder.getContext(),dataList,R.layout.gird_adapteritem);
                     gridView.setAdapter(customerAdapter);
