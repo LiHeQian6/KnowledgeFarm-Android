@@ -2,9 +2,7 @@ package com.farm.admin.controller;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,7 +19,6 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.upload.UploadFile;
 
 public class UserController extends Controller{
 	
