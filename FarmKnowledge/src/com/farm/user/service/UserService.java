@@ -52,8 +52,8 @@ public class UserService {
 	 * @throws
 	 */
 	//删除openId信息
-	public boolean deleteOpenId(String openId) {
-		return new UserDao().deleteOpenId(openId);
+	public boolean deleteOpenIdByUserId(int userId) {
+		return new UserDao().deleteOpenIdByUserId(userId);
 	}
 	//彻底删除User表内用户信息（User表delete）
 	public boolean deleteThoroughUser(int userId) {
@@ -85,6 +85,10 @@ public class UserService {
 	//修改用户密码，根据账号查询到
 	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
 		return new UserDao().updateUserPassword(oldPassword, newPassword, accout);
+	}
+	//修改用户的头像，根据账号查询到
+	public boolean updateUserPhoto(String accout, String photo) {
+		return new UserDao().updateUserPhoto(accout, photo);
 	}
 	//购买作物后，减少金币
 	public boolean decreaseMoney(int id, int money) {

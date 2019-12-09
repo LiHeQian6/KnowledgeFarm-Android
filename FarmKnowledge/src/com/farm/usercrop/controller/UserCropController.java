@@ -19,19 +19,23 @@ public class UserCropController extends Controller{
 		
 		//根据用户Id获得userCropId列表
 		List<Integer> userCropIdList = new UserService().getUserCropIdById(userId);
-		Map<Integer,Crop> cropMap = new HashMap<>();	
-		UserCropService userCropService =  new UserCropService();
-		CropService service = new CropService();
-		
-		for(int userCropId : userCropIdList) {
-			//根据userCropId查询cropId
-			int cropId = userCropService.getCropIdByUserCropId(userCropId);
-			//根据cropId获得crop作物信息
-			Crop crop = service.getUpdateCropInfo(cropId);
-			cropMap.put(userCropId, crop);
+		if(userCropIdList == null) {
+			Map<Integer,Crop> cropMap = new HashMap<>();	
+			UserCropService userCropService =  new UserCropService();
+			CropService service = new CropService();
+			
+			for(int userCropId : userCropIdList) {
+				//根据userCropId查询cropId
+				int cropId = userCropService.getCropIdByUserCropId(userCropId);
+				//根据cropId获得crop作物信息
+				Crop crop = service.getUpdateCropInfo(cropId);
+				cropMap.put(userCropId, crop);
+			}
+			renderJson(cropMap);
+		}else {
+			renderJson("{}");
 		}
 		
-		renderJson(cropMap);
 	}
 	
 	//查看作物进度

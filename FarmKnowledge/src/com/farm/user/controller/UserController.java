@@ -1,31 +1,31 @@
 package com.farm.user.controller;
 
 import java.net.URLDecoder;
+import java.sql.SQLException;
 
 import org.json.JSONObject;
 
 import com.farm.crop.service.CropService;
+import com.farm.entity.Strings;
 import com.farm.model.User;
 import com.farm.user.service.UserService;
 import com.farm.userbag.service.BagService;
 import com.farm.usercrop.service.UserCropService;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.HttpKit;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.IAtom;
 
 public class UserController extends Controller{
 	
 	//用户登录
 	public void loginByOpenId() {
 		String jsonStr =  HttpKit.readData(getRequest());
-		System.out.print(jsonStr);
 		JSONObject jsonObject = new JSONObject(jsonStr);
 		
 		String openId = jsonObject.getString("openId");
 		String nickName = jsonObject.getString("nickName");
 		String photo = URLDecoder.decode(jsonObject.getString("photo"));
-		
-		System.out.println(jsonStr);
-		System.out.println(jsonObject.toString());
 		
 		UserService service = new UserService();
 		if(service.isExistUserByOpenId(openId)) { //已存在该用户，查询用户信息
@@ -33,7 +33,7 @@ public class UserController extends Controller{
 			renderJson(user);
 		}else { 						  
 			if(!service.isExistUserByOpenIdAll(openId)) { //不存在该用户，添加用户
-				boolean addUser = service.addUser(openId, nickName, photo, "QQ", openId);
+				boolean addUser = service.addUser(openId, nickName, photo, "QQ", "");
 				if(addUser) { //添加新用户成功
 					User user = service.findUserByOpenId(openId);
 					renderJson(user);
@@ -87,11 +87,25 @@ public class UserController extends Controller{
 	public void bindingQQ() {
 		String accout = get("accout");
 		String openId = get("openId");
+		String photo = URLDecoder.decode(get("photo"));
 		
 		UserService service = new UserService();
 		if(!service.isExistUserByOpenIdAll(openId)) {
-			boolean succeed = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ");
+			
+			boolean succeed = Db.tx(new IAtom() {
+				@Override
+				public boolean run() throws SQLException {
+					boolean a1 = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ"); //添加到授权表
+					boolean a2 = service.updateUserPhoto(accout, photo); //修改成QQ头像
+					if(a1 && a2) {
+						return true;
+					}
+					return false;
+				}
+			});
+			
 			renderJson(""+succeed);
+			
 		}else { //该QQ号已被绑定
 			renderJson("already");
 		}
@@ -99,9 +113,21 @@ public class UserController extends Controller{
 	
 	//解绑QQ
 	public void unBindingQQ() {
-		String openId = get("openId");
+		String accout = get("accout");
 		
-		boolean succeed = new UserService().deleteOpenId(openId);
+		UserService service = new UserService();
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				boolean a1 = service.deleteOpenIdByUserId(service.getUserIdByAccout(accout)); //从授权表删除
+				boolean a2 = new UserService().updateUserPhoto(accout, Strings.userPhotoUrl+"0.png"); //修改成默认头像
+				if(a1 && a2) {
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		renderJson(""+succeed);
 	}
 	

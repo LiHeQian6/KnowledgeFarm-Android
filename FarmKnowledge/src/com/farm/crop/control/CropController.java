@@ -11,6 +11,11 @@ public class CropController extends Controller{
 	//加载商店所有作物信息
 	public void initCrop() {
 		List<Crop> list = new CropService().findCrop();
-		renderJson(list);
+		if(list != null) {
+			renderJson(list);
+		}else {
+			renderJson("[]");
+		}
+		
 	}
 }

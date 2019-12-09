@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.net.wifi.aware.DiscoverySession;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,7 @@ import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.entity.Crop;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,6 +57,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView learn;
@@ -73,10 +77,26 @@ public class MainActivity extends AppCompatActivity {
     private GridLayout lands;
     private Dialog bagDialog;
     private OkHttpClient okHttpClient;
-    private String bagMessages;
     private Handler bagMessagesHandler;
     private Gson gson;
     private List<BagMessagesBean> dataList;
+    private Map<Integer, Crop> cropList;
+    private Handler cropMessagesHandler=new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            String messages = (String)msg.obj;
+            Log.e("cropList",messages);
+            if(!messages.equals("Fail")){
+                Type type = new TypeToken<Map<Integer,Crop>>(){}.getType();
+                cropList = gson.fromJson(messages,type);
+                if(cropList!=null)
+                    showLand();
+            }else{
+                Toast toast = Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +110,34 @@ public class MainActivity extends AppCompatActivity {
         setStatusBar();
         getViews();
         addListener();
-        showLand();
+        getCrop();
+        showUserInfo();
+    }
+
+    private void getCrop() {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/usercrop/initUserCrop?userId="+LoginActivity.user.getId()).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        cropMessagesHandler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj = response.body().string();
+                        cropMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
     }
 
     private void showUserInfo() {
@@ -109,27 +156,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLand() {
+        int flag=0;
         for (int i=1;i<19;i++){
             ImageView land = new ImageView(this);
-            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(200,200);
+            ImageView plant = new ImageView(this);
+            RelativeLayout relativeLayout = new RelativeLayout(this);
+            relativeLayout.addView(land);
+            relativeLayout.addView(plant);
+            ViewGroup.LayoutParams lp = new RelativeLayout.LayoutParams(160,160);
             land.setLayoutParams(lp);
-            land.setImageResource(R.drawable.land);
+            plant.setLayoutParams(lp);
             final int finalI = i;
+            if(LoginActivity.user.getLandStauts(finalI)==-1) {
+                if(flag==0){
+                    plant.setImageResource(R.drawable.kuojian);
+                    flag++;
+                }
+                land.setImageResource(R.drawable.land_green);
+                plant.setRotationX(-50);
+            }
+            else if (LoginActivity.user.getLandStauts(finalI)==0)
+                land.setImageResource(R.drawable.land);
+            else {
+                RequestOptions requestOptions = new RequestOptions()
+                        .placeholder(R.drawable.huancun)
+                        .error(R.drawable.meigui)
+                        .fallback(R.drawable.meigui)
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                land.setImageResource(R.drawable.land);
+                Glide.with(this).load(cropList.get(LoginActivity.user.getLandStauts(finalI)).getImg1()).apply(requestOptions).into(plant);
+                plant.setRotation(-10);
+                plant.setRotationX(-30);
+            }
             land.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.e("aaaa","点击了land"+ finalI);
                 }
             });
-            lands.addView(land);
-        }
-        //lands.setPivotY(0);
-        //lands.setPivotX(0);
-        lands.setRotationX(30);
-        //lands.setCameraDistance(4000);
-        //lands.setRotationY(10);
-        lands.setRotation(15);
 
+            lands.addView(relativeLayout);
+        }
     }
 
     private void addListener() {
@@ -209,17 +276,15 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        bagMessages = "Fail";
                         Message message = Message.obtain();
-                        message.obj = bagMessages;
+                        message.obj ="Fail";
                         bagMessagesHandler.sendMessage(message);
                     }
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        bagMessages = response.body().string();
                         Message message = Message.obtain();
-                        message.obj = bagMessages;
+                        message.obj =response.body().string();
                         bagMessagesHandler.sendMessage(message);
                     }
                 });

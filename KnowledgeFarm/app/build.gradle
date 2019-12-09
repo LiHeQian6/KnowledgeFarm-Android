@@ -21,7 +21,7 @@ android {
 
 repositories {
     mavenCentral()
-    maven{
+    maven {
         url 'https://maven.google.com'
     }
 }

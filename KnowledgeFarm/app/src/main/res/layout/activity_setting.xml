@@ -5,20 +5,25 @@
     android:layout_height="match_parent"
     tools:context=".Settings.SettingActivity"
     android:background="@drawable/background">
-    <ImageView
-        android:id="@+id/iv_return"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:src="@drawable/jiantou"/>
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/iv_return"
-        android:layout_marginTop="5dp"
-        android:textSize="30dp"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:text="设置"/>
+        android:layout_marginTop="15dp">
+        <ImageView
+            android:id="@+id/iv_return"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:src="@drawable/jiantou"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/iv_return"
+            android:layout_marginTop="5dp"
+            android:textSize="30dp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:text="设置"/>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,15 +46,16 @@
             android:layout_height="wrap_content"
             android:text="修改密码"/>
         <Button
-            android:id="@+id/btnUpdatePhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="修改头像"/>
-        <Button
             android:id="@+id/btnBindingQQ"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="绑定QQ"/>
+        <Button
+            android:id="@+id/btnUnBindingQQ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="解绑QQ"
+            android:visibility="gone"/>
         <Button
             android:id="@+id/btnRegout"
             android:layout_width="wrap_content"

@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,9 @@ import java.net.URLEncoder;
 import java.util.Date;
 
 import com.li.knowledgefarm.R;
+
+import static androidx.constraintlayout.widget.ConstraintSet.INVISIBLE;
+import static androidx.constraintlayout.widget.ConstraintSet.VISIBLE;
 
 public class LoginActivity extends AppCompatActivity {
     /**
@@ -111,17 +115,20 @@ public class LoginActivity extends AppCompatActivity {
     public static User user;
     private String openID;
     private String accessToken;
+    private RelativeLayout loginRelative;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
+        @SuppressLint("WrongConstant")
         public void handleMessage(final Message msg) {
             switch (msg.what) {
                 case 1:       //登录成功
-
+                    Log.e("jing","noVisibility");
                     logo.setVisibility(View.INVISIBLE);
                     linearUser.setVisibility(View.VISIBLE);
                     linearQQ.setVisibility(View.INVISIBLE);
                     linearStart.setVisibility(View.VISIBLE);
+                    Log.e("jing","noVisibility2");
                     user = (User) msg.obj;
                     tvUserName.setText(user.getNickName());
                     urlToImgBitmap(user.getPhoto());
@@ -130,6 +137,15 @@ public class LoginActivity extends AppCompatActivity {
                 case 2:     //返回头像的Bitmap
                     Bitmap bitmap = (Bitmap) msg.obj;
                     ivUserImage.setImageBitmap(bitmap);
+                    break;
+                case 3:
+                    logo.setVisibility(View.INVISIBLE);
+                    linearUser.setVisibility(View.VISIBLE);
+                    linearQQ.setVisibility(View.INVISIBLE);
+                    linearStart.setVisibility(View.VISIBLE);
+                    user = (User) msg.obj;
+                    tvUserName.setText(user.getNickName());
+                    urlToImgBitmap(user.getPhoto());
                     break;
                 case 0:     //登录失败
                     break;
@@ -165,12 +181,11 @@ public class LoginActivity extends AppCompatActivity {
         btnAccount = findViewById(R.id.btnAccount);
         tvUserName = findViewById(R.id.tvUserName);
         ivUserImage = findViewById(R.id.ivUserImage);
+        loginRelative = findViewById(R.id.loginRelative);
         linearUser = findViewById(R.id.linearUser);
         linearQQ = findViewById(R.id.linearQQ);
         linearStart = findViewById(R.id.linearStart);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
-        Typeface typeface = ResourcesCompat.getFont(this, R.font.font);
-        logo.setTypeface(typeface);
     }
 
     /**
@@ -423,6 +438,66 @@ public class LoginActivity extends AppCompatActivity {
         return result;
     }
 
+    private String doJsonPost2(String urlPath, String Json) {
+        // HttpClient 6.0被抛弃了
+        String result = "";
+        BufferedReader reader = null;
+        try {
+            URL url = new URL(urlPath);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Charset", "UTF-8");
+            // 设置文件类型:
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            // 设置接收类型否则返回415错误
+            //conn.setRequestProperty("accept","*/*")此处为暴力方法设置接受所有类型，以此来防范返回415;
+            conn.setRequestProperty("accept", "application/json");
+            // 往服务器里面发送数据
+            if (Json != null && !TextUtils.isEmpty(Json)) {
+                byte[] writebytes = Json.getBytes();
+                // 设置文件长度
+                conn.setRequestProperty("Content-Length", String.valueOf(writebytes.length));
+                OutputStream out = conn.getOutputStream();
+                out.write(Json.getBytes());
+                out.flush();
+                out.close();
+            }
+            if (conn.getResponseCode() == 200) {
+                reader = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+                result = reader.readLine();
+                Log.e("re", result);
+                Log.e("result", URLDecoder.decode(result));
+                Message message = new Message();
+                if (result.equals("false")) {
+                    message.what = 0;
+                    mHandler.sendMessage(message);
+                } else {
+                    message.what = 3;
+                    message.obj = parsr(URLDecoder.decode(result), User.class);
+                    user = (User) message.obj;
+                    mHandler.sendMessage(message);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return result;
+    }
+
     /**
      * 注销
      */
@@ -510,6 +585,7 @@ public class LoginActivity extends AppCompatActivity {
             transaction.add(notifyAccountDialog,"notify");
         }
         transaction.show(notifyAccountDialog);
+        transaction.commitAllowingStateLoss();
         transaction.commitAllowingStateLoss();
     }
 

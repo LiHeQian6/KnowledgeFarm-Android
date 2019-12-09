@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:visibility="invisible">
+        android:visibility="gone">
         <ImageView
             android:id="@+id/ivUserImage"
             android:layout_width="wrap_content"
@@ -40,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:visibility="visible"
             android:text="知识农场"
             android:textSize="50dp"/>
         <LinearLayout
@@ -47,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:visibility="visible"
             android:layout_below="@+id/logo"
             android:layout_marginTop="70dp">
             <TextView
@@ -87,7 +89,7 @@
             android:orientation="horizontal"
             android:layout_below="@+id/logo"
             android:layout_marginTop="70dp"
-            android:visibility="invisible">
+            android:visibility="gone">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

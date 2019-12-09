@@ -11,10 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
@@ -31,12 +30,17 @@ import okhttp3.Response;
 public class UpdateGradeDialog extends PopupWindow {
     private View view;
     private Context context;
-    private ImageView iv_return;
+    /** 取消*/
+    private Button btnReturn;
+    /** 下拉选框*/
     private Spinner spinner;
     /** 保存*/
-    private TextView tv_save;
+    private Button btnSave;
+    /** OkHttpClient*/
     private OkHttpClient okHttpClient;
-    private String spin[] = {"一年级上","一年级下","二年级上","二年级下","三年级上","三年级下"};;
+    /** 下拉选框数据源*/
+    private String spin[] = {"一年级上","一年级下","二年级上","二年级下","三年级上","三年级下"};
+    /** 适配器*/
     private ArrayAdapter<String> arrayAdapter;
     /** 选中的年级*/
     private String newGrade;
@@ -85,7 +89,7 @@ public class UpdateGradeDialog extends PopupWindow {
         });
 
         /** 点击保存*/
-        tv_save.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 save();
@@ -93,7 +97,7 @@ public class UpdateGradeDialog extends PopupWindow {
         });
 
         /** 点击返回*/
-        iv_return.setOnClickListener(new View.OnClickListener() {
+        btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -109,8 +113,8 @@ public class UpdateGradeDialog extends PopupWindow {
         this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
         this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
         this.setFocusable(true);
-        //this.setAnimationStyle(R.style.pop_animation);
-        //ColorDrawable dw = new ColorDrawable(0xb0000000);//背景半透明
+        this.setAnimationStyle(R.style.pop_animation);
+        //ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
         ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
         this.setBackgroundDrawable(d);
     }
@@ -119,9 +123,9 @@ public class UpdateGradeDialog extends PopupWindow {
      * 初始化
      */
     private void init(){
-        iv_return = view.findViewById(R.id.iv_return);
+        btnReturn = view.findViewById(R.id.btnReturn);
         spinner = view.findViewById(R.id.spinner);
-        tv_save = view.findViewById(R.id.tv_save);
+        btnSave = view.findViewById(R.id.btnSave);
         arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_expandable_list_item_1, spin);
         spinner.setAdapter(arrayAdapter);
         okHttpClient = new OkHttpClient();
@@ -134,7 +138,6 @@ public class UpdateGradeDialog extends PopupWindow {
         new Thread(){
             @Override
             public void run() {
-
                 FormBody formBody = new FormBody.Builder().add("accout","71007839").add("grade",""+transmit(newGrade)).build();
                 final Request request = new Request.Builder().post(formBody).url("http://"+context.getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/updateUserGrade").build();
                 Call call = okHttpClient.newCall(request);

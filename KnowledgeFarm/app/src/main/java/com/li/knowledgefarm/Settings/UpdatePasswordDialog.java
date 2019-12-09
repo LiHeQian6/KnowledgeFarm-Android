@@ -29,7 +29,9 @@ import okhttp3.Response;
 public class UpdatePasswordDialog extends PopupWindow {
     private View view;
     private Context context;
+    /** 返回*/
     private ImageView iv_return;
+    /** 旧密码、新密码、确认密码输入框*/
     private EditText edtOldPassword,edtNemPassword,edtNewPasswordTest;
     /** 保存*/
     private TextView tv_save;
@@ -86,39 +88,17 @@ public class UpdatePasswordDialog extends PopupWindow {
     }
 
     /**
-     * 保存
+     * 设置popupWindow样式
      */
-    private void save(){
-        final String oldPassword = edtOldPassword.getText().toString().trim();
-        final String newPassword = edtNemPassword.getText().toString().trim();
-        final String newPasswordTest = edtNewPasswordTest.getText().toString().trim();
-        if(oldPassword.equals("") || newPassword.equals("") || newPasswordTest.equals("")){
-            Toast.makeText(context,"您还有没填写的内容！",Toast.LENGTH_SHORT).show();
-        }
-        if(!newPassword.equals(newPasswordTest)){
-            Toast.makeText(context,"两次输入密码不一致",Toast.LENGTH_SHORT).show();
-        }else{
-            new Thread(){
-                @Override
-                public void run() {
-                    FormBody formBody = new FormBody.Builder().add("accout","71007839").add("oldPassword",oldPassword).add("newPassword",newPassword).build();
-                    final Request request = new Request.Builder().post(formBody).url("http://"+context.getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/updateUserPassword").build();
-                    Call call = okHttpClient.newCall(request);
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Log.i("lww","请求失败");
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            String result = response.body().string();
-                            sendMessage(1,result);
-                        }
-                    });
-                }
-            }.start();
-        }
+    private void setpopupWndow(){
+        this.setContentView(view);
+        this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
+        this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
+        this.setFocusable(true);
+        this.setAnimationStyle(R.style.pop_animation);
+        //ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
+        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
+        this.setBackgroundDrawable(d);
     }
 
     /**
@@ -134,17 +114,40 @@ public class UpdatePasswordDialog extends PopupWindow {
     }
 
     /**
-     * 设置popupWindow样式
+     * 保存
      */
-    private void setpopupWndow(){
-        this.setContentView(view);
-        this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setFocusable(true);
-        //this.setAnimationStyle(R.style.pop_animation);
-        //ColorDrawable dw = new ColorDrawable(0xb0000000);//背景半透明
-        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
-        this.setBackgroundDrawable(d);
+    private void save(){
+        final String oldPassword = edtOldPassword.getText().toString().trim();
+        final String newPassword = edtNemPassword.getText().toString().trim();
+        final String newPasswordTest = edtNewPasswordTest.getText().toString().trim();
+        if(oldPassword.equals("") || newPassword.equals("") || newPasswordTest.equals("")){
+            Toast.makeText(context,"您还有没填写的内容！",Toast.LENGTH_SHORT).show();
+        }else {
+            if (!newPassword.equals(newPasswordTest)) {
+                Toast.makeText(context, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
+            } else {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        FormBody formBody = new FormBody.Builder().add("accout", "71007839").add("oldPassword", oldPassword).add("newPassword", newPassword).build();
+                        final Request request = new Request.Builder().post(formBody).url("http://" + context.getResources().getString(R.string.IP) + ":8080/FarmKnowledge/user/updateUserPassword").build();
+                        Call call = okHttpClient.newCall(request);
+                        call.enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.i("lww", "请求失败");
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                String result = response.body().string();
+                                sendMessage(1, result);
+                            }
+                        });
+                    }
+                }.start();
+            }
+        }
     }
 
     /**

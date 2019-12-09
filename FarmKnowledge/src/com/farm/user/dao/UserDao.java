@@ -34,8 +34,8 @@ public class UserDao {
 	 * @throws
 	 */
 	//删除openId信息
-	public boolean deleteOpenId(String openId) {
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where openId=?",openId);
+	public boolean deleteOpenIdByUserId(int userId) {
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
 		if(list.size() != 0) {
 			boolean succeed = UserAuthority.dao.deleteById(list.get(0).getInt("id"));
 			return succeed;
@@ -106,6 +106,15 @@ public class UserDao {
 			return 0;
 		}
 		return -1;
+	}
+	//修改用户的头像，根据账号查询到
+	public boolean updateUserPhoto(String accout, String photo) {
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			boolean succeed = list.get(0).set("photo", photo).update();
+			return succeed;
+		}
+		return false;
 	}
 	//购买作物后，减少金币
 	public boolean decreaseMoney(int id, int money) {
