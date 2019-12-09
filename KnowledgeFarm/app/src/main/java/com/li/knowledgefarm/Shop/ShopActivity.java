@@ -244,9 +244,8 @@ public class ShopActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/crop/initCrop")
+                        .url(getResources().getString(R.string.URL)+"/crop/initCrop")
                         .build();
-                Log.i("Ip","http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/crop/initCrop");
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override

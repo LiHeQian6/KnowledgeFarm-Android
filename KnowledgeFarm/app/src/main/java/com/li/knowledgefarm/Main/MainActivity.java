@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/usercrop/initUserCrop?userId="+LoginActivity.user.getId()).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/usercrop/initUserCrop?userId="+LoginActivity.user.getId()).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/bag/initUserBag?userId=37").build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/bag/initUserBag?userId=37").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override

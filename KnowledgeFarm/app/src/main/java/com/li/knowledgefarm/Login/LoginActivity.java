@@ -309,7 +309,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                doJsonPost("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/loginByOpenId",
+                doJsonPost(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                         jsonObject.toString());
             }
         }.start();
@@ -360,7 +360,7 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            doJsonPost("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/loginByOpenId",
+                            doJsonPost(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                                     jsonObject.toString());
                         }
                     }.start();
