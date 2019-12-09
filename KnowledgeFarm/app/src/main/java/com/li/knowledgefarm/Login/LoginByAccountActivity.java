@@ -124,7 +124,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     }
                 };
                 Timer timer = new Timer();
-                timer.schedule(task, 5000);
+                timer.schedule(task, 4000);
             }
         });
 
