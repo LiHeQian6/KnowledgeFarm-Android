@@ -586,7 +586,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         transaction.show(notifyAccountDialog);
         transaction.commitAllowingStateLoss();
-        transaction.commitAllowingStateLoss();
     }
 
     /**

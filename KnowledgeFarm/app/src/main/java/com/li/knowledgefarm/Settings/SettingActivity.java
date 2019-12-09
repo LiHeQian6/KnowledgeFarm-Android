@@ -251,7 +251,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void run() {
                 FormBody formBody = new FormBody.Builder().add("accout","89838845").build();
-                final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/isBindingQQ").build();
+                final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/isBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -359,7 +359,7 @@ public class SettingActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             FormBody formBody = new FormBody.Builder().add("accout","89838845").add("openId",openId).add("photo",Path).build();
-                            final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/bindingQQ").build();
+                            final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
                                 @Override
@@ -397,7 +397,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void run() {
                 FormBody formBody = new FormBody.Builder().add("accout","89838845").build();
-                final Request request = new Request.Builder().post(formBody).url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/unBindingQQ").build();
+                final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
