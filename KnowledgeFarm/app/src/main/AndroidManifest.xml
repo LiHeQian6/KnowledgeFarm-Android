@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:fitsSystemWindows="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity android:name=".Shop.ShopActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".Main.MainActivity" android:screenOrientation="landscape"/>
         <activity android:name=".Login.LoginByAccountActivity"
@@ -25,11 +25,10 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".Login.LoginActivity"
+        <activity android:name=".Login.LoginActivity" android:theme="@style/AppTheme"
             android:screenOrientation="landscape">
             <intent-filter>
-
-
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -60,8 +59,6 @@
             android:screenOrientation="landscape"
             android:theme="@style/customApp">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

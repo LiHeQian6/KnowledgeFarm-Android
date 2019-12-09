@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url("http://10.7.87.220:8080/FarmKnowledge/bag/initUserBag?userId=37").build();
+                Request request = new Request.Builder().url("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/bag/initUserBag?userId=37").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override

@@ -2,6 +2,7 @@ package com.li.knowledgefarm.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -12,6 +13,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -92,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
      * 其中mAppId是分配给第三方应用的appid，类型为String
      */
     public String mAppId = "101827462";//101827370
-    public static String serverURL = "http://10.7.87.220:8080/FarmKnowledge/";
     /**
      * 授权登录监听器
      */
@@ -114,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         public void handleMessage(final Message msg) {
             switch (msg.what) {
                 case 1:       //登录成功
+
                     logo.setVisibility(View.INVISIBLE);
                     linearUser.setVisibility(View.VISIBLE);
                     linearQQ.setVisibility(View.INVISIBLE);
@@ -149,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
         autoLogin();
         registListener();
     }
+
     /**
      * 初始化视图
      */
@@ -164,6 +167,8 @@ public class LoginActivity extends AppCompatActivity {
         linearQQ = findViewById(R.id.linearQQ);
         linearStart = findViewById(R.id.linearStart);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.font);
+        logo.setTypeface(typeface);
     }
 
     /**
@@ -287,7 +292,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                doJsonPost(serverURL+"user/loginByOpenId",
+                doJsonPost("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/loginByOpenId",
                         jsonObject.toString());
             }
         }.start();
@@ -338,7 +343,7 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            doJsonPost(serverURL+"user/loginByOpenId",
+                            doJsonPost("http://"+getResources().getString(R.string.IP)+":8080/FarmKnowledge/user/loginByOpenId",
                                     jsonObject.toString());
                         }
                     }.start();
@@ -503,6 +508,6 @@ public class LoginActivity extends AppCompatActivity {
             transaction.add(notifyAccountDialog,"notify");
         }
         transaction.show(notifyAccountDialog);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 }

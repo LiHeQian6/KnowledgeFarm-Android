@@ -82,6 +82,7 @@
                             android:layout_height="40dp"
                             android:background="@drawable/edittext_solid"
                             android:inputType="number"
+                            android:imeOptions="flagNoExtractUi"
                             android:textColor="@color/blackTextColor">
                         </EditText>
 
