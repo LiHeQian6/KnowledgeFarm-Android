@@ -54,12 +54,14 @@ public class ShopActivity extends AppCompatActivity {
     private GridView gridView;
     private Handler messages;
     private ImageView imageView;
-    private AlertDialog alertDialog;
+    private AlertDialog alertDialog = null;
     private ImageView imgBtnJian;
     private ImageView imgBtnPlus;
     private EditText shopNumber;
     private Handler doAfterAdd;
-
+    private long lastClickTime = 0L;
+    // 两次点击间隔不能少于1000ms
+    private static final int FAST_CLICK_DELAY_TIME = 1000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +166,10 @@ public class ShopActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                    return;
+                }
+                lastClickTime = System.currentTimeMillis();
                 showSingleAlertDialog(position);
             }
         });
@@ -230,7 +236,6 @@ public class ShopActivity extends AppCompatActivity {
                 }
             }
         };
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
