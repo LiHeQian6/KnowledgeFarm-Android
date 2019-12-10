@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Math;
+package com.li.knowledgefarm.Study.Math;
 
 import java.util.Collections;
 import java.util.Stack;

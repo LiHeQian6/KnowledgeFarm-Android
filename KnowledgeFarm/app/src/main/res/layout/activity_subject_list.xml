@@ -18,20 +18,23 @@
         android:paddingTop="50dp">
         <ImageView
             android:id="@+id/iv_math"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/math"/>
         <ImageView
             android:id="@+id/iv_english"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
             android:src="@drawable/english"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"/>
         <ImageView
             android:id="@+id/chinese"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
             android:src="@drawable/chinese"/>
     </LinearLayout>
 </RelativeLayout>

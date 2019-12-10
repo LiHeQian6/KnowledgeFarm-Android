@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Math;
+package com.li.knowledgefarm.Study.Math;
 
 public class ArithHelper {
     // 默认除法运算精度
