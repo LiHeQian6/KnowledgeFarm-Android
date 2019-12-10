@@ -136,9 +136,6 @@ public class SettingActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    Intent intent = new Intent();
-                    intent.setClass(SettingActivity.this, MainActivity.class);
-                    startActivity(intent);
                     finish();
                     break;
                 case R.id.btnUpdateNickName:

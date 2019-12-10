@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
             if(LoginActivity.user.getLandStauts(finalI)==-1) {
                 if(flag==0){
                     plant.setImageResource(R.drawable.kuojian);
+                    plant.setBottom(50);
                     relativeLayout.addView(plant);
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override

@@ -109,6 +109,7 @@ public class StartActivity extends AppCompatActivity {
                 case R.id.btnStart:
                     Intent begin = new Intent(StartActivity.this, MainActivity.class);
                     startActivity(begin);
+                    finish();
                     break;
             }
         }
