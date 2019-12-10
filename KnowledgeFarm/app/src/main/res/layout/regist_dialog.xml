@@ -31,6 +31,7 @@
             android:background="@drawable/eradius"
             android:gravity="center_horizontal"
             android:imeOptions="flagNoExtractUi"
+            android:inputType="textPassword"
             android:hint="密码"
             android:textSize="20sp" />
         <EditText
@@ -38,6 +39,7 @@
             android:layout_width="300dp"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:inputType="textPassword"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
             android:background="@drawable/eradius"

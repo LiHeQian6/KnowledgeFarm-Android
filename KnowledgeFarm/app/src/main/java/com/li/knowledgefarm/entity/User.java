@@ -299,6 +299,65 @@ public class User {
         this.land18 = land18;
     }
 
+    public void setLandStauts(int landPosition,int status){
+        switch (landPosition){
+            case 1:
+                land1 = status;
+                break;
+            case 2:
+                land2 = status;
+                break;
+            case 3:
+                land3 = status;
+                break;
+            case 4:
+                land4 = status;
+                break;
+            case 5:
+                land5 = status;
+                break;
+            case 6:
+                land6 = status;
+                break;
+            case 7:
+                land7 = status;
+                break;
+            case 8:
+                land8 = status;
+                break;
+            case 9:
+                land9 = status;
+                break;
+            case 10:
+                land10 = status;
+                break;
+            case 11:
+                land11 = status;
+                break;
+            case 12:
+                land12 = status;
+                break;
+            case 13:
+                land13 = status;
+                break;
+            case 14:
+                land14 = status;
+                break;
+            case 15:
+                land15 = status;
+                break;
+            case 16:
+                land16 = status;
+                break;
+            case 17:
+                land17 = status;
+                break;
+            case 18:
+                land18 = status;
+                break;
+        }
+    }
+
     public int getLandStauts(int land) {
         int status=-1;
         switch (land){

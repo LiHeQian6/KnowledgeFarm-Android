@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 点击第三方登陆按钮
      */
-    private Button btnQQ;
     private Button btnQQFirst;
     private Button btnAccount;
     /**
@@ -143,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
 
         setStatusBar();
         getViews();
-//        autoLogin();
+        autoLogin();
         registListener();
     }
 
@@ -152,7 +151,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void getViews() {
         logo = findViewById(R.id.logo);
-        btnQQ = findViewById(R.id.btnQQ);
         btnQQFirst = findViewById(R.id.btnQQFirst);
         btnAccount = findViewById(R.id.btnAccount);
         linearUser = findViewById(R.id.linearUser);
@@ -166,7 +164,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void registListener() {
         listener = new CustomerListener();
-        btnQQ.setOnClickListener(listener);
         btnQQFirst.setOnClickListener(listener);
         btnAccount.setOnClickListener(listener);
     }
@@ -297,7 +294,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                asyncByJson(getResources().getString(R.string.URL)+"/user/loginByOpenId",
+                asyncByJson2(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                         jsonObject.toString());
             }
         }.start();
@@ -395,6 +392,47 @@ public class LoginActivity extends AppCompatActivity {
                         } else if(result.equals("notExist")){//第一次登录
                             message.what = 1;
                             mHandler.sendMessage(message);
+                        }else {
+                            message.what = 3;
+                            message.obj = parsr(URLDecoder.decode(result), User.class);
+                            user = (User) message.obj;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
+            }
+        }.start();
+
+    }
+
+    private void asyncByJson2(final String urlPath, final String Json) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                MediaType type = MediaType.parse("text/plain");
+                RequestBody body = RequestBody.create(Json,type);
+                Request request = new Request.Builder()
+                        .url(urlPath)
+                        .post(body)
+                        .build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e("jing", "请求失败");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result =  response.body().string();
+                        Message message = new Message();
+                        if (result.equals("notEffect")) {
+                            message.what = 2;
+                            mHandler.sendMessage(message);
+                        } else if(result.equals("notExist")){//第一次登录
+                            ;
                         }else {
                             message.what = 3;
                             message.obj = parsr(URLDecoder.decode(result), User.class);

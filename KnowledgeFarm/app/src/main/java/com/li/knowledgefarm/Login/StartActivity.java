@@ -80,7 +80,8 @@ public class StartActivity extends AppCompatActivity {
             nickName.setText(user.getNickName());
             urlToImgBitmap(user.getPhoto());
         }else if(getInfo.getAction().equals("accountLogin")){
-
+            nickName.setText(user.getNickName());
+            urlToImgBitmap(user.getPhoto());
         }
     }
 
@@ -109,6 +110,7 @@ public class StartActivity extends AppCompatActivity {
                 case R.id.btnStart:
                     Intent begin = new Intent(StartActivity.this, MainActivity.class);
                     startActivity(begin);
+                    finish();
                     break;
             }
         }

@@ -12,6 +12,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -39,6 +40,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -46,6 +48,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.li.knowledgefarm.Login.LoginActivity.parsr;
+import static com.li.knowledgefarm.Login.LoginActivity.user;
 
 public class LoginByAccountActivity extends AppCompatActivity {
 
@@ -70,6 +73,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 5:
+                    user = (User) msg.obj;
+                    Intent intentToStart = new Intent(LoginByAccountActivity.this,StartActivity.class);
+                    intentToStart.setAction("accountLogin");
+                    startActivity(intentToStart);
+                    finish();
                     break;
             }
         }
@@ -97,14 +105,14 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mName = findViewById(R.id.input_layout_name);
         mPsw = findViewById(R.id.input_layout_psw);
         registAccount = findViewById(R.id.registAccount);
-        EditText edtCount = findViewById(R.id.accout);
-        EditText pwd = findViewById(R.id.pwd);
-        accountStr = edtCount.getText().toString();
-        pwdStr = pwd.getText().toString();
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                EditText edtCount = findViewById(R.id.accout);
+                EditText pwd = findViewById(R.id.pwd);
+                accountStr = edtCount.getText().toString();
+                pwdStr = pwd.getText().toString();
                 // 计算出控件的高与宽
                 mWidth = mBtnLogin.getMeasuredWidth();
                 mHeight = mBtnLogin.getMeasuredHeight();
@@ -112,6 +120,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 mName.setVisibility(View.INVISIBLE);
                 mPsw.setVisibility(View.INVISIBLE);
                 mBtnLogin.setVisibility(View.INVISIBLE);
+                Toast.makeText(getApplicationContext(),pwdStr,Toast.LENGTH_SHORT).show();
 
                 inputAnimator(mInputLayout, mWidth, mHeight);
                 TimerTask task = new TimerTask() {
@@ -120,11 +129,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
                         /**
                          *要执行的操作
                          */
-                        loginByAccount();
+                        loginByAccount(accountStr,pwdStr);
                     }
                 };
                 Timer timer = new Timer();
-                timer.schedule(task, 4000);
+                timer.schedule(task, 3000);
             }
         });
 
@@ -136,13 +145,13 @@ public class LoginByAccountActivity extends AppCompatActivity {
         });
     }
 
-    private void loginByAccount() {
+    private void loginByAccount(String accountStr, String pwdStr) {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
-                .add("account",accountStr)
-                .add("pwd",pwdStr)
+                .add("account", accountStr)
+                .add("pwd", pwdStr)
                 .build();
-        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByOpenId").build();
+        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByAccount").build();
         //Call
         Call call = new OkHttpClient().newCall(request);
         //异步请求
@@ -154,7 +163,6 @@ public class LoginByAccountActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.i("jing", response.body().string());
                 Message message = new Message();
                 message.what = 5;
                 message.obj = parsr(URLDecoder.decode(response.body().string()), User.class);
