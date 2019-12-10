@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/loginRelative"
-    android:background="@drawable/diologback"
+    android:background="@drawable/logindialogbac"
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -17,6 +17,7 @@
             android:layout_centerHorizontal="true"
             android:visibility="visible"
             android:text="知识农场"
+            android:textColor="@color/ShopTextColor"
             android:textSize="50dp"/>
         <LinearLayout
             android:id="@+id/linearQQ"
@@ -31,11 +32,22 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
             <Button
+                android:id="@+id/btnQQFirst"
+                android:layout_width="0dp"
+                android:visibility="visible"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_login"
+                android:text="QQ登录"
+                android:textColor="#ffffff"
+                android:textSize="18dp"/>
+            <Button
+                android:visibility="gone"
                 android:id="@+id/btnQQ"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/shape_login"
+                android:background="@drawable/shape_login2"
                 android:text="QQ登录"
                 android:textColor="#ffffff"
                 android:textSize="18dp"/>
