@@ -80,7 +80,8 @@ public class StartActivity extends AppCompatActivity {
             nickName.setText(user.getNickName());
             urlToImgBitmap(user.getPhoto());
         }else if(getInfo.getAction().equals("accountLogin")){
-
+            nickName.setText(user.getNickName());
+            urlToImgBitmap(user.getPhoto());
         }
     }
 

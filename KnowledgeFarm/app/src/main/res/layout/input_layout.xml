@@ -33,6 +33,7 @@
                 android:layout_marginLeft="10dip"
                 android:textColorHint="#cecece"
                 android:textColor="#000"
+                android:maxLength="16"
                 android:hint="账号"
                 android:imeOptions="flagNoExtractUi"
                 android:textSize="16sp" />

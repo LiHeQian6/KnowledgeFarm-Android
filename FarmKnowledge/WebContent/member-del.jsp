@@ -139,7 +139,11 @@
 	                        <td>${page.accout}</td>
 	                        <td>${page.password}</td>
 	                        <td>${page.nickName}</td>
-	                        <td><img style="width:50px;height:50px" src="${page.photo}" /></td>
+	                        <td>
+	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
+	                        		<img style="width:50px;height:50px;" src="${page.photo}"/>
+	                        	</div>
+	                        </td>
 	                        <td>${page.level}</td>
 	                        <td>${page.experience}</td>
 	                        <td>${page.grade}</td>
