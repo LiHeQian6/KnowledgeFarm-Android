@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/loginRelative"
+    android:background="@drawable/diologback"
     android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/linearUser"
@@ -19,12 +20,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="独角兽的荣耀"
-            android:layout_toLeftOf="@+id/ivSetting"
-            android:layout_marginRight="10dp"/>
+            android:textSize="20sp"
+            android:layout_toLeftOf="@+id/ivSetting" />
         <Button
             android:id="@+id/btnRegout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:text="注销"/>
     </LinearLayout>
 

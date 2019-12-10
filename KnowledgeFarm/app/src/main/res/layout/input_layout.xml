@@ -61,7 +61,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
-                android:background="#00000000"
                 android:hint="密码"
                 android:textColorHint="#cecece"
                 android:inputType="textPassword"

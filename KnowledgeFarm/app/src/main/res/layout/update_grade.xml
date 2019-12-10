@@ -2,15 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="@drawable/logindialogbac">
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:textSize="25dp"
-        android:textColor="#2c2c2c"
+        android:textSize="35dp"
+        android:textColor="@color/ShopTextColor"
         android:text="修改年级"/>
     <RelativeLayout
         android:id="@+id/rela"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textSize="20dp"
-            android:textColor="#2c2c2c"
+            android:textColor="@color/ShopTextColor"
             android:text="我的年级"/>
         <Spinner
             android:id="@+id/spinner"
@@ -51,6 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
+            android:background="@drawable/buy"
             android:text="保存"/>
         <TextView
             android:layout_width="0dp"
@@ -61,7 +62,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:text="取消"/>
+            android:text="取消"
+            android:background="@drawable/buy"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

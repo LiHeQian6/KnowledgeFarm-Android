@@ -2,15 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="@drawable/logindialogbac">
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:textSize="25dp"
-        android:textColor="#2c2c2c"
+        android:textSize="35sp"
+        android:textColor="@color/ShopTextColor"
         android:text="修改昵称"/>
     <RelativeLayout
         android:id="@+id/rela"
@@ -23,8 +23,8 @@
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:textColor="#2c2c2c"
+            android:textSize="25dp"
+            android:textColor="@color/ShopTextColor"
             android:text="我的昵称"/>
         <EditText
             android:id="@+id/edtNickName"
@@ -36,14 +36,14 @@
             android:maxLength="20"
             android:imeOptions="flagNoExtractUi"
             android:hint="记得填写昵称哦"
-            android:textColorHint="#808080"/>
+            android:textColorHint="@color/ShopTextColor"/>
         <TextView
             android:id="@+id/tv_nickName_length"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edtNickName"
             android:textSize="18dp"
-            android:textColor="#2c2c2c"
+            android:textColor="@color/ShopTextColor"
             android:text="10/20"/>
     </RelativeLayout>
     <LinearLayout
@@ -60,6 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
+            android:background="@drawable/buy"
             android:text="保存"/>
         <TextView
             android:layout_width="0dp"
@@ -69,6 +70,7 @@
             android:id="@+id/btnReturn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/buy"
             android:layout_weight="1.5"
             android:text="取消"/>
         <TextView

@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="ShopTextColor">#ffffff</color>
     <color name="blackTextColor">#000000</color>
+    <color name="zhuxiaoColor">#dedede</color>
 </resources>

@@ -13,7 +13,8 @@
             android:id="@+id/flowerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="玫瑰花">
+            android:text="玫瑰花"
+            android:layout_marginBottom="10dp">
         </TextView>
 
         <ImageView
@@ -27,7 +28,9 @@
             android:id="@+id/flowerPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="500金币"></TextView>
+            android:text="500金币">
+            android:layout_marginTop="10dp"
+        </TextView>
 
     </LinearLayout>
 </LinearLayout>
