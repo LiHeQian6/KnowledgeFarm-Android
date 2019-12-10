@@ -150,6 +150,7 @@ public class CropController extends Controller{
 		int experience = 0;
 		String realPath[] = new String[3];
 		int count = 0;
+		String cropPhotoName = "";
 		
 		CropService service = new CropService();
 		try {
@@ -188,7 +189,6 @@ public class CropController extends Controller{
 					}	
 				}else {
 					//构造cropPhotoName，并判断是否与其他作物的cropPhotoName重复
-					String cropPhotoName = "";
 					if(count == 0) {
 						do {
 							cropPhotoName = "";

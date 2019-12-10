@@ -98,7 +98,6 @@ public class UserController extends Controller{
 	//×¢²áÕËºÅ
 	public void registAccout() {
 		String nickName = get("nickName");
-		String photo = URLDecoder.decode(get("photo"));
 		int grade = getInt("grade");
 		String email = get("email");
 		String password = get("password");
@@ -108,7 +107,7 @@ public class UserController extends Controller{
 			email = "";
 		}
 		String accout = service.generateAccout();
-		if(service.addUser(accout, nickName, password, photo, "", email, grade)) {
+		if(service.addUser(accout, nickName, password, "", "", email, grade)) {
 			User user = service.findUserByAccout(accout);
 			renderJson(user);
 		}else {

@@ -152,9 +152,9 @@
 	                        <td>${cropPage.id}</td>
 	                        <td>${cropPage.name}</td>
 	                        <td>${cropPage.price}</td>
-	                        <td><img style="width:50px;height:50px" src="${cropPage.img1}" /></td>
-	                        <td><img style="width:50px;height:50px" src="${cropPage.img2}" /></td>
-	                        <td><img style="width:50px;height:50px" src="${cropPage.img3}" /></td>
+	                        <td><img style="width:50px;height:50px;" src="${cropPage.img1}"/></td>
+	                        <td><img style="width:50px;height:50px;" src="${cropPage.img2}"/></td>
+							<td><img style="width:50px;height:50px;" src="${cropPage.img3}"/></td>
 	                        <td>${cropPage.matureTime}</td>
 	                        <td>${cropPage.value}金币</td>
 	                        <td>${cropPage.experience}</td>
