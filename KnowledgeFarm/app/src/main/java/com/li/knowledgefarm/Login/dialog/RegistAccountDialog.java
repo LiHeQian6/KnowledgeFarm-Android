@@ -46,6 +46,10 @@ public class RegistAccountDialog extends DialogFragment {
                     Toast.makeText(getContext(),"注册成功！",Toast.LENGTH_SHORT).show();
                     dismiss();
                     break;
+                case 5:
+                    Toast.makeText(getContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    dismiss();
+                    break;
             }
         }
     };
@@ -53,31 +57,35 @@ public class RegistAccountDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.regist_dialog,container,false);
+        final View view = inflater.inflate(R.layout.regist_dialog,container,false);
 
-        Spinner spinner = view.findViewById(R.id.spiner);
+        Spinner spinner = view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new ProvOnItemSelectedListener());
-
-        EditText registName = view.findViewById(R.id.registName);
-        rName = registName.getText().toString();
+        final EditText registName = view.findViewById(R.id.registName);
         final EditText pwd = view.findViewById(R.id.registPwd2);
-        password = pwd.getText().toString();
         final EditText configPwd = view.findViewById(R.id.configPwd2);
-        final String config = configPwd.getText().toString();
         final EditText emails = view.findViewById(R.id.boundToQQ);
-        email = emails.getText().toString();
         Button button = view.findViewById(R.id.btnRegist2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                rName = registName.getText().toString();
+                password = pwd.getText().toString();
+                String config = configPwd.getText().toString();
+                email = emails.getText().toString();
                 if(rName.equals("")||password.equals("")||config.equals("")||email.equals("")){
                     Toast.makeText(getContext(),"请完善注册信息！",Toast.LENGTH_SHORT).show();
                     return;
-                }else if(!password.equals(configPwd)){
+                }else if(!password.equals(config)){
                     Toast.makeText(getContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
                     return;
                 }else {
-                    registToServer();
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            registToServer();
+                        }
+                    }.start();
                 }
             }
         });
@@ -88,12 +96,12 @@ public class RegistAccountDialog extends DialogFragment {
     private void registToServer() {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
-                .add("rName",rName)
+                .add("nickName",rName)
                 .add("grade",grade)
-                .add("pwd",password)
+                .add("password",password)
                 .add("email",email)
                 .build();
-        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByOpenId").build();
+        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/registAccout").build();
         //Call
         Call call = new OkHttpClient().newCall(request);
         //异步请求
@@ -105,9 +113,11 @@ public class RegistAccountDialog extends DialogFragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.i("jing", response.body().string());
                 Message message = new Message();
-                if(response.body().string().equals("true")){
+                if(response.body().string().equals("fail")){
+                    message.what = 5;
+                    handler.sendMessage(message);
+                }else {
                     message.what = 4;
                     handler.sendMessage(message);
                 }
@@ -120,20 +130,29 @@ public class RegistAccountDialog extends DialogFragment {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             switch (position){
                 case 0:
-                    grade = "一年级";
+                    grade = "1";
                     break;
                 case 1:
-                    grade = "二年级";
+                    grade = "2";
                     break;
                 case 2:
-                    grade = "三年级";
+                    grade = "3";
+                    break;
+                case 3:
+                    grade = "4";
+                    break;
+                case 4:
+                    grade = "5";
+                    break;
+                case 5:
+                    grade = "6";
                     break;
             }
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
-            grade = "一年级";
+            grade = "1";
         }
     }
 }
