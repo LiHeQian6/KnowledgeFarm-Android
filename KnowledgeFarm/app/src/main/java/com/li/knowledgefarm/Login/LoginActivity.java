@@ -2,12 +2,10 @@ package com.li.knowledgefarm.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,9 +17,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,15 +27,11 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
-import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -51,21 +42,12 @@ import com.tencent.tauth.UiError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
 
 import com.li.knowledgefarm.R;
-
-import static androidx.constraintlayout.widget.ConstraintSet.INVISIBLE;
-import static androidx.constraintlayout.widget.ConstraintSet.VISIBLE;
 
 public class LoginActivity extends AppCompatActivity {
     /**
@@ -76,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
      * 点击第三方登陆按钮
      */
     private Button btnQQ;
+    private Button btnQQFirst;
     private Button btnAccount;
     /**
      * 点击注销按钮
@@ -120,58 +103,36 @@ public class LoginActivity extends AppCompatActivity {
         @SuppressLint("WrongConstant")
         public void handleMessage(final Message msg) {
             switch (msg.what) {
-                case 1:       //登录成功
-                    Log.e("jing","noVisibility");
-                    user = (User) msg.obj;
-                    if(user.getExist()==0){
-                        Toast.makeText(getApplicationContext(),"账号已不存在！",Toast.LENGTH_SHORT).show();
-                    }else {
-                        Intent intentToStart = new Intent(LoginActivity.this,StartActivity.class);
-                        intentToStart.setAction("QQLogin");
-                        startActivity(intentToStart);
-                        finish();
-
-//                        logo.setVisibility(View.INVISIBLE);
-//                        linearUser.setVisibility(View.VISIBLE);
-//                        linearQQ.setVisibility(View.INVISIBLE);
-//                        linearStart.setVisibility(View.VISIBLE);
-//                        Log.e("jing","noVisibility2");
-//                        tvUserName.setText(user.getNickName());
-//                        urlToImgBitmap(user.getPhoto());
-//                        showNotifyDialog();
-                    }
+                case 1:       //第一次登录
+//                    Log.e("jing","noVisibility");
+//                    user = (User) msg.obj;
+//                    Intent intentToStart = new Intent(LoginActivity.this,StartActivity.class);
+//                    intentToStart.setAction("QQFirstLogin");
+//                    startActivity(intentToStart);
+//                    finish();
+                    Toast.makeText(getApplicationContext(),"欢迎你，新用户",Toast.LENGTH_SHORT).show();
+                    Intent intentFirst = new Intent(LoginActivity.this,QQFirstActivity.class);
+                    intentFirst.putExtra("opId",openID);
+                    intentFirst.putExtra("nick",Nickname);
+                    intentFirst.putExtra("photo",Path);
+                    startActivity(intentFirst);
                     break;
-//                case 2:     //返回头像的Bitmap
-//                    Bitmap bitmap = (Bitmap) msg.obj;
-//                    ivUserImage.setImageBitmap(bitmap);
-//                    break;
+                case 2:
+                    Toast.makeText(getApplicationContext(),"账号已失效！",Toast.LENGTH_SHORT).show();
+                    break;
                 case 3:
+                    //自动登录
                     user = (User) msg.obj;
-                    if(user.getExist()==0){
-                        Toast.makeText(getApplicationContext(),"账号已不存在！",Toast.LENGTH_SHORT).show();
-                    }else {
-                        Intent autoToStart = new Intent(LoginActivity.this,StartActivity.class);
-                        autoToStart.setAction("autoLogin");
-                        startActivity(autoToStart);
-                        finish();
-//                        logo.setVisibility(View.INVISIBLE);
-//                        linearUser.setVisibility(View.VISIBLE);
-//                        linearQQ.setVisibility(View.INVISIBLE);
-//                        linearStart.setVisibility(View.VISIBLE);
-//
-//                        tvUserName.setText(user.getNickName());
-//                        urlToImgBitmap(user.getPhoto());
-                    }
-
+                    Intent autoToStart = new Intent(LoginActivity.this,StartActivity.class);
+                    autoToStart.setAction("autoLogin");
+                    startActivity(autoToStart);
+                    finish();
                     break;
-                case 0:     //登录失败
-                    Toast.makeText(getApplicationContext(),"登录失败！",Toast.LENGTH_SHORT).show();
-
-                    break;
-
             }
         }
     };
+    private String Nickname;
+    private String Path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
 
         setStatusBar();
         getViews();
-        autoLogin();
+//        autoLogin();
         registListener();
     }
 
@@ -192,6 +153,7 @@ public class LoginActivity extends AppCompatActivity {
     private void getViews() {
         logo = findViewById(R.id.logo);
         btnQQ = findViewById(R.id.btnQQ);
+        btnQQFirst = findViewById(R.id.btnQQFirst);
         btnAccount = findViewById(R.id.btnAccount);
         linearUser = findViewById(R.id.linearUser);
         linearQQ = findViewById(R.id.linearQQ);
@@ -205,6 +167,7 @@ public class LoginActivity extends AppCompatActivity {
     private void registListener() {
         listener = new CustomerListener();
         btnQQ.setOnClickListener(listener);
+        btnQQFirst.setOnClickListener(listener);
         btnAccount.setOnClickListener(listener);
     }
 
@@ -217,10 +180,11 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 /** 点击登录*/
-                case R.id.btnQQ:
+                case R.id.btnQQFirst:
                     onClickLogin();
+//                    Intent intentFirst = new Intent(LoginActivity.this,QQFirstActivity.class);
+//                    startActivity(intentFirst);
                     break;
-
                 case R.id.btnAccount:
                     Intent intentLoginByAccount = new Intent(LoginActivity.this, LoginByAccountActivity.class);
                     startActivity(intentLoginByAccount);
@@ -333,7 +297,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                asyncAutoLogin(getResources().getString(R.string.URL)+"/user/loginByOpenId",
+                asyncByJson(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                         jsonObject.toString());
             }
         }.start();
@@ -371,8 +335,8 @@ public class LoginActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    final String Nickname = nkname;
-                    final String Path = URLEncoder.encode(npath);
+                    Nickname = nkname;
+                    Path = URLEncoder.encode(npath);
                     new Thread() {
                         @Override
                         public void run() {
@@ -425,49 +389,13 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call call, Response response) throws IOException {
                         String result =  response.body().string();
                         Message message = new Message();
-                        if (result.equals("false")) {
-                            message.what = 0;
+                        if (result.equals("notEffect")) {
+                            message.what = 2;
                             mHandler.sendMessage(message);
-                        } else {
+                        } else if(result.equals("notExist")){//第一次登录
                             message.what = 1;
-                            message.obj = parsr(URLDecoder.decode(result), User.class);
-                            user = (User) message.obj;
                             mHandler.sendMessage(message);
-                        }
-                    }
-                });
-            }
-        }.start();
-
-    }
-
-    private void asyncAutoLogin(final String urlPath, final String Json) {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                MediaType type = MediaType.parse("text/plain");
-                RequestBody body = RequestBody.create(Json,type);
-                Request request = new Request.Builder()
-                        .url(urlPath)
-                        .post(body)
-                        .build();
-                Call call = new OkHttpClient().newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.e("jing", "请求失败");
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String result =  response.body().string();
-                        Message message = new Message();
-                        if (result.equals("false")) {
-                            message.what = 0;
-                            mHandler.sendMessage(message);
-                        } else {
+                        }else {
                             message.what = 3;
                             message.obj = parsr(URLDecoder.decode(result), User.class);
                             user = (User) message.obj;
@@ -479,6 +407,8 @@ public class LoginActivity extends AppCompatActivity {
         }.start();
 
     }
+
+
     /**
      * Json转换为对象
      */
@@ -506,6 +436,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
     /**
      * @Description 设置状态栏
      * @Auther 孙建旺
@@ -520,5 +451,4 @@ public class LoginActivity extends AppCompatActivity {
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
     }
-
 }

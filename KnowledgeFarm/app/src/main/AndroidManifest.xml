@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_APN_SETTINGS"
         tools:ignore="ProtectedPermissions" />
 
     <application
@@ -19,13 +20,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Login.StartActivity" android:fitsSystemWindows="true" android:screenOrientation="landscape"/>
-        <activity android:name=".Shop.ShopActivity" android:screenOrientation="landscape"></activity>
-        <activity android:name=".Main.MainActivity" android:screenOrientation="landscape"/>
-        <activity android:name=".Login.LoginByAccountActivity"
+        <activity android:name=".Login.QQFirstActivity"
             android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".Login.StartActivity"
+            android:fitsSystemWindows="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Shop.ShopActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Main.MainActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Login.LoginByAccountActivity"
+            android:screenOrientation="landscape" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -68,7 +80,6 @@
             android:screenOrientation="landscape"
             android:theme="@style/customApp">
             <intent-filter>
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

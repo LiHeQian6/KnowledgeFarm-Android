@@ -31,6 +31,7 @@ import okhttp3.Response;
 
 public class RegistAccountDialog extends DialogFragment {
 
+    private String rName;
     private String grade;
     private String password;
     private String email;
@@ -57,17 +58,19 @@ public class RegistAccountDialog extends DialogFragment {
         Spinner spinner = view.findViewById(R.id.spiner);
         spinner.setOnItemSelectedListener(new ProvOnItemSelectedListener());
 
-        final EditText pwd = view.findViewById(R.id.registPwd);
+        EditText registName = view.findViewById(R.id.registName);
+        rName = registName.getText().toString();
+        final EditText pwd = view.findViewById(R.id.registPwd2);
         password = pwd.getText().toString();
-        final EditText configPwd = view.findViewById(R.id.configPwd);
+        final EditText configPwd = view.findViewById(R.id.configPwd2);
         final String config = configPwd.getText().toString();
-        final EditText emails = view.findViewById(R.id.boundQQ);
+        final EditText emails = view.findViewById(R.id.boundToQQ);
         email = emails.getText().toString();
-        Button button = view.findViewById(R.id.btnRegist);
+        Button button = view.findViewById(R.id.btnRegist2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(password.equals("")||config.equals("")||email.equals("")){
+                if(rName.equals("")||password.equals("")||config.equals("")||email.equals("")){
                     Toast.makeText(getContext(),"请完善注册信息！",Toast.LENGTH_SHORT).show();
                     return;
                 }else if(!password.equals(configPwd)){
@@ -85,6 +88,7 @@ public class RegistAccountDialog extends DialogFragment {
     private void registToServer() {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
+                .add("rName",rName)
                 .add("grade",grade)
                 .add("pwd",password)
                 .add("email",email)
