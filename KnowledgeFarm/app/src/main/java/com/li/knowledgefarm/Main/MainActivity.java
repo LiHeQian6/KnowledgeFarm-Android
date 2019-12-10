@@ -5,15 +5,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private Gson gson;
     private List<BagCropNumber> dataList;
     private Map<Integer, Crop> cropList;
+    private Handler UpdataLands;
     private Handler cropMessagesHandler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -176,6 +175,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             //TODO 扩建土地
+                            ExtensionLand(finalI);
+                            UpdataLand(finalI);
                         }
                     });
                     flag++;
@@ -222,6 +223,76 @@ public class MainActivity extends AppCompatActivity {
         shop.setOnClickListener(new MainListener());
         pet.setOnClickListener(new MainListener());
         setting.setOnClickListener(new MainListener());
+    }
+
+    /**
+     * @Description 扩建土地
+     * @Auther 孙建旺
+     * @Date 下午 2:39 2019/12/10
+     * @Param []
+     * @return void
+     */
+    private void ExtensionLand(final int position){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                FormBody formBody = new FormBody.Builder()
+                        .add("userId",LoginActivity.user.getId()+"")
+                        .add("landNumber","land"+position).build();
+                Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/extensionLand").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        UpdataLands.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String callBackMessage = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = callBackMessage;
+                        UpdataLands.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    /**
+     * @Description 更新土地状态
+     * @Auther 孙建旺
+     * @Date 下午 2:54 2019/12/10
+     * @Param []
+     * @return void
+     */
+    private void UpdataLand(final int position){
+        UpdataLands = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+                if(message.equals("true")){
+                    LoginActivity.user.setLandStauts(position,0);
+                    int newMoney = LoginActivity.user.getMoney() - 500;
+                    LoginActivity.user.setMoney(newMoney);
+                    lands.removeAllViews();
+                    showLand();
+                }else if(message.equals("false")){
+                    Toast toast = Toast.makeText(MainActivity.this,"没有扩建成功哦！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }else if(message.equals("notEnoughMoney")){
+                    Toast toast = Toast.makeText(MainActivity.this,"你的钱不够了哦！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }else {
+                    Toast toast = Toast.makeText(MainActivity.this,"没有找到你的土地哦！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
     }
 
     private void getViews() {
