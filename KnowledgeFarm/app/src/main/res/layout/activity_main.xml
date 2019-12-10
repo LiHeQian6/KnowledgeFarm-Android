@@ -16,10 +16,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="7">
+            android:layout_weight="5">
         </TextView>
 
-        <GridLayout android:layout_width="400dp"
+        <GridLayout
+            android:layout_width="wrap_content"
             android:id="@+id/lands"
             android:rowCount="3"
             android:columnCount="6"
