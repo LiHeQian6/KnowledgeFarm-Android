@@ -39,6 +39,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -70,6 +71,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 5:
+                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();;
                     break;
             }
         }
@@ -97,14 +99,14 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mName = findViewById(R.id.input_layout_name);
         mPsw = findViewById(R.id.input_layout_psw);
         registAccount = findViewById(R.id.registAccount);
-        EditText edtCount = findViewById(R.id.accout);
-        EditText pwd = findViewById(R.id.pwd);
-        accountStr = edtCount.getText().toString();
-        pwdStr = pwd.getText().toString();
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                EditText edtCount = findViewById(R.id.accout);
+                EditText pwd = findViewById(R.id.pwd);
+                accountStr = edtCount.getText().toString();
+                pwdStr = pwd.getText().toString();
                 // 计算出控件的高与宽
                 mWidth = mBtnLogin.getMeasuredWidth();
                 mHeight = mBtnLogin.getMeasuredHeight();
@@ -112,6 +114,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 mName.setVisibility(View.INVISIBLE);
                 mPsw.setVisibility(View.INVISIBLE);
                 mBtnLogin.setVisibility(View.INVISIBLE);
+                Toast.makeText(getApplicationContext(),pwdStr,Toast.LENGTH_SHORT).show();
 
                 inputAnimator(mInputLayout, mWidth, mHeight);
                 TimerTask task = new TimerTask() {

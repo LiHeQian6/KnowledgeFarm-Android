@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
                 android:textColorHint="#cecece"
+                android:textColor="#000"
                 android:hint="账号"
                 android:imeOptions="flagNoExtractUi"
                 android:textSize="16sp" />
@@ -62,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
                 android:hint="密码"
+                android:textColor="#000"
                 android:textColorHint="#cecece"
                 android:inputType="textPassword"
                 android:imeOptions="flagNoExtractUi"

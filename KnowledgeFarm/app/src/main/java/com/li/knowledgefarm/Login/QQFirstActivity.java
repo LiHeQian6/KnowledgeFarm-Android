@@ -64,7 +64,7 @@ public class QQFirstActivity extends AppCompatActivity {
                     user = (User) msg.obj;
                     Toast.makeText(getApplicationContext(),"注册成功！",Toast.LENGTH_SHORT).show();
                     Intent autoToStart = new Intent(QQFirstActivity.this,StartActivity.class);
-                    autoToStart.setAction("autoLogin");
+                    autoToStart.setAction("QQFirstLogin");
                     startActivity(autoToStart);
                     finish();
                     break;
@@ -94,24 +94,28 @@ public class QQFirstActivity extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.spiner);
         spinner.setOnItemSelectedListener(new ProvOnItemSelectedListener());
 
-        EditText pwd = findViewById(R.id.registPwd);
-        password = pwd.getText().toString();
-        EditText configPwd = findViewById(R.id.configPwd);
-        config = configPwd.getText().toString();
-        EditText emails = findViewById(R.id.boundQQ);
-        email = emails.getText().toString();
         Button button = findViewById(R.id.btnRegist);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(password.equals("")||config.equals("")||email.equals("")){
-//                    Toast.makeText(getApplicationContext(),"请完善注册信息！",Toast.LENGTH_SHORT).show();
-//                }else if(!password.equals(config)){
-//                    Toast.makeText(getApplicationContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
-//                }else {
-//                    onClickLogin();
-//                }
-                registToServer();
+                EditText pwd = findViewById(R.id.registPwd);
+                password = pwd.getText().toString();
+                EditText configPwd = findViewById(R.id.configPwd);
+                config = configPwd.getText().toString();
+                EditText emails = findViewById(R.id.boundQQ);
+                email = emails.getText().toString();
+                if(password.equals("")||config.equals("")||email.equals("")){
+                    Toast.makeText(getApplicationContext(),"请完善注册信息！"+password+config+email,Toast.LENGTH_SHORT).show();
+                }else if(!password.equals(config)){
+                    Toast.makeText(getApplicationContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
+                }else {
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            registToServer();
+                        }
+                    }.start();
+                }
             }
         });
     }
@@ -119,7 +123,7 @@ public class QQFirstActivity extends AppCompatActivity {
     private void registToServer() {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
-                .add("grade","1")
+                .add("grade",grade)
                 .add("pwd",password)
                 .add("email",email)
                 .add("openId",openId)
@@ -153,20 +157,29 @@ public class QQFirstActivity extends AppCompatActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             switch (position){
                 case 0:
-                    grade = "一年级";
+                    grade = "1";
                     break;
                 case 1:
-                    grade = "二年级";
+                    grade = "2";
                     break;
                 case 2:
-                    grade = "三年级";
+                    grade = "3";
+                    break;
+                case 3:
+                    grade = "4";
+                    break;
+                case 4:
+                    grade = "5";
+                    break;
+                case 5:
+                    grade = "6";
                     break;
             }
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
-            grade = "一年级";
+            grade = "1";
         }
     }
 
