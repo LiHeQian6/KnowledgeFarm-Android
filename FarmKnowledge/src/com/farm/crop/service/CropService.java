@@ -67,27 +67,14 @@ public class CropService {
 	public Crop getUpdateCropInfo(int id) {
 		return new CropDao().getUpdateCropInfo(id);
 	}
-	
-	
-	//生成cropPhotoName
-	public String generateCropPhotoName() {
-		CropDao cropDao = new CropDao();
-		String cropPhotoName = "";
-		do{
-			cropPhotoName = "";
-			cropPhotoName = generateShortUuid();
-		}while(cropDao.isExistCropPhotoName(cropPhotoName));
-		return cropPhotoName;
+	//查询是否已存在该cropPhotoName
+	public boolean isExistCropPhotoName(String cropPhotoName) {
+		return new CropDao().isExistCropPhotoName(cropPhotoName);
 	}
 	
-	//生成imgUrl末尾随机数
-	public String generateCropPhotoUrlLast(String path) {
-		CropDao cropDao = new CropDao();
-		String cropPhotoUrlLast = "";
-		do{
-			cropPhotoUrlLast = "";
-			cropPhotoUrlLast = generateShortUuid();
-		}while(cropPhotoUrlLast.equals("path"));
+	//生成八位随机数
+	public String generateRandom() {
+		String cropPhotoUrlLast = generateShortUuid();
 		return cropPhotoUrlLast;
 	}
 	

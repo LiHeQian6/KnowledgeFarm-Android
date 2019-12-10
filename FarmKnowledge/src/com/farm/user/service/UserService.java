@@ -29,14 +29,14 @@ public class UserService {
 	 * @throws
 	 */
 	//添加用户信息（授权id、账号、别名、头像、登陆类型）（User表、UserAuthority表）
-	public boolean addUser(String openId, String nickName, String password, String photo, String photoName, String email, int grade, String type){
+	public boolean addUser(String accout, String openId, String nickName, String password, String photo, String photoName, String email, int grade, String type){
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
 				UserDao userDao = new UserDao();
 				
 				//user表插入别名、头像
-				boolean a1 = userDao.addUser(generateAccout(), nickName, password, photo, photoName, email, grade);
+				boolean a1 = userDao.addUser(accout, nickName, password, photo, photoName, email, grade);
 				//获得user表刚插入数据的userId
 				int userId = userDao.getLastUserId();
 				//UserAuthority表内插入userId、openId、token
@@ -248,11 +248,16 @@ public class UserService {
 	public boolean isBindingQQ(String accout) {
 		return new UserDao().isBindingQQ(accout);
 	}
+	//查询是否已存在该photoName
+	public boolean isExistPhotoName(String photoName) {
+		return new UserDao().isExistPhotoName(photoName);
+	}
 	
-	//生成账号
+	//生成八位数字随机数
 	public String generateAccout() {
 		String accout = "";
 		do{
+			accout = "";
 			for(int n = 1;n < 9;n++) {
 				accout += (int)(Math.random()*10);
 			}

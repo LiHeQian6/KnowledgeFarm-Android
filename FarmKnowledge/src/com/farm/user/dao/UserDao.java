@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.farm.model.Crop;
 import com.farm.model.User;
 import com.farm.model.UserAuthority;
 import com.jfinal.plugin.activerecord.Db;
@@ -351,6 +352,14 @@ public class UserDao {
 	public boolean isBindingQQ(String accout) {
 		int userId = getUserIdByAccout(accout);
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
+		if(list.size() != 0) {
+			return true;
+		}
+		return false;
+	}
+	//查询是否已存在该photoName
+	public boolean isExistPhotoName(String photoName) {
+		List<User> list = User.dao.find("select * from user where photoName=?",photoName);
 		if(list.size() != 0) {
 			return true;
 		}

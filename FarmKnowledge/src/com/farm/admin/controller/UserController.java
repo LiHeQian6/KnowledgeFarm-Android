@@ -12,6 +12,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.farm.crop.service.CropService;
 import com.farm.entity.Strings;
 import com.farm.model.User;
 import com.farm.user.service.UserService;
@@ -176,14 +177,16 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//添加用户信息（授权id、账号、别名、头像、登陆类型）
+	//添加用户信息（授权Id、账号、别名、头像、登陆类型）
 	public void addUser() {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		HttpServletRequest request = getRequest();
+		
 		String openId = "";
 		String nickName = "";
 		String type = "";
+		
 		UserService service = new UserService();
 		try {
 			List<FileItem> items = upload.parseRequest(request);
@@ -205,16 +208,26 @@ public class UserController extends Controller{
 							break;
 					}	
 				}else {
-					if(fi.getName().equals("")) {
+					if(fi.getName().equals("")) { //图片为空
 						renderText("null");
 						return;
-					}else {
-						String photoName = openId + fi.getName();
-						String photo = Strings.photoUrl + photoName;
-						File file = new File(Strings.filePath + photoName);
+					}else { //图片不为空
+						//构造photoName（并判断是否和其他用户的photoName重复）
+						String photoName = "";
+						CropService cropService = new CropService();
+						do {
+							photoName = "";
+							photoName = cropService.generateRandom() + fi.getName();
+						} while (service.isExistPhotoName(photoName));
+						
+						//构造photo
+						String photo = Strings.userPhotoUrl + photoName + "?" + cropService.generateRandom();
+						
+						//把头像写入文件
+						File file = new File(Strings.userfilePath + photoName);
 						fi.write(file);
 					
-						boolean succeed = service.addUser(openId, nickName, "", photo, photoName, "", 1, type);
+						boolean succeed = service.addUser(service.generateAccout(), openId, nickName, "", photo, photoName, "", 1, type);
 						if(succeed == true) {
 							renderText("succeed");
 						}else {
@@ -247,11 +260,14 @@ public class UserController extends Controller{
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		HttpServletRequest request = getRequest();
+		
 		String oldAccout = "";
 		String photo = "";
 		String photoName = "";
 		String newAccout = "";
 		String nickName = "";
+		String newPhoto = "";
+		
 		UserService service = new UserService();
 		try {
 			List<FileItem> items = upload.parseRequest(request);
@@ -279,18 +295,29 @@ public class UserController extends Controller{
 							break;
 					}	
 				}else {
-					boolean succeed = false;
-					if(fi.getName().equals("")) {
-						succeed = new UserService().updateUser(oldAccout, newAccout, nickName, photo, photoName);
-					}else {
+					if(fi.getName().equals("")) { //图片为空，默认展示之前的头像
+						newPhoto = photo;
+					}else { //图片不为空
+						//判断photoName的MIMETYPE类型是否是图片，若是则重新构造，并判断是否与其他用户的photoName重复
+						CropService cropService = new CropService();
 						if(request.getServletContext().getMimeType(photoName) == null) {
-							photoName = newAccout + fi.getName();
+							do {
+								photoName = "";
+								photoName = cropService.generateRandom() + fi.getName();
+							} while (service.isExistPhotoName(photoName));
 						}
-						photo = Strings.photoUrl + photoName;
-						File file = new File(Strings.filePath + photoName);
+						
+						//构造photo，并判断是否与上次的photo重复
+						do {
+							newPhoto = "";
+							newPhoto = Strings.userPhotoUrl + photoName + "?" + cropService.generateRandom();
+						} while (newPhoto.equals(photo));
+						
+						//把头像写入文件
+						File file = new File(Strings.userfilePath + photoName);
 						fi.write(file);
-						succeed = new UserService().updateUser(oldAccout, newAccout, nickName, photo, photoName);
 					}
+					boolean succeed = service.updateUser(oldAccout, newAccout, nickName, newPhoto, photoName);
 					if(succeed == true) {
 						renderText("succeed");
 					}else {
