@@ -12,6 +12,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -47,6 +48,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.li.knowledgefarm.Login.LoginActivity.parsr;
+import static com.li.knowledgefarm.Login.LoginActivity.user;
 
 public class LoginByAccountActivity extends AppCompatActivity {
 
@@ -71,7 +73,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 5:
-                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();;
+                    user = (User) msg.obj;
+                    Intent intentToStart = new Intent(LoginByAccountActivity.this,StartActivity.class);
+                    intentToStart.setAction("accountLogin");
+                    startActivity(intentToStart);
+                    finish();
                     break;
             }
         }
@@ -123,11 +129,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
                         /**
                          *要执行的操作
                          */
-                        loginByAccount();
+                        loginByAccount(accountStr,pwdStr);
                     }
                 };
                 Timer timer = new Timer();
-                timer.schedule(task, 4000);
+                timer.schedule(task, 3000);
             }
         });
 
@@ -139,13 +145,13 @@ public class LoginByAccountActivity extends AppCompatActivity {
         });
     }
 
-    private void loginByAccount() {
+    private void loginByAccount(String accountStr, String pwdStr) {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
-                .add("account",accountStr)
-                .add("pwd",pwdStr)
+                .add("account", accountStr)
+                .add("pwd", pwdStr)
                 .build();
-        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByOpenId").build();
+        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByAccount").build();
         //Call
         Call call = new OkHttpClient().newCall(request);
         //异步请求
@@ -157,7 +163,6 @@ public class LoginByAccountActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.i("jing", response.body().string());
                 Message message = new Message();
                 message.what = 5;
                 message.obj = parsr(URLDecoder.decode(response.body().string()), User.class);

@@ -127,7 +127,7 @@ public class QQFirstActivity extends AppCompatActivity {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
                 .add("grade",grade)
-                .add("pwd",password)
+                .add("password",password)
                 .add("email",email)
                 .add("openId",openId)
                 .add("photo",Path)
