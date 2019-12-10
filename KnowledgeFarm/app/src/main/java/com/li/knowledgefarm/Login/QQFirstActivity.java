@@ -68,6 +68,9 @@ public class QQFirstActivity extends AppCompatActivity {
                     startActivity(autoToStart);
                     finish();
                     break;
+                case 5:
+                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
@@ -143,10 +146,16 @@ public class QQFirstActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Message message = new Message();
-                message.what = 4;
-                message.obj = parsr(response.body().string(), User.class);
-                mHandler.sendMessage(message);
-
+                String result = response.body().string();
+                if(result.equals("fail")){
+                    message.what = 5;
+                    message.obj = result;
+                    mHandler.sendMessage(message);
+                }else {
+                    message.what = 4;
+                    message.obj = parsr(result, User.class);
+                    mHandler.sendMessage(message);
+                }
             }
         });
     }
