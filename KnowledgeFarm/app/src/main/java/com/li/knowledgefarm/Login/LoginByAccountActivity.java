@@ -80,8 +80,9 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     startActivity(intentToStart);
                     finish();
                     break;
-                case 4:
+                default:
                     Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    recovery();
                     break;
             }
         }
@@ -99,7 +100,6 @@ public class LoginByAccountActivity extends AppCompatActivity {
         }
         setStatusBar();
         initView();
-        recovery();
     }
 
     private void initView() {
@@ -125,8 +125,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 mPsw.setVisibility(View.INVISIBLE);
                 mBtnLogin.setVisibility(View.INVISIBLE);
                 Toast.makeText(getApplicationContext(),pwdStr,Toast.LENGTH_SHORT).show();
-
                 inputAnimator(mInputLayout, mWidth, mHeight);
+                if(accountStr.equals("")||pwdStr.equals("")){
+                    Toast.makeText(getApplicationContext(),"账号或密码为空！",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
@@ -179,7 +182,15 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     message.what = 4;
                     message.obj = result;
                     handler.sendMessage(message);
-                }else {
+                }else if(result.equals("notExist")){
+                    message.what = 6;
+                    message.obj = result;
+                    handler.sendMessage(message);
+                }else if(result.equals("notEffect")){
+                    message.what = 7;
+                    message.obj = result;
+                    handler.sendMessage(message);
+                } else {
                     message.what = 5;
                     message.obj = parsr(URLDecoder.decode(result), User.class);
                     handler.sendMessage(message);

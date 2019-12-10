@@ -6,12 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,11 +48,15 @@ import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.Crop;
+import com.li.knowledgefarm.entity.User;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,14 +94,15 @@ public class MainActivity extends AppCompatActivity {
             if(!messages.equals("Fail")){
                 Type type = new TypeToken<Map<Integer,Crop>>(){}.getType();
                 cropList = gson.fromJson(messages,type);
-                if(cropList!=null)
-                    showLand();
+                showLand();
             }else{
                 Toast toast = Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
     };
+    private int selectLand=0;//选中第几块土地
+    private Handler plantMessagesHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +122,59 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getUserInfo();
         showUserInfo();
+    }
+
+    private void getUserInfo() {
+        SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
+        final String openId=sp.getString("opId","");
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("openId",openId);
+                    jsonObject.put("nickName","");
+                    jsonObject.put("photo","");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                MediaType type = MediaType.parse("text/plain");
+                RequestBody body = RequestBody.create(jsonObject.toString(),type);
+                Request request = new Request.Builder()
+                        .url(getResources().getString(R.string.URL)+"/user/loginByOpenId")
+                        .post(body)
+                        .build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e("用户信息", "请求失败");
+                        e.printStackTrace();
+                    }
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result =  response.body().string();
+                        if (result.equals("notEffect")) {
+                        } else if(result.equals("notExist")){//第一次登录
+                        }else {
+                            Log.e("用户信息",result);
+                            Message message = new Message();
+                            message.what = 3;
+                            message.obj = LoginActivity.parsr(URLDecoder.decode(result), User.class);
+                            LoginActivity.user = (User) message.obj;
+                            if(bagDialog!=null){
+                                bagDialog.cancel();
+                                selectLand=0;
+                            }
+                        }
+
+                    }
+                });
+            }
+        }.start();
     }
 
     private void getCrop() {
@@ -159,19 +220,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void showLand() {
         int flag=0;
+        lands.removeAllViews();
         for (int i=1;i<19;i++){
-            ImageView land = new ImageView(this);
+            final ImageView land = new ImageView(this);
             ImageView plant = new ImageView(this);
             RelativeLayout relativeLayout = new RelativeLayout(this);
             relativeLayout.addView(land);
             ViewGroup.LayoutParams lp = new RelativeLayout.LayoutParams(160,160);
             land.setLayoutParams(lp);
             plant.setLayoutParams(lp);
-            final int finalI = i;
+            final int finalI = i;//第几块土地
             if(LoginActivity.user.getLandStauts(finalI)==-1) {
                 if(flag==0){
                     plant.setImageResource(R.drawable.kuojian);
-                    plant.setBottom(50);
                     relativeLayout.addView(plant);
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -189,7 +250,9 @@ public class MainActivity extends AppCompatActivity {
                 land.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO 种植
+                        land.setImageResource(R.drawable.land_light);
+                        selectLand=finalI;
+                        showBagMessages();
                     }
                 });
             }
@@ -200,18 +263,21 @@ public class MainActivity extends AppCompatActivity {
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
                 land.setImageResource(R.drawable.land);
-                Glide.with(this).load(cropList.get(LoginActivity.user.getLandStauts(finalI)).getImg1()).apply(requestOptions).into(plant);
-                plant.setRotation(-10);
-                plant.setRotationX(-30);
-                relativeLayout.addView(plant);
-                plant.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //TODO 浇水施肥收获
-                    }
-                });
-            }
+                Crop crop = cropList.get(LoginActivity.user.getLandStauts(finalI));
+                if (crop!=null){
+                    Glide.with(this).load(crop.getImg1()).apply(requestOptions).into(plant);
+                    plant.setRotation(-10);
+                    plant.setRotationX(-30);
+                    relativeLayout.addView(plant);
+                    plant.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //TODO 浇水施肥收获
+                        }
+                    });
+                }
 
+            }
             lands.addView(relativeLayout);
         }
     }
@@ -370,7 +436,6 @@ public class MainActivity extends AppCompatActivity {
                         message.obj ="Fail";
                         bagMessagesHandler.sendMessage(message);
                     }
-
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         Message message = Message.obtain();
@@ -439,6 +504,7 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String messages = (String)msg.obj;
+                Log.e("背包",messages);
                 if(!messages.equals("Fail")){
                     Type type = new TypeToken<List<BagCropNumber>>(){}.getType();
                     dataList = gson.fromJson(messages,type);
@@ -463,42 +529,61 @@ public class MainActivity extends AppCompatActivity {
         planting(gridView);
     }
 
-    private void planting(GridView gridView) {
-        final RelativeLayout touch = findViewById(R.id.touch);
-        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+    private void planting(final GridView gridView) {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ImageView bagPlant = view.findViewById(R.id.bag_flower_img);
-                Log.e("aaa","发生了长按事件");
-                final DrawView drawView= new DrawView(getApplicationContext(),null);
-                drawView.setImageDrawable(bagPlant.getDrawable());
-
-                touch.addView(drawView);
-//                touch.setOnTouchListener(new View.OnTouchListener() {
-//                    @Override
-//                    public boolean onTouch(View view, MotionEvent motionEvent) {
-//                        switch (motionEvent.getAction()) {
-//                            case MotionEvent.ACTION_DOWN:
-//                                break;
-//                            case MotionEvent.ACTION_MOVE:
-//                                Log.e("aaa","移动");
-//                                ViewGroup.MarginLayoutParams margin9 = new ViewGroup.MarginLayoutParams(
-//                                        drawView.getLayoutParams());
-//                                margin9.setMargins((int) motionEvent.getX(), (int) motionEvent.getY(), 0, 0);//在左边距400像素，顶边距10像素的位置显示图片
-//                                RelativeLayout.LayoutParams layoutParams9 = new RelativeLayout.LayoutParams(margin9);
-//                                drawView.setLayoutParams(layoutParams9);
-//                                break;
-//                            case MotionEvent.ACTION_UP:
-//                                break;
-//                            case MotionEvent.ACTION_CANCEL:
-//                                break;
-//                        }
-//                        return true;
-//                    }
-//                });
-                return false;
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                if(selectLand!=0){
+                    plant(selectLand,dataList.get(i).getCrop().getId());
+                    plantMessagesHandler=new Handler(){
+                        @Override
+                        public void handleMessage(@NonNull Message msg) {
+                            super.handleMessage(msg);
+                            String messages = (String)msg.obj;
+                            Log.e("种植",messages);
+                            if(messages.equals("Fail")){
+                                Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
+                            }else if (messages.equals("true")){
+                                Toast.makeText(MainActivity.this,"操作成功！",Toast.LENGTH_SHORT).show();
+                                getUserInfo();
+                            }else
+                                Toast.makeText(MainActivity.this,"操作失败！",Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                }
             }
         });
+        bagDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                getCrop();
+            }
+        });
+    }
+
+    private void plant(final int selectLand, final int id) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/raiseCrop?userId="+LoginActivity.user.getId()+"&cropId="+id+"&landNumber=land"+selectLand).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        plantMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        plantMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
     }
 
     protected void setStatusBar() {
