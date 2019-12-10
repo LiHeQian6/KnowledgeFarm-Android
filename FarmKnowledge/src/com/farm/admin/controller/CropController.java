@@ -142,6 +142,7 @@ public class CropController extends Controller{
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		HttpServletRequest request = getRequest();
+		
 		String name = "";
 		int price = 0;
 		int matureTime = 0;
@@ -149,9 +150,11 @@ public class CropController extends Controller{
 		int experience = 0;
 		String realPath[] = new String[3];
 		int count = 0;
+		
 		CropService service = new CropService();
 		try {
 			List<FileItem> items = upload.parseRequest(request);
+			//过滤掉图片为空的情况
 			for(FileItem fi : items) {
 				if(fi.isFormField()) {
 					
@@ -162,6 +165,7 @@ public class CropController extends Controller{
 					}					
 				}
 			}
+			//图片不为空
 			for(FileItem fi : items) {
 				if(fi.isFormField()) {
 					String aString = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
@@ -183,9 +187,20 @@ public class CropController extends Controller{
 							break;
 					}	
 				}else {
-					String cropPhotoName = service.generateCropPhotoName() + fi.getName();
-					realPath[count] = Strings.photoUrl + count + cropPhotoName + "?" + service.generateCropPhotoUrlLast("");
-					File file = new File(Strings.filePath + count + cropPhotoName);
+					//构造cropPhotoName，并判断是否与其他作物的cropPhotoName重复
+					String cropPhotoName = "";
+					if(count == 0) {
+						do {
+							cropPhotoName = "";
+							cropPhotoName = service.generateRandom() + fi.getName();
+						} while (service.isExistCropPhotoName(cropPhotoName));
+					}				
+					
+					//构造img
+					realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+					
+					//把图片写入文件
+					File file = new File(Strings.cropfilePath + count + cropPhotoName);
 					fi.write(file);
 					
 					if(count == 2) {
@@ -223,6 +238,7 @@ public class CropController extends Controller{
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		HttpServletRequest request = getRequest();
+		
 		int id = 0;
 		String img1 = "";
 		String img2 = "";
@@ -235,6 +251,7 @@ public class CropController extends Controller{
 		int experience = 0;
 		String realPath[] = new String[3];
 		int count = 0;
+		
 		CropService service = new CropService();
 		try {
 			List<FileItem> items = upload.parseRequest(request);
@@ -274,7 +291,7 @@ public class CropController extends Controller{
 							break;
 					}	
 				}else {
-					if(fi.getName().equals("")) {
+					if(fi.getName().equals("")) { //图片为空，默认展示之前的图片
 						switch(count) {
 							case 0:
 								realPath[count] = img1;
@@ -286,19 +303,31 @@ public class CropController extends Controller{
 								realPath[count] = img3;
 								break;
 						}
-					}else {
+					}else { //图片不为空
+						//构造img，并判断是否与上次的img重复
 						switch (count) {
 							case 0:
-								realPath[count] = Strings.photoUrl + count + cropPhotoName + "?" + service.generateCropPhotoUrlLast(img1);
+								do {
+									realPath[count] = "";
+									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+								} while (realPath[count].equals(img1));
 								break;
 							case 1:
-								realPath[count] = Strings.photoUrl + count + cropPhotoName + "?" + service.generateCropPhotoUrlLast(img2);
+								do {
+									realPath[count] = "";
+									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+								} while (realPath[count].equals(img2));
 								break;
 							case 2:
-								realPath[count] = Strings.photoUrl + count + cropPhotoName + "?" + service.generateCropPhotoUrlLast(img3);
+								do {
+									realPath[count] = "";
+									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+								} while (realPath[count].equals(img3));
 								break;
 						}
-						File file = new File(Strings.filePath + count + cropPhotoName);
+						
+						//把图片写入文件
+						File file = new File(Strings.cropfilePath + count + cropPhotoName);
 						fi.write(file);
 					}
 					if(count == 2) {

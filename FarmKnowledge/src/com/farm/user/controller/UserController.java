@@ -64,7 +64,7 @@ public class UserController extends Controller{
 		if(email == null) {
 			email = "";
 		}
-		if(service.addUser(openId, nickName, password, photo, "", email, grade, "QQ")) {
+		if(service.addUser(service.generateAccout(), openId, nickName, password, photo, "", email, grade, "QQ")) {
 			User user = service.findUserByOpenId(openId);
 			renderJson(user);
 		}else {
