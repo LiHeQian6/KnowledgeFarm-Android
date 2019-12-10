@@ -192,7 +192,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     handler.sendMessage(message);
                 } else {
                     message.what = 5;
-                    message.obj = result;
+                    message.obj = parsr(URLDecoder.decode(result), User.class);
                     handler.sendMessage(message);
                 }
             }
