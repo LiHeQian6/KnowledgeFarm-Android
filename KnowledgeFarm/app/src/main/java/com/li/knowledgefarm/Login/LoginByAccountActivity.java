@@ -30,6 +30,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -78,6 +79,9 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     intentToStart.setAction("accountLogin");
                     startActivity(intentToStart);
                     finish();
+                    break;
+                case 4:
+                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -129,11 +133,16 @@ public class LoginByAccountActivity extends AppCompatActivity {
                         /**
                          *要执行的操作
                          */
-                        loginByAccount(accountStr,pwdStr);
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                loginByAccount(accountStr,pwdStr);
+                            }
+                        }.start();
                     }
                 };
                 Timer timer = new Timer();
-                timer.schedule(task, 3000);
+                timer.schedule(task, 2000);
             }
         });
 
@@ -149,7 +158,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
                 .add("account", accountStr)
-                .add("pwd", pwdStr)
+                .add("password", pwdStr)
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByAccount").build();
         //Call
@@ -163,10 +172,18 @@ public class LoginByAccountActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
+                Log.e("rs",result);
                 Message message = new Message();
-                message.what = 5;
-                message.obj = parsr(URLDecoder.decode(response.body().string()), User.class);
-                handler.sendMessage(message);
+                if(result.equals("PasswordError")){
+                    message.what = 4;
+                    message.obj = result;
+                    handler.sendMessage(message);
+                }else {
+                    message.what = 5;
+                    message.obj = parsr(URLDecoder.decode(result), User.class);
+                    handler.sendMessage(message);
+                }
             }
         });
     }
