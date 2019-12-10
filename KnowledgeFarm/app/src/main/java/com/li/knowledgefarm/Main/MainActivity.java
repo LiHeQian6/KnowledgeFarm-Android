@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView money;
     private GridLayout lands;
     private Dialog bagDialog;
+    private Dialog ifExtention;
     private OkHttpClient okHttpClient;
     private Handler bagMessagesHandler;
     private Gson gson;
@@ -175,8 +177,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             //TODO 扩建土地
-                            ExtensionLand(finalI);
-                            UpdataLand(finalI);
+                            showIfExtensionLand(finalI);
                         }
                     });
                     flag++;
@@ -232,14 +233,15 @@ public class MainActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void ExtensionLand(final int position){
+    private void ExtensionLand(final int position, final int money){
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
                         .add("userId",LoginActivity.user.getId()+"")
-                        .add("landNumber","land"+position).build();
+                        .add("landNumber","land"+position)
+                        .add("needMoney",money+"").build();
                 Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/extensionLand").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -279,6 +281,8 @@ public class MainActivity extends AppCompatActivity {
                     LoginActivity.user.setLandStauts(position,0);
                     int newMoney = LoginActivity.user.getMoney() - 500;
                     LoginActivity.user.setMoney(newMoney);
+                    money.setText("金币:"+newMoney+"");
+                    ifExtention.dismiss();
                     lands.removeAllViews();
                     showLand();
                 }else if(message.equals("false")){
@@ -327,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.fertilizer:
                     break;
                 case R.id.bag:
-                    showSingleAlertDialog();
+                    showBagMessages();
                     break;
                 case R.id.shop:
                     intent = new Intent();
@@ -378,6 +382,42 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    private void showIfExtensionLand(final int position){
+        AlertDialog.Builder showAlert = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.extension_land_dialog,null);
+        TextView needMoney = layout.findViewById(R.id.needMoney);
+        Button cancel = layout.findViewById(R.id.cancelEx);
+        Button trueEx = layout.findViewById(R.id.sureEx);
+        needMoney.setText("你是否要花费"+(200*position-800)+"金币来扩建这块土地？");
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ifExtention.dismiss();
+            }
+        });
+        trueEx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExtensionLand(position,(200*position-800));
+                UpdataLand(position);
+            }
+        });
+        showAlert.setView(layout);
+        ifExtention = showAlert.create();
+        ifExtention.show();
+        WindowManager.LayoutParams attrs = ifExtention.getWindow().getAttributes();
+        if (ifExtention.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            ifExtention.getWindow().setDimAmount(0f);//去除遮罩
+        }
+        attrs.gravity = Gravity.CENTER;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(300*scale+0.5f);
+        attrs.height =(int)(250*scale+0.5f);
+        ifExtention.getWindow().setAttributes(attrs);
+    }
+
     /**
      * @Description 背包弹出框
      * @Auther 孙建旺
@@ -385,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
      * @Param [position]
      * @return void
      */
-    private void showSingleAlertDialog(){
+    private void showBagMessages(){
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.bag_girdview, null);

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/logindialogbac">
+
+    <TextView
+        android:id="@+id/needMoney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="@color/ShopTextColor">
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <Button
+            android:id="@+id/cancelEx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buy"
+            android:text="取消"
+            android:textSize="20dp">
+        </Button>
+
+        <Button
+            android:id="@+id/sureEx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buy"
+            android:layout_marginLeft="20dp"
+            android:text="购买"
+            android:textSize="20sp">
+        </Button>
+    </LinearLayout>
+</LinearLayout>
