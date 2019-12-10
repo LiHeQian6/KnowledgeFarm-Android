@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
@@ -183,6 +186,7 @@ public class ShopActivity extends AppCompatActivity {
         TextView thisName = layout.findViewById(R.id.thisName);
         TextView thisPrice = layout.findViewById(R.id.thisPrice);
         TextView thisTime = layout.findViewById(R.id.thisTime);
+        ImageView thisFlower = layout.findViewById(R.id.thisFlower);
         imgBtnJian = layout.findViewById(R.id.imgBtnJian);
         imgBtnPlus = layout.findViewById(R.id.imgBtnPlus);
         shopNumber = layout.findViewById(R.id.shopNum);
@@ -192,6 +196,10 @@ public class ShopActivity extends AppCompatActivity {
         thisName.setText("名称："+shopList.get(position).getName());
         thisPrice.setText("单价："+shopList.get(position).getPrice()+"");
         thisTime.setText("成熟时间："+shopList.get(position).getMatureTime()+"");
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.loading)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        Glide.with(alertBuilder.getContext()).load(shopList.get(position).getImg1()).apply(requestOptions).into(thisFlower);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

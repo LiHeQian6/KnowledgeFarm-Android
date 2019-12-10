@@ -47,7 +47,6 @@
         <LinearLayout android:layout_width="wrap_content"
                       android:layout_alignParentLeft="true"
                       android:id="@+id/userInfo"
-                      android:background="@color/colorPrimary"
                       android:gravity="center_vertical"
                       android:layout_height="wrap_content">
             <ImageView android:layout_width="50dp"
@@ -62,15 +61,18 @@
                           android:text="昵称:景宝宝"
                           android:id="@+id/nickName"
                           android:textSize="20sp"
+                    android:textColor="@color/ShopTextColor"
                           android:layout_height="wrap_content"/>
                 <TextView android:layout_width="wrap_content"
                           android:text="lv:16"
                           android:id="@+id/level"
+                    android:textColor="@color/ShopTextColor"
                           android:layout_height="wrap_content"/>
                 <TextView android:layout_width="wrap_content"
                           android:text="账号：26415161"
                           android:textSize="12sp"
                           android:id="@+id/account"
+                    android:textColor="@color/ShopTextColor"
                           android:layout_height="wrap_content"/>
             </LinearLayout>
 
@@ -78,8 +80,10 @@
         <TextView android:layout_width="wrap_content"
                   android:text="金币：6666"
                   android:layout_margin="5dp"
+            android:textColor="@color/ShopTextColor"
                   android:layout_toRightOf="@+id/userInfo"
                   android:id="@+id/money"
+            android:textSize="20sp"
                   android:layout_height="wrap_content"/>
         <LinearLayout android:layout_width="wrap_content"
                       android:layout_alignParentRight="true"
