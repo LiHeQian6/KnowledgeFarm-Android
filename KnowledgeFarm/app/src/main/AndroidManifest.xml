@@ -20,15 +20,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".Login.QQFirstActivity"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".Login.StartActivity"
             android:fitsSystemWindows="true"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Shop.ShopActivity"
             android:screenOrientation="landscape" />

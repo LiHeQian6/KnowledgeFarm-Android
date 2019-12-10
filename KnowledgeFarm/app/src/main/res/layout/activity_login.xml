@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/loginRelative"
-    android:background="@drawable/diologback"
+    android:background="@drawable/logindialogbac"
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -17,6 +17,7 @@
             android:layout_centerHorizontal="true"
             android:visibility="visible"
             android:text="知识农场"
+            android:textColor="@color/ShopTextColor"
             android:textSize="50dp"/>
         <LinearLayout
             android:id="@+id/linearQQ"

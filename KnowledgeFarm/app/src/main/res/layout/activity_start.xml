@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/loginRelative"
-    android:background="@drawable/diologback"
+    android:background="@drawable/logindialogbac"
     android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/linearUser"

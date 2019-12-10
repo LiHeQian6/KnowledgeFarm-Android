@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Settings.SettingActivity"
-    android:background="@drawable/background">
+    android:background="@drawable/logindialogbac">
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp">
         <ImageView
@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/iv_return"
+            android:layout_centerInParent="true"
             android:layout_marginTop="5dp"
             android:textSize="30dp"
             android:textColor="#ffffff"
