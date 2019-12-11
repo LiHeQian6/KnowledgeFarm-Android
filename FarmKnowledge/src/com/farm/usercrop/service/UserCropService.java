@@ -3,8 +3,10 @@ package com.farm.usercrop.service;
 import java.sql.SQLException;
 
 import com.farm.crop.service.CropService;
+import com.farm.entity.Strings;
 import com.farm.entity.UserCropItem;
 import com.farm.model.Crop;
+import com.farm.model.User;
 import com.farm.user.dao.UserDao;
 import com.farm.user.service.UserService;
 import com.farm.userbag.service.BagService;
@@ -66,14 +68,23 @@ public class UserCropService {
 		int experience= crop.getInt("experience");
 		
 		boolean succeed = Db.tx(new IAtom() {
-			
 			@Override
 			public boolean run() throws SQLException {
 				UserService service = new UserService();
 				boolean a1 = new UserCropDao().deleteCrop(ucId);
 				boolean a2 = service.addEandM(userId, price, experience);
 				boolean a3 = service.updateLandCrop(userId, landNumber, 0);
-				if(a1 == true && a2 == true && a3 == true) {
+				
+				boolean a4 = false;
+				User user = service.getUpdateUserInfo(userId);
+				int userLevel = user.getInt("level");
+				int userExperience = user.getInt("experience");
+				if(userExperience >= Strings.userLevel[userLevel]) {
+					a4 = user.set("level", userLevel+1).update();
+				}else {
+					a4 = true;
+				}
+				if(a1 == true && a2 == true && a3 == true && a4 == true) {
 					return true;
 				}
 				return false;
