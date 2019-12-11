@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView level;
     private TextView account;
     private TextView money;
+    private ProgressBar experience;
+    private TextView experienceValue;
     private GridLayout lands;
     private Dialog bagDialog;
     private Dialog ifExtention;
@@ -229,6 +231,10 @@ public class MainActivity extends AppCompatActivity {
         money.setText("金币:"+LoginActivity.user.getMoney());
         waterCount.setText(LoginActivity.user.getWater()+"");
         fertilizerCount.setText(LoginActivity.user.getFertilizer()+"");
+        int[] levelExperience = getResources().getIntArray(R.array.levelExperience);
+        experience.setMax(levelExperience[LoginActivity.user.getLevel()-1]);
+        experience.setProgress((int)LoginActivity.user.getExperience());
+        experienceValue.setText(""+LoginActivity.user.getExperience()+"/"+levelExperience[LoginActivity.user.getLevel()-1]);
     }
 
     /**

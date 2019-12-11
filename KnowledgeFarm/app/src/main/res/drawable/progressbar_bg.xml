@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!--  设置背景色  -->
     <item android:id="@android:id/background"
-        android:drawable="@android:color/holo_orange_light">
+        android:drawable="#836332">
     </item>
 
     <!--  设置进度条颜色  -->
@@ -11,8 +11,8 @@
             <shape>
 
                 <gradient
-                    android:endColor="#fff000"
-                    android:startColor="#fff000" />
+                    android:endColor="#ffd901"
+                    android:startColor="#ffd901" />
             </shape>
         </clip>
     </item>
