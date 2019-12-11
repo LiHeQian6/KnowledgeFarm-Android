@@ -25,6 +25,7 @@
             android:text="设置"/>
     </RelativeLayout>
     <LinearLayout
+        android:id="@+id/linearCenter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -123,5 +124,13 @@
                 android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearCenter"
+        android:layout_alignRight="@+id/linearCenter"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"
+        android:visibility="gone"/>
 </RelativeLayout>
