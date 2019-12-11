@@ -33,7 +33,7 @@
                 android:id="@+id/tvAnswer"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:textSize="40dp"
+                android:textSize="50dp"
                 android:inputType="number"
                 android:imeOptions="flagNoExtractUi"
                 android:textColor="#ffffff" />
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:text="你还差一点就答对了哦！"
                 android:textColor="@color/ShopTextColor"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:textSize="20sp">
             </TextView>
         </LinearLayout>

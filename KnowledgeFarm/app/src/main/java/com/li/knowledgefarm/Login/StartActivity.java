@@ -195,9 +195,7 @@ public class StartActivity extends AppCompatActivity {
     //对返回键进行监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-
             exit();
             return true;
         }
