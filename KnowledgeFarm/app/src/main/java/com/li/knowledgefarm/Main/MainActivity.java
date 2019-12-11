@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
+                        Log.e("用户信息","aaaaaaaaaaaaaaaaa");
                         String result =  response.body().string();
                         if (result.equals("{}")) {
                             Log.e("用户信息","信息异常");

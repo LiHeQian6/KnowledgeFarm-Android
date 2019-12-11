@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -113,13 +112,13 @@ public class SettingActivity extends AppCompatActivity {
                             editor.putLong("start",new Date().getTime());
                             editor.putInt("expires", Integer.parseInt(expires));
                             editor.commit();
-                            Toast.makeText(getApplicationContext(),"绑定成功",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"绑定QQ成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
-                            Toast.makeText(getApplicationContext(),"绑定失败",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"绑定QQ失败",Toast.LENGTH_SHORT).show();
                             break;
                         case "already":
-                            Toast.makeText(getApplicationContext(),"该QQ号已被绑定",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"该QQ号已被其他账号绑定",Toast.LENGTH_SHORT).show();
                             break;
                     }
                     break;
@@ -134,16 +133,28 @@ public class SettingActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = sp.edit();
                             editor.clear();
                             editor.commit();
-                            Toast.makeText(getApplicationContext(),"解绑成功",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"解绑QQ成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
-                            Toast.makeText(getApplicationContext(),"解绑失败",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"解绑QQ失败",Toast.LENGTH_SHORT).show();
                             break;
                     }
                     break;
                 case 3: //绑定邮箱判断
                     break;
                 case 4: //解绑邮箱判断
+                    switch ((String)msg.obj){
+                        case "true":
+                            LoginActivity.user.setEmail("");
+                            btnBindingEmail.setVisibility(View.VISIBLE);
+                            btnUnBindingEmail.setVisibility(View.GONE);
+                            tv_email.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(),"解绑邮箱成功",Toast.LENGTH_SHORT).show();
+                            break;
+                        case "false":
+                            Toast.makeText(getApplicationContext(),"解绑邮箱失败",Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                     break;
             }
         }
@@ -336,8 +347,10 @@ public class SettingActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(Object o) {
                     JSONObject response = (JSONObject) o;
+                    Log.i("lww",response.toString());
                     try {
                         int ret = response.getInt("ret");
+                        Log.i("lww",""+ret);
                         if (ret == 0) {
                             openId = response.getString("openid");
                             accessToken = response.getString("access_token");
@@ -443,7 +456,7 @@ public class SettingActivity extends AppCompatActivity {
         //设置标题
         builder.setTitle("温馨提示");
         //设置提示内容
-        builder.setMessage("确定要解除绑定吗？解除绑定后该QQ号将不能继续登录该账号下的游戏");
+        builder.setMessage("确定要解除绑定吗？"+"\r\n"+"解除绑定后该QQ号将不能继续登录该账号下的游戏");
         //设置取消按钮
         builder.setNegativeButton("取消",null);
         //设置确定按钮
@@ -500,7 +513,7 @@ public class SettingActivity extends AppCompatActivity {
         //设置标题
         builder.setTitle("温馨提示");
         //设置提示内容
-        builder.setMessage("确定要解除绑定吗？邮箱可用于找回密码，解除绑定后将无法找回密码");
+        builder.setMessage("确定要解除绑定吗？"+"\r\n"+"邮箱可用于找回密码，解除绑定后将无法找回密码");
         //设置取消按钮
         builder.setNegativeButton("取消",null);
         //设置确定按钮
@@ -519,7 +532,26 @@ public class SettingActivity extends AppCompatActivity {
      * 解绑邮箱
      */
     private void unBindingEmail(){
+        new Thread() {
+            @Override
+            public void run() {
+                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).build();
+                final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingEmail").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i("lww","请求失败");
+                    }
 
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result = response.body().string();
+                        sendMessage(4,result);
+                    }
+                });
+            }
+        }.start();
     }
 
     /**
@@ -538,6 +570,7 @@ public class SettingActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(SettingActivity.this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     /**

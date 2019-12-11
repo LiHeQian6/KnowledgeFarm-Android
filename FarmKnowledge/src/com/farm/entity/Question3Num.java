@@ -7,10 +7,9 @@ public class Question3Num {
 	private String signal2;
 	private int num3;
 	private int result;
+	private String ifDone = "false";
 	
-	
-	
-	public Question3Num(int num1, String signal1, int num2, String signal2, int num3, int result) {
+	public Question3Num(int num1, String signal1, int num2, String signal2, int num3, int result, String ifDone) {
 		super();
 		this.num1 = num1;
 		this.signal1 = signal1;
@@ -18,6 +17,7 @@ public class Question3Num {
 		this.signal2 = signal2;
 		this.num3 = num3;
 		this.result = result;
+		this.ifDone = ifDone;
 	}
 	public int getNum1() {
 		return num1;
@@ -55,11 +55,16 @@ public class Question3Num {
 	public void setResult(int result) {
 		this.result = result;
 	}
+	public String getIfDone() {
+		return ifDone;
+	}
+	public void setIfDone(String ifDone) {
+		this.ifDone = ifDone;
+	}
 	@Override
 	public String toString() {
 		return "Question3Num [num1=" + num1 + ", signal1=" + signal1 + ", num2=" + num2 + ", signal2=" + signal2
-				+ ", num3=" + num3 + ", result=" + result + "]";
-	}
-	
+				+ ", num3=" + num3 + ", result=" + result + ", ifDone=" + ifDone + "]";
+	}	
 	
 }

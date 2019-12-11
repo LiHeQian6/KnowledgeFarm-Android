@@ -34,6 +34,18 @@ public class UserController extends Controller{
 		}
 	}	
 	
+	//根据userId查询用户信息
+	public void findUserInfoByUserId() {
+		int userId = getInt("userId");
+		
+		User user = new UserService().getUpdateUserInfo(userId);
+		if(user != null) {
+			renderJson(user);
+		}else {
+			renderJson("{}");
+		}
+	}
+	
 	//用户第一次登录QQ，添加用户
 	public void addQQUser() {
 		String openId = get("openId");
@@ -100,18 +112,32 @@ public class UserController extends Controller{
 	
 	//发送验证码用于找回密码，并返回验证码
 	public void sendTestCodePassword() {
+		String accout = get("accout");
 		String email = get("email");
 		
 		UserService service = new UserService();
-		String testCode = "";
-		for(int i = 0;i < 4;i++) {
-			testCode = "" + (int)(Math.random()*10);
+		String userEmail = service.findUserByAccout(accout).get("email");
+		if(service.isExistUserByAccout(accout)) {
+			if(!userEmail.equals("")) {
+				if(userEmail.equals(email)) {
+					String testCode = "";
+					for(int i = 0;i < 4;i++) {
+						testCode = "" + (int)(Math.random()*10);
+					}
+					String text = "您用于找回密码的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
+					service.sendEmail(email, text);
+					renderJson(testCode);
+				}else {
+					renderJson("EmailError");
+				}
+			}else {
+				renderJson("notBindingEmail");
+			}
+		}else {
+			renderJson("notExistAccount");
 		}
-		String text = "您用于找回密码的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
-		service.sendEmail(email, text);
-		renderJson(testCode);
 	}
-	
+
 	//找回密码（重新给账号设置密码）
 	public void resetUserPassword() {
 		String accout = get("accout");
