@@ -3,9 +3,7 @@ package com.farm.userbag.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.farm.entity.BagCropItem;
 import com.farm.entity.CropItem;
-import com.farm.model.Crop;
 import com.farm.model.UserBag;
 
 public class BagDao {
@@ -26,6 +24,14 @@ public class BagDao {
 	 * 	删
 	 * @throws
 	 */
+	//删除指定作物
+	public boolean deleteCropByUserIdAndCropId(int userId,int cropId) {
+		List<UserBag> list = UserBag.dao.find("select * from userbag where userId = ? and cropId = ?",userId,cropId);
+		if(list.size() != 0) {
+			return UserBag.dao.deleteById(list.get(0).getInt("id"));
+		}
+		return false;
+	}
 	
 	
 	
@@ -93,7 +99,14 @@ public class BagDao {
 		}
 		return null;
 	}
-	
+	//查询指定作物的剩余数量
+	public int findNumberByCropId(int userId, int cropId) {
+		List<UserBag> list = UserBag.dao.find("select * from userbag where userId=? and cropId=?",userId,cropId);
+		if(list.size() != 0) {
+			return list.get(0).getInt("number");
+		}
+		return 0;
+	}
 
 
 }

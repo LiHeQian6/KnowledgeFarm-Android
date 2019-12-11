@@ -101,6 +101,10 @@ public class UserService {
 	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
 		return new UserDao().updateUserPassword(oldPassword, newPassword, accout);
 	}
+	//找回密码，，根据账号查询到
+	public boolean updateUserPassword(String accout,String password) {
+		return new UserDao().updateUserPassword(accout, password);
+	}
 	//修改用户的头像，根据账号查询到
 	public boolean updateUserPhoto(String accout, String photo) {
 		return new UserDao().updateUserPhoto(accout, photo);

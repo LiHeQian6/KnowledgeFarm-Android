@@ -4,7 +4,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.farm.model.Crop;
 import com.farm.model.User;
 import com.farm.model.UserAuthority;
 import com.jfinal.plugin.activerecord.Db;
@@ -18,7 +17,7 @@ public class UserDao {
 	 */
 	//User表插入账号、别名、头像（accout、nickName、photo）
 	public boolean addUser(String accout, String nickName, String password, String photo, String photoName, String email, int grade){
-		boolean succeed =  new User().set("accout", accout).set("nickName", nickName).set("photo", photo).set("photoName", photoName).set("email", email).set("grade", grade).save();
+		boolean succeed =  new User().set("accout", accout).set("nickName", nickName).set("password", password).set("photo", photo).set("photoName", photoName).set("email", email).set("grade", grade).save();
 		return succeed;
 	}
 	//UserAuthority表内插入userId、openId、type
@@ -107,6 +106,15 @@ public class UserDao {
 			return 0;
 		}
 		return -1;
+	}
+	//找回密码，，根据账号查询到
+	public boolean updateUserPassword(String accout,String password) {
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			User user = list.get(0);
+			return user.set("password", password).update();
+		}
+		return false;
 	}
 	//修改用户的头像，根据账号查询到
 	public boolean updateUserPhoto(String accout, String photo) {
@@ -209,6 +217,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
+	//修改password
 	
 	
 	

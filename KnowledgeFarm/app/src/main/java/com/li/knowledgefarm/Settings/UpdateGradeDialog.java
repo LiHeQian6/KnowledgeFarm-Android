@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class UpdateGradeDialog extends PopupWindow {
             switch (msg.what){
                 case 1: // 修改年级判断
                     if(msg.obj.equals("true")){
+                        LoginActivity.user.setGrade(transmit(newGrade));
                         Toast.makeText(context,"年级修改成功",Toast.LENGTH_SHORT).show();
                         dismiss();
                     }else{
@@ -61,7 +63,7 @@ public class UpdateGradeDialog extends PopupWindow {
         }
     };
 
-    public UpdateGradeDialog(final Context context, String grade) {
+    public UpdateGradeDialog(final Context context) {
         this.context = context;
         view = LayoutInflater.from(context).inflate(R.layout.update_grade, null);
 
@@ -72,7 +74,7 @@ public class UpdateGradeDialog extends PopupWindow {
         init();
 
         /** 得出当前年级的position值，并设置*/
-        int position = Integer.parseInt(grade) - 1;
+        int position = LoginActivity.user.getGrade() - 1;
         spinner.setSelection(position,true);
 
         /** 监听下拉选框*/
@@ -138,7 +140,7 @@ public class UpdateGradeDialog extends PopupWindow {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","71007839").add("grade",""+transmit(newGrade)).build();
+                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).add("grade",""+transmit(newGrade)).build();
                 final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/updateUserGrade").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {

@@ -88,13 +88,18 @@ public class UserCropService {
 			
 			@Override
 			public boolean run() throws SQLException {
-				int userCropId = new UserCropDao().addNewCrop(cropId);
+				BagService bagService = new BagService();
+				int userCropId = 0;
 				boolean a2 = false;
 				boolean a3 = false;
-				if(userCropId != 0) {
-					a2 = new UserService().updateLandCrop(userId, landNumber, userCropId);
-					a3 = new BagService().decreaseOneCrop(userId, cropId);
+				if(bagService.findNumberByCropId(userId, cropId) > 0) {
+					userCropId = new UserCropDao().addNewCrop(cropId);
+					if(userCropId != 0) {
+						a2 = new UserService().updateLandCrop(userId, landNumber, userCropId);
+						a3 = bagService.decreaseOneCrop(userId, cropId);
+					}
 				}
+				
 				if(userCropId != 0 && a2 && a3) {
 					return true;
 				}

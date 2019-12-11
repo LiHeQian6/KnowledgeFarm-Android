@@ -54,7 +54,7 @@
             android:id="@+id/btnUnBindingQQ"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="解绑QQ"
+            android:text="账号和QQ解除绑定"
             android:visibility="gone"/>
         <Button
             android:id="@+id/btnRegout"
