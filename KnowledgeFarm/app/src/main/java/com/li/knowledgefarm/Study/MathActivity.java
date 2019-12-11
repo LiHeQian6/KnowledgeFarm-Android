@@ -55,7 +55,6 @@ public class MathActivity extends AppCompatActivity {
     private int position=0;
     private int TrueAnswerNumber = 0;
     private Dialog ifReturn;
-    private Boolean ifGetWAF = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,17 +125,27 @@ public class MathActivity extends AppCompatActivity {
     }
 
     /**
-     * @Description 展示题目
+     * @Description 展示下一道题目
      * @Auther 孙建旺
      * @Date 上午 11:33 2019/12/11
      * @Param [pos]
      * @return void
      */
     private void showQuestion(int pos){
-        answer.setText("");
-        isFalse.setText("");
-        isTrue.setVisibility(View.INVISIBLE);
-        question.setText(datalist.get(pos).toString());
+        if(datalist.get(pos).getIfDone().equals("true")) {
+            isFalse.setText("");
+            isTrue.setVisibility(View.INVISIBLE);
+            isFalse.setVisibility(View.INVISIBLE);
+            answer.setVisibility(View.GONE);
+            question.setText(datalist.get(pos).toString()+ datalist.get(pos).getResult());
+        }else{
+            if(answer.getVisibility() == View.GONE){
+                answer.setVisibility(View.VISIBLE);
+            }
+            isFalse.setText("");
+            isTrue.setVisibility(View.INVISIBLE);
+            question.setText(datalist.get(pos).toString());
+        }
     }
 
     /**
@@ -212,18 +221,24 @@ public class MathActivity extends AppCompatActivity {
                     break;
                 case R.id.btnNextQuestion:
                     String inputRes = answer.getText().toString().trim();
+                    if(answer.getVisibility() == View.GONE){
+                        position++;
+                        showQuestion(position);
+                        return;
+                    }
                     if(inputRes.equals(datalist.get(position).getResult()+"")) {
                         TrueAnswerNumber++;
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         isFalse.setVisibility(View.VISIBLE);
-                        answer.setTextColor(getResources().getColor(R.color.AnswerTrue));
                         if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    answer.setText("");
+                                    datalist.get(position).setIfDone("true");
                                     position = ++position;
                                     showQuestion(position);
                                 }
