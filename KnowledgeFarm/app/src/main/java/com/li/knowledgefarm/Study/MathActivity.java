@@ -39,6 +39,7 @@ public class MathActivity extends AppCompatActivity {
     private TextView btnPreQuestion;
     private TextView btnNextQuestion;
     private TextView question;
+    private ImageView isTrue;
     private EditText answer;
     private Handler getMath;
     private Gson gson;
@@ -60,6 +61,8 @@ public class MathActivity extends AppCompatActivity {
     }
 
     private void showQuestion(int pos){
+        answer.setText("");
+        isTrue.setVisibility(View.INVISIBLE);
         question.setText(datalist.get(pos).toString());
     }
 
@@ -135,10 +138,20 @@ public class MathActivity extends AppCompatActivity {
                     break;
                 case R.id.btnNextQuestion:
                     if((position+1)<datalist.size()) {
-                        answer.setText("");
-                        answer.clearFocus();
-                        position = ++position;
-                        showQuestion(position);
+                        String inputRes = answer.getText().toString().trim();
+                        if(inputRes.equals(datalist.get(position).getResult()+"")) {
+                            isTrue.setVisibility(View.VISIBLE);
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    position = ++position;
+                                    showQuestion(position);
+                                }
+                            },1000);
+                        }else{
+
+                        }
                     }
                     break;
             }
@@ -157,6 +170,7 @@ public class MathActivity extends AppCompatActivity {
         btnNextQuestion = findViewById(R.id.btnNextQuestion);
         question = findViewById(R.id.tvQuestion);
         answer = findViewById(R.id.tvAnswer);
+        isTrue = findViewById(R.id.isTrue);
     }
 
     /**

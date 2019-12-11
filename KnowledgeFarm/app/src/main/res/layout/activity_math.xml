@@ -19,6 +19,7 @@
             android:id="@+id/linearQuestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_centerHorizontal="true">
             <TextView
                 android:id="@+id/tvQuestion"
@@ -34,6 +35,13 @@
                 android:textSize="40dp"
                 android:imeOptions="flagNoExtractUi"
                 android:textColor="#ffffff" />
+            <ImageView
+                android:id="@+id/isTrue"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/duigou"
+                android:visibility="gone"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
