@@ -1,6 +1,7 @@
 package com.li.knowledgefarm.Study;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -8,6 +9,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +48,8 @@ public class MathActivity extends AppCompatActivity {
     private Gson gson;
     private List<Question3Num> datalist;
     private int position=0;
+    private int TrueAnswerNumber = 0;
+    private Dialog ifReturn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +65,28 @@ public class MathActivity extends AppCompatActivity {
         getMathHandler();
     }
 
+
+    /**
+     * @Description 答题正确获取奖励
+     * @Auther 孙建旺
+     * @Date 下午 2:17 2019/12/11
+     * @Param []
+     * @return void
+     */
+    private void getWaterAndFertilizer(){
+
+    }
+
+    /**
+     * @Description 展示题目
+     * @Auther 孙建旺
+     * @Date 上午 11:33 2019/12/11
+     * @Param [pos]
+     * @return void
+     */
     private void showQuestion(int pos){
         answer.setText("");
+        isFalse.setText("");
         isTrue.setVisibility(View.INVISIBLE);
         question.setText(datalist.get(pos).toString());
     }
@@ -125,6 +149,7 @@ public class MathActivity extends AppCompatActivity {
 
     class CustomerListener implements View.OnClickListener{
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onClick(View view) {
             switch (view.getId()){
@@ -141,8 +166,12 @@ public class MathActivity extends AppCompatActivity {
                     if((position+1)<datalist.size()) {
                         String inputRes = answer.getText().toString().trim();
                         if(inputRes.equals(datalist.get(position).getResult()+"")) {
+                            TrueAnswerNumber++;
+                            isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                             isTrue.setVisibility(View.VISIBLE);
-                            isFalse.setVisibility(View.INVISIBLE);
+                            isFalse.setText("答对啦！获得了奖励哦！");
+                            isFalse.setVisibility(View.VISIBLE);
+                            answer.setTextColor(getResources().getColor(R.color.AnswerTrue));
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -152,8 +181,13 @@ public class MathActivity extends AppCompatActivity {
                                 }
                             },1000);
                         }else{
+                            isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
+                            isTrue.setVisibility(View.VISIBLE);
+                            isFalse.setText("你还差一点就答对了哦！");
                             isFalse.setVisibility(View.VISIBLE);
                         }
+                    }else{
+
                     }
                     break;
             }

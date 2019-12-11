@@ -6,4 +6,6 @@
     <color name="ShopTextColor">#ffffff</color>
     <color name="blackTextColor">#000000</color>
     <color name="zhuxiaoColor">#dedede</color>
+    <color name="AnswerTrue">#49eb0a</color>
+    <color name="AnswerFalse">#d81e06</color>
 </resources>

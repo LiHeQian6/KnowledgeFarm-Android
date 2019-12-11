@@ -34,6 +34,7 @@
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:textSize="40dp"
+                android:inputType="number"
                 android:imeOptions="flagNoExtractUi"
                 android:textColor="#ffffff" />
             <ImageView
