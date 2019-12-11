@@ -415,6 +415,8 @@ public class MainActivity extends AppCompatActivity {
         money=findViewById(R.id.money);
         account=findViewById(R.id.account);
         lands=findViewById(R.id.lands);
+        experience=findViewById(R.id.experience);
+        experienceValue=findViewById(R.id.experienceValue);
     }
     class MainListener implements View.OnClickListener {
 
