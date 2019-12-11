@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.entity.MathBean;
+import com.li.knowledgefarm.entity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,9 +37,11 @@ public class MathActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private TextView btnPreQuestion;
     private TextView btnNextQuestion;
+    private TextView question;
     private Handler getMath;
     private Gson gson;
-    private List<MathBean> datalist;
+    private List<Question3Num> datalist;
+    private int position=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,8 @@ public class MathActivity extends AppCompatActivity {
         getMathHandler();
     }
 
-    private void showQuestion(int position){
-
+    private void showQuestion(int pos){
+        question.setText(datalist.get(pos).toString());
     }
 
     /**
@@ -73,9 +75,10 @@ public class MathActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
                 if(data != null) {
-                    Type type = new TypeToken<List<MathBean>>() {
+                    Type type = new TypeToken<List<Question3Num>>() {
                     }.getType();
                     datalist = gson.fromJson(data, type);
+                    showQuestion(position);
                 }
             }
         };
@@ -123,10 +126,16 @@ public class MathActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.btnPreQuestion:
-
+                    if((position-1)>=0) {
+                        position = --position;
+                        showQuestion(position);
+                    }
                     break;
                 case R.id.btnNextQuestion:
-
+                    if((position+1)<datalist.size()) {
+                        position = ++position;
+                        showQuestion(position);
+                    }
                     break;
             }
         }
@@ -142,6 +151,7 @@ public class MathActivity extends AppCompatActivity {
         datalist = new ArrayList<>();
         btnPreQuestion = findViewById(R.id.btnPreQuestion);
         btnNextQuestion = findViewById(R.id.btnNextQuestion);
+        question = findViewById(R.id.tvQuestion);
     }
 
     /**
@@ -151,6 +161,7 @@ public class MathActivity extends AppCompatActivity {
         listener = new CustomerListener();
         iv_return.setOnClickListener(listener);
         btnPreQuestion.setOnClickListener(listener);
+        btnNextQuestion.setOnClickListener(listener);
     }
     protected void setStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
