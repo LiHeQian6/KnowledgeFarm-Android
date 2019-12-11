@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ public class MathActivity extends AppCompatActivity {
     private TextView btnPreQuestion;
     private TextView btnNextQuestion;
     private TextView question;
+    private EditText answer;
     private Handler getMath;
     private Gson gson;
     private List<Question3Num> datalist;
@@ -133,6 +135,8 @@ public class MathActivity extends AppCompatActivity {
                     break;
                 case R.id.btnNextQuestion:
                     if((position+1)<datalist.size()) {
+                        answer.setText("");
+                        answer.clearFocus();
                         position = ++position;
                         showQuestion(position);
                     }
@@ -152,6 +156,7 @@ public class MathActivity extends AppCompatActivity {
         btnPreQuestion = findViewById(R.id.btnPreQuestion);
         btnNextQuestion = findViewById(R.id.btnNextQuestion);
         question = findViewById(R.id.tvQuestion);
+        answer = findViewById(R.id.tvAnswer);
     }
 
     /**

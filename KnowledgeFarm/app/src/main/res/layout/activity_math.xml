@@ -27,13 +27,13 @@
                 android:textSize="40dp"
                 android:textColor="#ffffff"
                 android:text="5 + 8 - 3 = " />
-            <TextView
+            <EditText
                 android:id="@+id/tvAnswer"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:textSize="40dp"
-                android:textColor="#ffffff"
-                android:text="10"/>
+                android:imeOptions="flagNoExtractUi"
+                android:textColor="#ffffff" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
