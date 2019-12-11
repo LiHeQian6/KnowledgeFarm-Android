@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
@@ -52,6 +53,12 @@ public class SettingActivity extends AppCompatActivity {
     private Button btnBindingQQ;
     /** 解绑QQ*/
     private Button btnUnBindingQQ;
+    /** 绑定邮箱*/
+    private Button btnBindingEmail;
+    /** 解绑邮箱*/
+    private Button btnUnBindingEmail;
+    /** 邮箱信息*/
+    private TextView tv_email;
     /** 切换账号*/
     private Button btnRegout;
     /** OKHttpClient*/
@@ -144,7 +151,7 @@ public class SettingActivity extends AppCompatActivity {
         isBindingQQ();
 
         /** 判断是否已绑定邮箱，再修改页面*/
-
+        isBindingEmail();
 
     }
 
@@ -171,6 +178,10 @@ public class SettingActivity extends AppCompatActivity {
                 case R.id.btnUnBindingQQ:
                     showAlertDialog();
                     break;
+                case R.id.btnBindingEmail:
+                    break;
+                case R.id.btnUnBindingEmail:
+                    break;
                 case R.id.btnRegout:
                     regout();
                     break;
@@ -188,6 +199,9 @@ public class SettingActivity extends AppCompatActivity {
         btnUpdatePassword = findViewById(R.id.btnUpdatePassword);
         btnBindingQQ = findViewById(R.id.btnBindingQQ);
         btnUnBindingQQ = findViewById(R.id.btnUnBindingQQ);
+        btnBindingEmail = findViewById(R.id.btnBindingEmail);
+        btnUnBindingEmail = findViewById(R.id.btnUnBindingEmail);
+        tv_email = findViewById(R.id.tv_email);
         btnRegout = findViewById(R.id.btnRegout);
 
         listener = new CustomerListener();
@@ -197,6 +211,8 @@ public class SettingActivity extends AppCompatActivity {
         btnUpdatePassword.setOnClickListener(listener);
         btnBindingQQ.setOnClickListener(listener);
         btnUnBindingQQ.setOnClickListener(listener);
+        btnBindingEmail.setOnClickListener(listener);
+        btnUnBindingEmail.setOnClickListener(listener);
         btnRegout.setOnClickListener(listener);
 
         /** 关闭状态栏*/
@@ -282,6 +298,18 @@ public class SettingActivity extends AppCompatActivity {
                 });
             }
         }.start();
+    }
+
+    /**
+     * 判断是否已绑定邮箱，再修改页面
+     */
+    private void isBindingEmail(){
+        if(!LoginActivity.user.getEmail().equals("")){
+            btnBindingEmail.setVisibility(View.GONE);
+            btnUnBindingEmail.setVisibility(View.VISIBLE);
+            tv_email.setVisibility(View.VISIBLE);
+            tv_email.setText("已绑定邮箱：" + LoginActivity.user.getEmail());
+        }
     }
 
     /**
