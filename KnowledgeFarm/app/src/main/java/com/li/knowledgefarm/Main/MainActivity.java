@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.Crop;
 import com.li.knowledgefarm.entity.User;
+import com.li.knowledgefarm.entity.UserCropItem;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -60,7 +62,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity {
     private ImageView learn;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler bagMessagesHandler;
     private Gson gson;
     private List<BagCropNumber> dataList;
-    private Map<Integer, Crop> cropList;
+    private List<UserCropItem> cropList;
     private Handler UpdataLands;
     private Handler cropMessagesHandler=new Handler(){
         @Override
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             String messages = (String)msg.obj;
             Log.e("cropList",messages);
             if(!messages.equals("Fail")){
-                Type type = new TypeToken<Map<Integer,Crop>>(){}.getType();
+                Type type = new TypeToken<List<UserCropItem>>(){}.getType();
                 cropList = gson.fromJson(messages,type);
                 showLand();
             }else{
@@ -128,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
         showUserInfo();
     }
 
+    /**
+     * 获取用户信息
+     */
     private void getUserInfo() {
         SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
         final String openId=sp.getString("opId","");
@@ -179,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * 获取种植的作物信息
+     */
     private void getCrop() {
         new Thread(){
             @Override
@@ -205,6 +213,9 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * 展示用户信息
+     */
     private void showUserInfo() {
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.huancun)
@@ -220,6 +231,9 @@ public class MainActivity extends AppCompatActivity {
         fertilizerCount.setText(LoginActivity.user.getFertilizer()+"");
     }
 
+    /**
+     * 生成土地
+     */
     private void showLand() {
         int flag=0;
         lands.removeAllViews();
@@ -268,12 +282,21 @@ public class MainActivity extends AppCompatActivity {
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
                 land.setImageResource(R.drawable.land);
-                Crop crop = cropList.get(LoginActivity.user.getLandStauts(finalI));
+                UserCropItem crop=null;
+                for (int j = 0; j < cropList.size(); j++) {
+                    if(cropList.get(j).getUserCropId()==LoginActivity.user.getLandStauts(finalI)){
+                        crop=cropList.get(j);
+                        break;
+                    }
+                }
                 if (crop!=null){
-                    Glide.with(this).load(crop.getImg1()).apply(requestOptions).into(plant);
-                    plant.setRotation(-10);
-                    plant.setRotationX(-30);
+                    Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
+                    ProgressBar progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+                    progressBar.setMax(crop.getCrop().getMatureTime());
+                    progressBar.setProgress(crop.getProgress());
+                    progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar_bg));
                     relativeLayout.addView(plant);
+                    relativeLayout.addView(progressBar);
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -452,6 +475,10 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * 询问扩建
+     * @param position
+     */
     private void showIfExtensionLand(final int position){
         AlertDialog.Builder showAlert = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -534,6 +561,10 @@ public class MainActivity extends AppCompatActivity {
         planting(gridView);
     }
 
+    /**
+     * 种植作物
+     * @param gridView
+     */
     private void planting(final GridView gridView) {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -566,6 +597,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 请求种植
+     * @param selectLand
+     * @param id
+     */
     private void plant(final int selectLand, final int id) {
         new Thread(){
             @Override
