@@ -23,7 +23,6 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -48,7 +47,6 @@ import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.entity.BagCropNumber;
-import com.li.knowledgefarm.entity.Crop;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
 
@@ -79,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView level;
     private TextView account;
     private TextView money;
+    private ProgressBar experience;
+    private TextView experienceValue;
     private GridLayout lands;
     private Dialog bagDialog;
     private Dialog ifExtention;
@@ -134,25 +134,12 @@ public class MainActivity extends AppCompatActivity {
      * 获取用户信息
      */
     private void getUserInfo() {
-        SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
-        final String openId=sp.getString("opId","");
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("openId",openId);
-                    jsonObject.put("nickName","");
-                    jsonObject.put("photo","");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                MediaType type = MediaType.parse("text/plain");
-                RequestBody body = RequestBody.create(jsonObject.toString(),type);
                 Request request = new Request.Builder()
-                        .url(getResources().getString(R.string.URL)+"/user/loginByOpenId")
-                        .post(body)
+                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId?userId="+LoginActivity.user.getId())
                         .build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
@@ -164,12 +151,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String result =  response.body().string();
-                        if (result.equals("notEffect")) {
-                        } else if(result.equals("notExist")){//第一次登录
+                        if (result.equals("{}")) {
+                            Log.e("用户信息","信息异常");
                         }else {
                             Log.e("用户信息",result);
                             Message message = new Message();
-                            message.what = 3;
                             message.obj = LoginActivity.parsr(URLDecoder.decode(result), User.class);
                             LoginActivity.user = (User) message.obj;
                             if(bagDialog!=null){
@@ -224,11 +210,15 @@ public class MainActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(this).load(LoginActivity.user.getPhoto()).apply(requestOptions).into(photo);
         nickName.setText(LoginActivity.user.getNickName());
-        account.setText("账号"+LoginActivity.user.getAccout());
+        account.setText("账号:"+LoginActivity.user.getAccout());
         level.setText("Lv:"+LoginActivity.user.getLevel());
         money.setText("金币:"+LoginActivity.user.getMoney());
         waterCount.setText(LoginActivity.user.getWater()+"");
         fertilizerCount.setText(LoginActivity.user.getFertilizer()+"");
+        int[] levelExperience = getResources().getIntArray(R.array.levelExperience);
+        experience.setMax(levelExperience[LoginActivity.user.getLevel()-1]);
+        experience.setProgress((int)LoginActivity.user.getExperience());
+        experienceValue.setText(""+LoginActivity.user.getExperience()+"/"+levelExperience[LoginActivity.user.getLevel()-1]);
     }
 
     /**
@@ -250,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 if(flag==0){
                     plant.setImageResource(R.drawable.kuojian);
                     relativeLayout.addView(plant);
+                    //扩建
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -262,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (LoginActivity.user.getLandStauts(finalI)==0) {
                 land.setImageResource(R.drawable.land);
+                //种植
                 land.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -282,7 +274,9 @@ public class MainActivity extends AppCompatActivity {
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
                 land.setImageResource(R.drawable.land);
+                plant.setRotationX(-60);
                 UserCropItem crop=null;
+                //得到植物信息
                 for (int j = 0; j < cropList.size(); j++) {
                     if(cropList.get(j).getUserCropId()==LoginActivity.user.getLandStauts(finalI)){
                         crop=cropList.get(j);
@@ -290,16 +284,48 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if (crop!=null){
-                    Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
-                    ProgressBar progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+                    //展示植物不同阶段
+                    int status = crop.getProgress() / crop.getCrop().getMatureTime();
+                    if(status <0.1){
+                        plant.setImageResource(R.drawable.seed);
+                    }else if (status<30){
+                        Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
+                    }else if (status<60){
+                        Glide.with(this).load(crop.getCrop().getImg2()).apply(requestOptions).into(plant);
+                    }else if (status==100){
+                        Glide.with(this).load(crop.getCrop().getImg3()).apply(requestOptions).into(plant);
+                    }
+                    //植物成长进度条
+                    final ProgressBar progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
                     progressBar.setMax(crop.getCrop().getMatureTime());
                     progressBar.setProgress(crop.getProgress());
                     progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar_bg));
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(140,20);
+                    layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                    progressBar.setLayoutParams(layoutParams);
+                    progressBar.setVisibility(View.GONE);
+                    //植物成长值
+                    final TextView value = new TextView(this);
+                    value.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
+                    value.setTextSize(8);
+                    value.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+                    value.setLayoutParams(layoutParams);
+                    value.setVisibility(View.GONE);
+                    //添加视图
                     relativeLayout.addView(plant);
                     relativeLayout.addView(progressBar);
+                    relativeLayout.addView(value);
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            if(value.getVisibility()==View.GONE){
+                                progressBar.setVisibility(View.VISIBLE);
+                                value.setVisibility(View.VISIBLE);
+                            }else{
+                                progressBar.setVisibility(View.GONE);
+                                value.setVisibility(View.GONE);
+                            }
+
                             //TODO 浇水施肥收获
                         }
                     });
@@ -409,6 +435,8 @@ public class MainActivity extends AppCompatActivity {
         money=findViewById(R.id.money);
         account=findViewById(R.id.account);
         lands=findViewById(R.id.lands);
+        experience=findViewById(R.id.experience);
+        experienceValue=findViewById(R.id.experienceValue);
     }
     class MainListener implements View.OnClickListener {
 

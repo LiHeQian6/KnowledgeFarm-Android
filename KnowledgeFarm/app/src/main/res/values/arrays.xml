@@ -8,4 +8,19 @@
         <item>三年级 上</item>
         <item>三年级 下</item>
     </string-array>
+    <integer-array name="levelExperience">
+        <item>100</item>
+        <item>300</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>2000</item>
+        <item>3000</item>
+        <item>4000</item>
+        <item>5000</item>
+        <item>6000</item>
+        <item>7000</item>
+        <item>8000</item>
+        <item>9000</item>
+        <item>10000</item>
+    </integer-array>
 </resources>
