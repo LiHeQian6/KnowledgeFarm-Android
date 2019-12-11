@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId")
+                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId?userId="+LoginActivity.user.getId())
                         .build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
