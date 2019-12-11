@@ -1,4 +1,4 @@
-//package com.li.knowledgefarm.Math;
+//package com.li.knowledgefarm.MathBean;
 //
 //
 //import dropwizard.demo.api.FormulaItem;

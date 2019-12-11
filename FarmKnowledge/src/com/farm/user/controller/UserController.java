@@ -34,20 +34,6 @@ public class UserController extends Controller{
 		}
 	}	
 	
-	//发送验证码，并返回客户端
-	public void sendTestCode() {
-		String email = get("email");
-		
-		UserService service = new UserService();
-		String testCode = "";
-		for(int i = 0;i < 4;i++) {
-			testCode = "" + (int)(Math.random()*10);
-		}
-		String text = "您用于绑定邮箱的验证码为" + testCode + "，1分钟内有效，请妥善保管，切勿告诉他人";
-		service.sendEmail(email, text);
-		renderJson(testCode);
-	}
-	
 	//用户第一次登录QQ，添加用户
 	public void addQQUser() {
 		String openId = get("openId");
@@ -112,6 +98,29 @@ public class UserController extends Controller{
 		}
 	}
 	
+	//发送验证码用于找回密码，并返回验证码
+	public void sendTestCodePassword() {
+		String email = get("email");
+		
+		UserService service = new UserService();
+		String testCode = "";
+		for(int i = 0;i < 4;i++) {
+			testCode = "" + (int)(Math.random()*10);
+		}
+		String text = "您用于找回密码的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
+		service.sendEmail(email, text);
+		renderJson(testCode);
+	}
+	
+	//找回密码（重新给账号设置密码）
+	public void resetUserPassword() {
+		String accout = get("accout");
+		String password = get("password");
+		
+		boolean succeed = new UserService().updateUserPassword(accout, password);
+		renderJson(""+succeed);
+	}
+	
 	//修改用户昵称
 	public void updateUserNickName() {
 		String accout = get("accout");
@@ -141,15 +150,6 @@ public class UserController extends Controller{
 		renderJson(flag);
 	}
 	
-	//找回密码（重新给账号设置密码）
-	public void updateUserPassword2() {
-		String accout = get("accout");
-		String password = get("password");
-		
-		boolean succeed = new UserService().updateUserPassword(accout, password);
-		renderJson(""+succeed);
-	}
-	
 	//验证是否已经绑定QQ
 	public void isBindingQQ() {
 		String accout = get("accout");
@@ -167,7 +167,6 @@ public class UserController extends Controller{
 		if(!service.isExistUserByOpenIdAll(openId)) {
 			boolean succeed = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ"); //添加到授权表
 			renderJson(""+succeed);
-			
 		}else { //该QQ号已被绑定
 			renderJson("already");
 		}
@@ -180,6 +179,39 @@ public class UserController extends Controller{
 		UserService service = new UserService();
 		boolean succeed = service.deleteOpenIdByUserId(service.getUserIdByAccout(accout)); //从授权表删除
 		renderJson(""+succeed);
+	}
+	
+	//发送验证码用于绑定邮箱，并返回验证码
+	public void sendTestCodeBingEmail() {
+		String email = get("email");
+		
+		UserService service = new UserService();
+		String testCode = "";
+		for(int i = 0;i < 4;i++) {
+			testCode = "" + (int)(Math.random()*10);
+		}
+		String text = "您用于绑定邮箱的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
+		service.sendEmail(email, text);
+		renderJson(testCode);
+	}
+	
+	//绑定邮箱
+	public void bindingEmail() {
+		String accout  = get("accout");
+		String email = get("email");
+		
+		UserService service = new UserService();
+		boolean succeed = service.updateUserEmail(accout, email);
+		renderJson(""+succeed);
+	}
+	
+	//解绑邮箱
+	public void unBindingEmail() {
+		String accout = get("accout");
+		
+		UserService service = new UserService();
+		boolean succeed = service.updateUserEmail(accout, "");
+		renderJson("" +succeed);
 	}
 	
 	//增加浇水、施肥次数（userId，数量）

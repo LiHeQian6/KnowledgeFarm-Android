@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
@@ -52,6 +54,14 @@ public class SettingActivity extends AppCompatActivity {
     private Button btnBindingQQ;
     /** 解绑QQ*/
     private Button btnUnBindingQQ;
+    /** 绑定邮箱*/
+    private Button btnBindingEmail;
+    /** 解绑邮箱*/
+    private Button btnUnBindingEmail;
+    /** QQ信息*/
+    private TextView tv_QQ;
+    /** 邮箱信息*/
+    private TextView tv_email;
     /** 切换账号*/
     private Button btnRegout;
     /** OKHttpClient*/
@@ -83,6 +93,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
+                            tv_QQ.setVisibility(View.VISIBLE);
                             break;
                         case "false":
                             break;
@@ -93,6 +104,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
+                            tv_QQ.setVisibility(View.VISIBLE);
                             /** 存入SharedPreferences*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -116,6 +128,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.VISIBLE);
                             btnUnBindingQQ.setVisibility(View.GONE);
+                            tv_QQ.setVisibility(View.GONE);
                             /** 删除SharedPreferences内Token信息*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -127,6 +140,10 @@ public class SettingActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"解绑失败",Toast.LENGTH_SHORT).show();
                             break;
                     }
+                    break;
+                case 3: //绑定邮箱判断
+                    break;
+                case 4: //解绑邮箱判断
                     break;
             }
         }
@@ -140,11 +157,11 @@ public class SettingActivity extends AppCompatActivity {
         /** 初始化*/
         getViews();
 
-        /** 判断该账号是否已绑定QQ*/
+        /** 请求服务器，判断该账号是否已绑定QQ，返回并刷新界面*/
         isBindingQQ();
 
-        /** 判断是否已绑定邮箱，再修改页面*/
-
+        /** 判断是否已绑定邮箱，再刷新界面*/
+        isBindingEmail();
 
     }
 
@@ -169,7 +186,13 @@ public class SettingActivity extends AppCompatActivity {
                     bindingQQ();
                     break;
                 case R.id.btnUnBindingQQ:
-                    showAlertDialog();
+                    showAlertDialogQQ();
+                    break;
+                case R.id.btnBindingEmail:
+                    bindingEmail();
+                    break;
+                case R.id.btnUnBindingEmail:
+                    showAlertDialogEmail();
                     break;
                 case R.id.btnRegout:
                     regout();
@@ -188,6 +211,10 @@ public class SettingActivity extends AppCompatActivity {
         btnUpdatePassword = findViewById(R.id.btnUpdatePassword);
         btnBindingQQ = findViewById(R.id.btnBindingQQ);
         btnUnBindingQQ = findViewById(R.id.btnUnBindingQQ);
+        btnBindingEmail = findViewById(R.id.btnBindingEmail);
+        btnUnBindingEmail = findViewById(R.id.btnUnBindingEmail);
+        tv_QQ = findViewById(R.id.tv_QQ);
+        tv_email = findViewById(R.id.tv_email);
         btnRegout = findViewById(R.id.btnRegout);
 
         listener = new CustomerListener();
@@ -197,6 +224,8 @@ public class SettingActivity extends AppCompatActivity {
         btnUpdatePassword.setOnClickListener(listener);
         btnBindingQQ.setOnClickListener(listener);
         btnUnBindingQQ.setOnClickListener(listener);
+        btnBindingEmail.setOnClickListener(listener);
+        btnUnBindingEmail.setOnClickListener(listener);
         btnRegout.setOnClickListener(listener);
 
         /** 关闭状态栏*/
@@ -282,6 +311,18 @@ public class SettingActivity extends AppCompatActivity {
                 });
             }
         }.start();
+    }
+
+    /**
+     * 判断是否已绑定邮箱，再修改页面
+     */
+    private void isBindingEmail(){
+        if(!LoginActivity.user.getEmail().equals("")){
+            btnBindingEmail.setVisibility(View.GONE);
+            btnUnBindingEmail.setVisibility(View.VISIBLE);
+            tv_email.setVisibility(View.VISIBLE);
+            tv_email.setText("账号已绑定邮箱：" + LoginActivity.user.getEmail());
+        }
     }
 
     /**
@@ -397,7 +438,7 @@ public class SettingActivity extends AppCompatActivity {
     /**
      * 弹出确定、取消对话框来确定是否解除绑定QQ
      */
-    private void showAlertDialog(){
+    private void showAlertDialogQQ(){
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
         //设置标题
         builder.setTitle("温馨提示");
@@ -442,6 +483,43 @@ public class SettingActivity extends AppCompatActivity {
                 });
             }
         }.start();
+    }
+
+    /**
+     * 绑定邮箱
+     */
+    private void bindingEmail(){
+
+    }
+
+    /**
+     * 弹出确定、取消对话框来确定是否解除绑定邮箱
+     */
+    private void showAlertDialogEmail(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+        //设置标题
+        builder.setTitle("温馨提示");
+        //设置提示内容
+        builder.setMessage("确定要解除绑定吗？邮箱可用于找回密码，解除绑定后将无法找回密码");
+        //设置取消按钮
+        builder.setNegativeButton("取消",null);
+        //设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                unBindingEmail();
+            }
+        });
+        //创建AlertDialog对象
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    /**
+     * 解绑邮箱
+     */
+    private void unBindingEmail(){
+
     }
 
     /**

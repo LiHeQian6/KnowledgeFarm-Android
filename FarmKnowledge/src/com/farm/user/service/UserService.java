@@ -3,6 +3,7 @@ package  com.farm.user.service;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -101,13 +102,17 @@ public class UserService {
 	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
 		return new UserDao().updateUserPassword(oldPassword, newPassword, accout);
 	}
-	//找回密码，，根据账号查询到
+	//重置密码，根据账号查询到
 	public boolean updateUserPassword(String accout,String password) {
 		return new UserDao().updateUserPassword(accout, password);
 	}
 	//修改用户的头像，根据账号查询到
 	public boolean updateUserPhoto(String accout, String photo) {
 		return new UserDao().updateUserPhoto(accout, photo);
+	}
+	//设置email，根据账号查询到
+	public boolean updateUserEmail(String accout, String email) {
+		return new UserDao().updateUserEmail(accout, email);
 	}
 	//购买作物后，减少金币
 	public boolean decreaseMoney(int id, int money) {

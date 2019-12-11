@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/buy"
             android:layout_marginLeft="20dp"
-            android:text="购买"
+            android:text="扩建"
             android:textSize="20sp">
         </Button>
     </LinearLayout>
