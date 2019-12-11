@@ -16,6 +16,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.aware.DiscoverySession;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
     private Handler plantMessagesHandler;
     private long lastClickTime=0;
     private long FAST_CLICK_DELAY_TIME=500;
+    private Handler waterMessagesHandler;
+    private int selected=-2;//选中的是水壶0，还是肥料-1，植物所在土地编号，还是没选选择任何一个-2
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,14 +289,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (crop!=null){
                     //展示植物不同阶段
-                    int status = crop.getProgress() / crop.getCrop().getMatureTime();
+                    final int status = crop.getProgress() / crop.getCrop().getMatureTime();
                     if(status <0.1){
                         plant.setImageResource(R.drawable.seed);
-                    }else if (status<30){
+                    }else if (status<0.3){
                         Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
-                    }else if (status<60){
+                    }else if (status<0.6){
                         Glide.with(this).load(crop.getCrop().getImg2()).apply(requestOptions).into(plant);
-                    }else if (status==100){
+                    }else if (status==1){
                         Glide.with(this).load(crop.getCrop().getImg3()).apply(requestOptions).into(plant);
                     }
                     //植物成长进度条
@@ -304,14 +307,14 @@ public class MainActivity extends AppCompatActivity {
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(140,20);
                     layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
                     progressBar.setLayoutParams(layoutParams);
-                    progressBar.setVisibility(View.GONE);
+                    //progressBar.setVisibility(View.GONE);
                     //植物成长值
                     final TextView value = new TextView(this);
                     value.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
                     value.setTextSize(8);
                     value.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     value.setLayoutParams(layoutParams);
-                    value.setVisibility(View.GONE);
+                    //value.setVisibility(View.GONE);
                     //添加视图
                     relativeLayout.addView(plant);
                     relativeLayout.addView(progressBar);
@@ -319,14 +322,52 @@ public class MainActivity extends AppCompatActivity {
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(value.getVisibility()==View.GONE){
-                                progressBar.setVisibility(View.VISIBLE);
-                                value.setVisibility(View.VISIBLE);
-                            }else{
-                                progressBar.setVisibility(View.GONE);
-                                value.setVisibility(View.GONE);
-                            }
+//                            if(value.getVisibility()==View.GONE){
+//                                progressBar.setVisibility(View.VISIBLE);
+//                                value.setVisibility(View.VISIBLE);
+//                            }else{
+//                                progressBar.setVisibility(View.GONE);
+//                                value.setVisibility(View.GONE);
+//                            }
+                            land.setImageResource(R.drawable.land_light);
 
+                            if(selected==0) {
+                                selected=finalI;
+                                watering();
+                            }else if(selected==-1){
+                                selected=finalI;
+                                Fertilize();
+                            }else{
+                                selected=finalI;
+                                if(status==1)
+                                    Harvest();
+                                else {
+                                    Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
+                                    land.setImageResource(R.drawable.land);
+                                    selected = -2;
+                                }
+                            }
+                            waterMessagesHandler = new Handler() {
+                                @Override
+                                public void handleMessage(@NonNull Message msg) {
+                                    String messages = (String) msg.obj;
+                                    Log.e("Watering", messages);
+                                    if (!messages.equals("Fail")) {
+                                        if (messages.equals("-1")) {
+                                            Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
+                                            getCrop();
+                                            getUserInfo();
+                                            showUserInfo();//写到handle里
+                                        }
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                    }
+                                    land.setImageResource(R.drawable.land);
+                                    selected = -2;
+                                }
+                            };
                             //TODO 浇水施肥收获
                         }
                     });
@@ -450,8 +491,10 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.water:
+                    selected=0;
                     break;
                 case R.id.fertilizer:
+                    selected=-1;
                     break;
                 case R.id.bag:
                     showBagMessages();
@@ -470,6 +513,89 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    /**
+     * 浇水操作
+     */
+    private void watering() {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/waterCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                    Call call = okHttpClient.newCall(request);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            Message message = Message.obtain();
+                            message.obj ="Fail";
+                            waterMessagesHandler.sendMessage(message);
+                        }
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            Message message = Message.obtain();
+                            message.obj =response.body().string();
+                            waterMessagesHandler.sendMessage(message);
+                        }
+                    });
+                }
+            }.start();
+    }
+
+    /**
+     * 施肥操作
+     */
+    private void Fertilize() {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/fertilizerCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        waterMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        waterMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+    /**
+     * 收获操作
+     */
+    private void Harvest () {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/harvest?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        waterMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        waterMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
     }
 
     /**
