@@ -39,6 +39,7 @@ public class MathActivity extends AppCompatActivity {
     private TextView btnPreQuestion;
     private TextView btnNextQuestion;
     private TextView question;
+    private TextView isFalse;
     private ImageView isTrue;
     private EditText answer;
     private Handler getMath;
@@ -141,6 +142,7 @@ public class MathActivity extends AppCompatActivity {
                         String inputRes = answer.getText().toString().trim();
                         if(inputRes.equals(datalist.get(position).getResult()+"")) {
                             isTrue.setVisibility(View.VISIBLE);
+                            isFalse.setVisibility(View.INVISIBLE);
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -150,7 +152,7 @@ public class MathActivity extends AppCompatActivity {
                                 }
                             },1000);
                         }else{
-
+                            isFalse.setVisibility(View.VISIBLE);
                         }
                     }
                     break;
@@ -171,6 +173,7 @@ public class MathActivity extends AppCompatActivity {
         question = findViewById(R.id.tvQuestion);
         answer = findViewById(R.id.tvAnswer);
         isTrue = findViewById(R.id.isTrue);
+        isFalse = findViewById(R.id.isFalse);
     }
 
     /**
