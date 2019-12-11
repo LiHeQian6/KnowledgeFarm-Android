@@ -103,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
     };
     private int selectLand=0;//选中第几块土地
     private Handler plantMessagesHandler;
+    private long lastClickTime=0;
+    private long FAST_CLICK_DELAY_TIME=500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //TODO 扩建土地
                             showIfExtensionLand(finalI);
                         }
                     });
@@ -250,6 +251,10 @@ public class MainActivity extends AppCompatActivity {
                 land.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                            return;
+                        }
+                        lastClickTime = System.currentTimeMillis();
                         land.setImageResource(R.drawable.land_light);
                         selectLand=finalI;
                         showBagMessages();
