@@ -56,7 +56,7 @@ public class AnswerService {
 					}
 				}
 			}
-			list.add(new Question3Num(num1,signal1,num2,signal2,num3,result));
+			list.add(new Question3Num(num1,signal1,num2,signal2,num3,result,"false"));
 		}
 		return list;
 	}
@@ -108,7 +108,7 @@ public class AnswerService {
 					}
 				}
 			}
-			list.add(new Question3Num(num1,signal1,num2,signal2,num3,result));
+			list.add(new Question3Num(num1,signal1,num2,signal2,num3,result,"false"));
 		}
 		return list;
 	}

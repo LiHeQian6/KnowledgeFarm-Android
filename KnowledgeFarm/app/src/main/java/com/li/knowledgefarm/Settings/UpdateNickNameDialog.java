@@ -20,6 +20,8 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -110,6 +112,33 @@ public class UpdateNickNameDialog extends PopupWindow {
     }
 
     /**
+     * 设置popupWindow样式
+     */
+    private void setpopupWndow(){
+        this.setContentView(view);
+        //this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
+        //this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
+        this.setFocusable(true);
+        this.setAnimationStyle(R.style.pop_animation);
+        //ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
+        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
+        this.setBackgroundDrawable(d);
+    }
+
+    /**
+     * 初始化
+     */
+    private void init(){
+        btnReturn = view.findViewById(R.id.btnReturn);
+        edtNickName = view.findViewById(R.id.edtNickName);
+        tv_nickName_length = view.findViewById(R.id.tv_nickName_length);
+        btnSave = view.findViewById(R.id.btnSave);
+        edtNickName.setText(LoginActivity.user.getNickName());
+        tv_nickName_length.setText(LoginActivity.user.getNickName().length()+"/20");
+        okHttpClient = new OkHttpClient();
+    }
+
+    /**
      * 保存
      */
     private void save(){
@@ -138,33 +167,6 @@ public class UpdateNickNameDialog extends PopupWindow {
                 }
             }.start();
         }
-    }
-
-    /**
-     * 初始化
-     */
-    private void init(){
-        btnReturn = view.findViewById(R.id.btnReturn);
-        edtNickName = view.findViewById(R.id.edtNickName);
-        tv_nickName_length = view.findViewById(R.id.tv_nickName_length);
-        btnSave = view.findViewById(R.id.btnSave);
-        edtNickName.setText(LoginActivity.user.getNickName());
-        tv_nickName_length.setText(LoginActivity.user.getNickName().length()+"/20");
-        okHttpClient = new OkHttpClient();
-    }
-
-    /**
-     * 设置popupWindow样式
-     */
-    private void setpopupWndow(){
-        this.setContentView(view);
-        //this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
-        //this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setFocusable(true);
-        this.setAnimationStyle(R.style.pop_animation);
-        //ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
-        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
-        this.setBackgroundDrawable(d);
     }
 
     /**
