@@ -3,6 +3,7 @@ package com.farm.usercrop.service;
 import java.sql.SQLException;
 
 import com.farm.crop.service.CropService;
+import com.farm.entity.UserCropItem;
 import com.farm.model.Crop;
 import com.farm.user.dao.UserDao;
 import com.farm.user.service.UserService;
@@ -112,6 +113,11 @@ public class UserCropService {
 	//根据userCropId查询cropId
 	public int getCropIdByUserCropId(int id){
 		return new UserCropDao().getCropIdByUserCropId(id);
+	}
+	
+	//根据userCropId查询cropId、progress（放到UserCropItem中cropId当成userCropId）
+	public UserCropItem getCropIdProgressByUserCropId(int id){
+		return new UserCropDao().getCropIdProgressByUserCropId(id);
 	}
 	
 	//查看作物进度

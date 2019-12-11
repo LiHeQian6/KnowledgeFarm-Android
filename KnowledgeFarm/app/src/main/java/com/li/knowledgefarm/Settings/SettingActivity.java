@@ -143,6 +143,9 @@ public class SettingActivity extends AppCompatActivity {
         /** 判断该账号是否已绑定QQ*/
         isBindingQQ();
 
+        /** 判断是否已绑定邮箱，再修改页面*/
+
+
     }
 
     class CustomerListener implements View.OnClickListener{

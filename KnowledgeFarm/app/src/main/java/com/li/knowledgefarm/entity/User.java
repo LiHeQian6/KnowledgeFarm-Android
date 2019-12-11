@@ -7,6 +7,7 @@ public class User {
     private String nickName;
     private String photo;
     private String photoName;
+    private String email;
     private int level;
     private long experience;
     private int grade;
@@ -37,6 +38,14 @@ public class User {
 
     public int getId() {
         return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setId(int id) {

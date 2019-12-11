@@ -1,12 +1,8 @@
 package com.farm.usercrop.dao;
 
-import java.util.List;
 
-import com.farm.crop.service.CropService;
-import com.farm.model.Crop;
-import com.farm.model.User;
+import com.farm.entity.UserCropItem;
 import com.farm.model.UserCrop;
-import com.farm.user.service.UserService;
 
 public class UserCropDao {
 	
@@ -88,6 +84,19 @@ public class UserCropDao {
 		}
 		return 0;
 	}
+	
+	//根据userCropId查询cropId、progress（放到UserCropItem中cropId当成userCropId）
+	public UserCropItem getCropIdProgressByUserCropId(int id){
+		UserCrop userCrop = UserCrop.dao.findById(id);
+		if(userCrop != null) {
+			UserCropItem item = new UserCropItem();
+			item.setUserCropId(userCrop.getInt("cropId"));
+			item.setProgress(userCrop.getInt("progress"));
+			return item;
+		}
+		return null;
+	}
+	
 	//删除已收获的作物
 	public boolean deleteCrop(int ucId) {
 		boolean succeed = UserCrop.dao.deleteById(ucId);
