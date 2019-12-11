@@ -19,7 +19,7 @@ public class UserCropController extends Controller{
 		
 		//根据用户Id获得userCropId列表
 		List<Integer> userCropIdList = new UserService().getUserCropIdById(userId);
-		if(userCropIdList == null) {
+		if(userCropIdList != null) {
 			Map<Integer,Crop> cropMap = new HashMap<>();	
 			UserCropService userCropService =  new UserCropService();
 			CropService service = new CropService();

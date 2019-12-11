@@ -1,7 +1,6 @@
 package com.farm.user.controller;
 
 import java.net.URLDecoder;
-import java.sql.SQLException;
 
 import org.json.JSONObject;
 
@@ -13,8 +12,6 @@ import com.farm.userbag.service.BagService;
 import com.farm.usercrop.service.UserCropService;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.HttpKit;
-import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.IAtom;
 
 public class UserController extends Controller{
 	
@@ -76,12 +73,12 @@ public class UserController extends Controller{
 	public void loginByAccount() {
 
 		String account = get("account");
-		String pwd = get("pwd");
+		String password = get("password");
 		
 		UserService service = new UserService();
 		if(service.isExistUserByAccoutAll(account)) { //存在该账号
 			if(service.isExistUserByAccout(account)) { //存在有效的账号
-				User user = service.findUserByAccountPassword(account, pwd);
+				User user = service.findUserByAccountPassword(account, password);
 				if(user != null) {
 					renderJson(user);
 				}else {
@@ -107,7 +104,7 @@ public class UserController extends Controller{
 			email = "";
 		}
 		String accout = service.generateAccout();
-		if(service.addUser(accout, nickName, password, "", "", email, grade)) {
+		if(service.addUser(accout, nickName, password, Strings.userPhotoUrl + "0.png", "", email, grade)) {
 			User user = service.findUserByAccout(accout);
 			renderJson(user);
 		}else {
@@ -144,6 +141,15 @@ public class UserController extends Controller{
 		renderJson(flag);
 	}
 	
+	//找回密码（重新给账号设置密码）
+	public void updateUserPassword2() {
+		String accout = get("accout");
+		String password = get("password");
+		
+		boolean succeed = new UserService().updateUserPassword(accout, password);
+		renderJson(""+succeed);
+	}
+	
 	//验证是否已经绑定QQ
 	public void isBindingQQ() {
 		String accout = get("accout");
@@ -156,23 +162,10 @@ public class UserController extends Controller{
 	public void bindingQQ() {
 		String accout = get("accout");
 		String openId = get("openId");
-		String photo = URLDecoder.decode(get("photo"));
 		
 		UserService service = new UserService();
 		if(!service.isExistUserByOpenIdAll(openId)) {
-			
-			boolean succeed = Db.tx(new IAtom() {
-				@Override
-				public boolean run() throws SQLException {
-					boolean a1 = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ"); //添加到授权表
-					boolean a2 = service.updateUserPhoto(accout, photo); //修改成QQ头像
-					if(a1 && a2) {
-						return true;
-					}
-					return false;
-				}
-			});
-			
+			boolean succeed = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ"); //添加到授权表
 			renderJson(""+succeed);
 			
 		}else { //该QQ号已被绑定
@@ -185,18 +178,7 @@ public class UserController extends Controller{
 		String accout = get("accout");
 		
 		UserService service = new UserService();
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				boolean a1 = service.deleteOpenIdByUserId(service.getUserIdByAccout(accout)); //从授权表删除
-				boolean a2 = new UserService().updateUserPhoto(accout, Strings.userPhotoUrl+"0.png"); //修改成默认头像
-				if(a1 && a2) {
-					return true;
-				}
-				return false;
-			}
-		});
-		
+		boolean succeed = service.deleteOpenIdByUserId(service.getUserIdByAccout(accout)); //从授权表删除
 		renderJson(""+succeed);
 	}
 	
@@ -284,11 +266,12 @@ public class UserController extends Controller{
 	public void extensionLand() {
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
+		int needMoney = getInt("needMoney");
 		
 		UserService service = new UserService();
 		int userMoney = new UserService().getUpdateUserInfo(userId).getInt("money");
-		if(userMoney >= 500) {
-			boolean succeed = service.extensionLand(userId, landNumber, 500);
+		if(userMoney >= needMoney) {
+			boolean succeed = service.extensionLand(userId, landNumber, needMoney);
 			renderJson(""+succeed);
 		}else {
 			renderJson("notEnoughMoney");

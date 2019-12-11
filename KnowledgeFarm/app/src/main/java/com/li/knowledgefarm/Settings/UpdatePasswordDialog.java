@@ -15,6 +15,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 
 import java.io.IOException;
@@ -48,6 +49,7 @@ public class UpdatePasswordDialog extends PopupWindow {
                             Toast.makeText(context,"旧密码输入错误",Toast.LENGTH_SHORT).show();
                             break;
                         case "1":
+                            LoginActivity.user.setPassword(edtNemPassword.getText().toString().trim());
                             Toast.makeText(context,"密码修改成功",Toast.LENGTH_SHORT).show();
                             dismiss();
                             break;
@@ -129,7 +131,7 @@ public class UpdatePasswordDialog extends PopupWindow {
                 new Thread() {
                     @Override
                     public void run() {
-                        FormBody formBody = new FormBody.Builder().add("accout", "71007839").add("oldPassword", oldPassword).add("newPassword", newPassword).build();
+                        FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("oldPassword", oldPassword).add("newPassword", newPassword).build();
                         final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
                         Call call = okHttpClient.newCall(request);
                         call.enqueue(new Callback() {

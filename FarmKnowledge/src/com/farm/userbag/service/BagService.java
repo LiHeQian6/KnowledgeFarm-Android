@@ -39,6 +39,11 @@ public class BagService {
 	 * 	删
 	 * @throws
 	 */
+	//删除指定作物
+	public boolean deleteCropByUserIdAndCropId(int userId,int cropId) {
+		return new BagDao().deleteCropByUserIdAndCropId(userId, cropId);
+	}
+	
 	
 	
 	
@@ -64,6 +69,10 @@ public class BagService {
 	}
 	//减少指定作物一个（UserBag）
 	public boolean decreaseOneCrop(int userId,int cropId) {
+		BagDao bagDao = new BagDao();
+		if(bagDao.findNumberByCropId(userId, cropId) == 1) {
+			return bagDao.deleteCropByUserIdAndCropId(userId, cropId);
+		}
 		return new BagDao().decreaseOneCrop(userId, cropId);
 	}
 	//使用背包中种子
@@ -84,6 +93,10 @@ public class BagService {
 	//根据userId查询用户背包cropId列表
 	public List<CropItem> getCropIdByUserId(int userId){
 		return new BagDao().getCropIdByUserId(userId);
+	}
+	//查询指定作物的剩余数量
+	public int findNumberByCropId(int userId, int cropId) {
+		return new BagDao().findNumberByCropId(userId, cropId);
 	}
 	
 }

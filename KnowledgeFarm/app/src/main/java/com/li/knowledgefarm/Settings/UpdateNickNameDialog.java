@@ -12,11 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 
 import java.io.IOException;
@@ -48,6 +48,7 @@ public class UpdateNickNameDialog extends PopupWindow {
             switch (msg.what){
                 case 1: // 修改昵称判断
                     if(msg.obj.equals("true")){
+                        LoginActivity.user.setNickName(edtNickName.getText().toString().trim());
                         Toast.makeText(context,"昵称修改成功",Toast.LENGTH_SHORT).show();
                         dismiss();
                     }else{
@@ -58,7 +59,7 @@ public class UpdateNickNameDialog extends PopupWindow {
         }
     };
 
-    public UpdateNickNameDialog(final Context context, String nickName) {
+    public UpdateNickNameDialog(final Context context) {
         this.context = context;
         view = LayoutInflater.from(context).inflate(R.layout.update_nickname, null);
 
@@ -66,7 +67,7 @@ public class UpdateNickNameDialog extends PopupWindow {
         setpopupWndow();
 
         /** 初始化*/
-        init(nickName);
+        init();
 
         /** 监听输入框*/
         edtNickName.addTextChangedListener(new TextWatcher() {
@@ -119,7 +120,7 @@ public class UpdateNickNameDialog extends PopupWindow {
             new Thread(){
                 @Override
                 public void run() {
-                    FormBody formBody = new FormBody.Builder().add("accout","71007839").add("nickName",nickName).build();
+                    FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("nickName",nickName).build();
                     final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/updateUserNickName").build();
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {
@@ -142,13 +143,13 @@ public class UpdateNickNameDialog extends PopupWindow {
     /**
      * 初始化
      */
-    private void init(String nickName){
+    private void init(){
         btnReturn = view.findViewById(R.id.btnReturn);
         edtNickName = view.findViewById(R.id.edtNickName);
         tv_nickName_length = view.findViewById(R.id.tv_nickName_length);
         btnSave = view.findViewById(R.id.btnSave);
-        edtNickName.setText(nickName);
-        tv_nickName_length.setText(nickName.length()+"/20");
+        edtNickName.setText(LoginActivity.user.getNickName());
+        tv_nickName_length.setText(LoginActivity.user.getNickName().length()+"/20");
         okHttpClient = new OkHttpClient();
     }
 

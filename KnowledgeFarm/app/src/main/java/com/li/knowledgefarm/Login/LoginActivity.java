@@ -90,8 +90,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     private IUiListener userInfoListener;
 
-    /*
-        用户表
+    /**
+     * 用户表
      */
     public static User user;
     private String openID;

@@ -1,5 +1,6 @@
 package com.li.knowledgefarm.Settings;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -9,6 +10,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -25,7 +27,6 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
-import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.IUiListener;
@@ -36,7 +37,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Date;
 
 public class SettingActivity extends AppCompatActivity {
@@ -70,6 +70,8 @@ public class SettingActivity extends AppCompatActivity {
     /** 获取用户信息监听器*/
     private IUiListener userInfoListener;
     private String openId;
+    private String accessToken;
+    private String expires;
 
     /** 线程服务端返回处理*/
     private Handler handler = new Handler(){
@@ -91,6 +93,14 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
+                            /** 存入SharedPreferences*/
+                            SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("opId",openId);
+                            editor.putString("tk",accessToken);
+                            editor.putLong("start",new Date().getTime());
+                            editor.putInt("expires", Integer.parseInt(expires));
+                            editor.commit();
                             Toast.makeText(getApplicationContext(),"绑定成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
@@ -106,6 +116,11 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.VISIBLE);
                             btnUnBindingQQ.setVisibility(View.GONE);
+                            /** 删除SharedPreferences内Token信息*/
+                            SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.clear();
+                            editor.commit();
                             Toast.makeText(getApplicationContext(),"解绑成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
@@ -151,7 +166,7 @@ public class SettingActivity extends AppCompatActivity {
                     bindingQQ();
                     break;
                 case R.id.btnUnBindingQQ:
-                    unBindingQQ();
+                    showAlertDialog();
                     break;
                 case R.id.btnRegout:
                     regout();
@@ -192,7 +207,7 @@ public class SettingActivity extends AppCompatActivity {
      * 弹出修改昵称窗口
      */
     private void popupWindow_update_nickName(){
-        UpdateNickNameDialog popupDialogShopCar = new UpdateNickNameDialog(getApplicationContext(),"71007839");
+        UpdateNickNameDialog popupDialogShopCar = new UpdateNickNameDialog(getApplicationContext());
         popupDialogShopCar.setWidth(getSyetemWidth()*1/2);
         popupDialogShopCar.setHeight(getSyetemHeight()*3/4);
         popupDialogShopCar.showAtLocation(btnUpdateNickName, Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
@@ -210,7 +225,7 @@ public class SettingActivity extends AppCompatActivity {
      * 弹出修改年级窗口
      */
     private void popupWindow_update_grade(){
-        UpdateGradeDialog popupDialogShopCar = new UpdateGradeDialog(getApplicationContext(),"1");
+        UpdateGradeDialog popupDialogShopCar = new UpdateGradeDialog(getApplicationContext());
         popupDialogShopCar.setWidth(getSyetemWidth()*1/2);
         popupDialogShopCar.setHeight(getSyetemHeight()*3/4);
         popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateGrade), Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
@@ -247,7 +262,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","89838845").build();
+                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/isBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -267,7 +282,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     /**
-     * 拉起QQ登陆，返回登录信息，存入SharedPreferences
+     * 拉起QQ登陆，返回登录信息
      */
     private void bindingQQ(){
         if (!mTencent.isSessionValid()) {
@@ -281,18 +296,9 @@ public class SettingActivity extends AppCompatActivity {
                         int ret = response.getInt("ret");
                         if (ret == 0) {
                             openId = response.getString("openid");
-                            String accessToken = response.getString("access_token");
-                            String expires = response.getString("expires_in");
+                            accessToken = response.getString("access_token");
+                            expires = response.getString("expires_in");
                             Log.i("lww", "Openid:" + openId);
-
-                            /** 存入SharedPreferences*/
-                            SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("opId",openId);
-                            editor.putString("tk",accessToken);
-                            editor.putLong("start",new Date().getTime());
-                            editor.putInt("expires", Integer.parseInt(expires));
-                            editor.commit();
 
                             mTencent.setOpenId(openId);
                             mTencent.setAccessToken(accessToken, expires);
@@ -350,12 +356,11 @@ public class SettingActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    /** 将openId、photo发送至后台*/
-                    final String Path = URLEncoder.encode(path);
+                    /** 将openId发送至后台*/
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("accout","89838845").add("openId",openId).add("photo",Path).build();
+                            FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).add("openId",openId).build();
                             final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -387,13 +392,37 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     /**
+     * 弹出确定、取消对话框来确定是否解除绑定QQ
+     */
+    private void showAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+        //设置标题
+        builder.setTitle("温馨提示");
+        //设置提示内容
+        builder.setMessage("确定要解除绑定吗？解除绑定后该QQ号将不能继续登录该账号下的游戏");
+        //设置取消按钮
+        builder.setNegativeButton("取消",null);
+        //设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                unBindingQQ();
+            }
+        });
+        //创建AlertDialog对象
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    /**
      * 解绑QQ
      */
     private void unBindingQQ(){
+
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout","89838845").build();
+                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
