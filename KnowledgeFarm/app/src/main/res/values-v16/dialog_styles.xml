@@ -2,5 +2,6 @@
 <resources>
     <style name="dialog_soft_input" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowSoftInputMode">adjustPan</item>
+        <item name="android:fontFamily">@font/font</item>
     </style>
 </resources>

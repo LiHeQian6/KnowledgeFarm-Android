@@ -643,4 +643,5 @@ public class SettingActivity extends AppCompatActivity {
         WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         return manager.getDefaultDisplay().getHeight();
     }
+
 }

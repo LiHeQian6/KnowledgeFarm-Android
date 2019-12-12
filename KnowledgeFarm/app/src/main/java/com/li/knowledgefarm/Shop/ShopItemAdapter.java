@@ -49,26 +49,27 @@ public class ShopItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if(convertView == null){
-            convertView = View.inflate(context,resource,null);
-            holder = new ViewHolder();
-            holder.name = convertView.findViewById(R.id.flowerName);
-            holder.imageView = convertView.findViewById(R.id.flowerImage);
-            holder.price = convertView.findViewById(R.id.flowerPrice);
-            convertView.setTag(holder);
-        }else{
-            holder = (ViewHolder) convertView.getTag();
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = View.inflate(context, resource, null);
+                holder = new ViewHolder();
+                holder.name = convertView.findViewById(R.id.flowerName);
+                holder.imageView = convertView.findViewById(R.id.flowerImage);
+                holder.price = convertView.findViewById(R.id.flowerPrice);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+        if(!ShopActivity.mIsScroll) {
+            RequestOptions requestOptions = new RequestOptions()
+                    .placeholder(R.drawable.loading)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+            Glide.with(context).load(list.get(position).getImg3()).apply(requestOptions).into(holder.imageView);
+            ShopItemBean bean = list.get(position);
+            holder.name.setText(bean.getName());
+            holder.price.setText(bean.getPrice() + "金币");
+            notifyDataSetChanged();
         }
-
-        RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.loading)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(context).load(list.get(position).getImg3()).apply(requestOptions).into(holder.imageView);
-        ShopItemBean bean = list.get(position);
-        holder.name.setText(bean.getName());
-        holder.price.setText(bean.getPrice()+"金币");
-        notifyDataSetChanged();
         return convertView;
     }
 

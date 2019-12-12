@@ -9,9 +9,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
+import com.li.knowledgefarm.Login.StartActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
@@ -62,6 +65,7 @@ public class ShopActivity extends AppCompatActivity {
     private long lastClickTime = 0L;
     // 两次点击间隔不能少于1000ms
     private static final int FAST_CLICK_DELAY_TIME = 1000;
+    public static Boolean mIsScroll = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,6 +175,20 @@ public class ShopActivity extends AppCompatActivity {
                 }
                 lastClickTime = System.currentTimeMillis();
                 showSingleAlertDialog(position);
+            }
+        });
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
+                    mIsScroll = false;
+                }else{
+                    mIsScroll = true;
+                }
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
     }
@@ -349,4 +367,5 @@ public class ShopActivity extends AppCompatActivity {
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
     }
+
 }

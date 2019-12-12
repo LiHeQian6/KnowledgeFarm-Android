@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private int selected=-2;//选中的是水壶0，还是肥料-1，植物所在土地编号，还是没选选择任何一个-2
     private Handler operatingHandleMessage;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
