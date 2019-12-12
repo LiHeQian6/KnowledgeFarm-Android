@@ -8,11 +8,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,7 +25,10 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,8 +57,10 @@ public class BindingEmailActivity extends AppCompatActivity {
             switch (msg.what){
                 case 0: // 绑定邮箱判断
                     if(msg.obj.equals("true")){
-                        asyncTask.cancel(true);
                         LoginActivity.user.setEmail(edtEmail.getText().toString().trim());
+                        asyncTask.cancel(true);
+                        EventBus.getDefault().post("绑定邮箱成功");
+                        finish();
                         Toast.makeText(getApplicationContext(),"绑定邮箱成功",Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getApplicationContext(),"绑定邮箱失败",Toast.LENGTH_SHORT).show();
@@ -107,6 +115,7 @@ public class BindingEmailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 asyncTask.cancel(true);
+                finish();
             }
         });
 
@@ -125,6 +134,9 @@ public class BindingEmailActivity extends AppCompatActivity {
         btnTest = findViewById(R.id.btnTest);
 
         okHttpClient = new OkHttpClient();
+
+        /** 关闭状态栏*/
+        setStatusBar();
     }
 
     /**
@@ -180,4 +192,16 @@ public class BindingEmailActivity extends AppCompatActivity {
         message.obj = obj;
         handler.sendMessage(message);
     }
+
+    /**
+     * 关闭状态栏
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
+        }
+    }
+
 }

@@ -30,9 +30,6 @@
         <activity android:name=".Login.FindPassword"
             android:screenOrientation="landscape"></activity>
         <activity
-            android:name=".Login.QQFirstActivity"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".Login.StartActivity"
             android:fitsSystemWindows="true"
             android:screenOrientation="landscape" />
