@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,8 +18,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,6 +59,7 @@ public class MathActivity extends AppCompatActivity {
     private int position=0;
     private int TrueAnswerNumber = 0;
     private Dialog ifReturn;
+    private Boolean returnHandlerFinish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,52 @@ public class MathActivity extends AppCompatActivity {
         getMathHandler();
     }
 
+    /**
+     * @Description  确认是否返回
+     * @Auther 孙建旺
+     * @Date 下午 5:00 2019/12/11
+     * @Param []
+     * @return void
+     */
+    private void showIfReturn(){
+        ifReturn = new Dialog(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.math_return_dialog,null);
+        Button cancel = layout.findViewById(R.id.cancel_return);
+        Button sure = layout.findViewById(R.id.sure_return);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ifReturn.dismiss();
+            }
+        });
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnHandlerFinish = true;
+                ifReturn.dismiss();
+                if(getWAF == null)
+                    getWandFCallBack();
+                getWaterAndFertilizer();
+            }
+        });
+        ifReturn.setContentView(layout);
+        ifReturn.show();
+        WindowManager.LayoutParams attrs = ifReturn.getWindow().getAttributes();
+        attrs.gravity = Gravity.CENTER;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(300*scale+0.5f);
+        attrs.height =(int)(300*scale+0.5f);
+        ifReturn.getWindow().setAttributes(attrs);
+    }
+
+    /**
+     * @Description 获得水和肥料成功
+     * @Auther 孙建旺
+     * @Date 下午 4:58 2019/12/11
+     * @Param []
+     * @return void
+     */
     private void getWandFCallBack(){
         getWAF = new Handler(){
             @Override
@@ -78,7 +129,10 @@ public class MathActivity extends AppCompatActivity {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
+                        LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
                         isFalse.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
+                        if(returnHandlerFinish)
+                            finish();
                     }else{
                         isFalse.setText("获得奖励失败了哦！");
                     }
@@ -133,13 +187,12 @@ public class MathActivity extends AppCompatActivity {
      */
     private void showQuestion(int pos){
         if(datalist.get(pos).getIfDone().equals("true")) {
-            isFalse.setText("");
+            isFalse.setText(" ");
             isTrue.setVisibility(View.INVISIBLE);
-            isFalse.setVisibility(View.INVISIBLE);
-            answer.setVisibility(View.GONE);
+            answer.setVisibility(View.INVISIBLE);
             question.setText(datalist.get(pos).toString()+ datalist.get(pos).getResult());
         }else{
-            if(answer.getVisibility() == View.GONE){
+            if(answer.getVisibility() == View.INVISIBLE){
                 answer.setVisibility(View.VISIBLE);
             }
             isFalse.setText("");
@@ -183,25 +236,40 @@ public class MathActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/answer/OneUpMath").build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        getMath.sendMessage(message);
+                if (LoginActivity.user.getRewardCount() <= 0) {
+                    question.setText("今天的任务都做完了哦！");
+                    answer.setVisibility(View.GONE);
+                    btnNextQuestion.setVisibility(View.INVISIBLE);
+                    btnPreQuestion.setVisibility(View.INVISIBLE);
+                } else {
+                    Request request = null;
+                    switch (LoginActivity.user.getGrade()) {
+                        case 1:
+                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneUpMath").build();
+                            break;
+                        case 2:
+                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneDownMath").build();
                     }
+                    Call call = okHttpClient.newCall(request);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            Message message = Message.obtain();
+                            message.obj = "Fail";
+                            getMath.sendMessage(message);
+                        }
 
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj = response.body().string();
-                        getMath.sendMessage(message);
-                    }
-                });
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            Message message = Message.obtain();
+                            message.obj = response.body().string();
+                            getMath.sendMessage(message);
+                        }
+                    });
+                }
             }
         }.start();
+
     }
 
     class CustomerListener implements View.OnClickListener{
@@ -211,7 +279,10 @@ public class MathActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    finish();
+                    if(TrueAnswerNumber>0 && LoginActivity.user.getRewardCount()>0)
+                        showIfReturn();
+                    else
+                        finish();
                     break;
                 case R.id.btnPreQuestion:
                     if((position-1)>=0) {
@@ -221,7 +292,7 @@ public class MathActivity extends AppCompatActivity {
                     break;
                 case R.id.btnNextQuestion:
                     String inputRes = answer.getText().toString().trim();
-                    if(answer.getVisibility() == View.GONE){
+                    if(answer.getVisibility() == View.INVISIBLE){
                         position++;
                         showQuestion(position);
                         return;
