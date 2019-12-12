@@ -250,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
             if(LoginActivity.user.getLandStauts(finalI)==-1) {
                 if(flag==0){
                     plant.setImageResource(R.drawable.kuojian);
+                    plant.setRotation(10);
                     relativeLayout.addView(plant);
                     //扩建
                     plant.setOnClickListener(new View.OnClickListener() {
@@ -285,7 +286,8 @@ public class MainActivity extends AppCompatActivity {
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
                 land.setImageResource(R.drawable.land);
-                plant.setRotationX(-60);
+                plant.setRotationX(-50);
+                plant.setRotation(-5);
                 UserCropItem crop=null;
                 //得到植物信息
                 for (int j = 0; j < cropList.size(); j++) {
@@ -341,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 else{
                                     selected=finalI;
-                                    operating(0);
+                                    operating(0);//浇水
                                 }
                             }else if(selected==-1){
                                 if(status==1) {
@@ -350,12 +352,12 @@ public class MainActivity extends AppCompatActivity {
                                     selected = -2;
                                 }else{
                                     selected=finalI;
-                                    operating(-1);
+                                    operating(-1);//施肥
                                 }
                             }else{
                                 selected=finalI;
                                 if(status==1)
-                                    operating(-2);
+                                    operating(-2);//成熟
                                 else {
                                     Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
                                     land.setImageResource(R.drawable.land);
