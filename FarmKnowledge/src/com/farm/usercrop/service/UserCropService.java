@@ -16,9 +16,11 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 
 public class UserCropService {
+	private String result;
+	private int isLevel;
 	
 	//浇水
-	public int waterCr(int userId,String landNumber) {
+	public boolean waterCr(int userId,String landNumber) {
 		int ucId = new UserService().findUcId(userId, landNumber);
 		UserCropDao dao = new UserCropDao();
 		boolean succeed = Db.tx(new IAtom() {
@@ -44,13 +46,13 @@ public class UserCropService {
 			}
 		});
 		if(succeed) {
-			return dao.getCropProgress(ucId);
+			return true;
 		}
-		return -1;				
+		return false;				
 	}
 	
 	//施肥
-	public int fertilizerCr(int userId,String landNumber) {
+	public boolean fertilizerCr(int userId,String landNumber) {
 		int ucId = new UserService().findUcId(userId, landNumber);
 		boolean succeed = Db.tx(new IAtom() {
 			
@@ -76,24 +78,26 @@ public class UserCropService {
 			}
 		});
 		if(succeed) {
-			return new UserCropDao().getCropProgress(ucId);
+			return true;
 		}
-		return -1;	
+		return false;	
 	}
 
 	//收获
-	public boolean getCrop(int userId, String landNumber) {
+	public String getCrop(int userId, String landNumber) {
 		int ucId = new UserService().findUcId(userId, landNumber);
 		Crop crop = new CropService().getUpdateCropInfo(getCropIdByUserCropId(ucId));
 		int price = crop.getInt("value");
 		int experience= crop.getInt("experience");
-		
+		result = "";
+		isLevel = 0;
 		boolean succeed = Db.tx(new IAtom() {
+			
 			@Override
 			public boolean run() throws SQLException {
 				UserService service = new UserService();
 				boolean a1 = new UserCropDao().deleteCrop(ucId);
-				boolean a2 = service.addEandM(userId, price, experience);
+				boolean a2 = service.addEandM(userId,experience,price);
 				boolean a3 = service.updateLandCrop(userId, landNumber, 0);
 				
 				boolean a4 = false;
@@ -101,18 +105,24 @@ public class UserCropService {
 				int userLevel = user.getInt("level");
 				int userExperience = user.getInt("experience");
 				if(userExperience >= Strings.userLevel[userLevel]) {
+					isLevel = 1;
 					a4 = user.set("level", userLevel+1).update();
 				}else {
 					a4 = true;
 				}
 				if(a1 == true && a2 == true && a3 == true && a4 == true) {
+					if(isLevel == 1) {
+						result = "up";
+					}else {
+						result = "true";
+					}
 					return true;
 				}
+				result = "false";
 				return false;
 			}
 		});
-		return succeed;
-				
+		return result;		
 	}
 	
 	//种植新作物,,,(没有考虑当前土地是否已有作物占用，由前端考虑QAQ）

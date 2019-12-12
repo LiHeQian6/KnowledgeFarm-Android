@@ -23,7 +23,9 @@
         android:isGame="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Settings.BindingEmailActivity"></activity>
+        <activity android:name=".Settings.BindingEmailActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="screenSize|orientation"></activity>
         <activity
             android:name=".Login.QQFirstActivity"
             android:screenOrientation="landscape" />

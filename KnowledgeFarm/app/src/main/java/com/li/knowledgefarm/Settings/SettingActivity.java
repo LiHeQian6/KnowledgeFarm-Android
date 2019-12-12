@@ -512,22 +512,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     /**
-     * 绑定邮箱
-     */
-    private void bindingEmail(){
-        BindingEmailDialog popupDialogShopCar = new BindingEmailDialog(getApplicationContext());
-        popupDialogShopCar.showAtLocation(findViewById(R.id.btnBindingEmail), Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
-        backgroundAlpha(0.3f);
-        //监听弹出框关闭时，屏幕透明度变回原样
-        popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
-            @Override
-            public void onDismiss() {
-                backgroundAlpha(1f);
-            }
-        });
-    }
-
-    /**
      * 弹出确定、取消对话框来确定是否解除绑定邮箱
      */
     private void showAlertDialogEmail(){

@@ -267,8 +267,8 @@ public class UserController extends Controller{
 		String landNumber = get("landNumber");
 		
 		//progress为作物当前进度；若为-1，则浇水失败
-		int progress = new UserCropService().waterCr(userId, landNumber);
-		renderJson(progress);
+		boolean succeed = new UserCropService().waterCr(userId, landNumber);
+		renderJson(""+succeed);
 	}
 	
 	//施肥（userId）
@@ -277,8 +277,8 @@ public class UserController extends Controller{
 		String landNumber = get("landNumber");
 		
 		//progress为作物当前进度；若为-1，则施肥失败
-		int progress = new UserCropService().fertilizerCr(userId, landNumber);
-		renderJson(progress);
+		boolean succeed = new UserCropService().fertilizerCr(userId, landNumber);
+		renderJson(""+succeed);
 	}
 	
 	//购买种子后添加到背包
@@ -319,9 +319,9 @@ public class UserController extends Controller{
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
 
-		//返回为"true":收获成功；返回为"false":收获失败
-		boolean succeed = new UserCropService().getCrop(userId, landNumber);
-		renderJson(""+succeed);
+		//返回为"up":收获成功且升级;返回为"true":收获成功;返回为"false":收获失败
+		String result = new UserCropService().getCrop(userId, landNumber);
+		renderJson(result);
 	}
 	
 	//扩建土地
