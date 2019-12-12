@@ -11,10 +11,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -34,6 +40,10 @@ public class RegistAccountDialog extends DialogFragment {
     private String rName;
     private String grade;
     private String password;
+    private RelativeLayout closeImg;
+    private LinearLayout linearAccount;
+    private LinearLayout linearRegist;
+    private TextView newAccount;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -43,7 +53,9 @@ public class RegistAccountDialog extends DialogFragment {
             switch (msg.what){
                 case 4:
                     Toast.makeText(getContext(),"注册成功！",Toast.LENGTH_SHORT).show();
-                    dismiss();
+                    linearRegist.setVisibility(View.GONE);
+                    linearAccount.setVisibility(View.VISIBLE);
+                    newAccount.setText(msg.obj.toString());
                     break;
                 case 5:
                     Toast.makeText(getContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
@@ -60,6 +72,10 @@ public class RegistAccountDialog extends DialogFragment {
 
         Spinner spinner = view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new ProvOnItemSelectedListener());
+        linearAccount = view.findViewById(R.id.linearCount);
+        linearRegist = view.findViewById(R.id.linearRegist);
+        closeImg = view.findViewById(R.id.closeImg);
+        newAccount = view.findViewById(R.id.newAccount);
         final EditText registName = view.findViewById(R.id.registName);
         final EditText pwd = view.findViewById(R.id.registPwd2);
         final EditText configPwd = view.findViewById(R.id.configPwd2);
@@ -86,6 +102,12 @@ public class RegistAccountDialog extends DialogFragment {
                 }
             }
         });
+        closeImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
         return view;
     }
@@ -109,12 +131,18 @@ public class RegistAccountDialog extends DialogFragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
                 Message message = new Message();
-                if(response.body().string().equals("fail")){
+                if(result.equals("fail")){
                     message.what = 5;
                     handler.sendMessage(message);
                 }else {
                     message.what = 4;
+                    try {
+                        message.obj = new JSONObject(result).getString("accout");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     handler.sendMessage(message);
                 }
             }
