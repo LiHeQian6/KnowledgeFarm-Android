@@ -1,6 +1,5 @@
 package com.farm.usercrop.dao;
 
-
 import com.farm.entity.UserCropItem;
 import com.farm.model.UserCrop;
 
@@ -35,24 +34,20 @@ public class UserCropDao {
 	 * 	查
 	 * @throws
 	 */
-	//浇水(参数:usercropId,userId)
-	public boolean waterCrop(int ucId) {
+	//浇水
+	public boolean waterCrop(int ucId, int progress) {
 		UserCrop uc = UserCrop.dao.findById(ucId);
 		if(uc!=null) {
-			if(uc.getInt("progress")<=95) {
-				return uc.set("progress", uc.getInt("progress")+5).update();
-			}
+			return uc.set("progress", progress).update();
 		}
 		return false;
 	}
 	
-	//施肥(参数:usercropId,userId)
-	public boolean fertilizerCrop(int ucId) {
+	//施肥
+	public boolean fertilizerCrop(int ucId, int progress) {
 		UserCrop uc = UserCrop.dao.findById(ucId);
 		if(uc!=null) {
-			if(uc.getInt("progress")<=90) {
-				return uc.set("progress", uc.getInt("progress")+10).update();
-			}
+			return uc.set("progress", progress).update();
 		}
 		return false;
 	}

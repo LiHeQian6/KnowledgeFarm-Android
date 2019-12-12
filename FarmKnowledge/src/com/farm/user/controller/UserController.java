@@ -116,13 +116,13 @@ public class UserController extends Controller{
 		String email = get("email");
 		
 		UserService service = new UserService();
-		String userEmail = service.findUserByAccout(accout).get("email");
-		if(service.isExistUserByAccout(accout)) {
+		if(service.isExistUserByAccoutAll(accout)) {
+			String userEmail = service.findUserByAccout(accout).get("email");
 			if(!userEmail.equals("")) {
 				if(userEmail.equals(email)) {
 					String testCode = "";
 					for(int i = 0;i < 4;i++) {
-						testCode = "" + (int)(Math.random()*10);
+						testCode += (int)(Math.random()*10);
 					}
 					String text = "您用于找回密码的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
 					service.sendEmail(email, text);
@@ -214,7 +214,7 @@ public class UserController extends Controller{
 		UserService service = new UserService();
 		String testCode = "";
 		for(int i = 0;i < 4;i++) {
-			testCode = "" + (int)(Math.random()*10);
+			testCode += (int)(Math.random()*10);
 		}
 		String text = "您用于绑定邮箱的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
 		service.sendEmail(email, text);
