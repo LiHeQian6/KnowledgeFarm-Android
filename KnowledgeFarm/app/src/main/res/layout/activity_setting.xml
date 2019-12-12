@@ -133,8 +133,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:textSize="20dp"
-        android:text="账号已绑定QQ"
-        android:visibility="invisible"/>
+        android:text="账号未绑定QQ"/>
     <TextView
         android:id="@+id/tv_email"
         android:layout_width="wrap_content"
@@ -143,5 +142,5 @@
         android:layout_alignRight="@+id/tv_QQ"
         android:layout_marginTop="10dp"
         android:textSize="20dp"
-        android:visibility="invisible"/>
+        android:text="账号未绑定邮箱"/>
 </RelativeLayout>

@@ -212,13 +212,17 @@ public class UserController extends Controller{
 		String email = get("email");
 		
 		UserService service = new UserService();
-		String testCode = "";
-		for(int i = 0;i < 4;i++) {
-			testCode += (int)(Math.random()*10);
+		if(!service.isBindingEmail(email)) {
+			String testCode = "";
+			for(int i = 0;i < 4;i++) {
+				testCode += (int)(Math.random()*10);
+			}
+			String text = "您用于绑定邮箱的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
+			service.sendEmail(email, text);
+			renderJson(testCode);
+		}else { //该邮箱已被其他账号绑定
+			renderJson("already");
 		}
-		String text = "您用于绑定邮箱的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
-		service.sendEmail(email, text);
-		renderJson(testCode);
 	}
 	
 	//绑定邮箱

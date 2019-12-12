@@ -96,7 +96,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
-                            tv_QQ.setVisibility(View.VISIBLE);
+                            tv_QQ.setText("账号已绑定QQ");
                             break;
                         case "false":
                             break;
@@ -107,7 +107,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
-                            tv_QQ.setVisibility(View.VISIBLE);
+                            tv_QQ.setText("账号已绑定QQ");
                             /** 存入SharedPreferences*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -131,7 +131,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.VISIBLE);
                             btnUnBindingQQ.setVisibility(View.GONE);
-                            tv_QQ.setVisibility(View.INVISIBLE);
+                            tv_QQ.setText("账号未绑定QQ");
                             /** 删除SharedPreferences内Token信息*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -144,16 +144,13 @@ public class SettingActivity extends AppCompatActivity {
                             break;
                     }
                     break;
-                case 3: //绑定邮箱判断
-
-                    break;
                 case 4: //解绑邮箱判断
                     switch ((String)msg.obj){
                         case "true":
                             LoginActivity.user.setEmail("");
                             btnBindingEmail.setVisibility(View.VISIBLE);
                             btnUnBindingEmail.setVisibility(View.GONE);
-                            tv_email.setVisibility(View.INVISIBLE);
+                            tv_email.setText("账号未绑定邮箱");
                             Toast.makeText(getApplicationContext(),"解绑邮箱成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
@@ -348,7 +345,6 @@ public class SettingActivity extends AppCompatActivity {
         if(!LoginActivity.user.getEmail().equals("")){
             btnBindingEmail.setVisibility(View.GONE);
             btnUnBindingEmail.setVisibility(View.VISIBLE);
-            tv_email.setVisibility(View.VISIBLE);
             tv_email.setText("账号已绑定邮箱：" + LoginActivity.user.getEmail());
         }
     }

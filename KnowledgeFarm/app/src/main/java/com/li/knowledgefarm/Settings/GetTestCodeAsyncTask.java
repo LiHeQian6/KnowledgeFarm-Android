@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
 
@@ -50,7 +51,12 @@ public class GetTestCodeAsyncTask extends AsyncTask<Object,Integer,Object> {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String result = response.body().string();
-                tv_testCode.setText(result);
+                if(result.equals("already")){
+                    Toast.makeText(context,"该邮箱已被其他账号绑定",Toast.LENGTH_SHORT).show();
+                    return;
+                }else{
+                    tv_testCode.setText(result);
+                }
             }
         });
         int i = 60;

@@ -378,6 +378,14 @@ public class UserDao {
 		}
 		return false;
 	}
+	//判断邮箱是否已被其它账号绑定
+	public boolean isBindingEmail(String email) {
+		List<User> list = User.dao.find("select * from user where email=?",email);
+		if(list.size() != 0) {
+			return true;
+		}
+		return false;
+	}
 	//查询是否已存在该photoName
 	public boolean isExistPhotoName(String photoName) {
 		List<User> list = User.dao.find("select * from user where photoName=?",photoName);

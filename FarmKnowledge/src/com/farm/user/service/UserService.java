@@ -257,6 +257,10 @@ public class UserService {
 	public boolean isBindingQQ(String accout) {
 		return new UserDao().isBindingQQ(accout);
 	}
+	//判断邮箱是否已被其它账号绑定
+	public boolean isBindingEmail(String email) {
+		return new UserDao().isBindingEmail(email);
+	}
 	//查询是否已存在该photoName
 	public boolean isExistPhotoName(String photoName) {
 		return new UserDao().isExistPhotoName(photoName);
