@@ -75,6 +75,7 @@ public class UpdateGradeDialog extends PopupWindow {
 
         /** 得出当前年级的position值，并设置*/
         int position = LoginActivity.user.getGrade() - 1;
+        newGrade = spin[position];
         spinner.setSelection(position,true);
 
         /** 监听下拉选框*/

@@ -1,28 +1,6 @@
 package com.li.knowledgefarm.Settings;
 
-import android.app.ActionBar;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.li.knowledgefarm.Login.LoginActivity;
-import com.li.knowledgefarm.R;
-
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -30,9 +8,31 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class BindingEmailDialog extends PopupWindow {
-    private View view;
-    private Context context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.li.knowledgefarm.Login.LoginActivity;
+import com.li.knowledgefarm.R;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.IOException;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class BindingEmailActivity extends AppCompatActivity {
     private ImageView iv_return;
     /** 邮箱输入框上面的文字*/
     private TextView tv_email;
@@ -57,23 +57,22 @@ public class BindingEmailDialog extends PopupWindow {
             switch (msg.what){
                 case 0: // 绑定邮箱判断
                     if(msg.obj.equals("true")){
-                        asyncTask.cancel(true);
                         LoginActivity.user.setEmail(edtEmail.getText().toString().trim());
-                        dismiss();
-                        Toast.makeText(context,"绑定邮箱成功",Toast.LENGTH_SHORT).show();
+                        asyncTask.cancel(true);
+                        EventBus.getDefault().post("绑定邮箱成功");
+                        finish();
+                        Toast.makeText(getApplicationContext(),"绑定邮箱成功",Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(context,"绑定邮箱失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"绑定邮箱失败",Toast.LENGTH_SHORT).show();
                     }
             }
         }
     };
 
-    public BindingEmailDialog(final Context context) {
-        this.context = context;
-        view = LayoutInflater.from(context).inflate(R.layout.binding_email, null);
-
-        /** 设置设置popupWindow样式*/
-        setpopupWndow();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_binding_email);
 
         /** 初始化*/
         init();
@@ -86,10 +85,10 @@ public class BindingEmailDialog extends PopupWindow {
                     if(isEmail(edtEmail.getText().toString().trim())){
                         getTestCode();
                     }else{
-                        Toast.makeText(context,"邮箱格式错误",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"邮箱格式错误",Toast.LENGTH_SHORT).show();
                     }
                 }else {
-                    Toast.makeText(context,"邮箱不能为空",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"邮箱不能为空",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -98,13 +97,16 @@ public class BindingEmailDialog extends PopupWindow {
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("lww","over");
-                Log.i("lww","testCode:"+tv_testCode.getText());
-                if(edtTestCode.getText().toString().trim().equals(tv_testCode.getText())){
-                    over();
+                if(!edtTestCode.getText().toString().trim().equals("")){
+                    if(edtTestCode.getText().toString().trim().equals(tv_testCode.getText())){
+                        over();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"验证码输入错误",Toast.LENGTH_SHORT).show();
+                    }
                 }else{
-                    Toast.makeText(context,"验证码输入错误",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"验证码不能为空",Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
@@ -113,45 +115,35 @@ public class BindingEmailDialog extends PopupWindow {
             @Override
             public void onClick(View view) {
                 asyncTask.cancel(true);
-                dismiss();
+                finish();
             }
         });
-    }
 
-    /**
-     * 设置popupWindow样式
-     */
-    private void setpopupWndow(){
-        this.setContentView(view);
-        this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setFocusable(true);
-        this.setAnimationStyle(R.style.pop_animation);
-        //ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
-        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
-        this.setBackgroundDrawable(d);
     }
 
     /**
      * 初始化
      */
     private void init(){
-        iv_return = view.findViewById(R.id.iv_return);
-        tv_email = view.findViewById(R.id.tv_email);
-        edtEmail = view.findViewById(R.id.edtEmail);
-        edtTestCode = view.findViewById(R.id.edtTestCode);
-        tv_getTestCode = view.findViewById(R.id.tv_getTestCode);
-        tv_testCode = view.findViewById(R.id.tv_testCode);
-        btnTest = view.findViewById(R.id.btnTest);
+        iv_return = findViewById(R.id.iv_return);
+        tv_email = findViewById(R.id.tv_email);
+        edtEmail = findViewById(R.id.edtEmail);
+        edtTestCode = findViewById(R.id.edtTestCode);
+        tv_getTestCode = findViewById(R.id.tv_getTestCode);
+        tv_testCode = findViewById(R.id.tv_testCode);
+        btnTest = findViewById(R.id.btnTest);
 
         okHttpClient = new OkHttpClient();
+
+        /** 关闭状态栏*/
+        setStatusBar();
     }
 
     /**
      * 获取验证码
      */
     private void getTestCode(){
-        asyncTask = new GetTestCodeAsyncTask(context,tv_email,tv_getTestCode,tv_testCode,edtEmail.getText().toString().trim());
+        asyncTask = new GetTestCodeAsyncTask(getApplicationContext(),tv_email,tv_getTestCode,tv_testCode,edtEmail.getText().toString().trim());
         asyncTask.execute();
     }
 
@@ -163,7 +155,7 @@ public class BindingEmailDialog extends PopupWindow {
             @Override
             public void run() {
                 FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("email", edtEmail.getText().toString().trim()).build();
-                final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/bindingEmail").build();
+                final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -199,6 +191,17 @@ public class BindingEmailDialog extends PopupWindow {
         message.what = what;
         message.obj = obj;
         handler.sendMessage(message);
+    }
+
+    /**
+     * 关闭状态栏
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
+        }
     }
 
 }

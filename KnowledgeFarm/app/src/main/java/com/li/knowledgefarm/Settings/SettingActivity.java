@@ -34,6 +34,8 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,6 +69,8 @@ public class SettingActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     /** 自定义点击事件监听器*/
     private CustomerListener listener;
+    /** EvenBus*/
+    EventBus eventBus;
 
     /** Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI*/
     private Tencent mTencent;
@@ -87,7 +91,7 @@ public class SettingActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 0: //账号是否已被绑定判断
+                case 0: //账号是否已被绑定QQ判断
                     switch ((String)msg.obj){
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
@@ -141,6 +145,7 @@ public class SettingActivity extends AppCompatActivity {
                     }
                     break;
                 case 3: //绑定邮箱判断
+
                     break;
                 case 4: //解绑邮箱判断
                     switch ((String)msg.obj){
@@ -176,6 +181,14 @@ public class SettingActivity extends AppCompatActivity {
 
     }
 
+    @Subscribe//可以订阅粘性事件
+    public void onEventBeanStikyEvent(String result){
+        if(result.equals("绑定邮箱成功")){
+            Log.i("lww","绑定邮箱成功");
+            isBindingEmail();
+        }
+    }
+
     class CustomerListener implements View.OnClickListener{
 
         @Override
@@ -200,7 +213,9 @@ public class SettingActivity extends AppCompatActivity {
                     showAlertDialogQQ();
                     break;
                 case R.id.btnBindingEmail:
-                    bindingEmail();
+                    Intent intent = new Intent();
+                    intent.setClass(SettingActivity.this, BindingEmailActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.btnUnBindingEmail:
                     showAlertDialogEmail();
@@ -239,11 +254,13 @@ public class SettingActivity extends AppCompatActivity {
         btnUnBindingEmail.setOnClickListener(listener);
         btnRegout.setOnClickListener(listener);
 
+        okHttpClient = new OkHttpClient();
+        eventBus = EventBus.getDefault();
+        eventBus.register(SettingActivity.this);
+        mTencent = Tencent.createInstance(mAppId, getApplicationContext());
+
         /** 关闭状态栏*/
         setStatusBar();
-
-        okHttpClient = new OkHttpClient();
-        mTencent = Tencent.createInstance(mAppId, getApplicationContext());
     }
 
     /**
