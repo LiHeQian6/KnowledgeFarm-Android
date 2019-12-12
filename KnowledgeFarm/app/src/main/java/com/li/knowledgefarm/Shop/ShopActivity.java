@@ -203,7 +203,7 @@ public class ShopActivity extends AppCompatActivity {
         thisPrice.setText("单价："+shopList.get(position).getPrice()+"");
         thisTime.setText("成熟时间："+shopList.get(position).getMatureTime()+"");
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.loading)
+                .placeholder(R.drawable.huancun2)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(alertBuilder.getContext()).load(shopList.get(position).getImg3()).apply(requestOptions).into(thisFlower);
         button.setOnClickListener(new View.OnClickListener() {

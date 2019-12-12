@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showUserInfo() {
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.huancun)
+                .placeholder(R.drawable.huancun2)
                 .error(R.drawable.meigui)
                 .fallback(R.drawable.meigui)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 RequestOptions requestOptions = new RequestOptions()
-                        .placeholder(R.drawable.huancun)
+                        .placeholder(R.drawable.huancun2)
                         .error(R.drawable.meigui)
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);

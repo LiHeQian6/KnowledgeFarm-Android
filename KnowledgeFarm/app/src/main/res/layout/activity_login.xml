@@ -18,7 +18,7 @@
             android:visibility="visible"
             android:text="知识农场"
             android:textColor="@color/ShopTextColor"
-            android:textSize="50dp"/>
+            android:textSize="80dp"/>
         <LinearLayout
             android:id="@+id/linearQQ"
             android:layout_width="match_parent"
