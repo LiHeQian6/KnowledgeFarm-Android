@@ -17,12 +17,14 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -64,7 +66,6 @@ public class FindPassword extends AppCompatActivity {
                 case 5:
                     Toast.makeText(getApplicationContext(),"验证码已发送，请在邮箱查收",Toast.LENGTH_SHORT).show();
                     identyCode = (String) msg.obj;
-                    startCode();
                     break;
                 case 6:
                     Toast.makeText(getApplicationContext(),"未绑定邮箱！",Toast.LENGTH_SHORT).show();
@@ -87,6 +88,20 @@ public class FindPassword extends AppCompatActivity {
             }
         }
     };
+    /**
+     * @Description 设置状态栏
+     * @Auther 孙建旺
+     * @Date 下午 2:28 2019/12/09
+     * @Param []
+     * @return void
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +112,7 @@ public class FindPassword extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
+        setStatusBar();
         getViews();
         registListener();
     }
@@ -143,8 +159,13 @@ public class FindPassword extends AppCompatActivity {
                         return;
                     }
                     getCodeFromServer(getResources().getString(R.string.URL)+"/user/sendTestCodePassword");
+                    startCode();
                     break;
                 case R.id.btnSubmit:
+                    if(account.equals("")||email.equals("")||code.equals("")){
+                        Toast.makeText(getApplicationContext(),"请完善所有信息！",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if(!identyCode.equals("")&&code.equals(identyCode)){
                         linearCode.setVisibility(View.GONE);
                         linearPwd.setVisibility(View.VISIBLE);
@@ -219,15 +240,12 @@ public class FindPassword extends AppCompatActivity {
                 Message message = new Message();
                 if(result.equals("notExistAccount")){
                     message.what = 4;
-                    message.obj = result;
                     handler.sendMessage(message);
                 }else if(result.equals("notBindingEmail")){
                     message.what = 6;
-                    message.obj = result;
                     handler.sendMessage(message);
                 }else if(result.equals("EmailError")){
                     message.what = 7;
-                    message.obj = result;
                     handler.sendMessage(message);
                 } else {
                     message.what = 5;
