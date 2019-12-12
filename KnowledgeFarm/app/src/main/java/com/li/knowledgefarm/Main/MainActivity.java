@@ -40,6 +40,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
+import com.li.knowledgefarm.Settings.UpdateGradeDialog;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.entity.BagCropNumber;
@@ -228,9 +229,16 @@ public class MainActivity extends AppCompatActivity {
         waterCount.setText(LoginActivity.user.getWater()+"");
         fertilizerCount.setText(LoginActivity.user.getFertilizer()+"");
         int[] levelExperience = getResources().getIntArray(R.array.levelExperience);
-        experience.setMax(levelExperience[LoginActivity.user.getLevel()-1]);
-        experience.setProgress((int)LoginActivity.user.getExperience());
-        experienceValue.setText(""+LoginActivity.user.getExperience()+"/"+levelExperience[LoginActivity.user.getLevel()-1]);
+        int l = LoginActivity.user.getLevel() ;
+        if(levelExperience.length<=l){
+            experience.setMax(levelExperience[levelExperience.length-1]);
+            experience.setProgress(levelExperience[levelExperience.length-1]);
+            experienceValue.setText(""+levelExperience[levelExperience.length-1]+"/"+levelExperience[levelExperience.length-1]);
+        }else {
+            experience.setMax(levelExperience[l - 1]);
+            experience.setProgress((int) LoginActivity.user.getExperience());
+            experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l - 1]);
+        }
     }
 
     /**
@@ -371,12 +379,15 @@ public class MainActivity extends AppCompatActivity {
                                     String messages = (String) msg.obj;
                                     Log.e("Watering", messages);
                                     if (!messages.equals("Fail")) {
-                                        if (messages.equals("-1")) {
+                                        if (messages.equals("false")) {
                                             Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                                         } else {
                                             //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
                                             getCrop();
                                             getUserInfo();
+                                            if(messages.equals("up")){
+                                                upLevel();
+                                            }
                                         }
                                     } else {
                                         Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
@@ -392,6 +403,36 @@ public class MainActivity extends AppCompatActivity {
             }
             lands.addView(relativeLayout);
         }
+    }
+
+    /**
+     * 用户升级,弹窗提示
+     */
+    private void upLevel() {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.up_level_dialog, null);
+        Button right = layout.findViewById(R.id.right);
+        alertBuilder.setView(layout);
+        final AlertDialog upDiaLog = alertBuilder.create();
+        right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                upDiaLog.cancel();
+            }
+        });
+
+        upDiaLog.show();
+        WindowManager.LayoutParams attrs = upDiaLog.getWindow().getAttributes();
+        if (upDiaLog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            upDiaLog.getWindow().setDimAmount(0f);//去除遮罩
+        }
+        attrs.gravity = Gravity.CENTER;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(300*scale+0.5f);
+        attrs.height =(int)(250*scale+0.5f);
+        upDiaLog.getWindow().setAttributes(attrs);
     }
 
     private void addListener() {
