@@ -35,6 +35,9 @@ public class GetTestCodeAsyncTask extends AsyncTask<Object,Integer,Object> {
 
     @Override
     protected Object doInBackground(Object[] objects) {
+        if(isCancelled()){
+            return null;
+        }
         FormBody formBody = new FormBody.Builder().add("email", email).build();
         final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/sendTestCodeBingEmail").build();
         Call call = okHttpClient.newCall(request);
@@ -53,6 +56,9 @@ public class GetTestCodeAsyncTask extends AsyncTask<Object,Integer,Object> {
         int i = 60;
         while(i >= 1){
             try {
+                if(isCancelled()){
+                    return null;
+                }
                 Thread.sleep(1000);
                 i--;
                 publishProgress(i);
@@ -68,6 +74,13 @@ public class GetTestCodeAsyncTask extends AsyncTask<Object,Integer,Object> {
         super.onProgressUpdate(values);
         tv_email.setText("正在向" + email + "发送验证码...");
         tv_getTestCode.setText(values[0] + "秒后可重新发送");
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        tv_email.setText("");
+        tv_getTestCode.setText("获取验证码");
     }
 
     @Override

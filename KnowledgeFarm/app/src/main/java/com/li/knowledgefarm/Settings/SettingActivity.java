@@ -87,7 +87,7 @@ public class SettingActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 0: //账号是否已被绑定判断
+                case 0: //账号是否已被绑定QQ判断
                     switch ((String)msg.obj){
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
