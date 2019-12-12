@@ -23,8 +23,11 @@
         android:isGame="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Login.QQFirstActivity"
+        <activity android:name=".Login.FindPassword"
             android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".Login.QQFirstActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Login.StartActivity"
             android:fitsSystemWindows="true"
@@ -48,6 +51,7 @@
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

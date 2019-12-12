@@ -34,7 +34,6 @@ public class RegistAccountDialog extends DialogFragment {
     private String rName;
     private String grade;
     private String password;
-    private String email;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -64,7 +63,6 @@ public class RegistAccountDialog extends DialogFragment {
         final EditText registName = view.findViewById(R.id.registName);
         final EditText pwd = view.findViewById(R.id.registPwd2);
         final EditText configPwd = view.findViewById(R.id.configPwd2);
-        final EditText emails = view.findViewById(R.id.boundToQQ);
         Button button = view.findViewById(R.id.btnRegist2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,8 +70,7 @@ public class RegistAccountDialog extends DialogFragment {
                 rName = registName.getText().toString();
                 password = pwd.getText().toString();
                 String config = configPwd.getText().toString();
-                email = emails.getText().toString();
-                if(rName.equals("")||password.equals("")||config.equals("")||email.equals("")){
+                if(rName.equals("")||password.equals("")||config.equals("")){
                     Toast.makeText(getContext(),"请完善注册信息！",Toast.LENGTH_SHORT).show();
                     return;
                 }else if(!password.equals(config)){
@@ -99,7 +96,6 @@ public class RegistAccountDialog extends DialogFragment {
                 .add("nickName",rName)
                 .add("grade",grade)
                 .add("password",password)
-                .add("email",email)
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/registAccout").build();
         //Call

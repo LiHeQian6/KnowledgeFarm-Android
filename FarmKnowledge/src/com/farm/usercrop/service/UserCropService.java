@@ -2,6 +2,7 @@ package com.farm.usercrop.service;
 
 import java.sql.SQLException;
 
+import com.farm.crop.dao.CropDao;
 import com.farm.crop.service.CropService;
 import com.farm.entity.Strings;
 import com.farm.entity.UserCropItem;
@@ -16,15 +17,25 @@ import com.jfinal.plugin.activerecord.IAtom;
 
 public class UserCropService {
 	
-	//浇水(参数:usercropId，userId)
+	//浇水
 	public int waterCr(int userId,String landNumber) {
 		int ucId = new UserService().findUcId(userId, landNumber);
+		UserCropDao dao = new UserCropDao();
 		boolean succeed = Db.tx(new IAtom() {
 			
 			@Override
 			public boolean run() throws SQLException {
-				boolean a1 = new UserCropDao().waterCrop(ucId);
+				boolean a1 = false;
 				boolean a2 = new UserService().lessW(userId);
+				Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(ucId));
+				int progress = dao.getCropProgress(ucId);
+				int matureTime = crop.getInt("matureTime");
+				
+				if(progress+5 >= matureTime) {
+					a1 = dao.waterCrop(ucId, crop.getInt("matureTime"));
+				}else {
+					a1 = dao.waterCrop(ucId, progress+5);
+				}
 				
 				if(a1 == true && a2 == true) {
 					return true;
@@ -33,20 +44,30 @@ public class UserCropService {
 			}
 		});
 		if(succeed) {
-			return new UserCropDao().getCropProgress(ucId);
+			return dao.getCropProgress(ucId);
 		}
 		return -1;				
 	}
 	
-	//施肥(参数:usercropId,userId)
+	//施肥
 	public int fertilizerCr(int userId,String landNumber) {
 		int ucId = new UserService().findUcId(userId, landNumber);
 		boolean succeed = Db.tx(new IAtom() {
 			
 			@Override
 			public boolean run() throws SQLException {
-				boolean a1 = new UserCropDao().fertilizerCrop(ucId);
+				UserCropDao dao = new UserCropDao();
+				boolean a1 = false;
 				boolean a2 = new UserService().lessF(userId);
+				Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(ucId));
+				int progress = dao.getCropProgress(ucId);
+				int matureTime = crop.getInt("matureTime");
+				
+				if(progress+10 >= matureTime) {
+					a1 = dao.fertilizerCrop(ucId, crop.getInt("matureTime"));
+				}else {
+					a1 = dao.fertilizerCrop(ucId, progress+10);
+				}
 				
 				if(a1 == true && a2 == true) {
 					return true;

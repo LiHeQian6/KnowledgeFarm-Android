@@ -127,7 +127,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.VISIBLE);
                             btnUnBindingQQ.setVisibility(View.GONE);
-                            tv_QQ.setVisibility(View.GONE);
+                            tv_QQ.setVisibility(View.INVISIBLE);
                             /** 删除SharedPreferences内Token信息*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -148,7 +148,7 @@ public class SettingActivity extends AppCompatActivity {
                             LoginActivity.user.setEmail("");
                             btnBindingEmail.setVisibility(View.VISIBLE);
                             btnUnBindingEmail.setVisibility(View.GONE);
-                            tv_email.setVisibility(View.GONE);
+                            tv_email.setVisibility(View.INVISIBLE);
                             Toast.makeText(getApplicationContext(),"解绑邮箱成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
@@ -502,7 +502,16 @@ public class SettingActivity extends AppCompatActivity {
      * 绑定邮箱
      */
     private void bindingEmail(){
-
+        BindingEmailDialog popupDialogShopCar = new BindingEmailDialog(getApplicationContext());
+        popupDialogShopCar.showAtLocation(findViewById(R.id.btnBindingEmail), Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
+        backgroundAlpha(0.3f);
+        //监听弹出框关闭时，屏幕透明度变回原样
+        popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1f);
+            }
+        });
     }
 
     /**

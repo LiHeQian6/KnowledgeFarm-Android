@@ -47,18 +47,6 @@
             android:imeOptions="flagNoExtractUi"
             android:hint="确认密码"
             android:textSize="20sp" />
-        <EditText
-            android:id="@+id/boundToQQ"
-            android:layout_width="300dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/eradius"
-            android:gravity="center_horizontal"
-            android:imeOptions="flagNoExtractUi"
-            android:hint="绑定QQ邮箱"
-            android:textSize="20sp" />
         <Spinner
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
@@ -69,6 +57,10 @@
             android:layout_width="300dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
         <Button
             android:id="@+id/btnRegist2"
             android:layout_width="200dp"
