@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.entity.User;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import androidx.annotation.NonNull;
@@ -49,7 +51,6 @@ import static com.li.knowledgefarm.Login.LoginActivity.user;
 public class QQFirstActivity extends AppCompatActivity {
     private String grade;
     private String password;
-    private String email;
     private String openId;
 
 
@@ -104,10 +105,8 @@ public class QQFirstActivity extends AppCompatActivity {
                 password = pwd.getText().toString();
                 EditText configPwd = findViewById(R.id.configPwd);
                 config = configPwd.getText().toString();
-                EditText emails = findViewById(R.id.boundQQ);
-                email = emails.getText().toString();
-                if(password.equals("")||config.equals("")||email.equals("")){
-                    Toast.makeText(getApplicationContext(),"请完善注册信息！"+password+config+email,Toast.LENGTH_SHORT).show();
+                if(password.equals("")||config.equals("")){
+                    Toast.makeText(getApplicationContext(),"请完善注册信息！",Toast.LENGTH_SHORT).show();
                 }else if(!password.equals(config)){
                     Toast.makeText(getApplicationContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
                 }else {
@@ -127,7 +126,6 @@ public class QQFirstActivity extends AppCompatActivity {
         FormBody formBody = new FormBody.Builder()
                 .add("grade",grade)
                 .add("password",password)
-                .add("email",email)
                 .add("openId",openId)
                 .add("photo",Path)
                 .add("nickName",Nickname)
@@ -157,6 +155,13 @@ public class QQFirstActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public boolean isEmail(String email) {
+        String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+        Pattern p = Pattern.compile(str);
+        Matcher m = p.matcher(email);
+        return m.matches();
     }
 
 
@@ -206,8 +211,6 @@ public class QQFirstActivity extends AppCompatActivity {
         }
     }
 
-    //退出时的时间
-    private long mExitTime;
     //对返回键进行监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

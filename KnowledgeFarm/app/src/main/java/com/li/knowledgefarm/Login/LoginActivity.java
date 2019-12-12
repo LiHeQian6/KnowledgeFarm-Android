@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -103,12 +104,6 @@ public class LoginActivity extends AppCompatActivity {
         public void handleMessage(final Message msg) {
             switch (msg.what) {
                 case 1:       //第一次登录
-//                    Log.e("jing","noVisibility");
-//                    user = (User) msg.obj;
-//                    Intent intentToStart = new Intent(LoginActivity.this,StartActivity.class);
-//                    intentToStart.setAction("QQFirstLogin");
-//                    startActivity(intentToStart);
-//                    finish();
                     Toast.makeText(getApplicationContext(),"欢迎你，新用户",Toast.LENGTH_SHORT).show();
                     Intent intentFirst = new Intent(LoginActivity.this,QQFirstActivity.class);
                     intentFirst.putExtra("opId",openID);
@@ -121,10 +116,16 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 case 3:
                     //自动登录
+                    Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
                     user = (User) msg.obj;
                     Intent autoToStart = new Intent(LoginActivity.this,StartActivity.class);
                     autoToStart.setAction("autoLogin");
                     startActivity(autoToStart);
+                    finish();
+                    break;
+                case 0:
+                    Intent intent = new Intent(LoginActivity.this,LoginActivity.class);
+                    startActivity(intent);
                     finish();
                     break;
             }
@@ -202,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    //退出
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
             Toast.makeText(LoginActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
@@ -213,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
+    //自动登录
     private void autoLogin(){
         SharedPreferences sp = getSharedPreferences("token", MODE_PRIVATE);
         String opId = sp.getString("opId",null);
@@ -242,7 +243,6 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         int ret = response.getInt("ret");
                         if (ret == 0) {
-                            Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
                             openID = response.getString("openid");
                             Log.i("lww", "Openid:" + openID);
                             accessToken = response.getString("access_token");
@@ -262,7 +262,12 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     //更新用户信息
-                    updateUserInfo();
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            updateUserInfo();
+                        }
+                    }.start();
                 }
 
                 @Override
@@ -296,6 +301,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 asyncByJson2(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                         jsonObject.toString());
+
             }
         }.start();
     }
@@ -347,6 +353,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             asyncByJson(getResources().getString(R.string.URL)+"/user/loginByOpenId",
                                     jsonObject.toString());
+
                         }
                     }.start();
                 }
@@ -379,6 +386,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e("jing", "请求失败");
+                        Message message = new Message();
+                        message.what = 0;
+                        mHandler.sendMessage(message);
                         e.printStackTrace();
                     }
 
@@ -421,6 +431,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e("jing", "请求失败");
+                        Message message = new Message();
+                        message.what = 0;
+                        mHandler.sendMessage(message);
                         e.printStackTrace();
                     }
 
@@ -463,12 +476,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("lww", "onActivityResult1");
         mTencent.onActivityResultData(requestCode, resultCode, data, loginListener);
         if (requestCode == Constants.REQUEST_API) {
-            Log.i("lww", "onActivityResult2");
             if (resultCode == Constants.REQUEST_QQ_SHARE || resultCode == Constants.REQUEST_QZONE_SHARE || resultCode == Constants.REQUEST_OLD_SHARE) {
-                Log.i("lww", "onActivityResult3");
                 mTencent.handleResultData(data, loginListener);
             }
         }

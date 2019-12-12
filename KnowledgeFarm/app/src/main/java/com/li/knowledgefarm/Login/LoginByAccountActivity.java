@@ -40,6 +40,7 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
     private LinearLayout mName, mPsw;
     private String accountStr;
     private String pwdStr;
+    private RelativeLayout forget;
 
     private TextView registAccount;
 
@@ -73,6 +75,18 @@ public class LoginByAccountActivity extends AppCompatActivity {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+                case 4:
+                    Toast.makeText(getApplicationContext(),"账号或密码错误",Toast.LENGTH_SHORT).show();
+                    recovery();
+                    break;
+                case 6:
+                    Toast.makeText(getApplicationContext(),"账号不存在！",Toast.LENGTH_SHORT).show();
+                    recovery();
+                    break;
+                case 7:
+                    Toast.makeText(getApplicationContext(),"账号已失效",Toast.LENGTH_SHORT).show();
+                    recovery();
+                    break;
                 case 5:
                     user = (User) msg.obj;
                     Intent intentToStart = new Intent(LoginByAccountActivity.this,StartActivity.class);
@@ -81,7 +95,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     finish();
                     break;
                 default:
-                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"登录失败",Toast.LENGTH_SHORT).show();
                     recovery();
                     break;
             }
@@ -108,6 +122,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mInputLayout = findViewById(R.id.input_layout);
         mName = findViewById(R.id.input_layout_name);
         mPsw = findViewById(R.id.input_layout_psw);
+        forget = findViewById(R.id.forgetPwd);
         registAccount = findViewById(R.id.registAccount);
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +132,10 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 EditText pwd = findViewById(R.id.pwd);
                 accountStr = edtCount.getText().toString();
                 pwdStr = pwd.getText().toString();
+                if(accountStr.equals("")||pwdStr.equals("")){
+                    Toast.makeText(getApplicationContext(),"账号或密码为空！",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // 计算出控件的高与宽
                 mWidth = mBtnLogin.getMeasuredWidth();
                 mHeight = mBtnLogin.getMeasuredHeight();
@@ -124,12 +143,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 mName.setVisibility(View.INVISIBLE);
                 mPsw.setVisibility(View.INVISIBLE);
                 mBtnLogin.setVisibility(View.INVISIBLE);
-                Toast.makeText(getApplicationContext(),pwdStr,Toast.LENGTH_SHORT).show();
                 inputAnimator(mInputLayout, mWidth, mHeight);
-                if(accountStr.equals("")||pwdStr.equals("")){
-                    Toast.makeText(getApplicationContext(),"账号或密码为空！",Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
@@ -155,6 +169,14 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 showRegistDialog();
             }
         });
+
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentFindPwd = new Intent(LoginByAccountActivity.this,FindPassword.class);
+                startActivity(intentFindPwd);
+            }
+        });
     }
 
     private void loginByAccount(String accountStr, String pwdStr) {
@@ -171,6 +193,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("jing", "请求失败");
+
             }
 
             @Override
@@ -297,6 +320,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mInputLayout.setVisibility(View.VISIBLE);
         mName.setVisibility(View.VISIBLE);
         mPsw.setVisibility(View.VISIBLE);
+        mBtnLogin.setVisibility(View.VISIBLE);
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
         params.leftMargin = 0;
