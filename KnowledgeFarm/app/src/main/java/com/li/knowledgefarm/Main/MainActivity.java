@@ -6,17 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.wifi.aware.DiscoverySession;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -51,11 +45,7 @@ import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
-
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
@@ -90,27 +80,14 @@ public class MainActivity extends AppCompatActivity {
     private List<BagCropNumber> dataList;
     private List<UserCropItem> cropList;
     private Handler UpdataLands;
-    private Handler cropMessagesHandler=new Handler(){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            String messages = (String)msg.obj;
-            Log.e("cropList",messages);
-            if(!messages.equals("Fail")){
-                Type type = new TypeToken<List<UserCropItem>>(){}.getType();
-                cropList = gson.fromJson(messages,type);
-                showLand();
-            }else{
-                Toast toast = Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-    };
+    private Handler cropMessagesHandler;
     private int selectLand=0;//选中第几块土地
     private Handler plantMessagesHandler;
     private long lastClickTime=0;
     private long FAST_CLICK_DELAY_TIME=500;
     private Handler waterMessagesHandler;
     private int selected=-2;//选中的是水壶0，还是肥料-1，植物所在土地编号，还是没选选择任何一个-2
+    private Handler operatingHandleMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Log.e("用户信息","aaaaaaaaaaaaaaaaa");
                         String result =  response.body().string();
                         if (result.equals("{}")) {
                             Log.e("用户信息","信息异常");
@@ -163,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
                             Message message = new Message();
                             message.obj = LoginActivity.parsr(URLDecoder.decode(result), User.class);
                             LoginActivity.user = (User) message.obj;
+                            Message msg = new Message();
+                            msg.obj="true";
+                            operatingHandleMessage.sendMessage(msg);
                             if(bagDialog!=null){
                                 bagDialog.cancel();
                                 selectLand=0;
@@ -173,6 +152,18 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }.start();
+        operatingHandleMessage=new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                String messages = (String)msg.obj;
+                Log.e("operating",messages);
+                if(!messages.equals("Fail")){
+                    showUserInfo();
+                }else{
+                    Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
     }
 
     /**
@@ -202,6 +193,21 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }.start();
+        cropMessagesHandler=new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                String messages = (String)msg.obj;
+                Log.e("cropList",messages);
+                if(!messages.equals("Fail")){
+                    Type type = new TypeToken<List<UserCropItem>>(){}.getType();
+                    cropList = gson.fromJson(messages,type);
+                    showLand();
+                }else{
+                    Toast toast = Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
     }
 
     /**
@@ -244,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
             if(LoginActivity.user.getLandStauts(finalI)==-1) {
                 if(flag==0){
                     plant.setImageResource(R.drawable.kuojian);
+                    plant.setRotation(10);
                     relativeLayout.addView(plant);
                     //扩建
                     plant.setOnClickListener(new View.OnClickListener() {
@@ -279,7 +286,8 @@ public class MainActivity extends AppCompatActivity {
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
                 land.setImageResource(R.drawable.land);
-                plant.setRotationX(-60);
+                plant.setRotationX(-50);
+                plant.setRotation(-5);
                 UserCropItem crop=null;
                 //得到植物信息
                 for (int j = 0; j < cropList.size(); j++) {
@@ -290,12 +298,16 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (crop!=null){
                     //展示植物不同阶段
-                    final int status = crop.getProgress() / crop.getCrop().getMatureTime();
+                    final double status = (crop.getProgress()+0.0) / crop.getCrop().getMatureTime();
                     if(status <0.1){
                         plant.setImageResource(R.drawable.seed);
+                    }else if (status<0.2){
+                        plant.setImageResource(R.drawable.mucao);
                     }else if (status<0.3){
-                        Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
+                        plant.setImageResource(R.drawable.mucao);
                     }else if (status<0.6){
+                        Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
+                    }else if (status<1){
                         Glide.with(this).load(crop.getCrop().getImg2()).apply(requestOptions).into(plant);
                     }else if (status==1){
                         Glide.with(this).load(crop.getCrop().getImg3()).apply(requestOptions).into(plant);
@@ -308,40 +320,44 @@ public class MainActivity extends AppCompatActivity {
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(140,20);
                     layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
                     progressBar.setLayoutParams(layoutParams);
-                    //progressBar.setVisibility(View.GONE);
                     //植物成长值
                     final TextView value = new TextView(this);
                     value.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
                     value.setTextSize(8);
                     value.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     value.setLayoutParams(layoutParams);
-                    //value.setVisibility(View.GONE);
                     //添加视图
                     relativeLayout.addView(plant);
                     relativeLayout.addView(progressBar);
                     relativeLayout.addView(value);
+                    //浇水、施肥、收获
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-//                            if(value.getVisibility()==View.GONE){
-//                                progressBar.setVisibility(View.VISIBLE);
-//                                value.setVisibility(View.VISIBLE);
-//                            }else{
-//                                progressBar.setVisibility(View.GONE);
-//                                value.setVisibility(View.GONE);
-//                            }
                             land.setImageResource(R.drawable.land_light);
-
                             if(selected==0) {
-                                selected=finalI;
-                                watering();
+                                if(status==1) {
+                                    Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                    land.setImageResource(R.drawable.land);
+                                    selected = -2;
+                                }
+                                else{
+                                    selected=finalI;
+                                    operating(0);//浇水
+                                }
                             }else if(selected==-1){
-                                selected=finalI;
-                                Fertilize();
+                                if(status==1) {
+                                    Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                    land.setImageResource(R.drawable.land);
+                                    selected = -2;
+                                }else{
+                                    selected=finalI;
+                                    operating(-1);//施肥
+                                }
                             }else{
                                 selected=finalI;
                                 if(status==1)
-                                    Harvest();
+                                    operating(-2);//成熟
                                 else {
                                     Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
                                     land.setImageResource(R.drawable.land);
@@ -357,10 +373,9 @@ public class MainActivity extends AppCompatActivity {
                                         if (messages.equals("-1")) {
                                             Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                                         } else {
-                                            Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
                                             getCrop();
                                             getUserInfo();
-                                            showUserInfo();//写到handle里
                                         }
                                     } else {
                                         Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
@@ -369,7 +384,6 @@ public class MainActivity extends AppCompatActivity {
                                     selected = -2;
                                 }
                             };
-                            //TODO 浇水施肥收获
                         }
                     });
                 }
@@ -517,14 +531,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 浇水操作
+     * 浇水、施肥、收获操作
      */
-    private void watering() {
+    private void operating(final int operating) {
             new Thread(){
                 @Override
                 public void run() {
                     super.run();
-                    Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/waterCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                    Request request=null;
+                    if(operating==0)
+                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/waterCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                    else if(operating==-1){
+                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/fertilizerCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                    }else{
+                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/harvest?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                    }
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {
                         @Override
@@ -542,61 +563,6 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             }.start();
-    }
-
-    /**
-     * 施肥操作
-     */
-    private void Fertilize() {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/fertilizerCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj ="Fail";
-                        waterMessagesHandler.sendMessage(message);
-                    }
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj =response.body().string();
-                        waterMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }
-    /**
-     * 收获操作
-     */
-    private void Harvest () {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/harvest?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj ="Fail";
-                        waterMessagesHandler.sendMessage(message);
-                    }
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj =response.body().string();
-                        waterMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
     }
 
     /**

@@ -65,7 +65,7 @@ public class BagCustomerAdapter extends BaseAdapter {
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.loading)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(context).load(dataList.get(position).getCrop().getImg1()).apply(requestOptions).into(viewHolder.flowerImg);
+        Glide.with(context).load(dataList.get(position).getCrop().getImg3()).apply(requestOptions).into(viewHolder.flowerImg);
         viewHolder.name.setText(dataList.get(position).getCrop().getName());
         viewHolder.number.setText("*"+dataList.get(position).getNumber());
         notifyDataSetChanged();
