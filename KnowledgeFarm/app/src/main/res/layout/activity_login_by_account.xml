@@ -76,5 +76,20 @@
             android:textColor="#ffffff"
             android:textSize="20sp" />
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forgetPwd"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="忘记密码"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp"/>
+    </RelativeLayout>
 
 </RelativeLayout>
