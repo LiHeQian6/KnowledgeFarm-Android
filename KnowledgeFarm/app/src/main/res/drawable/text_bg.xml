@@ -5,6 +5,7 @@
     <corners android:radius="50dip"/>
 
     <stroke
+        android:color="@color/ShopTextColor"
         android:width="1dip" />
 
 </shape>

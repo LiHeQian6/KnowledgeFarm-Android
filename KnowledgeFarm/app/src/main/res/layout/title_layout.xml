@@ -5,11 +5,6 @@
     android:gravity="center_vertical"
     android:padding="10dip" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/apple" />
-
     <TextView
         android:id="@+id/registAccount"
         android:layout_width="wrap_content"
@@ -17,7 +12,8 @@
         android:textColor="#ffffff"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:textSize="20sp"
+        android:textSize="25sp"
+        android:layout_marginRight="10dp"
         android:text="Sign up"
         />
 </RelativeLayout>

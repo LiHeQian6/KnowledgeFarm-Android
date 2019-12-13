@@ -8,4 +8,7 @@
     <color name="zhuxiaoColor">#dedede</color>
     <color name="AnswerTrue">#49eb0a</color>
     <color name="AnswerFalse">#d81e06</color>
+    <color name="editTextCorlor">#D3D3D3</color>
+    <color name="cursorCorlor">#1E90FF</color>
+    <color name="editBac">#F5F5F5</color>
 </resources>
