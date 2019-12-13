@@ -55,12 +55,16 @@ public class BindingEmailActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0: //邮箱是否已被其他账号绑定判断
-                    if(!msg.obj.equals("already")){ //获取到验证码
-                        tv_testCode.setText((String)msg.obj);
-                    }else{ //邮箱已被其他账号绑定
+                    if(msg.obj.equals("already")){ //邮箱已被其他账号绑定
                         endAsync1(); //停止异步任务
                         endAsync2(); //停止异步任务
                         Toast.makeText(getApplicationContext(),"该邮箱已被其它账号绑定",Toast.LENGTH_SHORT).show();
+                    }else if(msg.obj.equals("fail")){ //发送邮箱失败
+                        endAsync1(); //停止异步任务
+                        endAsync1(); //停止异步任务
+                        Toast.makeText(getApplicationContext(),"发送验证码失败",Toast.LENGTH_SHORT).show();
+                    }else{ //获取到验证码
+                        tv_testCode.setText((String)msg.obj);
                     }
                     break;
                 case 1: // 绑定邮箱判断
