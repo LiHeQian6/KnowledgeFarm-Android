@@ -45,6 +45,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -153,6 +156,15 @@ public class LoginByAccountActivity extends AppCompatActivity {
                         new Thread(){
                             @Override
                             public void run() {
+                                if(!isConnByHttp()){
+                                    Looper.prepare();
+                                    Toast.makeText(getApplicationContext(),"未连接服务器",Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                    Message message = new Message();
+                                    message.what = 8;
+                                    handler.sendMessage(message);
+                                    return;
+                                }
                                 loginByAccount(accountStr,pwdStr);
                             }
                         }.start();
@@ -287,6 +299,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 progress.setVisibility(View.VISIBLE);
                 progressAnimator(progress);
                 mInputLayout.setVisibility(View.INVISIBLE);
+                registAccount.setVisibility(View.INVISIBLE);
+                forget.setVisibility(View.INVISIBLE);
 
             }
 
@@ -321,6 +335,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mName.setVisibility(View.VISIBLE);
         mPsw.setVisibility(View.VISIBLE);
         mBtnLogin.setVisibility(View.VISIBLE);
+        registAccount.setVisibility(View.VISIBLE);
+        forget.setVisibility(View.VISIBLE);
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
         params.leftMargin = 0;
@@ -348,5 +364,27 @@ public class LoginByAccountActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
+    }
+
+    public boolean isConnByHttp(){
+        boolean isConn = false;
+        URL url;
+        HttpURLConnection conn = null;
+        try {
+            url = new URL(getResources().getString(R.string.URL));
+            conn = (HttpURLConnection)url.openConnection();
+            conn.setConnectTimeout(1000*5);
+            if(conn.getResponseCode()==200){
+                isConn = true;
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            conn.disconnect();
+        }
+        return isConn;
     }
 }
