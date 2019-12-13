@@ -2,6 +2,8 @@ package com.li.knowledgefarm.Settings;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -41,6 +43,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Set;
 
 public class SettingActivity extends AppCompatActivity {
     /** 返回*/
@@ -264,52 +267,49 @@ public class SettingActivity extends AppCompatActivity {
      * 弹出修改昵称窗口
      */
     private void popupWindow_update_nickName(){
-        UpdateNickNameDialog popupDialogShopCar = new UpdateNickNameDialog(getApplicationContext());
-        popupDialogShopCar.setWidth(getSyetemWidth()*1/2);
-        popupDialogShopCar.setHeight(getSyetemHeight()*3/4);
-        popupDialogShopCar.showAtLocation(btnUpdateNickName, Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
-        backgroundAlpha(0.3f);
-        //监听弹出框关闭时，屏幕透明度变回原样
-        popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
-            @Override
-            public void onDismiss() {
-                backgroundAlpha(1f);
-            }
-        });
+        //管理多个Fragment对象
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        //事务(原子性的操作)
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        //创建CustomDialog,添加数据
+        UpdateNickNameDialog customDialog = new UpdateNickNameDialog();
+        //判断是否已经被添加过
+        if(!customDialog.isAdded()){
+            //添加Fragment
+            transaction.add(customDialog,"dialog");
+        }
+        //显示Fragment
+        transaction.show(customDialog);
+        transaction.commit();
     }
 
     /**
      * 弹出修改年级窗口
      */
     private void popupWindow_update_grade(){
-        UpdateGradeDialog popupDialogShopCar = new UpdateGradeDialog(getApplicationContext());
-        popupDialogShopCar.setWidth(getSyetemWidth()*1/2);
-        popupDialogShopCar.setHeight(getSyetemHeight()*3/4);
-        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdateGrade), Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
-        backgroundAlpha(0.3f);
-        //监听弹出框关闭时，屏幕透明度变回原样
-        popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
-            @Override
-            public void onDismiss() {
-                backgroundAlpha(1f);
-            }
-        });
+        //管理多个Fragment对象
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        //事务(原子性的操作)
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        //创建CustomDialog,添加数据
+        UpdateGradeDialog customDialog = new UpdateGradeDialog();
+        //判断是否已经被添加过
+        if(!customDialog.isAdded()){
+            //添加Fragment
+            transaction.add(customDialog,"dialog");
+        }
+        //显示Fragment
+        transaction.show(customDialog);
+        transaction.commit();
     }
 
     /**
-     * 弹出修改密码窗口
+     * 弹出修改密码界面
      */
     private void popupWindow_update_password(){
-        UpdatePasswordDialog popupDialogShopCar = new UpdatePasswordDialog(getApplicationContext());
-        popupDialogShopCar.showAtLocation(findViewById(R.id.btnUpdatePassword), Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL,0,0);
-        backgroundAlpha(0.3f);
-        //监听弹出框关闭时，屏幕透明度变回原样
-        popupDialogShopCar.setOnDismissListener(new PopupWindow.OnDismissListener(){
-            @Override
-            public void onDismiss() {
-                backgroundAlpha(1f);
-            }
-        });
+        Intent intent = new Intent();
+        intent.setClass(SettingActivity.this,UpdatePasswordActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -608,15 +608,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     /**
-     * 设置添加屏幕的背景透明度
-     */
-    public void backgroundAlpha(float bgAlpha) {
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.alpha = bgAlpha;
-        getWindow().setAttributes(lp);
-    }
-
-    /**
      * handler发送message
      */
     private void sendMessage(int what ,Object obj){
@@ -635,25 +626,6 @@ public class SettingActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
-    }
-
-    //获取系统宽度
-    private int getSyetemWidth(){
-        return getResources().getDisplayMetrics().widthPixels;
-    }
-    //获取系统高度
-    private int getSyetemHeight(){
-        return getResources().getDisplayMetrics().heightPixels;
-    }
-    //获取Activity宽度
-    private int getActivityWidth(){
-        WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        return manager.getDefaultDisplay().getWidth();
-    }
-    //获取Activity高度
-    private int getActivityHeight(){
-        WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        return manager.getDefaultDisplay().getHeight();
     }
 
 }

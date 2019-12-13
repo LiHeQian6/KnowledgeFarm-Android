@@ -1,18 +1,15 @@
 package com.li.knowledgefarm.Settings;
 
-import android.app.ActionBar;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,6 +18,9 @@ import com.li.knowledgefarm.R;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -28,9 +28,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UpdateGradeDialog extends PopupWindow {
+public class UpdateGradeDialog extends DialogFragment {
     private View view;
-    private Context context;
     /** 取消*/
     private Button btnReturn;
     /** 下拉选框*/
@@ -53,22 +52,20 @@ public class UpdateGradeDialog extends PopupWindow {
                 case 1: // 修改年级判断
                     if(msg.obj.equals("true")){
                         LoginActivity.user.setGrade(transmit(newGrade));
-                        Toast.makeText(context,"年级修改成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),"年级修改成功",Toast.LENGTH_SHORT).show();
                         dismiss();
                     }else{
-                        Toast.makeText(context,"年级修改失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),"年级修改失败",Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
         }
     };
 
-    public UpdateGradeDialog(final Context context) {
-        this.context = context;
-        view = LayoutInflater.from(context).inflate(R.layout.update_grade, null);
-
-        /** 设置设置popupWindow样式*/
-        setpopupWndow();
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.update_grade,container,false);
 
         /** 初始化*/
         init();
@@ -106,20 +103,8 @@ public class UpdateGradeDialog extends PopupWindow {
                 dismiss();
             }
         });
-    }
 
-    /**
-     * 设置popupWindow样式
-     */
-    private void setpopupWndow(){
-        this.setContentView(view);
-        this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setFocusable(true);
-        this.setAnimationStyle(R.style.pop_animation);
-        //ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
-        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
-        this.setBackgroundDrawable(d);
+        return view;
     }
 
     /**
@@ -129,7 +114,7 @@ public class UpdateGradeDialog extends PopupWindow {
         btnReturn = view.findViewById(R.id.btnReturn);
         spinner = view.findViewById(R.id.spinner);
         btnSave = view.findViewById(R.id.btnSave);
-        arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_expandable_list_item_1, spin);
+        arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_expandable_list_item_1, spin);
         spinner.setAdapter(arrayAdapter);
         okHttpClient = new OkHttpClient();
     }
@@ -142,7 +127,7 @@ public class UpdateGradeDialog extends PopupWindow {
             @Override
             public void run() {
                 FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).add("grade",""+transmit(newGrade)).build();
-                final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/updateUserGrade").build();
+                final Request request = new Request.Builder().post(formBody).url(getContext().getResources().getString(R.string.URL)+"/user/updateUserGrade").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override

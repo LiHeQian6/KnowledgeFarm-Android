@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -268,6 +269,8 @@ public class ShopActivity extends AppCompatActivity {
         final float scale = this.getResources().getDisplayMetrics().density;
         attrs.width = (int)(300*scale+0.5f);
         attrs.height =(int)(300*scale+0.5f);
+        Window dialogWindow = alertDialog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.getWindow().setAttributes(attrs);
     }
 
