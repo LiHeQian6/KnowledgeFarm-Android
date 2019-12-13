@@ -2,6 +2,7 @@ package com.farm.config;
 
 import com.farm.config.routes.AdminRoutes;
 import com.farm.config.routes.FrontRoutes;
+import com.farm.entity.RewardCountTimerManager;
 import com.farm.model.Admin;
 import com.farm.model.Crop;
 import com.farm.model.User;
@@ -78,6 +79,12 @@ public class AppConfig extends JFinalConfig {
 	public void configHandler(Handlers me) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void afterJFinalStart() {
+		super.afterJFinalStart();
+		new RewardCountTimerManager();
 	}
 
 }

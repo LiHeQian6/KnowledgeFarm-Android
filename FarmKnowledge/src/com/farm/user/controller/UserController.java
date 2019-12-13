@@ -5,7 +5,9 @@ import java.net.URLDecoder;
 import org.json.JSONObject;
 
 import com.farm.crop.service.CropService;
+import com.farm.entity.RewardCountTimerManager;
 import com.farm.entity.Strings;
+import com.farm.entity.UserCropTimerManager;
 import com.farm.model.User;
 import com.farm.user.service.UserService;
 import com.farm.userbag.service.BagService;
@@ -339,6 +341,5 @@ public class UserController extends Controller{
 			renderJson("notEnoughMoney");
 		}
 	}
-	
 	
 }

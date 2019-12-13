@@ -6,9 +6,10 @@ import com.farm.crop.dao.CropDao;
 import com.farm.crop.service.CropService;
 import com.farm.entity.Strings;
 import com.farm.entity.UserCropItem;
+import com.farm.entity.UserCropTimerManager;
 import com.farm.model.Crop;
 import com.farm.model.User;
-import com.farm.user.dao.UserDao;
+import com.farm.model.UserCrop;
 import com.farm.user.service.UserService;
 import com.farm.userbag.service.BagService;
 import com.farm.usercrop.dao.UserCropDao;
@@ -144,12 +145,18 @@ public class UserCropService {
 				}
 				
 				if(userCropId != 0 && a2 && a3) {
+					new UserCropTimerManager(userCropId,cropId);
 					return true;
 				}
 				return false;
 			}
 		});
 		return succeed;
+	}
+	
+	//浇水
+	public boolean waterCrop(int ucId, int progress) {
+		return new UserCropDao().waterCrop(ucId, progress);
 	}
 	
 	//根据userCropId查询cropId
@@ -162,10 +169,14 @@ public class UserCropService {
 		return new UserCropDao().getCropIdProgressByUserCropId(id);
 	}
 	
-	//查看作物进度
-	public int getCropProgress(int userId,String landNumber) {
-		int ucId = new UserDao().findUcIdByLand(userId, landNumber);
+	//根据userCropId查询作物进度
+	public int getCropProgress(int ucId) {
 		return new UserCropDao().getCropProgress(ucId);
+	}
+	
+	//根据userCropId查询整条信息
+	public UserCrop findUserCropById(int ucId) {
+		return new UserCropDao().findUserCropById(ucId);
 	}
 	
 }

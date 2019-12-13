@@ -97,4 +97,13 @@ public class UserCropDao {
 		boolean succeed = UserCrop.dao.deleteById(ucId);
 		return succeed;
 	}
+	
+	//根据userCropId查询整条信息
+	public UserCrop findUserCropById(int ucId) {
+		UserCrop userCrop = UserCrop.dao.findById(ucId);
+		if(userCrop != null) {
+			return userCrop;
+		}
+		return null;
+	}
 }

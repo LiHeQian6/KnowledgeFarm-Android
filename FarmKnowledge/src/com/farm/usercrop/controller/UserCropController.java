@@ -6,6 +6,7 @@ import java.util.List;
 import com.farm.crop.service.CropService;
 import com.farm.entity.UserCropItem;
 import com.farm.model.Crop;
+import com.farm.user.dao.UserDao;
 import com.farm.user.service.UserService;
 import com.farm.usercrop.service.UserCropService;
 import com.jfinal.core.Controller;
@@ -44,7 +45,8 @@ public class UserCropController extends Controller{
 	public void getCropProgress() {
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
-		renderText(""+new UserCropService().getCropProgress(userId, landNumber));
+		int ucId = new UserDao().findUcIdByLand(userId, landNumber);
+		renderText(""+new UserCropService().getCropProgress(ucId));
 	}
 
 }
