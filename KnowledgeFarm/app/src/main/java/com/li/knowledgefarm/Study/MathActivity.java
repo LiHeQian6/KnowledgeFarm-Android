@@ -133,7 +133,11 @@ public class MathActivity extends AppCompatActivity {
                 if(data!= null){
                     if(!data.equals("-1")){
                         LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
-                        isFalse.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
+                        answer.setVisibility(View.INVISIBLE);
+                        isFalse.setVisibility(View.INVISIBLE);
+                        isTrue.setVisibility(View.GONE);
+                        question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
+                        question.setTextSize(28);
                         if(returnHandlerFinish)
                             finish();
                     }else{
@@ -241,9 +245,10 @@ public class MathActivity extends AppCompatActivity {
                 super.run();
                 if (LoginActivity.user.getRewardCount() <= 0) {
                     question.setText("今天的任务都做完了哦！");
+                    question.setTextSize(28);
                     answer.setVisibility(View.GONE);
-                    btnNextQuestion.setVisibility(View.INVISIBLE);
-                    btnPreQuestion.setVisibility(View.INVISIBLE);
+                    btnNextQuestion.setVisibility(View.GONE);
+                    btnPreQuestion.setVisibility(View.GONE);
                 } else {
                     Request request = null;
                     switch (LoginActivity.user.getGrade()) {
@@ -282,7 +287,7 @@ public class MathActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && LoginActivity.user.getRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
