@@ -23,7 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Settings.UpdatePasswordActivity"></activity>
+        <activity android:name=".Settings.UpdatePasswordActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="screenSize|orientation"></activity>
         <activity
             android:name=".Settings.BindingEmailActivity"
             android:configChanges="screenSize|orientation"
@@ -88,7 +90,7 @@
         <activity
             android:name=".Settings.SettingActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/customApp">
+            android:configChanges="screenSize|orientation">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

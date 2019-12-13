@@ -5,6 +5,7 @@ import java.net.URLDecoder;
 import org.json.JSONObject;
 
 import com.farm.crop.service.CropService;
+import com.farm.entity.Email;
 import com.farm.entity.RewardCountTimerManager;
 import com.farm.entity.Strings;
 import com.farm.entity.UserCropTimerManager;
@@ -122,13 +123,11 @@ public class UserController extends Controller{
 			String userEmail = service.findUserByAccout(accout).get("email");
 			if(!userEmail.equals("")) {
 				if(userEmail.equals(email)) {
-					String testCode = "";
-					for(int i = 0;i < 4;i++) {
-						testCode += (int)(Math.random()*10);
+					if(Email.findPasswordByMail(email)) {
+						renderJson(Email.getCode());
+					}else {
+						renderJson("fail");
 					}
-					String text = "您用于找回密码的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
-					service.sendEmail(email, text);
-					renderJson(testCode);
 				}else {
 					renderJson("EmailError");
 				}
@@ -215,13 +214,11 @@ public class UserController extends Controller{
 		
 		UserService service = new UserService();
 		if(!service.isBindingEmail(email)) {
-			String testCode = "";
-			for(int i = 0;i < 4;i++) {
-				testCode += (int)(Math.random()*10);
+			if(Email.bindingMail(email)) {
+				renderJson(Email.getCode());
+			}else {
+				renderJson("fail");
 			}
-			String text = "您用于绑定邮箱的验证码为" + testCode + "，2分钟内有效，请妥善保管，切勿告诉他人";
-			service.sendEmail(email, text);
-			renderJson(testCode);
 		}else { //该邮箱已被其他账号绑定
 			renderJson("already");
 		}
