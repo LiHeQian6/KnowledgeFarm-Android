@@ -36,7 +36,8 @@
             android:maxLength="20"
             android:imeOptions="flagNoExtractUi"
             android:hint="记得填写昵称哦"
-            android:textColorHint="@color/ShopTextColor"/>
+            android:textColorHint="#808080"
+            android:textColor="#808080"/>
         <TextView
             android:id="@+id/tv_nickName_length"
             android:layout_width="wrap_content"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/logindialogbac">
     <TextView
         android:id="@+id/title"
@@ -13,60 +13,67 @@
         android:textColor="@color/ShopTextColor"
         android:text="修改年级"/>
     <RelativeLayout
-        android:id="@+id/rela"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
-        <TextView
-            android:id="@+id/text"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true">
+        <RelativeLayout
+            android:id="@+id/rela"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:textSize="20dp"
-            android:textColor="@color/ShopTextColor"
-            android:text="我的年级"/>
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="130dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/text"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/update_grade_spinner"
-            android:textAlignment="center">
-        </Spinner>
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="我的年级"
+                android:textColor="@color/ShopTextColor"
+                android:textSize="20dp" />
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/text"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/update_grade_spinner"
+                android:textAlignment="center">
+            </Spinner>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rela">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:background="@drawable/buy"
+                android:text="保存"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/btnReturn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:background="@drawable/buy"
+                android:text="取消" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
     </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rela"
-        android:layout_marginTop="30dp">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:background="@drawable/buy"
-            android:text="保存"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <Button
-            android:id="@+id/btnReturn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:text="取消"
-            android:background="@drawable/buy"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </LinearLayout>
 </RelativeLayout>

@@ -1,17 +1,22 @@
 package com.li.knowledgefarm.Settings;
 
-import android.app.ActionBar;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import androidx.appcompat.app.AppCompatActivity;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,16 +25,7 @@ import com.li.knowledgefarm.R;
 
 import java.io.IOException;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-public class UpdatePasswordDialog extends PopupWindow {
-    private View view;
-    private Context context;
+public class UpdatePasswordActivity extends AppCompatActivity {
     /** 返回*/
     private ImageView iv_return;
     /** 旧密码、新密码、确认密码输入框*/
@@ -46,15 +42,15 @@ public class UpdatePasswordDialog extends PopupWindow {
                 case 1://修改密码判断
                     switch ((String)msg.obj){
                         case "0":
-                            Toast.makeText(context,"旧密码输入错误",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"旧密码输入错误",Toast.LENGTH_SHORT).show();
                             break;
                         case "1":
                             LoginActivity.user.setPassword(edtNemPassword.getText().toString().trim());
-                            Toast.makeText(context,"密码修改成功",Toast.LENGTH_SHORT).show();
-                            dismiss();
+                            finish();
+                            Toast.makeText(getApplicationContext(),"密码修改成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "2":
-                            Toast.makeText(context,"密码修改失败",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"密码修改失败",Toast.LENGTH_SHORT).show();
                             break;
                     }
                     break;
@@ -62,12 +58,11 @@ public class UpdatePasswordDialog extends PopupWindow {
         }
     };
 
-    public UpdatePasswordDialog(final Context context) {
-        this.context = context;
-        view = LayoutInflater.from(context).inflate(R.layout.update_password, null);
 
-        /** 设置设置popupWindow样式*/
-        setpopupWndow();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_update_password);
 
         /** 初始化*/
         init();
@@ -84,35 +79,25 @@ public class UpdatePasswordDialog extends PopupWindow {
         iv_return.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                finish();
             }
         });
-    }
 
-    /**
-     * 设置popupWindow样式
-     */
-    private void setpopupWndow(){
-        this.setContentView(view);
-        this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
-        this.setFocusable(true);
-        this.setAnimationStyle(R.style.pop_animation);
-        //ColorDrawable d = new ColorDrawable(0xb0000000);//背景半透明
-        ColorDrawable d = new ColorDrawable(Color.parseColor("#f5f5f5"));
-        this.setBackgroundDrawable(d);
     }
 
     /**
      * 初始化
      */
     private void init(){
-        iv_return = view.findViewById(R.id.iv_return);
-        edtOldPassword = view.findViewById(R.id.edtOldPassword);
-        edtNemPassword = view.findViewById(R.id.edtNewPassword);
-        edtNewPasswordTest = view.findViewById(R.id.edtNewPasswordTest);
-        tv_save = view.findViewById(R.id.tv_save);
+        iv_return = findViewById(R.id.iv_return);
+        edtOldPassword = findViewById(R.id.edtOldPassword);
+        edtNemPassword = findViewById(R.id.edtNewPassword);
+        edtNewPasswordTest = findViewById(R.id.edtNewPasswordTest);
+        tv_save = findViewById(R.id.tv_save);
         okHttpClient = new OkHttpClient();
+
+        /** 关闭状态栏*/
+        setStatusBar();
     }
 
     /**
@@ -123,16 +108,16 @@ public class UpdatePasswordDialog extends PopupWindow {
         final String newPassword = edtNemPassword.getText().toString().trim();
         final String newPasswordTest = edtNewPasswordTest.getText().toString().trim();
         if(oldPassword.equals("") || newPassword.equals("") || newPasswordTest.equals("")){
-            Toast.makeText(context,"您还有没填写的内容！",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"您还有没填写的内容！",Toast.LENGTH_SHORT).show();
         }else {
             if (!newPassword.equals(newPasswordTest)) {
-                Toast.makeText(context, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "两次输入密码不一致", Toast.LENGTH_SHORT).show();
             } else {
                 new Thread() {
                     @Override
                     public void run() {
                         FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("oldPassword", oldPassword).add("newPassword", newPassword).build();
-                        final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
+                        final Request request = new Request.Builder().post(formBody).url(getApplicationContext().getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
                         Call call = okHttpClient.newCall(request);
                         call.enqueue(new Callback() {
                             @Override
@@ -160,6 +145,17 @@ public class UpdatePasswordDialog extends PopupWindow {
         message.what = what;
         message.obj = obj;
         handler.sendMessage(message);
+    }
+
+    /**
+     * 关闭状态栏
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
+        }
     }
 
 }
