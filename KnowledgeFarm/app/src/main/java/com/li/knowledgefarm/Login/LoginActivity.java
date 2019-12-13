@@ -20,6 +20,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -44,6 +45,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -124,9 +128,10 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                     break;
                 case 0:
-                    Intent intent = new Intent(LoginActivity.this,LoginActivity.class);
-                    startActivity(intent);
                     finish();
+                    break;
+                case 4:
+                    onClickLogin();
                     break;
             }
         }
@@ -140,10 +145,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         user = null;
-
+        autoLogin();
         setStatusBar();
         getViews();
-        autoLogin();
         registListener();
     }
 
@@ -179,9 +183,20 @@ public class LoginActivity extends AppCompatActivity {
             switch (v.getId()) {
                 /** 点击登录*/
                 case R.id.btnQQFirst:
-                    onClickLogin();
-//                    Intent intentFirst = new Intent(LoginActivity.this,QQFirstActivity.class);
-//                    startActivity(intentFirst);
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            if(!isConnByHttp()){
+                                Looper.prepare();
+                                Toast.makeText(getApplicationContext(),"未连接服务器",Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                                return;
+                            }
+                            Message message = new Message();
+                            message.what = 4;
+                            mHandler.sendMessage(message);
+                        }
+                    }.start();
                     break;
                 case R.id.btnAccount:
                     Intent intentLoginByAccount = new Intent(LoginActivity.this, LoginByAccountActivity.class);
@@ -231,6 +246,7 @@ public class LoginActivity extends AppCompatActivity {
      * 登陆
      */
     public void onClickLogin() {
+
         //登陆
         if (!mTencent.isSessionValid()) {
             Log.i("lww", "onClickLogin session无效");
@@ -420,6 +436,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
+                if(!isConnByHttp()){
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(),"未连接服务器",Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                    return;
+                }
                 MediaType type = MediaType.parse("text/plain");
                 RequestBody body = RequestBody.create(Json,type);
                 Request request = new Request.Builder()
@@ -498,5 +520,27 @@ public class LoginActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
+    }
+
+    private boolean isConnByHttp(){
+        boolean isConn = false;
+        URL url;
+        HttpURLConnection conn = null;
+        try {
+            url = new URL(getResources().getString(R.string.URL));
+            conn = (HttpURLConnection)url.openConnection();
+            conn.setConnectTimeout(1000*5);
+            if(conn.getResponseCode()==200){
+                isConn = true;
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            conn.disconnect();
+        }
+        return isConn;
     }
 }
