@@ -218,7 +218,7 @@ public class SettingActivity extends AppCompatActivity {
                     showAlertDialogEmail();
                     break;
                 case R.id.btnRegout:
-                    regout();
+                    showAlertDialogLogOut();
                     break;
             }
         }
@@ -459,6 +459,34 @@ public class SettingActivity extends AppCompatActivity {
         } else {
             Log.i("lww", "updateUserInfo2");
         }
+    }
+
+    /**
+     * @Description 提示是否切换账号
+     * @Auther 孙建旺
+     * @Date 下午 5:19 2019/12/13
+     * @Param []
+     * @return void
+     */
+    private void showAlertDialogLogOut(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+        //设置标题
+        builder.setTitle("温馨提示");
+        //设置提示内容
+        builder.setMessage("确定要切换账号吗？");
+        //设置取消按钮
+        builder.setNegativeButton("取消",null);
+        //设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                regout();
+            }
+        });
+        //创建AlertDialog对象
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     /**

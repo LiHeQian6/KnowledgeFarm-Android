@@ -19,9 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginTop="5dp"
-            android:textSize="30dp"
+            android:textSize="40dp"
             android:textColor="#ffffff"
-            android:textStyle="bold"
             android:text="设置"/>
     </RelativeLayout>
     <LinearLayout
@@ -44,6 +43,8 @@
                 android:id="@+id/btnUpdateNickName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/buy"
+                android:textSize="20sp"
                 android:layout_weight="1"
                 android:text="修改昵称"/>
             <TextView
@@ -54,7 +55,9 @@
                 android:id="@+id/btnUpdateGrade"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/buy"
                 android:layout_weight="1"
+                android:textSize="20sp"
                 android:text="修改年级"/>
             <TextView
                 android:layout_width="0dp"
@@ -64,7 +67,9 @@
                 android:id="@+id/btnUpdatePassword"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/buy"
                 android:layout_weight="1"
+                android:textSize="20sp"
                 android:text="修改密码"/>
             <TextView
                 android:layout_width="0dp"
@@ -82,13 +87,17 @@
                 android:id="@+id/btnBindingQQ"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/buy"
                 android:layout_weight="1"
+                android:textSize="20sp"
                 android:text="绑定QQ"/>
             <Button
                 android:id="@+id/btnUnBindingQQ"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/buy"
                 android:layout_weight="1"
+                android:textSize="20sp"
                 android:text="解绑QQ"
                 android:visibility="gone"/>
             <TextView
@@ -99,13 +108,16 @@
                 android:id="@+id/btnBindingEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/buy"
                 android:layout_weight="1"
+                android:textSize="20sp"
                 android:text="绑定邮箱"/>
             <Button
                 android:id="@+id/btnUnBindingEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="20sp"
                 android:text="解绑邮箱"
                 android:visibility="gone"/>
             <TextView
@@ -116,6 +128,8 @@
                 android:id="@+id/btnRegout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/buy"
+                android:textSize="20sp"
                 android:layout_weight="1"
                 android:text="切换账号"/>
             <TextView
@@ -130,7 +144,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearCenter"
         android:layout_alignRight="@+id/linearCenter"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="20dp"
         android:textSize="20dp"
         android:text="账号未绑定QQ"/>
