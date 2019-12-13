@@ -38,7 +38,7 @@ public class UserDao {
 	 */
 	//删除openId信息
 	public boolean deleteOpenIdByUserId(int userId) {
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		if(list.size() != 0) {
 			boolean succeed = UserAuthority.dao.deleteById(list.get(0).getInt("id"));
 			return succeed;
@@ -52,7 +52,7 @@ public class UserDao {
 	}
 	//彻底删除UserAuthority表内授权信息（User表delete）
 	public boolean deleteThoroughUserAuthority(int userId) {
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		boolean succeed = false;
 		if(list.size() != 0) {
 			succeed = UserAuthority.dao.deleteById(list.get(0).get("id"));
@@ -208,7 +208,7 @@ public class UserDao {
 	}
 	//删除UserAuthority表内单个授权信息（UserAuthority表修改exist字段为0）
 	public boolean deleteOneUserAuthority(int userId) {
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		boolean succeed = false;
 		if(list.size() != 0) {
 			succeed = list.get(0).set("exist", 0).update();
@@ -222,7 +222,7 @@ public class UserDao {
 	}
 	//恢复UserAuthority表内单个授权信息（UserAuthority表修改exist字段为1）
 	public boolean recoveryOneUserAuthority(int userId) {
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		boolean succeed = false;
 		if(list.size() != 0) {
 			succeed = list.get(0).set("exist", 1).update();
@@ -239,7 +239,7 @@ public class UserDao {
 	 */
 	//根据openId查询User表内用户信息
 	public User findUserByOpenId(String openId){
-		List<User> list = User.dao.find("select user.* from user,userAuthority where user.id=userAuthority.userId and userAuthority.openId=?",openId);
+		List<User> list = User.dao.find("select user.* from user,userauthority where user.id=userauthority.userId and userauthority.openId=?",openId);
 		if(list.size() != 0) {
 			User user = list.get(0);
 			user.set("photo", URLEncoder.encode(user.getStr("photo")));
@@ -259,7 +259,7 @@ public class UserDao {
 	}
 	//根据openId判断UserAuthority表内是否存在该用户exist=1
 	public boolean isExistUserByOpenId(String openId){
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where openId=? and exist=1",openId);
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=? and exist=1",openId);
 		if(list.size() != 0) {
 			return true;
 		}else {
@@ -268,7 +268,7 @@ public class UserDao {
 	}
 	//根据openId判断UserAuthority表内是否存在该用户
 	public boolean isExistUserByOpenIdAll(String openId){
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where openId=?",openId);
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=?",openId);
 		if(list.size() != 0) {
 			return true;
 		}else {
@@ -372,7 +372,7 @@ public class UserDao {
 	//判断账号是否绑定QQ
 	public boolean isBindingQQ(String accout) {
 		int userId = getUserIdByAccout(accout);
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userAuthority where userId=?",userId);
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		if(list.size() != 0) {
 			return true;
 		}

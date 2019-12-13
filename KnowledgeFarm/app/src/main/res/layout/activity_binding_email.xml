@@ -53,7 +53,8 @@
                 android:layout_marginRight="15dp"
                 android:background="@drawable/update_password_edt"
                 android:hint="请输入邮箱"
-                android:textColorHint="#808080"/>
+                android:textColorHint="#808080"
+                android:textColor="#808080"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -77,7 +78,8 @@
                 android:layout_marginRight="15dp"
                 android:background="@drawable/update_password_edt"
                 android:hint="请输入验证码"
-                android:textColorHint="#808080"/>
+                android:textColorHint="#808080"
+                android:textColor="#808080"/>
             <TextView
                 android:id="@+id/tv_getTestCode"
                 android:layout_width="0dp"

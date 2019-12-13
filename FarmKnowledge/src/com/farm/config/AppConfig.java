@@ -55,13 +55,13 @@ public class AppConfig extends JFinalConfig {
 
 	@Override
 	public void configPlugin(Plugins me) {
-		DruidPlugin dp = new DruidPlugin("jdbc:mysql://localhost:3306/farm_db?useSSL=true&useUnicode=true&characterEncoding=utf8", "root", "");
+		DruidPlugin dp = new DruidPlugin("jdbc:mysql://localhost:3306/farm_db?useSSL=false&useUnicode=true&characterEncoding=utf8", "root", "");
 		me.add(dp);
 		ActiveRecordPlugin arp = new ActiveRecordPlugin(dp);
 		me.add(arp);
 		arp.setDialect(new MysqlDialect());
 		arp.addMapping("user", User.class);
-		arp.addMapping("userAuthority", UserAuthority.class);
+		arp.addMapping("userauthority", UserAuthority.class);
 		arp.addMapping("admin", Admin.class);
 		arp.addMapping("crop", Crop.class);
 		arp.addMapping("userbag", UserBag.class);

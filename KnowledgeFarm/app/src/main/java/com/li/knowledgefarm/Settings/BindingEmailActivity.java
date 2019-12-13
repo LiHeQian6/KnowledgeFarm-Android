@@ -33,8 +33,6 @@ import java.util.regex.Pattern;
 
 public class BindingEmailActivity extends AppCompatActivity {
     private ImageView iv_return;
-    /** 邮箱输入框上面的文字*/
-    private TextView tv_email;
     /** 邮箱输入框*/
     private EditText edtEmail;
     /** 验证码输入框*/
@@ -138,7 +136,6 @@ public class BindingEmailActivity extends AppCompatActivity {
      */
     private void init(){
         iv_return = findViewById(R.id.iv_return);
-        tv_email = findViewById(R.id.tv_email);
         edtEmail = findViewById(R.id.edtEmail);
         edtTestCode = findViewById(R.id.edtTestCode);
         tv_getTestCode = findViewById(R.id.tv_getTestCode);
@@ -157,6 +154,7 @@ public class BindingEmailActivity extends AppCompatActivity {
     private void getTestCode(){
         tv_getTestCode.setClickable(false);
         endAsync2();
+
         new Thread(){
             @Override
             public void run() {
@@ -179,7 +177,7 @@ public class BindingEmailActivity extends AppCompatActivity {
         }.start();
 
         /** 1分钟倒计时*/
-        asyncTask = new GetTestCodeAsyncTask(getApplicationContext(),tv_email,tv_getTestCode,tv_testCode,edtEmail.getText().toString().trim());
+        asyncTask = new GetTestCodeAsyncTask(getApplicationContext(),tv_getTestCode);
         asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         /** 2分钟倒计时*/
