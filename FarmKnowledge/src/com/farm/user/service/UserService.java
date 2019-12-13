@@ -125,8 +125,17 @@ public class UserService {
 			boolean succeed = Db.tx(new IAtom() {
 				@Override
 				public boolean run() throws SQLException {
-					boolean a1 = dao.addWaterAndFertilizer(id, water, fertilizer);
-					boolean a2 = dao.lessRewardCount(id);
+					boolean a1 = false;
+					boolean a2 = false;
+					int rewardCount = dao.getUpdateUserInfo(id).getInt("rewardCount");
+					if(rewardCount >= 1) {
+						a1 = dao.lessRewardCount(id,rewardCount-1);
+						a2 = dao.addWaterAndFertilizer(id, water, fertilizer);
+					}else {
+						a1 = true;
+						a2 = true;
+					}
+					
 					if(a1 && a2) {
 						return true;
 					}

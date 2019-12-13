@@ -188,11 +188,11 @@ public class UserDao {
 	public boolean updateLandCrop(int userId,String landNumber,int userCropId) {
 		return User.dao.findById(userId).set(landNumber, userCropId).update();
 	}
-	//设置奖励次数减少
-	public boolean lessRewardCount(int id) {
+	//设置奖励次数
+	public boolean lessRewardCount(int id, int rewardCount) {
 		User user = User.dao.findById(id);
 		if(user != null) {
-			return User.dao.findById(id).set("rewardCount", user.getInt("rewardCount")-1).update();
+			return User.dao.findById(id).set("rewardCount", rewardCount).update();
 		}
 		return false;
 	}
