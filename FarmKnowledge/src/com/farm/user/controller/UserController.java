@@ -1,14 +1,23 @@
 package com.farm.user.controller;
 
+import java.io.File;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONObject;
 
 import com.farm.crop.service.CropService;
 import com.farm.entity.Email;
-import com.farm.entity.RewardCountTimerManager;
 import com.farm.entity.Strings;
-import com.farm.entity.UserCropTimerManager;
 import com.farm.model.User;
 import com.farm.user.service.UserService;
 import com.farm.userbag.service.BagService;
@@ -175,6 +184,76 @@ public class UserController extends Controller{
 		//返回0说明旧密码错误，返回1说明修改成功，返回2说明修改失败
 		int flag = new UserService().updateUserPassword(oldPassword, newPassword, accout);
 		renderJson(flag);
+	}
+	
+	//修改头像
+	public void updatePhoto() {
+		FileItemFactory factory = new DiskFileItemFactory();
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		HttpServletRequest request = getRequest();
+		
+		String accout = "";
+		String photo = "";
+		String photoName = "";
+		String newPhoto = "";
+		
+		UserService service = new UserService();
+		try {
+			List<FileItem> items = upload.parseRequest(request);
+			for(FileItem fi : items) {
+				if(fi.isFormField()) {
+					switch (fi.getFieldName()) {
+						case "accout":
+							accout = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							break;
+						case "photo":
+							photo = URLDecoder.decode(new String(fi.getString().getBytes("ISO8859_1"),"utf-8"));
+							break;
+						case "photoName":
+							photoName = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							break;
+					}	
+				}else {
+					//判断photoName的MIMETYPE类型是否是图片，若是则重新构造，并判断是否与其他用户的photoName重复
+					CropService cropService = new CropService();
+					if(request.getServletContext().getMimeType(photoName) == null) {
+						do {
+							photoName = "";
+							photoName = cropService.generateRandom() + fi.getName();
+						} while (service.isExistPhotoName(photoName));
+					}
+					
+					//构造photo，并判断是否与上次的photo重复
+					do {
+						newPhoto = "";
+						newPhoto = Strings.userPhotoUrl + photoName + "?" + cropService.generateRandom();
+					} while (newPhoto.equals(photo));
+					
+					//把头像写入文件
+					File file = new File(Strings.userfilePath + photoName);
+					fi.write(file);
+					
+					boolean succeed = service.updateUserPhoto(accout, newPhoto, photoName);
+					if(succeed) {
+						User user = service.findUserByAccout(accout);
+						if(user != null) {
+							Map<String, String> map = new HashMap<String, String>();
+							map.put("photo", user.get("photo"));
+							map.put("photoName", user.get("photoName"));
+							renderJson(map);
+						}else {
+							renderJson("");
+						}
+					}else {
+						renderJson("false");
+					}
+				}
+			}
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 	}
 	
 	//验证是否已经绑定QQ

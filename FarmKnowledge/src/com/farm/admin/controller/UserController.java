@@ -192,19 +192,20 @@ public class UserController extends Controller{
 			List<FileItem> items = upload.parseRequest(request);
 			for(FileItem fi : items) {
 				if(fi.isFormField()) {
+					String aString = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
 					switch (fi.getFieldName()) {
 						case "openId":
-							openId = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							openId = aString;
 							if(service.isExistUserByOpenIdAll(openId)) { //存在该用户，不可添加
 								renderText("already");
 								return;
 							}
 							break;
 						case "nickName":
-							nickName = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							nickName = aString;
 							break;
 						case "type":
-							type = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							type = aString;
 							break;
 					}	
 				}else {
@@ -273,25 +274,26 @@ public class UserController extends Controller{
 			List<FileItem> items = upload.parseRequest(request);
 			for(FileItem fi : items) {
 				if(fi.isFormField()) {
+					String aString = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
 					switch (fi.getFieldName()) {
 						case "oldAccout":
-							oldAccout = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							oldAccout = aString;
 							break;
 						case "photo":
-							photo = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							photo = aString;
 							break;
 						case "photoName":
-							photoName = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							photoName = aString;
 							break;
 						case "newAccout":
-							newAccout = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							newAccout = aString;
 							if(service.isExistUserByAccout(oldAccout,newAccout)) {
 								renderText("already");
 								return;
 							}
 							break;
 						case "nickName":
-							nickName = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
+							nickName = aString;
 							break;
 					}	
 				}else {
