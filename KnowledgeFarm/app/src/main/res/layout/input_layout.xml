@@ -6,6 +6,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/layout_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dip"
@@ -16,9 +17,10 @@
         <LinearLayout
             android:id="@+id/input_layout_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:layout_weight="1"
             tools:ignore="ExtraText">
 
             <ImageView
@@ -31,9 +33,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
+                android:textAlignment="center"
                 android:textColorHint="#cecece"
                 android:textColor="#000"
                 android:maxLength="16"
+                android:background="@null"
+                android:textCursorDrawable="@color/cursorCorlor"
                 android:hint="账号"
                 android:imeOptions="flagNoExtractUi"
                 android:textSize="16sp" />
@@ -49,8 +54,9 @@
         <LinearLayout
             android:id="@+id/input_layout_psw"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:gravity="center_vertical"
+            android:layout_weight="1"
             android:orientation="horizontal" >
 
             <ImageView
@@ -66,9 +72,18 @@
                 android:hint="密码"
                 android:textColor="#000"
                 android:textColorHint="#cecece"
+                android:textCursorDrawable="@color/cursorCorlor"
+                android:background="@null"
                 android:inputType="textPassword"
+                android:textAlignment="center"
                 android:imeOptions="flagNoExtractUi"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="5dip"
+            android:background="#eeeeee" />
     </LinearLayout>
 </LinearLayout>

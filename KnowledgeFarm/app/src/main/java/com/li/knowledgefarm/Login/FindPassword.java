@@ -12,6 +12,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -22,16 +23,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +51,7 @@ public class FindPassword extends AppCompatActivity {
     private EditText emailEdt;
     private EditText accountEdt;
     private EditText codeEdt;
-    private Button getCode;
+    private TextView getCode;
     private Button btnSure;
     private LinearLayout linearCode;
     private LinearLayout linearPwd;
@@ -57,6 +61,12 @@ public class FindPassword extends AppCompatActivity {
     private String configPwd;
     private Button resetPwd;
     private findPwdListener listener;
+    private LinearLayout layout_account;
+    private LinearLayout layout_email;
+    private LinearLayout layout_code;
+    private LinearLayout layout_button;
+    private int displayWidth;
+    private int displayHeight;
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
@@ -115,6 +125,50 @@ public class FindPassword extends AppCompatActivity {
         setStatusBar();
         getViews();
         registListener();
+        setSizeForView();
+    }
+
+    /**
+     * @Description 控件适配屏幕
+     * @Auther 孙建旺
+     * @Date 下午 6:30 2019/12/13
+     * @Param []
+     * @return void
+     */
+    private void setSizeForView() {
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
+        displayWidth = displayMetrics.widthPixels;
+        displayHeight = displayMetrics.heightPixels;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                (int)(displayWidth*0.35), 120);
+        params.setMargins(0,(int)(displayHeight*0.08),0,0);
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        layout_account.setLayoutParams(params);
+
+        LinearLayout.LayoutParams paramsEmail = new LinearLayout.LayoutParams(
+                (int)(displayWidth*0.35), 120);
+        paramsEmail.setMargins(0,(int)(displayHeight*0.05),0,0);
+        paramsEmail.gravity = Gravity.CENTER_HORIZONTAL;
+        layout_email.setLayoutParams(paramsEmail);
+
+        LinearLayout.LayoutParams paramsCode = new LinearLayout.LayoutParams(
+                (int)(displayWidth*0.35), 120);
+        paramsCode.setMargins(0,(int)(displayHeight*0.05),0,0);
+        paramsCode.gravity = Gravity.CENTER_HORIZONTAL;
+        layout_code.setLayoutParams(paramsCode);
+
+        LinearLayout.LayoutParams paramsSure = new LinearLayout.LayoutParams(
+                (int)(displayWidth*0.25), 120);
+        paramsSure.setMargins(0,(int)(displayHeight*0.08),0,0);
+        paramsSure.gravity = Gravity.CENTER_HORIZONTAL;
+        layout_button.setLayoutParams(paramsSure);
+
+        accountEdt.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
+        emailEdt.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
+        codeEdt.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
+        getCode.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.008));
     }
 
     private void registListener() {
@@ -138,7 +192,10 @@ public class FindPassword extends AppCompatActivity {
         linearCode = findViewById(R.id.linearCode);
         linearPwd = findViewById(R.id.linearFindPwd);
         resetPwd = findViewById(R.id.btnFindPwd);
-
+        layout_account = findViewById(R.id.layout_account);
+        layout_email = findViewById(R.id.layout_email);
+        layout_code = findViewById(R.id.layout_code);
+        layout_button = findViewById(R.id.layout_button);
     }
     class findPwdListener implements View.OnClickListener{
 

@@ -14,6 +14,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
         android:layout_marginTop="15dp"
         android:background="@drawable/eradius"
         android:gravity="center_horizontal"
@@ -36,6 +37,8 @@
         android:inputType="textPassword"
         android:imeOptions="flagNoExtractUi"
         android:textSize="20sp" />
+
+
     <Spinner
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
@@ -61,7 +64,7 @@
         android:textAlignment="center"
         android:textColor="#fff"
         android:textSize="25sp"
-        android:background="@drawable/radius" />
+        android:background="@drawable/buy" />
 
 
 </LinearLayout>
