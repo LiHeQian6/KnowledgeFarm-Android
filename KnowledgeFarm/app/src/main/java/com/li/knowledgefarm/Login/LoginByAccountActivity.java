@@ -12,6 +12,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -32,13 +33,17 @@ import android.animation.ValueAnimator;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,8 +74,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
     private String accountStr;
     private String pwdStr;
     private RelativeLayout forget;
-
     private TextView registAccount;
+    private LinearLayout layout_title;
+    private int displayWidth;
+    private int displayHeight;
+    private ImageView titleImage;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -117,6 +125,52 @@ public class LoginByAccountActivity extends AppCompatActivity {
         }
         setStatusBar();
         initView();
+        setViewSize();
+    }
+
+    /**
+     * @Description 设置控件屏幕适配
+     * @Auther 孙建旺
+     * @Date 下午 6:23 2019/12/14
+     * @Param []
+     * @return void
+     */
+    private void setViewSize() {
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayWidth = ds.widthPixels;
+        displayHeight = ds.heightPixels;
+
+        //LinearLayout.LayoutParams lpm = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        LinearLayout.LayoutParams param_image = new LinearLayout.LayoutParams((int)(displayWidth*0.11),(int)(displayHeight*0.14));
+        param_image.gravity = Gravity.CENTER_HORIZONTAL;
+        titleImage.setLayoutParams(param_image);
+
+        RelativeLayout relative_input = findViewById(R.id.relative_input);
+        RelativeLayout.LayoutParams params_input = new RelativeLayout.LayoutParams((int)(displayWidth*0.45),(int)(displayHeight*0.5));
+        params_input.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params_input.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        //params_input.topMargin = (int)(displayHeight*0.05);
+        //params_input.bottomMargin = (int)(displayHeight*0.05);
+        relative_input.setLayoutParams(params_input);
+
+        LinearLayout layout_input = findViewById(R.id.layout_input);
+        LinearLayout.LayoutParams param_layout_input = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)(displayHeight*0.25));
+        layout_input.setLayoutParams(param_layout_input);
+
+        EditText account = findViewById(R.id.accout);
+        EditText pwd = findViewById(R.id.pwd);
+        account.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
+        pwd.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
+
+        TextView login = findViewById(R.id.main_btn_login);
+        RelativeLayout.LayoutParams params_login = new RelativeLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.12));
+        params_login.setMargins(0,0,0,(int)(displayHeight*0.06));
+        params_login.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params_login.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        login.setLayoutParams(params_login);
     }
 
     private void initView() {
@@ -127,6 +181,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mPsw = findViewById(R.id.input_layout_psw);
         forget = findViewById(R.id.forgetPwd);
         registAccount = findViewById(R.id.registAccount);
+        layout_title = findViewById(R.id.layout_title);
+        titleImage = findViewById(R.id.titleImage);
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
