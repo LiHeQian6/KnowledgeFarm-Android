@@ -22,6 +22,21 @@
             android:textSize="40dp"
             android:textColor="#ffffff"
             android:text="设置"/>
+        <ImageView
+            android:id="@+id/iv_photo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@+id/btnRegout"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/btnRegout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/buy"
+            android:textSize="20sp"
+            android:text="退出"/>
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/linearCenter"
@@ -84,6 +99,19 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
             <Button
+                android:id="@+id/btnUpdatePhoto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_below="@+id/linearCenter"
+                android:background="@drawable/buy"
+                android:textSize="20sp"
+                android:text="修改头像"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <Button
                 android:id="@+id/btnBindingQQ"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -121,18 +149,6 @@
                 android:textSize="20sp"
                 android:text="解绑邮箱"
                 android:visibility="gone"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <Button
-                android:id="@+id/btnRegout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/buy"
-                android:textSize="20sp"
-                android:layout_weight="1"
-                android:text="切换账号"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
