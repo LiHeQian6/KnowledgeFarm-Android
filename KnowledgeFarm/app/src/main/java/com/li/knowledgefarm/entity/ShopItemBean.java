@@ -10,6 +10,7 @@ public class ShopItemBean {
 
     private int exist;
     private String img3;
+    private String img4;
     private int matureTime;
     private int price;
     private String name;
@@ -19,6 +20,14 @@ public class ShopItemBean {
     private int value;
     private String img2;
     private String img1;
+
+    public String getImg4() {
+        return img4;
+    }
+
+    public void setImg4(String img4) {
+        this.img4 = img4;
+    }
 
     public void setExist(int exist) {
         this.exist = exist;
