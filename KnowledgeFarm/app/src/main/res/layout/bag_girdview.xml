@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:background="#7adfb8"
+    android:background="@drawable/bagbackground"
     android:layout_height="match_parent">
 
     <GridView
         android:id="@+id/bag_grid_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:numColumns="4"
-        android:columnWidth="70dp">
+        android:columnWidth="55dp">
     </GridView>
 </LinearLayout>
