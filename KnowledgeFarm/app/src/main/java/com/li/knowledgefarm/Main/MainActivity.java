@@ -99,11 +99,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         dataList = new ArrayList<>();
+        ImageView dog = findViewById(R.id.dog);
+        Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
 
+//        ImageView jiaoshui = findViewById(R.id.jiaoshui);
+//        Glide.with(this).asGif().load(R.drawable.jiaoshui).into(jiaoshui);
         setStatusBar();
         getViews();
         addListener();
@@ -312,18 +315,16 @@ public class MainActivity extends AppCompatActivity {
                 if (crop!=null){
                     //展示植物不同阶段
                     final double status = (crop.getProgress()+0.0) / crop.getCrop().getMatureTime();
-                    if(status <0.1){
+                    if(status <0.2){
                         plant.setImageResource(R.drawable.seed);
-                    }else if (status<0.2){
-                        plant.setImageResource(R.drawable.mucao);
                     }else if (status<0.3){
-                        plant.setImageResource(R.drawable.mucao);
-                    }else if (status<0.6){
                         Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
-                    }else if (status<1){
+                    }else if (status<0.6){
                         Glide.with(this).load(crop.getCrop().getImg2()).apply(requestOptions).into(plant);
-                    }else if (status==1){
+                    }else if (status<1){
                         Glide.with(this).load(crop.getCrop().getImg3()).apply(requestOptions).into(plant);
+                    }else if (status==1){
+                        Glide.with(this).load(crop.getCrop().getImg4()).apply(requestOptions).into(plant);
                     }
                     //植物成长进度条
                     final ProgressBar progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);

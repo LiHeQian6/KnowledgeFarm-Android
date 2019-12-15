@@ -4,6 +4,7 @@ public class Crop {
 
     private int exist;
     private String img3;
+    private String img4;
     private int matureTime;
     private int price;
     private String name;
@@ -19,6 +20,14 @@ public class Crop {
      public int getExist() {
          return exist;
      }
+
+    public String getImg4() {
+        return img4;
+    }
+
+    public void setImg4(String img4) {
+        this.img4 = img4;
+    }
 
     public void setImg3(String img3) {
          this.img3 = img3;
@@ -95,6 +104,7 @@ public class Crop {
         return "Crop{" +
                 "exist=" + exist +
                 ", img3='" + img3 + '\'' +
+                ", img4='" + img4 + '\'' +
                 ", matureTime=" + matureTime +
                 ", price=" + price +
                 ", name='" + name + '\'' +
