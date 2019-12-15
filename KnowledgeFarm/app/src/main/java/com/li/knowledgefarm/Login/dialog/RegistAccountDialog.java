@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -44,6 +45,8 @@ public class RegistAccountDialog extends DialogFragment {
     private LinearLayout linearAccount;
     private LinearLayout linearRegist;
     private TextView newAccount;
+    private String[] array;
+    private SpinnerAdapter arrayAdapter;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -70,7 +73,11 @@ public class RegistAccountDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.regist_dialog,container,false);
 
+        setViewSize();
+        array = getResources().getStringArray(R.array.sarry);
         Spinner spinner = view.findViewById(R.id.spinner);
+        arrayAdapter = new SpinnerAdapter(getContext(),array);
+        spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new ProvOnItemSelectedListener());
         linearAccount = view.findViewById(R.id.linearCount);
         linearRegist = view.findViewById(R.id.linearRegist);
@@ -110,6 +117,17 @@ public class RegistAccountDialog extends DialogFragment {
         });
 
         return view;
+    }
+
+    /**
+     * @Description 设置控件适配屏幕
+     * @Auther 孙建旺
+     * @Date 下午 1:04 2019/12/15
+     * @Param []
+     * @return void
+     */
+    private void setViewSize() {
+
     }
 
     private void registToServer() {

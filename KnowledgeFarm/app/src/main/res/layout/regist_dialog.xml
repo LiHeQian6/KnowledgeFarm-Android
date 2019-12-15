@@ -42,42 +42,42 @@
                 <LinearLayout
                     android:id="@+id/linearRegist"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_gravity="center"
                     android:padding="20dp">
                         <EditText
                             android:id="@+id/registName"
-                            android:layout_width="300dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="15dp"
                             android:background="@drawable/eradius"
-                            android:gravity="center_horizontal"
+                            android:textAlignment="center"
                             android:imeOptions="flagNoExtractUi"
                             android:hint="昵称"
+                            android:textColorHint="@color/editTextCorlor"
                             android:textSize="20sp" />
                         <EditText
                             android:id="@+id/registPwd2"
-                            android:layout_width="300dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="15dp"
                             android:background="@drawable/eradius"
-                            android:gravity="center_horizontal"
+                            android:textAlignment="center"
+                            android:textColorHint="@color/editTextCorlor"
                             android:imeOptions="flagNoExtractUi"
                             android:inputType="textPassword"
                             android:hint="密码"
                             android:textSize="20sp" />
                         <EditText
                             android:id="@+id/configPwd2"
-                            android:layout_width="300dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
                             android:inputType="textPassword"
-                            android:layout_gravity="center_horizontal"
+                            android:textAlignment="center"
+                            android:textColorHint="@color/editTextCorlor"
                             android:layout_marginTop="15dp"
                             android:background="@drawable/eradius"
                             android:gravity="center_horizontal"
@@ -91,25 +91,24 @@
                             android:entries="@array/sarry"
                             android:textAlignment="center"
                             android:background="@drawable/grade"
-                            android:layout_width="300dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"/>
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" />
                         <TextView
                             android:layout_weight="1"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"/>
                         <Button
                             android:id="@+id/btnRegist2"
-                            android:layout_width="200dp"
-                            android:layout_height="0dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
                             android:layout_weight="1"
                             android:layout_gravity="center"
                             android:layout_marginTop="8dp"
                             android:text="注册"
                             android:textAlignment="center"
-                            android:textColor="#fff"
-                            android:textSize="15dp"
-                            android:background="@drawable/radius" />
+                            android:textColor="#ffffff"
+                            android:textSize="18dp"
+                            android:background="@drawable/buy" />
                 </LinearLayout>
         </RelativeLayout>
 </LinearLayout>
