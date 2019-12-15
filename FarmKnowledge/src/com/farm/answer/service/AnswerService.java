@@ -30,6 +30,7 @@ public class AnswerService {
 					num2 = random.nextInt(20-num1);
 					result = num1 + num2;
 				}else {
+					num1 = 5 + random.nextInt(15);
 					num2 = random.nextInt(num1+1);
 					result = num1 - num2;
 				}

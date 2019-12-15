@@ -98,15 +98,6 @@
                         <input type="file" id="photo" name="upfile" accept="image/*" style="margin-top:5px;"/>
                     </div>
                 </div>
-                <div class="layui-form-item layui-form-text">
-                    <label for="L_sign" class="layui-form-label">
-                    	签名
-                    </label>
-                    <div class="layui-input-block">
-                        <textarea placeholder="随便写些什么刷下存在感" id="L_sign" name="sign" autocomplete="off"
-                        class="layui-textarea" style="height: 80px;"></textarea>
-                    </div>
-                </div>
                 <div class="layui-form-item">
                     <label for="L_sign" class="layui-form-label">
                     </label>

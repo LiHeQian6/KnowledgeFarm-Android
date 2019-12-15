@@ -34,7 +34,7 @@
             layer.confirm('确认要恢复吗？',function(index){
             	$.post("${ctx}/admin/crop/recoveryOneCrop",{"id":id},function(data){
 	    			if(data == "succeed"){
-	    				window.location.href="${ctx}/admin_crop/findCropPage?exist=0";
+	    				window.location.href="${ctx}/admin/crop/findCropPage?exist=0";
 	    			}else if(data == "fail"){
 	    				layer.msg('恢复失败');
 	    			}

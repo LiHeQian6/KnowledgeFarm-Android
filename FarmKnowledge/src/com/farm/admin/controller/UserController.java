@@ -59,17 +59,7 @@ public class UserController extends Controller{
 		int userId = getInt("userId");
 		
 		UserService service = new UserService();
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				boolean a1 = service.deleteOneUser(userId);
-				boolean a2 = service.deleteOneUserAuthority(userId);
-				if(a1 == true && a2 == true) {
-					return true;
-				}
-				return false;
-			}
-		});
+		boolean succeed = service.deleteOneUser(userId);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
@@ -85,12 +75,10 @@ public class UserController extends Controller{
 			@Override
 			public boolean run() throws SQLException {
 				boolean a = false;
-				boolean b = false;
 				UserService service = new UserService();
 				for(String aString : deleteId) {
 					a = service.deleteOneUser(Integer.parseInt(aString));
-					b = service.deleteOneUserAuthority(Integer.parseInt(aString));
-					if(a == false || b == false) {
+					if(a == false) {
 						return false;
 					}
 				}
@@ -109,17 +97,7 @@ public class UserController extends Controller{
 		int userId = getInt("userId");
 		
 		UserService service = new UserService();
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				boolean a1 = service.recoveryOneUser(userId);
-				boolean a2 = service.recoveryOneUserAuthority(userId);
-				if(a1 == true && a2 == true) {
-					return true;
-				}
-				return false;
-			}
-		});
+		boolean succeed = service.recoveryOneUser(userId);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
@@ -135,12 +113,10 @@ public class UserController extends Controller{
 			@Override
 			public boolean run() throws SQLException {
 				boolean a = false;
-				boolean b = false;
 				UserService service = new UserService();
 				for(String aString : recoveryId) {
 					a = service.recoveryOneUser(Integer.parseInt(aString));
-					b = service.recoveryOneUserAuthority(Integer.parseInt(aString));
-					if(a == false && b == false) {
+					if(a == false) {
 						return false;
 					}
 				}
@@ -159,17 +135,7 @@ public class UserController extends Controller{
 		int userId = getInt("userId");
 		
 		UserService service = new UserService();
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				boolean a1 = service.deleteThoroughUser(userId);
-				boolean a2 = service.deleteThoroughUserAuthority(userId);
-				if(a1 == true && a2 == true) {
-					return true;
-				}
-				return false;
-			}
-		});
+		boolean succeed = service.deleteThoroughUser(userId);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
@@ -177,71 +143,18 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//添加用户信息（授权Id、账号、别名、头像、登陆类型）
-	public void addUser() {
-		FileItemFactory factory = new DiskFileItemFactory();
-		ServletFileUpload upload = new ServletFileUpload(factory);
-		HttpServletRequest request = getRequest();
-		
-		String openId = "";
-		String nickName = "";
-		String type = "";
+	//添加用户信息
+	public void addUser() {		
+		String nickName = get("nickName");
 		
 		UserService service = new UserService();
-		try {
-			List<FileItem> items = upload.parseRequest(request);
-			for(FileItem fi : items) {
-				if(fi.isFormField()) {
-					String aString = new String(fi.getString().getBytes("ISO8859_1"),"utf-8");
-					switch (fi.getFieldName()) {
-						case "openId":
-							openId = aString;
-							if(service.isExistUserByOpenIdAll(openId)) { //存在该用户，不可添加
-								renderText("already");
-								return;
-							}
-							break;
-						case "nickName":
-							nickName = aString;
-							break;
-						case "type":
-							type = aString;
-							break;
-					}	
-				}else {
-					if(fi.getName().equals("")) { //图片为空
-						renderText("null");
-						return;
-					}else { //图片不为空
-						//构造photoName（并判断是否和其他用户的photoName重复）
-						String photoName = "";
-						CropService cropService = new CropService();
-						do {
-							photoName = "";
-							photoName = cropService.generateRandom() + fi.getName();
-						} while (service.isExistPhotoName(photoName));
-						
-						//构造photo
-						String photo = Strings.userPhotoUrl + photoName + "?" + cropService.generateRandom();
-						
-						//把头像写入文件
-						File file = new File(Strings.userfilePath + photoName);
-						fi.write(file);
-					
-						boolean succeed = service.addUser(service.generateAccout(), openId, nickName, "", photo, photoName, "", 1, type);
-						if(succeed == true) {
-							renderText("succeed");
-						}else {
-							renderText("fail");
-						}
-					}						
-				}
-			}
-		} catch (FileUploadException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		boolean succeed = service.addUser(service.generateAccout(), nickName, "", Strings.userPhotoUrl + "0.png", "", "", 1);
+		if(succeed == true) {
+			renderText("succeed");
+		}else {
+			renderText("fail");
 		}
+		
 	}
 
 	//根据用户id获取到要修改的用户信息（账号、别名、头像）
