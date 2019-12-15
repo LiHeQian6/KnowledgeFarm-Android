@@ -14,8 +14,8 @@ public class CropDao {
 	 * @throws
 	 */
 	//添加作物信息
-	public boolean addCrop(String name, int price, String img1, String img2, String img3, String cropPhotoName, int matureTime, int value, int experience) {
-		boolean succeed = new Crop().set("name", name).set("price", price).set("img1", img1).set("img2", img2).set("img3", img3).set("cropPhotoName", cropPhotoName).set("matureTime", matureTime).set("value", value).set("experience", experience).save();
+	public boolean addCrop(String name, int price, String img1, String img2, String img3, String img4, String cropPhotoName, int matureTime, int value, int experience) {
+		boolean succeed = new Crop().set("name", name).set("price", price).set("img1", img1).set("img2", img2).set("img3", img3).set("img4", img4).set("cropPhotoName", cropPhotoName).set("matureTime", matureTime).set("value", value).set("experience", experience).save();
 		return succeed;
 	}
 	
@@ -37,8 +37,8 @@ public class CropDao {
 	 * @throws
 	 */
 	//修改作物信息
-	public boolean updateCrop(int id, String name, int price, String img1, String img2, String img3, String cropPhotoName, int matureTime, int value, int experience) {
-		boolean succeed = Crop.dao.findById(id).set("name", name).set("price", price).set("img1", img1).set("img2", img2).set("img3", img3).set("img3", img3).set("cropPhotoName", cropPhotoName).set("matureTime", matureTime).set("value", value).set("experience", experience).update();
+	public boolean updateCrop(int id, String name, int price, String img1, String img2, String img3, String img4, String cropPhotoName, int matureTime, int value, int experience) {
+		boolean succeed = Crop.dao.findById(id).set("name", name).set("price", price).set("img1", img1).set("img2", img2).set("img3", img3).set("img4", img4).set("cropPhotoName", cropPhotoName).set("matureTime", matureTime).set("value", value).set("experience", experience).update();
 		return succeed;
 	}
 	//删除Crop表内单个作物信息（Crop表修改exist字段为0）

@@ -15,8 +15,8 @@ public class CropService {
 	 * @throws
 	 */
 	//添加作物信息
-	public boolean addCrop(String name, int price, String img1, String img2, String img3, String cropPhotoName, int matureTime, int value, int experience) {
-		return new CropDao().addCrop(name, price, img1, img2, img3, cropPhotoName, matureTime, value, experience);
+	public boolean addCrop(String name, int price, String img1, String img2, String img3, String img4, String cropPhotoName, int matureTime, int value, int experience) {
+		return new CropDao().addCrop(name, price, img1, img2, img3, img4, cropPhotoName, matureTime, value, experience);
 	}
 	
 	
@@ -37,8 +37,8 @@ public class CropService {
 	 * @throws
 	 */
 	//修改作物信息
-	public boolean updateCrop(int id, String name, int price, String img1, String img2, String img3, String cropPhotoName, int matureTime, int value, int experience) {
-		return new CropDao().updateCrop(id, name, price, img1, img2, img3, cropPhotoName, matureTime, value, experience);
+	public boolean updateCrop(int id, String name, int price, String img1, String img2, String img3, String img4, String cropPhotoName, int matureTime, int value, int experience) {
+		return new CropDao().updateCrop(id, name, price, img1, img2, img3, img4, cropPhotoName, matureTime, value, experience);
 	}
 	//删除Crop表内单个作物信息（Crop表修改exist字段为0）
 	public boolean deleteOneCrop(int id) {
