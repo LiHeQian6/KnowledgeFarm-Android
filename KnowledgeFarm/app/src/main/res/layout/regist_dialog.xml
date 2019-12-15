@@ -54,7 +54,9 @@
                             android:background="@drawable/eradius"
                             android:textAlignment="center"
                             android:imeOptions="flagNoExtractUi"
+                            android:textCursorDrawable="@color/cursorCorlor"
                             android:hint="昵称"
+                            android:textColor="@color/blackTextColor"
                             android:textColorHint="@color/editTextCorlor"
                             android:textSize="20sp" />
                         <EditText
@@ -68,6 +70,8 @@
                             android:textColorHint="@color/editTextCorlor"
                             android:imeOptions="flagNoExtractUi"
                             android:inputType="textPassword"
+                            android:textCursorDrawable="@color/cursorCorlor"
+                            android:textColor="@color/blackTextColor"
                             android:hint="密码"
                             android:textSize="20sp" />
                         <EditText
@@ -81,6 +85,8 @@
                             android:background="@drawable/eradius"
                             android:gravity="center_horizontal"
                             android:imeOptions="flagNoExtractUi"
+                            android:textColor="@color/blackTextColor"
+                            android:textCursorDrawable="@color/cursorCorlor"
                             android:hint="确认密码"
                             android:textSize="20sp" />
                         <Spinner
@@ -91,6 +97,7 @@
                             android:textAlignment="center"
                             android:background="@drawable/grade"
                             android:layout_width="match_parent"
+                            android:textColor="@color/blackTextColor"
                             android:layout_height="50dp" />
                         <TextView
                             android:layout_weight="1"

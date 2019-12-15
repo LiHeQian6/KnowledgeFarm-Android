@@ -229,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
                 .placeholder(R.drawable.huancun2)
                 .error(R.drawable.meigui)
                 .fallback(R.drawable.meigui)
+                .circleCrop()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(this).load(LoginActivity.user.getPhoto()).apply(requestOptions).into(photo);
         nickName.setText(LoginActivity.user.getNickName());
