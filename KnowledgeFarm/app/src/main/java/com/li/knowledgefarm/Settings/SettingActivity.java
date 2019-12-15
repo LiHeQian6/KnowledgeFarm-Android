@@ -1,5 +1,6 @@
 package com.li.knowledgefarm.Settings;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -7,26 +8,37 @@ import androidx.fragment.app.FragmentTransaction;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.tencent.connect.UserInfo;
@@ -39,18 +51,30 @@ import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Date;
+import java.util.Map;
 
 public class SettingActivity extends AppCompatActivity {
     /** 返回*/
     private ImageView iv_return;
+    /** 头像*/
+    private ImageView iv_photo;
     /** 修改昵称*/
     private Button btnUpdateNickName;
     /** 修改年级*/
     private Button btnUpdateGrade;
     /** 修改密码*/
     private Button btnUpdatePassword;
+    /** 修改头像*/
+    private Button btnUpdatePhoto;
     /** 绑定QQ*/
     private Button btnBindingQQ;
     /** 解绑QQ*/
@@ -71,6 +95,8 @@ public class SettingActivity extends AppCompatActivity {
     private CustomerListener listener;
     /** EvenBus*/
     EventBus eventBus;
+    /** Gson*/
+    Gson gson = new Gson();
 
     /** Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI*/
     private Tencent mTencent;
@@ -144,7 +170,7 @@ public class SettingActivity extends AppCompatActivity {
                             break;
                     }
                     break;
-                case 4: //解绑邮箱判断
+                case 3: //解绑邮箱判断
                     switch ((String)msg.obj){
                         case "true":
                             LoginActivity.user.setEmail("");
@@ -158,6 +184,25 @@ public class SettingActivity extends AppCompatActivity {
                             break;
                     }
                     break;
+                case 4: //修改头像判断
+                    String aString = (String)msg.obj;
+                    if(aString.equals("false") || aString.equals("")){
+                        Toast.makeText(getApplicationContext(),"头像上传失败",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Type type = new TypeToken<Map<String,String>>(){}.getType();
+                        Map<String,String> map = gson.fromJson(aString,type);
+                        String photo = URLDecoder.decode(map.get("photo"));
+                        LoginActivity.user.setPhoto(photo);
+                        LoginActivity.user.setPhotoName(map.get("photoName"));
+                        RequestOptions options = new RequestOptions();
+                        options.placeholder(R.drawable.huancun2) //加载图片时
+                                .error(R.drawable.huancun2) //请求出错（图片资源不存在，无访问权限）
+                                .fallback(R.drawable.huancun2) //请求资源为null
+                                .circleCrop() //转换图片效果
+                                .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
+                        Glide.with(getApplicationContext()).load(photo).apply(options).into(iv_photo);
+                    }
+
             }
         }
     };
@@ -195,13 +240,16 @@ public class SettingActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.btnUpdateNickName:
-                    popupWindow_update_nickName();
+                    dialog_update_nickName();
                     break;
                 case R.id.btnUpdateGrade:
-                    popupWindow_update_grade();
+                    dialog_update_grade();
                     break;
                 case R.id.btnUpdatePassword:
-                    popupWindow_update_password();
+                    update_password();
+                    break;
+                case R.id.btnUpdatePhoto:
+                    openPhonePhoto();
                     break;
                 case R.id.btnBindingQQ:
                     bindingQQ();
@@ -229,9 +277,11 @@ public class SettingActivity extends AppCompatActivity {
      */
     private void getViews(){
         iv_return = findViewById(R.id.iv_return);
+        iv_photo = findViewById(R.id.iv_photo);
         btnUpdateNickName = findViewById(R.id.btnUpdateNickName);
         btnUpdateGrade = findViewById(R.id.btnUpdateGrade);
         btnUpdatePassword = findViewById(R.id.btnUpdatePassword);
+        btnUpdatePhoto = findViewById(R.id.btnUpdatePhoto);
         btnBindingQQ = findViewById(R.id.btnBindingQQ);
         btnUnBindingQQ = findViewById(R.id.btnUnBindingQQ);
         btnBindingEmail = findViewById(R.id.btnBindingEmail);
@@ -245,6 +295,7 @@ public class SettingActivity extends AppCompatActivity {
         btnUpdateNickName.setOnClickListener(listener);
         btnUpdateGrade.setOnClickListener(listener);
         btnUpdatePassword.setOnClickListener(listener);
+        btnUpdatePhoto.setOnClickListener(listener);
         btnBindingQQ.setOnClickListener(listener);
         btnUnBindingQQ.setOnClickListener(listener);
         btnBindingEmail.setOnClickListener(listener);
@@ -256,6 +307,14 @@ public class SettingActivity extends AppCompatActivity {
         eventBus.register(SettingActivity.this);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
 
+        RequestOptions options = new RequestOptions();
+        options.placeholder(R.drawable.huancun2) //加载图片时
+                .error(R.drawable.huancun2) //请求出错（图片资源不存在，无访问权限）
+                .fallback(R.drawable.huancun2) //请求资源为null
+                .circleCrop() //转换图片效果
+                .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
+        Glide.with(getApplicationContext()).load(LoginActivity.user.getPhoto()).apply(options).into(iv_photo);
+
         /** 关闭状态栏*/
         setStatusBar();
     }
@@ -263,7 +322,7 @@ public class SettingActivity extends AppCompatActivity {
     /**
      * 弹出修改昵称窗口
      */
-    private void popupWindow_update_nickName(){
+    private void dialog_update_nickName(){
         //管理多个Fragment对象
         FragmentManager fragmentManager = getSupportFragmentManager();
         //事务(原子性的操作)
@@ -283,7 +342,7 @@ public class SettingActivity extends AppCompatActivity {
     /**
      * 弹出修改年级窗口
      */
-    private void popupWindow_update_grade(){
+    private void dialog_update_grade(){
         //管理多个Fragment对象
         FragmentManager fragmentManager = getSupportFragmentManager();
         //事务(原子性的操作)
@@ -303,10 +362,56 @@ public class SettingActivity extends AppCompatActivity {
     /**
      * 弹出修改密码界面
      */
-    private void popupWindow_update_password(){
+    private void update_password(){
         Intent intent = new Intent();
         intent.setClass(SettingActivity.this,UpdatePasswordActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * 打开相册
+     */
+    private void openPhonePhoto(){
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, 1);
+    }
+
+    /**
+     * 修改头像
+     */
+    private void updatePhoto(final File photo){
+        new Thread(){
+            @Override
+            public void run() {
+                Log.i("lww",photo.getAbsolutePath());
+                MediaType mimeType = MediaType.parse("image/*");
+                if(!photo.exists()){
+                    Log.i("lww","文件不存在");
+                }
+                RequestBody requestBody = RequestBody.create(photo,mimeType);
+                RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("accout",LoginActivity.user.getAccout())
+                        .addFormDataPart("photo", URLEncoder.encode(LoginActivity.user.getPhoto()))
+                        .addFormDataPart("photoName",LoginActivity.user.getPhotoName())
+                        .addFormDataPart("file",photo.getName(),requestBody)
+                        .build();
+                Request request = new Request.Builder().post(body).url(getResources().getString(R.string.URL)+"/user/updatePhoto").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i("lww","请求失败");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result = response.body().string();
+                        sendMessage(4,result);
+                    }
+                });
+            }
+        }.start();
     }
 
     /**
@@ -578,7 +683,7 @@ public class SettingActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String result = response.body().string();
-                        sendMessage(4,result);
+                        sendMessage(3,result);
                     }
                 });
             }
@@ -623,6 +728,40 @@ public class SettingActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
+    }
+
+    /**
+     * 返回Activity的数据
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data != null){
+            final Uri uri = data.getData();
+            Bitmap bitmap = null;
+            try {
+                bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(uri));
+                updatePhoto(saveBitmapFile(bitmap));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Log.i("lww",uri.getPath());
+        }else{
+            Log.i("lww","打开相册返回data为null");
+        }
+    }
+
+    /**
+     * Bitmap对象保存为图片文件
+     */
+    public File saveBitmapFile(Bitmap bitmap) throws FileNotFoundException {
+        File file = new File(getFilesDir().getAbsolutePath()+"/photo.png");
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        return file;
     }
 
 }

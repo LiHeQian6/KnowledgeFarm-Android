@@ -148,7 +148,7 @@ public class CropController extends Controller{
 		int matureTime = 0;
 		int value = 0;
 		int experience = 0;
-		String realPath[] = new String[3];
+		String realPath[] = new String[4];
 		int count = 0;
 		String cropPhotoName = "";
 		
@@ -203,8 +203,8 @@ public class CropController extends Controller{
 					File file = new File(Strings.cropfilePath + count + cropPhotoName);
 					fi.write(file);
 					
-					if(count == 2) {
-						boolean succeed = service.addCrop(name, price, realPath[0], realPath[1], realPath[2], cropPhotoName, matureTime, value, experience);
+					if(count == 3) {
+						boolean succeed = service.addCrop(name, price, realPath[0], realPath[1], realPath[2], realPath[3], cropPhotoName, matureTime, value, experience);
 						if(succeed == true) {
 							renderText("succeed");
 						}else {
@@ -243,13 +243,14 @@ public class CropController extends Controller{
 		String img1 = "";
 		String img2 = "";
 		String img3 = "";
+		String img4 = "";
 		String cropPhotoName = "";
 		String name = "";
 		int price = 0;
 		int matureTime = 0;
 		int value = 0;
 		int experience = 0;
-		String realPath[] = new String[3];
+		String realPath[] = new String[4];
 		int count = 0;
 		
 		CropService service = new CropService();
@@ -270,6 +271,9 @@ public class CropController extends Controller{
 							break;
 						case "img3":
 							img3 = aString;
+							break;
+						case "img4":
+							img4 = aString;
 							break;
 						case "cropPhotoName":
 							cropPhotoName = aString;
@@ -302,6 +306,9 @@ public class CropController extends Controller{
 							case 2:
 								realPath[count] = img3;
 								break;
+							case 3:
+								realPath[count] = img4;
+								break;
 						}
 					}else { //图片不为空
 						//构造img，并判断是否与上次的img重复
@@ -324,14 +331,20 @@ public class CropController extends Controller{
 									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
 								} while (realPath[count].equals(img3));
 								break;
+							case 3:
+								do {
+									realPath[count] = "";
+									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+								} while (realPath[count].equals(img4));
+								break;
 						}
 						
 						//把图片写入文件
 						File file = new File(Strings.cropfilePath + count + cropPhotoName);
 						fi.write(file);
 					}
-					if(count == 2) {
-						boolean succeed = service.updateCrop(id, name, price, realPath[0], realPath[1], realPath[2], cropPhotoName, matureTime, value, experience);
+					if(count == 3) {
+						boolean succeed = service.updateCrop(id, name, price, realPath[0], realPath[1], realPath[2], realPath[3], cropPhotoName, matureTime, value, experience);
 						if(succeed == true) {
 							renderText("succeed");
 						}else {

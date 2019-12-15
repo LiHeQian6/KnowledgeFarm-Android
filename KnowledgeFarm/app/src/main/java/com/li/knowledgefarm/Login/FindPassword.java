@@ -76,6 +76,8 @@ public class FindPassword extends AppCompatActivity {
                 case 5:
                     Toast.makeText(getApplicationContext(),"验证码已发送，请在邮箱查收",Toast.LENGTH_SHORT).show();
                     identyCode = (String) msg.obj;
+                    availableCode();
+                    startCode();
                     break;
                 case 6:
                     Toast.makeText(getApplicationContext(),"未绑定邮箱！",Toast.LENGTH_SHORT).show();
@@ -98,6 +100,8 @@ public class FindPassword extends AppCompatActivity {
             }
         }
     };
+
+
     /**
      * @Description 设置状态栏
      * @Auther 孙建旺
@@ -216,7 +220,7 @@ public class FindPassword extends AppCompatActivity {
                         return;
                     }
                     getCodeFromServer(getResources().getString(R.string.URL)+"/user/sendTestCodePassword");
-                    startCode();
+
                     break;
                 case R.id.btnSubmit:
                     if(account.equals("")||email.equals("")||code.equals("")){
@@ -226,6 +230,10 @@ public class FindPassword extends AppCompatActivity {
                     if(!identyCode.equals("")&&code.equals(identyCode)){
                         linearCode.setVisibility(View.GONE);
                         linearPwd.setVisibility(View.VISIBLE);
+                    }else if (!code.equals(identyCode)&&!identyCode.equals("")){
+                        Toast.makeText(getApplicationContext(),"验证码输入错误",Toast.LENGTH_SHORT).show();
+                    }else if(identyCode.equals("")){
+                        Toast.makeText(getApplicationContext(),"验证码已失效",Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.btnFindPwd:
@@ -358,11 +366,46 @@ public class FindPassword extends AppCompatActivity {
             @Override
             protected void onPostExecute(Integer result) {
                 getCode.setEnabled(true);
-                identyCode = "";
                 getCode.setText("获取验证码");
                 getCode.setTextColor(Color.parseColor("#1E90FF"));
             }
 
-        }.execute(0,100);
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void availableCode() {
+        new AsyncTask<Integer, Integer, Integer>() {
+            @Override
+            protected void onPreExecute() {
+                // 准备执行前调用，用于界面初始化操作
+
+            }
+
+            @Override
+            protected Integer doInBackground(Integer... params) {
+                // 子线程，耗时操作
+                int start = 0;
+                int end = 299;
+                int result = 0;
+                for (int i = end; i >= start; i--) {
+                    SystemClock.sleep(1000);
+                    result = i;
+                    publishProgress(result);//把进度推出去，推给onProgressUpdate参数位置
+                }
+                return result;
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer[] values) {
+
+            };
+
+            @Override
+            protected void onPostExecute(Integer result) {
+                identyCode = "";
+            }
+
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

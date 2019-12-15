@@ -118,8 +118,10 @@
                 <Button
                     android:id="@+id/btnCancel"
                     android:layout_width="100dp"
+                    android:textSize="22sp"
+                    android:paddingBottom="10dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/buy"
+                    android:background="@drawable/buttonbackground"
                     android:text="取消"/>
 
                 <Button
@@ -127,7 +129,9 @@
                     android:layout_width="100dp"
                     android:layout_marginLeft="10dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/buy"
+                    android:paddingBottom="10dp"
+                    android:textSize="22sp"
+                    android:background="@drawable/buttonbackground"
                     android:text="购买"/>
             </LinearLayout>
         </LinearLayout>

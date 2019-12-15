@@ -123,6 +123,7 @@
                         <th style="text-align:center;">img1</th>
                         <th style="text-align:center;">img2</th>
                         <th style="text-align:center;">img3</th>
+                        <th style="text-align:center;">img4</th>
                         <th style="text-align:center;">成熟时间</th>
                         <th style="text-align:center;">价值</th>
                         <th style="text-align:center;">提供经验</th>
@@ -140,6 +141,7 @@
 	                        <td><img style="width:50px;height:50px;" src="${cropPage.img1}"/></td>
 	                        <td><img style="width:50px;height:50px;" src="${cropPage.img2}"/></td>
 							<td><img style="width:50px;height:50px;" src="${cropPage.img3}"/></td>
+							<td><img style="width:50px;height:50px;" src="${cropPage.img4}"/></td>
 	                        <td>${cropPage.matureTime}天</td>
 	                        <td>${cropPage.value}金币</td>
 	                        <td>${cropPage.experience}</td>

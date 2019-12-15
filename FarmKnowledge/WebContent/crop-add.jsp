@@ -159,6 +159,14 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
+                    <label for="L_pass" class="layui-form-label">
+                        <font color="red">*</font>img4
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="file" id="img4" name="upfile" accept="image/*" style="margin-top:5px;"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <label for="L_repass" class="layui-form-label">
                     </label>
                     <button  class="layui-btn" lay-filter="add" lay-submit="">

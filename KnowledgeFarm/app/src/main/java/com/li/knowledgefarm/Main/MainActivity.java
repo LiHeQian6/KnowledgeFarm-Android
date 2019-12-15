@@ -65,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView pet;
     private ImageView setting;
     private ImageView photo;
+    private ImageView harvest;
+    private ImageView xzw;
+    private ImageView xzf;
+    private ImageView xzs;
     private TextView nickName;
     private TextView level;
     private TextView account;
@@ -86,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
     private long lastClickTime=0;
     private long FAST_CLICK_DELAY_TIME=500;
     private Handler waterMessagesHandler;
-    private int selected=-2;//选中的是水壶0，还是肥料-1，植物所在土地编号，还是没选选择任何一个-2
+    private int selected=-2;//选中的是水壶0，肥料-1，收获-2
     private Handler operatingHandleMessage;
+    private int selectedPlant=0;//选中的植物是第几块土地
 
 
     @Override
@@ -344,32 +349,29 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             land.setImageResource(R.drawable.land_light);
                             if(selected==0) {
+                                selectedPlant=finalI;
                                 if(status==1) {
                                     Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                     land.setImageResource(R.drawable.land);
-                                    selected = -2;
                                 }
                                 else{
-                                    selected=finalI;
                                     operating(0);//浇水
                                 }
                             }else if(selected==-1){
+                                selectedPlant=finalI;
                                 if(status==1) {
                                     Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                     land.setImageResource(R.drawable.land);
-                                    selected = -2;
                                 }else{
-                                    selected=finalI;
                                     operating(-1);//施肥
                                 }
                             }else{
-                                selected=finalI;
+                                selectedPlant=finalI;
                                 if(status==1)
                                     operating(-2);//成熟
                                 else {
                                     Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
                                     land.setImageResource(R.drawable.land);
-                                    selected = -2;
                                 }
                             }
                             waterMessagesHandler = new Handler() {
@@ -392,7 +394,6 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                     }
                                     land.setImageResource(R.drawable.land);
-                                    selected = -2;
                                 }
                             };
                         }
@@ -442,6 +443,8 @@ public class MainActivity extends AppCompatActivity {
         shop.setOnClickListener(new MainListener());
         pet.setOnClickListener(new MainListener());
         setting.setOnClickListener(new MainListener());
+        harvest.setOnClickListener(new MainListener());
+
     }
 
     /**
@@ -535,6 +538,10 @@ public class MainActivity extends AppCompatActivity {
         lands=findViewById(R.id.lands);
         experience=findViewById(R.id.experience);
         experienceValue=findViewById(R.id.experienceValue);
+        xzw=findViewById(R.id.xzw);
+        xzf=findViewById(R.id.xzf);
+        xzs=findViewById(R.id.xzs);
+        harvest=findViewById(R.id.harvest);
     }
     class MainListener implements View.OnClickListener {
 
@@ -548,10 +555,22 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.water:
                     selected=0;
+                    xzw.setVisibility(View.VISIBLE);
+                    xzf.setVisibility(View.GONE);
+                    xzs.setVisibility(View.GONE);
                     break;
                 case R.id.fertilizer:
                     selected=-1;
+                    xzw.setVisibility(View.GONE);
+                    xzf.setVisibility(View.VISIBLE);
+                    xzs.setVisibility(View.GONE);
                     break;
+                case R.id.harvest:
+                    selected=-2;
+                    xzw.setVisibility(View.GONE);
+                    xzf.setVisibility(View.GONE);
+                    xzs.setVisibility(View.VISIBLE);
+                     break;
                 case R.id.bag:
                     showBagMessages();
                     break;
@@ -581,11 +600,11 @@ public class MainActivity extends AppCompatActivity {
                     super.run();
                     Request request=null;
                     if(operating==0)
-                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/waterCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/waterCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
                     else if(operating==-1){
-                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/fertilizerCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/fertilizerCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
                     }else{
-                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/harvest?userId="+LoginActivity.user.getId()+"&landNumber=land"+selected).build();
+                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/harvest?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
                     }
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {
@@ -756,6 +775,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 getCrop();
+                showLand();
             }
         });
     }

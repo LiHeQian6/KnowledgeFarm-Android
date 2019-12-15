@@ -2,15 +2,12 @@ package  com.farm.user.dao;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.farm.model.User;
 import com.farm.model.UserAuthority;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import com.sun.javafx.image.impl.IntArgb;
 
 public class UserDao {
 	
@@ -120,10 +117,10 @@ public class UserDao {
 		return false;
 	}
 	//修改用户的头像，根据账号查询到
-	public boolean updateUserPhoto(String accout, String photo) {
+	public boolean updateUserPhoto(String accout, String photo, String photoName) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
-			boolean succeed = list.get(0).set("photo", photo).update();
+			boolean succeed = list.get(0).set("photo", photo).set("photoName", photoName).update();
 			return succeed;
 		}
 		return false;
@@ -243,7 +240,7 @@ public class UserDao {
 		if(list.size() != 0) {
 			User user = list.get(0);
 			user.set("photo", URLEncoder.encode(user.getStr("photo")));
-			return list.get(0);
+			return user;
 		}
 		return null;
 	}
@@ -253,7 +250,7 @@ public class UserDao {
 		if(list.size() != 0) {
 			User user = list.get(0);
 			user.set("photo", URLEncoder.encode(user.getStr("photo")));
-			return list.get(0);
+			return user;
 		}
 		return null;
 	}
