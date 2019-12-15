@@ -3,7 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="ShopTextColor">#12f4aa</color>
+    <color name="ShopTextColor">#ffffff</color>
     <color name="blackTextColor">#000000</color>
     <color name="zhuxiaoColor">#dedede</color>
     <color name="AnswerTrue">#49eb0a</color>

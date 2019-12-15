@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -732,6 +733,7 @@ public class MainActivity extends AppCompatActivity {
                     Type type = new TypeToken<List<BagCropNumber>>(){}.getType();
                     dataList = gson.fromJson(messages,type);
                     BagCustomerAdapter customerAdapter = new BagCustomerAdapter(bagDialog.getContext(),dataList,R.layout.gird_adapteritem);
+                    gridView.setColumnWidth(55);
                     gridView.setAdapter(customerAdapter);
                 }else{
                     Toast toast = Toast.makeText(MainActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);
@@ -749,6 +751,8 @@ public class MainActivity extends AppCompatActivity {
         attrs.width = (int)(300*scale+0.5f);
         attrs.height =(int)(400*scale+0.5f);
         bagDialog.getWindow().setAttributes(attrs);
+        Window dialogWindow = bagDialog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
         planting(gridView);
     }
 
