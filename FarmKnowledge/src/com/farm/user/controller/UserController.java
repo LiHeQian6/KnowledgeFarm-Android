@@ -82,7 +82,7 @@ public class UserController extends Controller{
 	//¸ù¾ÝÕËºÅµÇÂ¼
 	public void loginByAccount() {
 
-		String account = get("account");
+		String account = get("accout");
 		String password = get("password");
 		
 		UserService service = new UserService();

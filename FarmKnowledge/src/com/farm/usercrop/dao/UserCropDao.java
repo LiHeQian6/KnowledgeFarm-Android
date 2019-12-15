@@ -106,4 +106,13 @@ public class UserCropDao {
 		}
 		return null;
 	}
+	
+	//ÐÞ¸ÄÍÁµØ×´Ì¬
+	public boolean updateCropState(int userCropId, int state) {
+		UserCrop userCrop = UserCrop.dao.findById(userCropId);
+		if(userCrop != null) {
+			return userCrop.set("state", state).update();
+		}
+		return false;
+	}
 }

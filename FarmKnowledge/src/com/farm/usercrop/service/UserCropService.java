@@ -1,6 +1,7 @@
 package com.farm.usercrop.service;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 
 import com.farm.crop.dao.CropDao;
 import com.farm.crop.service.CropService;
@@ -24,13 +25,16 @@ public class UserCropService {
 	public boolean waterCr(int userId,String landNumber) {
 		int ucId = new UserService().findUcId(userId, landNumber);
 		UserCropDao dao = new UserCropDao();
+		UserCrop userCrop = dao.findUserCropById(ucId);
 		boolean succeed = Db.tx(new IAtom() {
 			
 			@Override
 			public boolean run() throws SQLException {
 				boolean a1 = false;
 				boolean a2 = new UserService().lessW(userId);
-				Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(ucId));
+				boolean a3 = false;
+				int cropId = userCrop.getInt("cropId");
+				Crop crop = new CropDao().getUpdateCropInfo(cropId);
 				int progress = dao.getCropProgress(ucId);
 				int matureTime = crop.getInt("matureTime");
 				
@@ -40,7 +44,14 @@ public class UserCropService {
 					a1 = dao.waterCrop(ucId, progress+5);
 				}
 				
-				if(a1 == true && a2 == true) {
+				if(userCrop.getInt("state") == 0) {
+					a3 = dao.updateCropState(ucId, 1);
+					new UserCropTimerManager(ucId,cropId); 
+				}else {
+					a3 = true;
+				}
+				
+				if(a1 == true && a2 == true && a3 == true) {
 					return true;
 				}
 				return false;
@@ -145,7 +156,7 @@ public class UserCropService {
 				}
 				
 				if(userCropId != 0 && a2 && a3) {
-					new UserCropTimerManager(userCropId,cropId);
+					new UserCropTimerManager(userCropId,cropId); 
 					return true;
 				}
 				return false;
@@ -177,6 +188,11 @@ public class UserCropService {
 	//根据userCropId查询整条信息
 	public UserCrop findUserCropById(int ucId) {
 		return new UserCropDao().findUserCropById(ucId);
+	}
+	
+	//修改土地状态
+	public boolean updateCropState(int userCropId, int state) {
+		return new UserCropDao().updateCropState(userCropId, state);
 	}
 	
 }
