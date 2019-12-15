@@ -97,6 +97,9 @@ public class FindPassword extends AppCompatActivity {
                 case 9:
                     Toast.makeText(getApplicationContext(),"密码修改失败！",Toast.LENGTH_SHORT).show();
                     break;
+                case 10:
+                    Toast.makeText(getApplicationContext(),"发送失败！",Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
@@ -311,6 +314,9 @@ public class FindPassword extends AppCompatActivity {
                     handler.sendMessage(message);
                 }else if(result.equals("EmailError")){
                     message.what = 7;
+                    handler.sendMessage(message);
+                }else if(result.equals("fail")){
+                    message.what = 10;
                     handler.sendMessage(message);
                 } else {
                     message.what = 5;
