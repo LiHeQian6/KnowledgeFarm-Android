@@ -144,6 +144,7 @@ public class RegistAccountDialog extends DialogFragment {
         EditText configPwd = view.findViewById(R.id.configPwd2);
         Spinner grade = view.findViewById(R.id.spinner);
         Button registe = view.findViewById(R.id.btnRegist2);
+
         LinearLayout.LayoutParams params_nickname = new LinearLayout.LayoutParams((int)(displayWidth*0.4),(int)(displayHeight*0.1));
         params_nickname.gravity = Gravity.CENTER_HORIZONTAL;
         params_nickname.setMargins(0,(int)(displayHeight*0.03),0,0);
@@ -160,6 +161,7 @@ public class RegistAccountDialog extends DialogFragment {
         params_registe.setMargins(0,(int)(displayHeight*0.05),0,0);
         params_registe.gravity = Gravity.CENTER_HORIZONTAL;
         registe.setLayoutParams(params_registe);
+
     }
 
     private void registToServer() {

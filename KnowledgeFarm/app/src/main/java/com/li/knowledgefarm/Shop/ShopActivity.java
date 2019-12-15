@@ -1,12 +1,14 @@
 package com.li.knowledgefarm.Shop;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +71,9 @@ public class ShopActivity extends AppCompatActivity {
     // 两次点击间隔不能少于1000ms
     private static final int FAST_CLICK_DELAY_TIME = 1000;
     public static Boolean mIsScroll = false;
+    private int displayWidth;
+    private int displayHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +82,7 @@ public class ShopActivity extends AppCompatActivity {
         getViews();
         getShopingsItems();
         setStatusBar();
+        setViewSize();
 
 
         messages = new Handler(){
@@ -96,6 +103,25 @@ public class ShopActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    /**
+     * @Description 设置控件适配屏幕
+     * @Auther 孙建旺
+     * @Date 下午 4:14 2019/12/15
+     * @Param []
+     * @return void
+     */
+    private void setViewSize() {
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+
+        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.7),(int)(displayHeight*0.7));
+        params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
+        gridView.setLayoutParams(params_gridview);
     }
 
     /**
@@ -167,7 +193,7 @@ public class ShopActivity extends AppCompatActivity {
      * @return void
      */
     private void setAdapter() {
-        ShopItemAdapter itemAdapter = new ShopItemAdapter(this,shopList,R.layout.shopitem_girdview);
+        final ShopItemAdapter itemAdapter = new ShopItemAdapter(this,shopList,R.layout.shopitem_girdview);
         gridView.setAdapter(itemAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -323,7 +349,6 @@ public class ShopActivity extends AppCompatActivity {
         gridView = findViewById(R.id.gird_view);
         imageView = findViewById(R.id.goBack);
     }
-
 
     /**
      * @Description 获取商品数据
