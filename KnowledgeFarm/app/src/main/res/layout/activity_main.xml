@@ -153,7 +153,7 @@
 
 
     <LinearLayout android:layout_width="match_parent"
-                  android:gravity="bottom"
+                  android:gravity="center_vertical"
                     android:layout_alignParentBottom="true"
                     android:layout_height="wrap_content">
         <LinearLayout android:layout_width="wrap_content"
@@ -175,12 +175,19 @@
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
             <RelativeLayout
-                android:layout_width="50dp"
-                android:layout_height="50dp">
+                android:layout_width="60dp"
+                android:layout_height="60dp">
                 <ImageView android:layout_width="50dp"
                     android:src="@drawable/shuihu"
                     android:id="@+id/water"
+                    android:layout_centerInParent="true"
                     android:layout_height="50dp"/>
+                <ImageView
+                    android:layout_width="60dp"
+                    android:src="@drawable/xuanzhong"
+                    android:visibility="gone"
+                    android:id="@+id/xzw"
+                    android:layout_height="60dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:text="16"
@@ -201,12 +208,20 @@
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
             <RelativeLayout
-                android:layout_width="50dp"
-                android:layout_height="50dp">
+                android:layout_width="60dp"
+                android:layout_height="60dp">
                 <ImageView android:layout_width="50dp"
                     android:src="@drawable/huafei"
                     android:id="@+id/fertilizer"
+                    android:layout_centerInParent="true"
                     android:layout_height="50dp"/>
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/xuanzhong"
+                    android:visibility="gone"
+                    android:id="@+id/xzf"
+                    android:layout_height="60dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:text="16"
@@ -226,10 +241,35 @@
                       android:gravity="center"
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
-            <ImageView android:layout_width="50dp"
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp">
+                <ImageView android:layout_width="50dp"
+                    android:src="@drawable/shouhuo"
+                    android:id="@+id/harvest"
+                    android:layout_centerInParent="true"
+                    android:layout_height="50dp"/>
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/xzs"
+                    android:src="@drawable/xuanzhong"
+                    android:layout_height="60dp"/>
+            </RelativeLayout>
+            <TextView android:layout_width="wrap_content"
+                      android:text="收获"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:orientation="vertical"
+                      android:gravity="center"
+                      android:layout_marginRight="20dp"
+                      android:layout_height="wrap_content">
+            <ImageView android:layout_width="60dp"
                        android:src="@drawable/beibao"
                        android:id="@+id/bag"
-                       android:layout_height="50dp"/>
+                       android:padding="5dp"
+                       android:layout_height="60dp"/>
             <TextView android:layout_width="wrap_content"
                       android:text="背包"
                       android:layout_height="wrap_content"/>

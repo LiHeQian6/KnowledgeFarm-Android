@@ -2,8 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7adfb8"
+    android:background="@drawable/logindialogbac"
     tools:context=".Main.MainActivity" >
+    <!--    android:background="#7adfb8"-->
 
     <include
         android:id="@+id/main_title"

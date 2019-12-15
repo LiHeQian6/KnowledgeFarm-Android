@@ -17,46 +17,18 @@
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
 
 	<script>
-		//添加用户信息
-		function addUser(){
-			var form = document.getElementById("form1");
-			var formData = new FormData(form);
-			 $.ajax({
-				    url: "${ctx}/admin/user/addUser",
-				    type: "POST",
-				    processData: false,  // 告诉jQuery不要去处理发送的数据
-				    contentType: false,  // 告诉jQuery不要去设置Content-Type请求头
-				    data: formData,
-				    success:function (data) {
-				      if(data == "succeed"){
-				    	  x_admin_close();
-				      }else if(data == "fail"){
-		    			  layer.msg('添加失败');
-		    		  }else if(data == "already"){
-		    			  layer.msg('该授权Id已存在');
-		    		  }else if(data == "null"){
-		    			  layer.msg('图片不能为空');
-		    		  }
-				    }
-			 })
-		}
 	
 		//添加用户信息
-		function a(){
-			var openId = $("#openId").val();
+		function addUser(){
     		var nickName = $("#nickName").val();
-    		var photo = $("#photo").val();
-    		var type = $("input[name='loginRadio']:checked").val();
-    		if(openId == "" || nickName == "" || photo == "" || type == ""){
+    		if(nickName == ""){
     			layer.msg('输入框不能为空');
     		}else{
-				$.post("${ctx}/admin/user/addUser",{"openId":openId,"nickName":nickName,"photo":photo,"type":type},function(data){
+				$.post("${ctx}/admin/user/addUser",{"nickName":nickName},function(data){
 					if(data == "succeed"){
 						x_admin_close();
 	    			}else if(data == "fail"){
 	    				layer.msg('添加失败');
-	    			}else if(data == "already"){
-	    				layer.msg('该授权Id已存在');
 	    			}
 	    		}) 
     		}
@@ -79,18 +51,6 @@
           <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
             <form id="form1" class="layui-form" enctype="multipart/form-data" action="javascript:addUser()">
-            	<div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>授权Id
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="openId" name="openId" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input">
-                    </div>
-                    <div class="layui-form-mid layui-word-aux">
-                    	 *将会成为您授权登陆的唯一认证
-                    </div>
-                </div>
                 <div class="layui-form-item">
                     <label for="L_username" class="layui-form-label">
                         <font color="red">*</font>名称
@@ -98,25 +58,6 @@
                     <div class="layui-input-inline">
                         <input type="text" id="nickName" name="nickName" required="" lay-verify="nikename"
                         autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_repass" class="layui-form-label">
-                        <font color="red">*</font>登陆类型
-                    </label>
-                    <div class="layui-inline">
-                        <div class="layui-input-inline">
-                            <input type="radio" name="type" value="QQ" checked title="QQ">
-                            <input type="radio" name="type" value="微信" title="微信">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        <font color="red">*</font>头像
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="file" id="photo" name="upfile" accept="image/*" style="margin-top:5px;"/>
                     </div>
                 </div>
                 <div class="layui-form-item">

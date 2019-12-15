@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
@@ -74,14 +75,17 @@ public class StartActivity extends AppCompatActivity {
         Log.e("user",user.toString());
         if(getInfo.getAction().equals("QQFirstLogin")&&user!=null){
             nickName.setText(user.getNickName());
-            urlToImgBitmap(user.getPhoto());
+//            urlToImgBitmap(user.getPhoto());
+            Glide.with(this).load(user.getPhoto()).centerCrop().fitCenter().circleCrop().into(photo);
             showNotifyDialog();
         }else if(getInfo.getAction().equals("autoLogin")&&user!=null){
             nickName.setText(user.getNickName());
-            urlToImgBitmap(user.getPhoto());
+//            urlToImgBitmap(user.getPhoto());
+            Glide.with(this).load(user.getPhoto()).centerCrop().fitCenter().circleCrop().into(photo);
         }else if(getInfo.getAction().equals("accountLogin")){
             nickName.setText(user.getNickName());
-            urlToImgBitmap(user.getPhoto());
+//            urlToImgBitmap(user.getPhoto());
+            Glide.with(this).load(user.getPhoto()).centerCrop().fitCenter().circleCrop().into(photo);
         }
     }
 
