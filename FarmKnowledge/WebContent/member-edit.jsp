@@ -38,26 +38,7 @@
 				    }
 			 })
 		}
-    
-    	//修改用户信息
-    	function a(){
-    		var newAccout = $("#accout").val();
-    		var nickName = $("#nickName").val();
-    		var photo = $("#photo").val();
-    		if(newAccout == "" || nickName == "" || photo == ""){
-    			layer.msg('输入框不能为空');
-    		}else{
-	    		$.post("${ctx}/admin/user/updateUser",{"oldAccout":"${user.accout}","newAccout":newAccout,"nickName":nickName,"photo":photo},function(data){
-	    			if(data == "succeed"){
-						x_admin_close();
-	    			}else if(data == "fail"){
-	    				layer.msg('修改失败');
-	    			}else if(data == "already"){
-	    				layer.msg('该账号已存在');
-	    			}
-	    	 	}) 
-    		}
-    	}
+
     </script>
 
 </head>

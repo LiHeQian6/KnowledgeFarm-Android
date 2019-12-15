@@ -146,9 +146,12 @@ public class UserController extends Controller{
 	//添加用户信息
 	public void addUser() {		
 		String nickName = get("nickName");
+		String password = get("password");
+		String email = get("email");
+		int grade = getInt("grade");
 		
 		UserService service = new UserService();
-		boolean succeed = service.addUser(service.generateAccout(), nickName, "", Strings.userPhotoUrl + "0.png", "", "", 1);
+		boolean succeed = service.addUser(service.generateAccout(), nickName, password, Strings.userPhotoUrl + "0.png", "", email, grade);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {

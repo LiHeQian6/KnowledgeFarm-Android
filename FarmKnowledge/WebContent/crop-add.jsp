@@ -39,29 +39,6 @@
 				    }
 			 })
 		}
-	
-		//添加作物信息
-		function a(){
-			var name = $("#name").val();
-    		var price = $("#price").val();
-    		var img1 = $("#img1").val();
-    		var img2 = $("#img2").val();
-    		var img3 = $("#img3").val();
-    		var matureTime = $("#matureTime").val();
-    		var value = $("#value").val();
-    		var experience = $("#experience").val();
-    		if(name == "" || price == "" || img1 == "" || img2 == "" || img3 == "" || matureTime == "" || value == "" || experience == ""){
-    			layer.msg('输入框不能为空');
-    		}else{
-				$.post("${ctx}/admin/crop/addCrop",{"name":name,"price":price,"img1":img1,"img2":img2,"img3":img3,"matureTime":matureTime,"value":value,"experience":experience},function(data){
-					if(data == "succeed"){
-						x_admin_close();
-	    			}else if(data == "fail"){
-	    				layer.msg('添加失败');
-	    			}
-	    		}) 
-    		}
-		}
 		
 		//关闭弹出框口
 		function x_admin_close(){
@@ -108,9 +85,6 @@
                     <div class="layui-input-inline">
                         <input type="text" id="matureTime" name="matureTime" required="" lay-verify="pass"
                         autocomplete="off" class="layui-input">
-                    </div>
-                    <div class="layui-form-mid layui-word-aux">
-                    	*天
                     </div>
                 </div>
                 <div class="layui-form-item">
