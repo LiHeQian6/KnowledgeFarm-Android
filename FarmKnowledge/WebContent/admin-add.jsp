@@ -22,23 +22,19 @@
 			var accout = $("#accout").val();
     		var password = $("#password").val();
     		var testPassword = $("#testPassword").val();
-    		if(accout == "" || password == "" || testPassword == ""){
-    			layer.msg('输入框不能为空');
-    		}else{
-				if(password == testPassword){
-					$.post("${ctx}/admin/addAdmin",{"accout":accout,"password":password},function(data){
-						if(data == "succeed"){
-							x_admin_close();
-		    			}else if(data == "fail"){
-		    				layer.msg('添加失败');
-		    			}else{
-		    				layer.msg('该管理员账号已存在');
-		    			}
-		    		}) 
-				}else{
-					layer.msg('两次输入密码不一致');
-				}
-    		}
+			if(password == testPassword){
+				$.post("${ctx}/admin/addAdmin",{"accout":accout,"password":password},function(data){
+					if(data == "succeed"){
+						x_admin_close();
+	    			}else if(data == "fail"){
+	    				layer.msg('添加失败');
+	    			}else{
+	    				layer.msg('该管理员账号已存在');
+	    			}
+	    		}) 
+			}else{
+				layer.msg('两次输入密码不一致');
+			}   		
 		}
 		
 		//关闭弹出框口
@@ -83,6 +79,15 @@
                     <div class="layui-input-inline">
                         <input type="password" id="testPassword" name="pass" required="" lay-verify="pass"
                         autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label for="L_sign" class="layui-form-label">
+                    	签名
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="随便写些什么刷下存在感" id="L_sign" name="sign" autocomplete="off"
+                        class="layui-textarea" style="height: 80px;"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">

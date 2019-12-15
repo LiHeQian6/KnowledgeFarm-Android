@@ -65,11 +65,11 @@ public class UserDao {
 	 * @throws
 	 */
 	//修改用户信息，根据修改前账号索引到
-	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName) {
+	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName, String email, int grade, int level, int experience, int money, int online) {
 		List<User> list = User.dao.find("select * from user where accout=?",oldAccout);
 		boolean succeed = false;
 		if(list.size() != 0) {
-			succeed = list.get(0).set("accout", newAccout).set("nickName", nickName).set("photo", photo).set("photoName", photoName).update();
+			succeed = list.get(0).set("accout", newAccout).set("nickName", nickName).set("photo", photo).set("photoName", photoName).set("email", email).set("grade", grade).set("level", level).set("experience", experience).set("money", money).set("online", online).update();
 		}
 		return succeed;
 	}

@@ -81,12 +81,13 @@ public class UserCropDao {
 	}
 	
 	//根据userCropId查询cropId、progress（放到UserCropItem中cropId当成userCropId）
-	public UserCropItem getCropIdProgressByUserCropId(int id){
+	public UserCropItem getCropIdProgressStateByUserCropId(int id){
 		UserCrop userCrop = UserCrop.dao.findById(id);
 		if(userCrop != null) {
 			UserCropItem item = new UserCropItem();
 			item.setUserCropId(userCrop.getInt("cropId"));
 			item.setProgress(userCrop.getInt("progress"));
+			item.setState(userCrop.getInt("state"));
 			return item;
 		}
 		return null;

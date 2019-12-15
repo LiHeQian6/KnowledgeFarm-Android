@@ -6,6 +6,7 @@ public class UserCropItem {
 	private int userCropId;
 	private Crop crop;
 	private int progress;
+	private int state;
 	
 	public int getUserCropId() {
 		return userCropId;
@@ -24,6 +25,12 @@ public class UserCropItem {
 	}
 	public void setProgress(int progress) {
 		this.progress = progress;
+	}
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
 	}
 	
 }

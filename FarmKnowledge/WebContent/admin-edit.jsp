@@ -20,19 +20,15 @@
     	//修改管理员信息
     	function updateAdmin(){
     		var newAccout = $("#accout").val();
-    		if(accout == ""){
-    			layer.msg('输入框不能为空');
-    		}else{
-	    		$.post("${ctx}/admin/updateAdminAccout",{"oldAccout":"${adminInfo.accout}","newAccout":newAccout},function(data){
-	    			if(data == "succeed"){
-						x_admin_close();
-	    			}else if(data == "fail"){
-	    				layer.msg('修改失败');
-	    			}else{
-	    				layer.msg('该管理员账号已存在');
-	    			}
-	    	 	}) 
-	    	}
+    		$.post("${ctx}/admin/updateAdminAccout",{"oldAccout":"${adminInfo.accout}","newAccout":newAccout},function(data){
+    			if(data == "succeed"){
+					x_admin_close();
+    			}else if(data == "fail"){
+    				layer.msg('修改失败');
+    			}else{
+    				layer.msg('该管理员账号已存在');
+    			}
+    	 	}) 
     	}
     	
     </script>
