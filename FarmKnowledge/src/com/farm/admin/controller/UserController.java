@@ -183,6 +183,12 @@ public class UserController extends Controller{
 		String photoName = "";
 		String newAccout = "";
 		String nickName = "";
+		String email = "";
+		int grade = 0;
+		int level = 0;
+		int experience = 0;
+		int money = 0;
+		int online = 0;
 		String newPhoto = "";
 		
 		UserService service = new UserService();
@@ -211,6 +217,28 @@ public class UserController extends Controller{
 						case "nickName":
 							nickName = aString;
 							break;
+						case "email":
+							email = aString;
+							break;
+						case "grade":
+							grade = Integer.parseInt(aString);
+							break;
+						case "level":
+							level = Integer.parseInt(aString);
+							break;
+						case "experience":
+							experience = Integer.parseInt(aString);
+							break;
+						case "money":
+							money = Integer.parseInt(aString);
+							break;
+						case "online":
+							if(aString.equals("on")) {
+								online = 1;
+							}else {
+								online = 0;
+							}
+							break;
 					}	
 				}else {
 					if(fi.getName().equals("")) { //图片为空，默认展示之前的头像
@@ -235,7 +263,7 @@ public class UserController extends Controller{
 						File file = new File(Strings.userfilePath + photoName);
 						fi.write(file);
 					}
-					boolean succeed = service.updateUser(oldAccout, newAccout, nickName, newPhoto, photoName);
+					boolean succeed = service.updateUser(oldAccout, newAccout, nickName, newPhoto, photoName, email, grade, level, experience, money, online);
 					if(succeed == true) {
 						renderText("succeed");
 					}else {

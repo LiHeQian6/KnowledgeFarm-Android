@@ -25,21 +25,17 @@
     		var testPassword = $("#testPassword").val();
     		var email = $("#email").val();
     		var grade = $("#grade option:selected").val();
-    		if(nickName == "" || password == "" || testPassword == "" || email == ""){
-    			layer.msg('输入框不能为空');
-    		}else{
-    			if(password == testPassword){
-    				$.post("${ctx}/admin/user/addUser",{"nickName":nickName,"password":password,"email":email,"grade":grade},function(data){
-    					if(data == "succeed"){
-    						x_admin_close();
-    	    			}else if(data == "fail"){
-    	    				layer.msg('添加失败');
-    	    			}
-    	    		}) 
-    			}else{
-    				layer.msg('两次密码输入不一致');
-    			}
-    		}
+   			if(password == testPassword){
+   				$.post("${ctx}/admin/user/addUser",{"nickName":nickName,"password":password,"email":email,"grade":grade},function(data){
+   					if(data == "succeed"){
+   						x_admin_close();
+   	    			}else if(data == "fail"){
+   	    				layer.msg('添加失败');
+   	    			}
+   	    		}) 
+   			}else{
+   				layer.msg('两次密码输入不一致');
+   			}
 		}
 		
 		//关闭弹出框口
@@ -110,7 +106,15 @@
 					     </select>
                     </div>
                 </div>
-                
+                <div class="layui-form-item layui-form-text">
+                    <label for="L_sign" class="layui-form-label">
+                    	签名
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="随便写些什么刷下存在感" id="L_sign" name="sign" autocomplete="off"
+                        class="layui-textarea" style="height: 80px;"></textarea>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label for="L_repass" class="layui-form-label">
                     </label>
