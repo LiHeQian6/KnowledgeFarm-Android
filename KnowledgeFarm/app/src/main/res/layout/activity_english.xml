@@ -14,29 +14,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_marginTop="100dp">
         <LinearLayout
             android:id="@+id/linearQuestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp">
+            android:layout_centerHorizontal="true">
             <TextView
                 android:id="@+id/tvQuestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="50dp"
                 android:textColor="#ffffff"
-                android:text="5 + 8 - 3 = " />
-            <EditText
-                android:id="@+id/tvAnswer"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="50dp"
-                android:inputType="number"
-                android:imeOptions="flagNoExtractUi"
-                android:textColor="#ffffff" />
+                android:text="hello" />
             <ImageView
                 android:id="@+id/isTrue"
                 android:layout_width="40dp"
@@ -44,19 +34,59 @@
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/duigou"
                 android:visibility="gone"/>
-        </LinearLayout>
 
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/trans"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/linearQuestion">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"/>
+            <TextView
+                android:id="@+id/transOne"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.5"
+                android:textSize="30dp"
+                android:background="@drawable/land_green"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:text="你好"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/transTwo"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2.5"
+                android:textSize="30dp"
+                android:background="@drawable/land_green"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:text="再见"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/qs"
             android:gravity="center"
-            android:layout_centerVertical="true">
+            android:layout_below="@id/trans">
 
             <TextView
                 android:id="@+id/isFalse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="你还差一点就答对了哦！"
+                android:text="哎呀，选错了！"
                 android:textColor="@color/ShopTextColor"
                 android:visibility="invisible"
                 android:textSize="20sp">
@@ -65,8 +95,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/linearQuestion">
+            android:layout_below="@+id/qs">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
