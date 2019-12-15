@@ -705,12 +705,12 @@ public class MainActivity extends AppCompatActivity {
      * @return void
      */
     private void showBagMessages(){
-        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
+        bagDialog = new Dialog(this,R.style.dialog_soft_input);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.bag_girdview, null);
         final GridView gridView = layout.findViewById(R.id.bag_grid_view);
-        alertBuilder.setView(layout);
-        bagDialog = alertBuilder.create();
+        //alertBuilder.setView(layout);
+        bagDialog.setContentView(layout);
         bagDialog.show();
         getBagMessages();
         bagMessagesHandler = new Handler(){
@@ -722,7 +722,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!messages.equals("Fail")){
                     Type type = new TypeToken<List<BagCropNumber>>(){}.getType();
                     dataList = gson.fromJson(messages,type);
-                    BagCustomerAdapter customerAdapter = new BagCustomerAdapter(alertBuilder.getContext(),dataList,R.layout.gird_adapteritem);
+                    BagCustomerAdapter customerAdapter = new BagCustomerAdapter(bagDialog.getContext(),dataList,R.layout.gird_adapteritem);
                     gridView.setAdapter(customerAdapter);
                 }else{
                     Toast toast = Toast.makeText(MainActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);

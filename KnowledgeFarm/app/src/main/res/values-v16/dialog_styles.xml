@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="dialog_soft_input" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowSoftInputMode">adjustPan</item>
-        <item name="android:fontFamily">@font/font</item>
+        <item name="android:windowAnimationStyle">@style/ActionSheetDialogRight</item>
+    </style>
+
+    <style name="ActionSheetDialogRight" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_out</item>
     </style>
 </resources>
