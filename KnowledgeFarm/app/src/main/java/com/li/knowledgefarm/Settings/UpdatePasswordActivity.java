@@ -41,15 +41,12 @@ public class UpdatePasswordActivity extends AppCompatActivity {
             switch (msg.what){
                 case 1://修改密码判断
                     switch ((String)msg.obj){
-                        case "0":
-                            Toast.makeText(getApplicationContext(),"旧密码输入错误",Toast.LENGTH_SHORT).show();
-                            break;
-                        case "1":
+                        case "true":
                             LoginActivity.user.setPassword(edtNemPassword.getText().toString().trim());
                             finish();
                             Toast.makeText(getApplicationContext(),"密码修改成功",Toast.LENGTH_SHORT).show();
                             break;
-                        case "2":
+                        case "false":
                             Toast.makeText(getApplicationContext(),"密码修改失败",Toast.LENGTH_SHORT).show();
                             break;
                     }
@@ -113,26 +110,30 @@ public class UpdatePasswordActivity extends AppCompatActivity {
             if (!newPassword.equals(newPasswordTest)) {
                 Toast.makeText(getApplicationContext(), "两次输入密码不一致", Toast.LENGTH_SHORT).show();
             } else {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("oldPassword", oldPassword).add("newPassword", newPassword).build();
-                        final Request request = new Request.Builder().post(formBody).url(getApplicationContext().getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
-                        Call call = okHttpClient.newCall(request);
-                        call.enqueue(new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                                Log.i("lww", "请求失败");
-                            }
+                if(!oldPassword.equals(LoginActivity.user.getPassword())){
+                    Toast.makeText(getApplicationContext(), "旧密码输入错误", Toast.LENGTH_SHORT).show();
+                }else{
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("oldPassword", oldPassword).add("newPassword", newPassword).build();
+                            final Request request = new Request.Builder().post(formBody).url(getApplicationContext().getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
+                            Call call = okHttpClient.newCall(request);
+                            call.enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    Log.i("lww", "请求失败");
+                                }
 
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                String result = response.body().string();
-                                sendMessage(1, result);
-                            }
-                        });
-                    }
-                }.start();
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    String result = response.body().string();
+                                    sendMessage(1, result);
+                                }
+                            });
+                        }
+                    }.start();
+                }
             }
         }
     }

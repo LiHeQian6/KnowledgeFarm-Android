@@ -146,9 +146,12 @@ public class UserController extends Controller{
 	//添加用户信息
 	public void addUser() {		
 		String nickName = get("nickName");
+		String password = get("password");
+		String email = get("email");
+		int grade = getInt("grade");
 		
 		UserService service = new UserService();
-		boolean succeed = service.addUser(service.generateAccout(), nickName, "", Strings.userPhotoUrl + "0.png", "", "", 1);
+		boolean succeed = service.addUser(service.generateAccout(), nickName, password, Strings.userPhotoUrl + "0.png", "", email, grade);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
@@ -180,6 +183,12 @@ public class UserController extends Controller{
 		String photoName = "";
 		String newAccout = "";
 		String nickName = "";
+		String email = "";
+		int grade = 0;
+		int level = 0;
+		int experience = 0;
+		int money = 0;
+		int online = 0;
 		String newPhoto = "";
 		
 		UserService service = new UserService();
@@ -208,6 +217,28 @@ public class UserController extends Controller{
 						case "nickName":
 							nickName = aString;
 							break;
+						case "email":
+							email = aString;
+							break;
+						case "grade":
+							grade = Integer.parseInt(aString);
+							break;
+						case "level":
+							level = Integer.parseInt(aString);
+							break;
+						case "experience":
+							experience = Integer.parseInt(aString);
+							break;
+						case "money":
+							money = Integer.parseInt(aString);
+							break;
+						case "online":
+							if(aString.equals("on")) {
+								online = 1;
+							}else {
+								online = 0;
+							}
+							break;
 					}	
 				}else {
 					if(fi.getName().equals("")) { //图片为空，默认展示之前的头像
@@ -232,7 +263,7 @@ public class UserController extends Controller{
 						File file = new File(Strings.userfilePath + photoName);
 						fi.write(file);
 					}
-					boolean succeed = service.updateUser(oldAccout, newAccout, nickName, newPhoto, photoName);
+					boolean succeed = service.updateUser(oldAccout, newAccout, nickName, newPhoto, photoName, email, grade, level, experience, money, online);
 					if(succeed == true) {
 						renderText("succeed");
 					}else {
@@ -245,6 +276,19 @@ public class UserController extends Controller{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
+	}
+	
+	//修改用户密码
+	public void updateUserPassword() {
+		String accout = get("accout");
+		String password = get("password");
+		
+		boolean succeed = new UserService().updateUserPassword(accout, password);
+		if(succeed) {
+			renderText("succeed");
+		}else {
+			renderText("fail");
+		}
 	}
 	
 }

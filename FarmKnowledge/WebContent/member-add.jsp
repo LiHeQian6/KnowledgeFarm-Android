@@ -21,17 +21,21 @@
 		//添加用户信息
 		function addUser(){
     		var nickName = $("#nickName").val();
-    		if(nickName == ""){
-    			layer.msg('输入框不能为空');
-    		}else{
-				$.post("${ctx}/admin/user/addUser",{"nickName":nickName},function(data){
-					if(data == "succeed"){
-						x_admin_close();
-	    			}else if(data == "fail"){
-	    				layer.msg('添加失败');
-	    			}
-	    		}) 
-    		}
+    		var password = $("#password").val();
+    		var testPassword = $("#testPassword").val();
+    		var email = $("#email").val();
+    		var grade = $("#grade option:selected").val();
+   			if(password == testPassword){
+   				$.post("${ctx}/admin/user/addUser",{"nickName":nickName,"password":password,"email":email,"grade":grade},function(data){
+   					if(data == "succeed"){
+   						x_admin_close();
+   	    			}else if(data == "fail"){
+   	    				layer.msg('添加失败');
+   	    			}
+   	    		}) 
+   			}else{
+   				layer.msg('两次密码输入不一致');
+   			}
 		}
 		
 		//关闭弹出框口
@@ -58,6 +62,57 @@
                     <div class="layui-input-inline">
                         <input type="text" id="nickName" name="nickName" required="" lay-verify="nikename"
                         autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>密码
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="password" id="password" name="username" required="" lay-verify="nikename"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_pass" class="layui-form-label">
+                        <font color="red">*</font>确认密码
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="password" id="testPassword" name="pass" required="" lay-verify="pass"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>邮箱
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="email" name="nickName" required="" lay-verify="nikename"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>年级
+                    </label>
+                    <div class="layui-input-inline">
+                        <select id="grade" name="interest" lay-filter="aihao">
+					        <option value="1" selected="">一年级上</option>
+					        <option value="2">一年级下</option>
+					        <option value="3">二年级上</option>
+					        <option value="4">二年级下</option>
+					        <option value="5">三年级上</option>
+					        <option value="6">三年级下</option>
+					     </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label for="L_sign" class="layui-form-label">
+                    	签名
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="随便写些什么刷下存在感" id="L_sign" name="sign" autocomplete="off"
+                        class="layui-textarea" style="height: 80px;"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">

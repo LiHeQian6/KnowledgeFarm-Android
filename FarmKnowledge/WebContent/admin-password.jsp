@@ -17,30 +17,26 @@
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
     
     <script type="text/javascript">
-    	//修改管理员信息
+    	//修改管理员密码
     	function updateAdmin(){
     		var oldPassword = $("#oldPassword").val();
     		var newPassword = $("#newPassword").val();
     		var testPassword = $("#testPassword").val();
-    		if(oldPassword == "" || newPassword == "" || testPassword == ""){
-    			layer.msg('输入框不能为空');
+    		if(oldPassword == "${adminInfo.password}"){
+    			if(newPassword == testPassword){
+    				$.post("${ctx}/admin/updateAdminPassword",{"accout":"${adminInfo.accout}","password":newPassword},function(data){
+		    			if(data == "succeed"){
+							x_admin_close();
+		    			}else if(data == "fail"){
+		    				layer.msg('修改失败');
+		    			}
+		    	 	}) 
+    			}else{
+    				layer.msg('两次输入密码不一致');
+    			}
     		}else{
-	    		if(oldPassword == "${adminInfo.password}"){
-	    			if(newPassword == testPassword){
-	    				$.post("${ctx}/admin/updateAdminPassword",{"accout":"${adminInfo.accout}","password":newPassword},function(data){
-			    			if(data == "succeed"){
-								x_admin_close();
-			    			}else if(data == "fail"){
-			    				layer.msg('修改失败');
-			    			}
-			    	 	}) 
-	    			}else{
-	    				layer.msg('两次输入密码不一致');
-	    			}
-	    		}else{
-	    			layer.msg('旧密码错误');
-	    		}
-	    	}
+    			layer.msg('旧密码错误');
+    		}
     	}
     	
     </script>

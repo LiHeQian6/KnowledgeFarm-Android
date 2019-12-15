@@ -65,11 +65,11 @@ public class UserDao {
 	 * @throws
 	 */
 	//修改用户信息，根据修改前账号索引到
-	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName) {
+	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName, String email, int grade, int level, int experience, int money, int online) {
 		List<User> list = User.dao.find("select * from user where accout=?",oldAccout);
 		boolean succeed = false;
 		if(list.size() != 0) {
-			succeed = list.get(0).set("accout", newAccout).set("nickName", nickName).set("photo", photo).set("photoName", photoName).update();
+			succeed = list.get(0).set("accout", newAccout).set("nickName", nickName).set("photo", photo).set("photoName", photoName).set("email", email).set("grade", grade).set("level", level).set("experience", experience).set("money", money).set("online", online).update();
 		}
 		return succeed;
 	}
@@ -91,23 +91,7 @@ public class UserDao {
 		}
 		return succeed;
 	}	
-	//修改用户密码，根据账号查询到
-	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
-		List<User> list = User.dao.find("select * from user where accout=?",accout);
-		if(list.size() != 0) {
-			User user = list.get(0);
-			if(oldPassword.equals(user.get("password"))) {
-				boolean succeed = user.set("password", newPassword).update();
-				if(succeed) {
-					return 1;
-				}
-				return 2;
-			}
-			return 0;
-		}
-		return -1;
-	}
-	//重置密码，根据账号查询到
+	//设置密码，根据账号查询到
 	public boolean updateUserPassword(String accout,String password) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {

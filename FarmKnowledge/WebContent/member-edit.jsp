@@ -38,26 +38,7 @@
 				    }
 			 })
 		}
-    
-    	//修改用户信息
-    	function a(){
-    		var newAccout = $("#accout").val();
-    		var nickName = $("#nickName").val();
-    		var photo = $("#photo").val();
-    		if(newAccout == "" || nickName == "" || photo == ""){
-    			layer.msg('输入框不能为空');
-    		}else{
-	    		$.post("${ctx}/admin/user/updateUser",{"oldAccout":"${user.accout}","newAccout":newAccout,"nickName":nickName,"photo":photo},function(data){
-	    			if(data == "succeed"){
-						x_admin_close();
-	    			}else if(data == "fail"){
-	    				layer.msg('修改失败');
-	    			}else if(data == "already"){
-	    				layer.msg('该账号已存在');
-	    			}
-	    	 	}) 
-    		}
-    	}
+
     </script>
 
 </head>
@@ -89,6 +70,72 @@
                         <input id="nickName" type="text" id="L_username" name="nickName" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.nickName}">
                     </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>邮箱
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="email" name="email" required="" lay-verify="nikename"
+                        autocomplete="off" class="layui-input" value="${user.email}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>年级
+                    </label>
+                    <div class="layui-input-inline">
+                        <select id="grade" name="grade" lay-filter="aihao">
+					        <option value="1" selected="">一年级上</option>
+					        <option value="2">一年级下</option>
+					        <option value="3">二年级上</option>
+					        <option value="4">二年级下</option>
+					        <option value="5">三年级上</option>
+					        <option value="6">三年级下</option>
+					     </select>
+                    </div>
+                </div>
+                 <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>等级
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="level" type="text" id="L_username" name="level" required lay-verify="required"
+                        autocomplete="off" class="layui-input" value="${user.level}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>经验
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="experience" type="text" id="L_username" name="experience" required lay-verify="required"
+                        autocomplete="off" class="layui-input" value="${user.experience}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>金币
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="money" type="text" id="L_username" name="money" required lay-verify="required"
+                        autocomplete="off" class="layui-input" value="${user.money}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>在线
+                    </label>
+				    <div class="layui-input-block">
+				    	<c:choose>
+				    		<c:when test="${user.online == 0}">
+				    			<input type="checkbox" name="online" lay-skin="switch" lay-filter="switchTest" title="开关">
+				    		</c:when>
+				    		<c:when test="${user.online == 1}">
+				    			<input type="checkbox" checked="" name="online" lay-skin="switch" lay-filter="switchTest" title="开关">
+				    		</c:when>
+				    	</c:choose>
+				    </div>
                 </div>
                 <div class="layui-form-item">
                     <label for="L_city" class="layui-form-label">

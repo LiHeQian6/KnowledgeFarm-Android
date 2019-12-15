@@ -15,35 +15,31 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.jquery.min.js"></script>
     <script src="${ctx}/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
-
-	<script>
-		//添加管理员信息
-		function addAdmin(){
-			var accout = $("#accout").val();
-    		var password = $("#password").val();
+    
+    <script type="text/javascript">
+    	//修改用户密码
+    	function updateUser(){
+    		var oldPassword = $("#oldPassword").val();
+    		var newPassword = $("#newPassword").val();
     		var testPassword = $("#testPassword").val();
-			if(password == testPassword){
-				$.post("${ctx}/admin/addAdmin",{"accout":accout,"password":password},function(data){
-					if(data == "succeed"){
-						x_admin_close();
-	    			}else if(data == "fail"){
-	    				layer.msg('添加失败');
-	    			}else{
-	    				layer.msg('该管理员账号已存在');
-	    			}
-	    		}) 
-			}else{
-				layer.msg('两次输入密码不一致');
-			}   		
-		}
+    		if(newPassword != testPassword){
+    			layer.msg('两次输入密码不一致');
+    		}else{
+				if(oldPassword != "${user.password}"){
+					layer.msg('旧密码错误');
+    			}else{
+    				$.post("${ctx}/admin/user/updateUserPassword",{"accout":"${user.accout}","password":newPassword},function(data){
+    					if(data == "succeed"){
+    						x_admin_close();
+    					}else if(data == "fail"){
+    						layer.msg('修改失败');
+    					}
+    			 	}) 
+    			}
+    		}
+    	}
 		
-		//关闭弹出框口
-		function x_admin_close(){
-		    var index = parent.layer.getFrameIndex(window.name);
-		    parent.layer.close(index);
-		}
-		
-	</script>
+    </script>
 
 </head>
 <body>
@@ -53,48 +49,39 @@
         <div class="page-content">
           <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
-            <form class="layui-form" action="javascript:addAdmin()">
-            	<div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>账号
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="accout" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input">
-                    </div>
-                </div>
+            <form class="layui-form" action="javascript:updateUser()">
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>密码
+                    <label for="L_pass" class="layui-form-label">
+                        	<font color="red">*</font>旧密码
                     </label>
                     <div class="layui-input-inline">
-                        <input type="password" id="password" name="username" required="" lay-verify="nikename"
+                        <input type="password" id="oldPassword" name="pass" required="" lay-verify="pass"
                         autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label for="L_pass" class="layui-form-label">
-                        <font color="red">*</font>确认密码
+                        	<font color="red">*</font>新密码
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="password" id="newPassword" name="pass" required="" lay-verify="pass"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_pass" class="layui-form-label">
+                        	<font color="red">*</font>确认密码
                     </label>
                     <div class="layui-input-inline">
                         <input type="password" id="testPassword" name="pass" required="" lay-verify="pass"
                         autocomplete="off" class="layui-input">
                     </div>
                 </div>
-                <div class="layui-form-item layui-form-text">
-                    <label for="L_sign" class="layui-form-label">
-                    	签名
-                    </label>
-                    <div class="layui-input-block">
-                        <textarea placeholder="随便写些什么刷下存在感" id="L_sign" name="sign" autocomplete="off"
-                        class="layui-textarea" style="height: 80px;"></textarea>
-                    </div>
-                </div>
                 <div class="layui-form-item">
-                    <label for="L_repass" class="layui-form-label">
+                    <label for="L_sign" class="layui-form-label">
                     </label>
-                    <button  class="layui-btn" lay-filter="add" lay-submit="">
-                    	添加
+                    <button class="layui-btn" key="set-mine" lay-filter="save" lay-submit>
+                    	 保存          
                     </button>
                 </div>
             </form>

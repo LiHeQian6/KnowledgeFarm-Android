@@ -85,9 +85,9 @@ public class UserService {
 	 * 	改
 	 * @throws
 	 */
-	//修改用户信息（账号、别名、头像）根据修改前账号索引到
-	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName) {
-		return new UserDao().updateUser(oldAccout, newAccout, nickName, photo, photoName);
+	//修改用户信息，根据修改前账号索引到
+	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName, String email, int grade, int level, int experience, int money, int online) {
+		return new UserDao().updateUser(oldAccout, newAccout, nickName, photo, photoName, email, grade, level, experience, money, online);
 	}
 	//修改用户昵称，根据账号查询到
 	public boolean updateUserNickName(String accout, String nickName) {
@@ -98,10 +98,6 @@ public class UserService {
 		return new UserDao().updateUserGrade(accout, grade);
 	}
 	//修改用户密码，根据账号查询到
-	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
-		return new UserDao().updateUserPassword(oldPassword, newPassword, accout);
-	}
-	//重置密码，根据账号查询到
 	public boolean updateUserPassword(String accout,String password) {
 		return new UserDao().updateUserPassword(accout, password);
 	}

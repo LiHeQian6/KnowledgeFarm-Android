@@ -164,7 +164,7 @@
 	                        	<span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
 	                        </td>
 	                        <td class="td-manage" align="center">
-	                            <a style="text-decoration:none"  onclick="getUpdateCropInfo(${cropPage.id},'${ctx}/crop-edit.jsp')" href="javascript:;" title="修改">
+	                            <a style="text-decoration:none"  onclick="getUpdateCropInfo(${cropPage.id},'${ctx}/crop-edit.jsp')" href="javascript:;" title="编辑">
 	                                <i class="layui-icon">&#xe642;</i>
 	                            </a>
 	                            <a title="删除" href="javascript:;" onclick="deleteOneCrop(${cropPage.id})" style="text-decoration:none">

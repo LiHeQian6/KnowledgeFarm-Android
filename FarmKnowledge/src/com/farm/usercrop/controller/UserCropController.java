@@ -27,7 +27,7 @@ public class UserCropController extends Controller{
 			
 			for(int userCropId : userCropIdList) {
 				//根据userCropId查询cropId、progress
-				UserCropItem item = userCropService.getCropIdProgressByUserCropId(userCropId);
+				UserCropItem item = userCropService.getCropIdProgressStateByUserCropId(userCropId);
 				//根据cropId获得crop作物信息
 				Crop crop = service.getUpdateCropInfo(item.getUserCropId());
 				item.setCrop(crop);

@@ -177,13 +177,12 @@ public class UserController extends Controller{
 	
 	//修改密码
 	public void updateUserPassword() {
-		String oldPassword = get("oldPassword");
-		String newPassword = get("newPassword");
+		String password = get("password");
 		String accout = get("accout");
 		
 		//返回0说明旧密码错误，返回1说明修改成功，返回2说明修改失败
-		int flag = new UserService().updateUserPassword(oldPassword, newPassword, accout);
-		renderJson(flag);
+		boolean succeed = new UserService().updateUserPassword(accout, password);
+		renderJson(""+succeed);
 	}
 	
 	//修改头像

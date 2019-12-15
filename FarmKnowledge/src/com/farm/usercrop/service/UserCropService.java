@@ -176,8 +176,8 @@ public class UserCropService {
 	}
 	
 	//根据userCropId查询cropId、progress（放到UserCropItem中cropId当成userCropId）
-	public UserCropItem getCropIdProgressByUserCropId(int id){
-		return new UserCropDao().getCropIdProgressByUserCropId(id);
+	public UserCropItem getCropIdProgressStateByUserCropId(int id){
+		return new UserCropDao().getCropIdProgressStateByUserCropId(id);
 	}
 	
 	//根据userCropId查询作物进度
