@@ -37,7 +37,7 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/closedialog"/>
+                            android:src="@drawable/cha"/>
                 </RelativeLayout>
                 <LinearLayout
                     android:id="@+id/linearRegist"
@@ -45,13 +45,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_gravity="center"
-                    android:padding="20dp">
+                    android:paddingTop="10dp">
                         <EditText
                             android:id="@+id/registName"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="15dp"
                             android:background="@drawable/eradius"
                             android:textAlignment="center"
                             android:imeOptions="flagNoExtractUi"

@@ -1,13 +1,17 @@
 package com.li.knowledgefarm.Login.dialog;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,6 +51,8 @@ public class RegistAccountDialog extends DialogFragment {
     private TextView newAccount;
     private String[] array;
     private SpinnerAdapter arrayAdapter;
+    private int displayWidth;
+    private int displayHeight;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -73,7 +79,7 @@ public class RegistAccountDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.regist_dialog,container,false);
 
-        setViewSize();
+        setViewSize(view);
         array = getResources().getStringArray(R.array.sarry);
         Spinner spinner = view.findViewById(R.id.spinner);
         arrayAdapter = new SpinnerAdapter(getContext(),array);
@@ -126,8 +132,34 @@ public class RegistAccountDialog extends DialogFragment {
      * @Param []
      * @return void
      */
-    private void setViewSize() {
+    private void setViewSize(View view) {
+        WindowManager wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayWidth = ds.widthPixels;
+        displayHeight = ds.heightPixels;
 
+        EditText nickname = view.findViewById(R.id.registName);
+        EditText pwd = view.findViewById(R.id.registPwd2);
+        EditText configPwd = view.findViewById(R.id.configPwd2);
+        Spinner grade = view.findViewById(R.id.spinner);
+        Button registe = view.findViewById(R.id.btnRegist2);
+        LinearLayout.LayoutParams params_nickname = new LinearLayout.LayoutParams((int)(displayWidth*0.4),(int)(displayHeight*0.1));
+        params_nickname.gravity = Gravity.CENTER_HORIZONTAL;
+        params_nickname.setMargins(0,(int)(displayHeight*0.03),0,0);
+        nickname.setLayoutParams(params_nickname);
+        pwd.setLayoutParams(params_nickname);
+        configPwd.setLayoutParams(params_nickname);
+
+        LinearLayout.LayoutParams params_spinner = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.1));
+        params_spinner.gravity = Gravity.CENTER_HORIZONTAL;
+        params_spinner.setMargins(0,(int)(displayHeight*0.05),0,0);
+        grade.setLayoutParams(params_spinner);
+
+        LinearLayout.LayoutParams params_registe = new LinearLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.1));
+        params_registe.setMargins(0,(int)(displayHeight*0.05),0,0);
+        params_registe.gravity = Gravity.CENTER_HORIZONTAL;
+        registe.setLayoutParams(params_registe);
     }
 
     private void registToServer() {
