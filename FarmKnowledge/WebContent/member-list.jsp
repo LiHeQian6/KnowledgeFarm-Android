@@ -71,7 +71,7 @@
             x_admin_show(title,url,w,h);
         }
         
-		//根据用户id获取到要修改的用户信息（账号、别名、头像）
+		//根据用户id获取到要修改的用户信息
 		function getUpdateUserInfo(id,path){
 			 $.post("${ctx}/admin/user/getUpdateUserInfo",{"id":id},function(data){
 			 	updateUser('编辑',path,'600','400');
@@ -186,8 +186,11 @@
 	                        	<span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
 	                        </td>
 	                        <td class="td-manage" align="center">
-	                            <a style="text-decoration:none" onclick="getUpdateUserInfo(${userPage.id},'${ctx}/member-edit.jsp')" href="javascript:;" title="修改">
+	                            <a style="text-decoration:none" onclick="getUpdateUserInfo(${userPage.id},'${ctx}/member-edit.jsp')" href="javascript:;" title="编辑">
 	                                <i class="layui-icon">&#xe642;</i>
+	                            </a>
+	                            <a style="text-decoration:none"  onclick="getUpdateUserInfo(${userPage.id},'${ctx}/member-password.jsp')" href="javascript:;" title="修改密码">
+	                                <i class="layui-icon">&#xe631;</i>
 	                            </a>
 	                            <a title="删除" href="javascript:;" onclick="deleteOneUser(${userPage.id})" style="text-decoration:none">
 	                                <i class="layui-icon">&#xe640;</i>

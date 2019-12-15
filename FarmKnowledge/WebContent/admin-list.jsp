@@ -159,10 +159,10 @@
 	                        	<span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
 	                        </td>
 	                        <td class="td-manage" align="center">
-	                            <a style="text-decoration:none"  onclick="getUpdateAdminInfo(${adminPage.id},'${ctx}/admin-edit.jsp')" href="javascript:;" title="修改">
+	                            <a style="text-decoration:none"  onclick="getUpdateAdminInfo(${adminPage.id},'${ctx}/admin-edit.jsp')" href="javascript:;" title="编辑">
 	                                <i class="layui-icon">&#xe642;</i>
 	                            </a>
-	                            <a style="text-decoration:none"  onclick="getUpdateAdminInfo(${adminPage.id},'${ctx}/admin-password.jsp')" href="javascript:;" title="修改">
+	                            <a style="text-decoration:none"  onclick="getUpdateAdminInfo(${adminPage.id},'${ctx}/admin-password.jsp')" href="javascript:;" title="修改密码">
 	                                <i class="layui-icon">&#xe631;</i>
 	                            </a>
 	                            <a title="删除" href="javascript:;" onclick="deleteOneAdmin(${adminPage.id})" style="text-decoration:none">

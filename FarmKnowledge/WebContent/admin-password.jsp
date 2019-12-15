@@ -17,7 +17,7 @@
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
     
     <script type="text/javascript">
-    	//修改管理员信息
+    	//修改管理员密码
     	function updateAdmin(){
     		var oldPassword = $("#oldPassword").val();
     		var newPassword = $("#newPassword").val();
