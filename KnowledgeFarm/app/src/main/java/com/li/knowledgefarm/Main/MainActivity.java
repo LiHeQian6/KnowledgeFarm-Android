@@ -12,6 +12,7 @@ import okhttp3.Response;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -257,9 +258,13 @@ public class MainActivity extends AppCompatActivity {
         for (int i=1;i<19;i++){
             final ImageView land = new ImageView(this);
             ImageView plant = new ImageView(this);
+            final ImageView animation = new ImageView(this);
+            Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
+            animation.setVisibility(View.GONE);
             RelativeLayout relativeLayout = new RelativeLayout(this);
             relativeLayout.addView(land);
             ViewGroup.LayoutParams lp = new RelativeLayout.LayoutParams(160,160);
+            animation.setLayoutParams(lp);
             land.setLayoutParams(lp);
             plant.setLayoutParams(lp);
             final int finalI = i;//第几块土地
@@ -344,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
                     relativeLayout.addView(plant);
                     relativeLayout.addView(progressBar);
                     relativeLayout.addView(value);
+                    relativeLayout.addView(animation);
                     //浇水、施肥、收获
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -356,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
                                     land.setImageResource(R.drawable.land);
                                 }
                                 else{
+                                    animation.setVisibility(View.VISIBLE);
                                     operating(0);//浇水
                                 }
                             }else if(selected==-1){
@@ -394,6 +401,7 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                     }
+                                    animation.setVisibility(View.GONE);
                                     land.setImageResource(R.drawable.land);
                                 }
                             };
