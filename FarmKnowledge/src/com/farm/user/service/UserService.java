@@ -98,10 +98,6 @@ public class UserService {
 		return new UserDao().updateUserGrade(accout, grade);
 	}
 	//修改用户密码，根据账号查询到
-	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
-		return new UserDao().updateUserPassword(oldPassword, newPassword, accout);
-	}
-	//重置密码，根据账号查询到
 	public boolean updateUserPassword(String accout,String password) {
 		return new UserDao().updateUserPassword(accout, password);
 	}

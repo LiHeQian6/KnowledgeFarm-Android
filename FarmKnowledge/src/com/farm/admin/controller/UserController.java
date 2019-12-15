@@ -278,4 +278,17 @@ public class UserController extends Controller{
 		}		
 	}
 	
+	//–ﬁ∏ƒ”√ªß√‹¬Î
+	public void updateUserPassword() {
+		String accout = get("accout");
+		String password = get("password");
+		
+		boolean succeed = new UserService().updateUserPassword(accout, password);
+		if(succeed) {
+			renderText("succeed");
+		}else {
+			renderText("fail");
+		}
+	}
+	
 }
