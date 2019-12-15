@@ -167,7 +167,7 @@ public class ShopActivity extends AppCompatActivity {
      * @return void
      */
     private void setAdapter() {
-        ShopItemAdapter itemAdapter = new ShopItemAdapter(this,shopList,R.layout.shopitem_girdview);
+        final ShopItemAdapter itemAdapter = new ShopItemAdapter(this,shopList,R.layout.shopitem_girdview);
         gridView.setAdapter(itemAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
