@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/logindialogbac"
+    android:background="@drawable/loginbackground"
     tools:context=".Main.MainActivity" >
     <!--    android:background="#7adfb8"-->
 
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/layout_title"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
         <include
             android:id="@+id/input_layout"
