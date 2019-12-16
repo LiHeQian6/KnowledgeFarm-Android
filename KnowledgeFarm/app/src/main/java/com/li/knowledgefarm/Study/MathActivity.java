@@ -12,20 +12,25 @@ import okhttp3.Response;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +68,10 @@ public class MathActivity extends AppCompatActivity {
     private int TrueAnswerNumber = 0;
     private Dialog ifReturn;
     private Boolean returnHandlerFinish = false;
+    private int displayWidth;
+    private int displayHeight;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,12 +79,47 @@ public class MathActivity extends AppCompatActivity {
 
         /** 加载视图*/
         getViews();
+        setViewSize();
         /** 注册点击事件监听器*/
         registListener();
         setStatusBar();
         getMaths();
         getMathHandler();
     }
+
+    /**
+     * @Description 设置控件适配屏幕
+     * @Auther 孙建旺
+     * @Date 上午 8:12 2019/12/16
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void setViewSize() {
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayWidth = ds.widthPixels;
+        displayHeight = ds.heightPixels;
+
+        TextView btnPre = findViewById(R.id.btnPreQuestion);
+        TextView btnNext = findViewById(R.id.btnNextQuestion);
+        LinearLayout question  = findViewById(R.id.linearQuestion);
+
+        LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.5),(int)(displayHeight*0.1));
+        btnPre.setLayoutParams(params_btn);
+        btnPre.setTextSize((int)(displayWidth*0.015));
+        btnPre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        btnNext.setLayoutParams(params_btn);
+        btnNext.setTextSize((int)(displayWidth*0.015));
+        btnNext.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        RelativeLayout.LayoutParams params_question = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(displayHeight*0.2));
+        params_question.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params_question.bottomMargin = (int)(displayHeight*0.2);
+        question.setLayoutParams(params_question);
+    }
+
 
     /**
      * @Description  确认是否返回
@@ -126,6 +169,7 @@ public class MathActivity extends AppCompatActivity {
      */
     private void getWandFCallBack(){
         getWAF = new Handler(){
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
@@ -133,11 +177,12 @@ public class MathActivity extends AppCompatActivity {
                 if(data!= null){
                     if(!data.equals("-1")){
                         LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
-                        answer.setVisibility(View.INVISIBLE);
+                        answer.setVisibility(View.GONE);
                         isFalse.setVisibility(View.INVISIBLE);
                         isTrue.setVisibility(View.GONE);
                         question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
-                        question.setTextSize(28);
+                        question.setTextSize((int)(displayWidth*0.012));
+                        question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         if(returnHandlerFinish)
                             finish();
                     }else{
@@ -240,12 +285,14 @@ public class MathActivity extends AppCompatActivity {
      */
     private void getMaths() {
         new Thread(){
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void run() {
                 super.run();
                 if (LoginActivity.user.getRewardCount() <= 0) {
                     question.setText("今天的任务都做完了哦！");
-                    question.setTextSize(28);
+                    question.setTextSize((int)(displayWidth*0.015));
+                    question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     answer.setVisibility(View.GONE);
                     btnNextQuestion.setVisibility(View.GONE);
                     btnPreQuestion.setVisibility(View.GONE);

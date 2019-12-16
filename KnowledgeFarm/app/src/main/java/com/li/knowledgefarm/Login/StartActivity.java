@@ -72,7 +72,6 @@ public class StartActivity extends AppCompatActivity {
         getViews();
         registListener();
         Intent getInfo = getIntent();
-        Log.e("user",user.toString());
         if(getInfo.getAction().equals("QQFirstLogin")&&user!=null){
             nickName.setText(user.getNickName());
 //            urlToImgBitmap(user.getPhoto());
