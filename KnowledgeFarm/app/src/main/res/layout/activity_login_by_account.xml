@@ -6,6 +6,21 @@
     tools:context=".Main.MainActivity" >
     <!--    android:background="#7adfb8"-->
 
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/loginByAccountReturn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/returns"
+            />
+    </LinearLayout>
+
     <include
         android:id="@+id/main_title"
         layout="@layout/title_layout" />
@@ -48,7 +63,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true">
+        android:layout_below="@id/layout_title"
+        android:layout_marginTop="20dp">
 
         <include
             android:id="@+id/input_layout"
@@ -62,6 +78,14 @@
             android:layout_height="130dip"
             layout="@layout/layout_progress"
             android:visibility="gone" />
+        <CheckBox
+            android:id="@+id/rememberPwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_layout"
+            android:layout_alignLeft="@+id/input_layout"
+            android:textSize="20dp"
+            android:text="记住密码"/>
 
         <TextView
             android:id="@+id/main_btn_login"

@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +66,7 @@ public class FindPassword extends AppCompatActivity {
     private LinearLayout layout_email;
     private LinearLayout layout_code;
     private LinearLayout layout_button;
+    private ImageView returnPwd;
     private int displayWidth;
     private int displayHeight;
     @SuppressLint("HandlerLeak")
@@ -183,6 +185,7 @@ public class FindPassword extends AppCompatActivity {
         getCode.setOnClickListener(listener);
         btnSure.setOnClickListener(listener);
         resetPwd.setOnClickListener(listener);
+        returnPwd.setOnClickListener(listener);
     }
 
     private void getViews() {
@@ -191,7 +194,7 @@ public class FindPassword extends AppCompatActivity {
         emailEdt = findViewById(R.id.findPwdEmail);
 
         codeEdt = findViewById(R.id.identifyCode);
-
+        returnPwd = findViewById(R.id.findPwdReturn);
         getCode = findViewById(R.id.getCode);
         btnSure = findViewById(R.id.btnSubmit);
         newPwdEdt = findViewById(R.id.newPwd);
@@ -247,6 +250,9 @@ public class FindPassword extends AppCompatActivity {
                     }else {
                         resetPwdToServer(getResources().getString(R.string.URL)+"/user/resetUserPassword");
                     }
+                    break;
+                case R.id.findPwdReturn:
+                    finish();
                     break;
             }
         }
