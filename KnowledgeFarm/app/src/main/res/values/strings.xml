@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">KnowledgeFarm</string>
-<!--    <string name="URL">http://39.106.18.238:8080/FarmKnowledge</string>-->
+    <!--    <string name="URL">http://39.106.18.238:8080/FarmKnowledge</string>-->
     <string name="URL">http://10.7.87.220:8080/FarmKnowledge</string>
 </resources>
