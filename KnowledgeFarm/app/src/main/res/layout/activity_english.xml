@@ -10,11 +10,37 @@
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:src="@drawable/jiantou"/>
+    <LinearLayout
+        android:id="@+id/tipText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerHorizontal="true">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择一个你认为正确的答案">
+            </TextView>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+        </TextView>
+    </LinearLayout>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp">
+        android:layout_centerVertical="true">
         <LinearLayout
             android:id="@+id/linearEnglishQuestion"
             android:layout_width="wrap_content"
@@ -36,42 +62,68 @@
                 android:visibility="gone"/>
 
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/trans"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/trans"
-            android:layout_marginTop="15dp"
-            android:layout_below="@+id/linearEnglishQuestion">
-            <TextView
+            android:layout_below="@+id/linearEnglishQuestion"
+            android:layout_marginTop="15dp">
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"/>
+                android:layout_weight="1"
+                android:gravity="right">
+
+                <TextView
+                    android:id="@+id/transOne"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="你好"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="30dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:src="@drawable/cha">
+                </ImageView>
+
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/transOne"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="2.5"
+                android:id="@+id/trueAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="True Answer"
                 android:textSize="30dp"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:text="你好"/>
-            <TextView
+                android:visibility="gone" />
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <TextView
-                android:id="@+id/transTwo"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="2.5"
-                android:textSize="30dp"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:text="再见"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"/>
+                android:layout_weight="1"
+                android:gravity="left">
+
+                <TextView
+                    android:id="@+id/transTwo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="再见"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="30dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:src="@drawable/cha">
+                </ImageView>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,35 +145,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/qs">
-            <TextView
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"/>
-            <TextView
-                android:id="@+id/btnPreEnglish"
+                android:gravity="center"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/btnPreEnglish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:textColor="#ffffff"
+                    android:text="上一题"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="0dp"
+                android:gravity="center"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="30dp"
-                android:textColor="#ffffff"
-                android:text="上一题"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <TextView
-                android:id="@+id/btnNextEnglish"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="30dp"
-                android:textColor="#ffffff"
-                android:text="下一题"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"/>
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/btnNextEnglish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:textColor="#ffffff"
+                    android:text="下一题"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
