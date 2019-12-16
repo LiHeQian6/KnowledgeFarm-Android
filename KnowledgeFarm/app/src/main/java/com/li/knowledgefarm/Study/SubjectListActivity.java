@@ -21,6 +21,7 @@ public class SubjectListActivity extends AppCompatActivity {
     private ImageView iv_return;
     /** 数学*/
     private ImageView iv_math;
+    private ImageView iv_english;
     /** 自定义点击事件监听器*/
     private CustomerListener listener;
 
@@ -49,6 +50,10 @@ public class SubjectListActivity extends AppCompatActivity {
                     intent1.setClass(SubjectListActivity.this,MathActivity.class);
                     startActivity(intent1);
                     break;
+                case R.id.iv_english:
+                    Intent intent2 = new Intent(SubjectListActivity.this,EnglishActivity.class);
+                    startActivity(intent2);
+                    break;
             }
         }
     }
@@ -59,6 +64,7 @@ public class SubjectListActivity extends AppCompatActivity {
     private void getViews(){
         iv_return = findViewById(R.id.iv_return);
         iv_math = findViewById(R.id.iv_math);
+        iv_english = findViewById(R.id.iv_english);
     }
 
     /**
@@ -68,6 +74,7 @@ public class SubjectListActivity extends AppCompatActivity {
         listener = new CustomerListener();
         iv_return.setOnClickListener(listener);
         iv_math.setOnClickListener(listener);
+        iv_english.setOnClickListener(listener);
     }
     protected void setStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
