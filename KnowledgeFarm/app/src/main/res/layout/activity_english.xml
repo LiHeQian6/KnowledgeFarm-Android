@@ -23,6 +23,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="选择一个你认为正确的答案">
@@ -53,13 +54,6 @@
                 android:textSize="50dp"
                 android:textColor="#ffffff"
                 android:text="hello" />
-            <ImageView
-                android:id="@+id/englishIsTrue"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/duigou"
-                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -67,25 +61,28 @@
             android:id="@+id/trans"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_below="@+id/linearEnglishQuestion"
             android:layout_marginTop="15dp">
 
             <LinearLayout
+                android:id="@+id/AnswerA"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right">
+                android:gravity="right|center">
 
                 <TextView
                     android:id="@+id/transOne"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:text="你好"
                     android:textAlignment="center"
                     android:textColor="#ffffff"
                     android:textSize="30dp" />
 
                 <ImageView
+                    android:id="@+id/englishIsTrue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="invisible"
@@ -104,20 +101,22 @@
                 android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/AnswerB"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="left">
+                android:gravity="left|center">
 
                 <TextView
                     android:id="@+id/transTwo"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:text="再见"
                     android:textAlignment="center"
                     android:textColor="#ffffff"
                     android:textSize="30dp" />
                 <ImageView
+                    android:id="@+id/englishIsTrue2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="invisible"

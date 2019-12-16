@@ -13,31 +13,29 @@ import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.entity.English;
-import com.li.knowledgefarm.entity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +43,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class EnglishActivity extends AppCompatActivity {
@@ -59,6 +56,7 @@ public class EnglishActivity extends AppCompatActivity {
     private TextView question;
     private TextView isFalse;
     private ImageView isTrue;
+    private ImageView isTrue2;
     private Handler getMath;
     private Handler getWAF;
     private Gson gson;
@@ -69,7 +67,13 @@ public class EnglishActivity extends AppCompatActivity {
     private Boolean returnHandlerFinish = false;
     private TextView answer1;
     private TextView answer2;
+    private int displayWidth;
+    private int displayHeight;
+    private LinearLayout answerA;
+    private LinearLayout answerB;
+    private TextView trueAnswer;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,11 +81,56 @@ public class EnglishActivity extends AppCompatActivity {
 
         /** 加载视图*/
         getViews();
+        setViewSize();
         /** 注册点击事件监听器*/
         registListener();
         setStatusBar();
         getMaths();
         getMathHandler();
+    }
+
+    /**
+     * @Description 设置控件大小
+     * @Auther 孙建旺
+     * @Date 下午 4:11 2019/12/16
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setViewSize() {
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayWidth = ds.widthPixels;
+        displayHeight = ds.heightPixels;
+
+        LinearLayout tipText = findViewById(R.id.tipText);
+        TextView tip = findViewById(R.id.tip);
+        ImageView isTrue = findViewById(R.id.englishIsTrue);
+        TextView trans2 = findViewById(R.id.transTwo);
+        ImageView isTrue2 = findViewById(R.id.englishIsTrue2);
+
+        RelativeLayout.LayoutParams params_tip = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_tip.setMargins((int)(displayWidth*0.1),(int)(displayHeight*0.2),0,0);
+        tipText.setLayoutParams(params_tip);
+
+        LinearLayout.LayoutParams params_tiptext = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_tiptext.gravity = Gravity.CENTER_HORIZONTAL;
+        tip.setLayoutParams(params_tiptext);
+        tip.setTextSize((int)(displayWidth*0.01));
+        tip.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
+
+        LinearLayout.LayoutParams params_isTrue = new LinearLayout.LayoutParams((int)(displayWidth*0.05),(int)(displayHeight*0.1));
+        params_isTrue.setMargins(0,0,(int)(displayWidth*0.01),0);
+        isTrue.setLayoutParams(params_isTrue);
+
+        LinearLayout.LayoutParams params_trans2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_trans2.setMargins((int)(displayWidth*0.06),0,0,0);
+        trans2.setLayoutParams(params_trans2);
+
+        LinearLayout.LayoutParams params_isTrue2 = new LinearLayout.LayoutParams((int)(displayWidth*0.05),(int)(displayHeight*0.1));
+        params_isTrue2.setMargins(0,0,0,0);
+        isTrue2.setLayoutParams(params_isTrue2);
     }
 
     /**
@@ -139,7 +188,7 @@ public class EnglishActivity extends AppCompatActivity {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
+                        //LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
                         isFalse.setVisibility(View.INVISIBLE);
@@ -203,19 +252,40 @@ public class EnglishActivity extends AppCompatActivity {
     private void showQuestion(int pos){
         if(!datalist.get(pos).getIfDone().equals("true")) {
             isFalse.setText("");
+            answerA.setVisibility(View.VISIBLE);
+            answerB.setVisibility(View.VISIBLE);
+            trueAnswer.setVisibility(View.GONE);
             isTrue.setVisibility(View.INVISIBLE);
+            isTrue2.setVisibility(View.INVISIBLE);
             question.setText(datalist.get(pos).getWord());
             if(new Random().nextInt(2) == 0) {
                 answer1.setText(datalist.get(pos).getTrans());
-                answer2.setText(datalist.get(new Random().nextInt(datalist.size())).getTrans());
+                String trans = null;
+                do{
+                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
+                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
+                answer2.setText(trans);
             }else{
                 answer2.setText(datalist.get(pos).getTrans());
-                answer1.setText(datalist.get(new Random().nextInt(datalist.size())).getTrans());
+                String trans = null;
+                do{
+                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
+                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
+                answer1.setText(trans);
             }
         }else {
             isTrue.setVisibility(View.VISIBLE);
+            answerA.setVisibility(View.GONE);
+            answerB.setVisibility(View.GONE);
+            trueAnswer.setVisibility(View.VISIBLE);
             question.setText(datalist.get(pos).getWord());
-            answer1.setText(datalist.get(pos).getTrans());
+            trueAnswer.setText(datalist.get(pos).getTrans());
+
+            LinearLayout.LayoutParams params_trueanswer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params_trueanswer.gravity = Gravity.CENTER_HORIZONTAL;
+            trueAnswer.setLayoutParams(params_trueanswer);
+            trueAnswer.setTextSize((int)(displayWidth*0.02));
+            trueAnswer.setTextColor(getResources().getColor(R.color.ShopTextColor));
         }
     }
 
@@ -319,6 +389,7 @@ public class EnglishActivity extends AppCompatActivity {
                         TrueAnswerNumber++;
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue.setVisibility(View.VISIBLE);
+                        isTrue2.setVisibility(View.INVISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         isFalse.setVisibility(View.VISIBLE);
                         if((position+1)<=datalist.size()-1) {
@@ -344,8 +415,9 @@ public class EnglishActivity extends AppCompatActivity {
                     if(t2.equals(datalist.get(position).getTrans())){
                         datalist.get(position).setIfDone("true");
                         TrueAnswerNumber++;
-                        isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
-                        isTrue.setVisibility(View.VISIBLE);
+                        isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
+                        isTrue2.setVisibility(View.VISIBLE);
+                        isTrue.setVisibility(View.INVISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         isFalse.setVisibility(View.VISIBLE);
                         if((position+1)<=datalist.size()-1) {
@@ -360,8 +432,8 @@ public class EnglishActivity extends AppCompatActivity {
                             }, 1000);
                         }
                     }else{
-                        isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
-                        isTrue.setVisibility(View.VISIBLE);
+                        isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
+                        isTrue2.setVisibility(View.VISIBLE);
                         isFalse.setText("哎呀，选错了！");
                         isFalse.setVisibility(View.VISIBLE);
                     }
@@ -394,7 +466,11 @@ public class EnglishActivity extends AppCompatActivity {
         answer1 = findViewById(R.id.transOne);
         answer2 = findViewById(R.id.transTwo);
         isTrue = findViewById(R.id.englishIsTrue);
+        isTrue2 = findViewById(R.id.englishIsTrue2);
         isFalse = findViewById(R.id.englishIsFalse);
+        answerA = findViewById(R.id.AnswerA);
+        answerB = findViewById(R.id.AnswerB);
+        trueAnswer = findViewById(R.id.trueAnswer);
     }
 
     /**
