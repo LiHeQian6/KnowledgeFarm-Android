@@ -7,12 +7,13 @@ import java.util.Random;
 import com.farm.answer.dao.EnglishDao;
 import com.farm.entity.Question3Num;
 import com.farm.model.English;
+import com.jfinal.plugin.activerecord.Page;
 
 public class AnswerService {
 	
 	//一年级上册英语
-	public List<English> OneUpEnglish(){
-		return new EnglishDao().getEnglishWords();
+	public Page<English> OneUpEnglish(int pageNumber, int pageSize){
+		return new EnglishDao().getEnglishWords(pageNumber, pageSize);
 	}
 
 	//一年级上册数学

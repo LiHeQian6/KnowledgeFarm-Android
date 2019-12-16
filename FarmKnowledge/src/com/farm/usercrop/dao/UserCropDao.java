@@ -1,5 +1,7 @@
 package com.farm.usercrop.dao;
 
+import java.util.List;
+
 import com.farm.entity.UserCropItem;
 import com.farm.model.UserCrop;
 
@@ -101,9 +103,9 @@ public class UserCropDao {
 	
 	//根据userCropId查询整条信息
 	public UserCrop findUserCropById(int ucId) {
-		UserCrop userCrop = UserCrop.dao.findById(ucId);
-		if(userCrop != null) {
-			return userCrop;
+		List<UserCrop> list = UserCrop.dao.find("select * from usercrop where id=?",ucId);
+		if(list.size() != 0) {
+			return list.get(0);
 		}
 		return null;
 	}

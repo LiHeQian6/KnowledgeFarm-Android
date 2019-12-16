@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/touch"
+    android:background="@drawable/main_background"
+    android:padding="5dp"
+    tools:context=".MyFriends.MyFriendActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5">
+        </TextView>
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/lands"
+            android:rowCount="3"
+            android:columnCount="6"
+            android:rotationX="20"
+            android:layout_marginTop="100dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+        </GridLayout>
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    <ImageView android:layout_width="200dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/dog"
+        android:id="@+id/dog"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_height="200dp"/>
+    <RelativeLayout android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+        <LinearLayout android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/userInfo"
+            android:paddingLeft="10dp"
+            android:background="@drawable/photobg"
+            android:gravity="center_vertical"
+            android:layout_height="80dp">
+            <ImageView android:layout_width="50dp"
+                android:id="@+id/photo"
+                android:src="@drawable/photo"
+                android:layout_height="50dp"/>
+            <LinearLayout android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:layout_height="wrap_content">
+                <TextView android:layout_width="wrap_content"
+                    android:text="昵称:景宝宝"
+                    android:id="@+id/nickName"
+                    android:textSize="20sp"
+                    android:textColor="@color/ShopTextColor"
+                    android:layout_height="wrap_content"/>
+                <TextView android:layout_width="wrap_content"
+                    android:text="lv:16"
+                    android:id="@+id/level"
+                    android:textColor="@color/ShopTextColor"
+                    android:layout_height="wrap_content"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ProgressBar
+                        android:layout_width="100dp"
+                        android:progress="50"
+                        android:id="@+id/experience"
+                        android:layout_centerInParent="true"
+                        android:progressDrawable="@drawable/progressbar_bg"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_height="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="20/500"
+                        android:textSize="10sp"
+                        android:id="@+id/experienceValue"
+                        android:textColor="@android:color/white"
+                        android:layout_centerInParent="true"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
+                <TextView android:layout_width="wrap_content"
+                    android:text="账号：26415161"
+                    android:textSize="12sp"
+                    android:id="@+id/account"
+                    android:textColor="@color/ShopTextColor"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <TextView android:layout_width="wrap_content"
+            android:text="金币：6666"
+            android:layout_margin="5dp"
+            android:textColor="@color/ShopTextColor"
+            android:layout_toRightOf="@+id/userInfo"
+            android:id="@+id/money"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"/>
+        <LinearLayout android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content">
+            <LinearLayout android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content">
+                <ImageView android:layout_width="50dp"
+                    android:src="@drawable/shop"
+                    android:id="@+id/shop"
+                    android:layout_height="50dp"/>
+                <TextView android:layout_width="wrap_content"
+                    android:text="商店"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content">
+                <ImageView android:layout_width="50dp"
+                    android:src="@drawable/pet"
+                    android:id="@+id/pet"
+                    android:layout_height="50dp"/>
+                <TextView android:layout_width="wrap_content"
+                    android:text="宠物"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content">
+                <ImageView android:layout_width="50dp"
+                    android:src="@drawable/setting"
+                    android:id="@+id/setting"
+                    android:layout_height="50dp"/>
+                <TextView android:layout_width="wrap_content"
+                    android:text="设置"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView android:layout_width="40dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/dog"
+        android:id="@+id/friends"
+        android:layout_centerVertical="true"
+        android:layout_height="100dp"/>
+</RelativeLayout>
