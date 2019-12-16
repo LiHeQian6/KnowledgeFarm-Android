@@ -145,12 +145,12 @@ public class UserController extends Controller{
 	
 	//添加用户信息
 	public void addUser() {		
+		UserService service = new UserService();
 		String nickName = get("nickName");
-		String password = get("password");
+		String password = service.stringMD5(get("password"));
 		String email = get("email");
 		int grade = getInt("grade");
 		
-		UserService service = new UserService();
 		boolean succeed = service.addUser(service.generateAccout(), nickName, password, Strings.userPhotoUrl + "0.png", "", email, grade);
 		if(succeed == true) {
 			renderText("succeed");
@@ -280,13 +280,17 @@ public class UserController extends Controller{
 	
 	//修改用户密码
 	public void updateUserPassword() {
+		UserService service = new UserService();
 		String accout = get("accout");
-		String password = get("password");
+		String oldPassword = service.stringMD5(get("oldPassword"));
+		String newPassword = service.stringMD5(get("newPassword"));
 		
-		boolean succeed = new UserService().updateUserPassword(accout, password);
-		if(succeed) {
+		int result = new UserService().updateUserPassword(oldPassword, newPassword, accout);
+		if(result == 0) {
+			renderText("PasswordError");
+		}else if(result == 1){
 			renderText("succeed");
-		}else {
+		}else if(result == 2){
 			renderText("fail");
 		}
 	}

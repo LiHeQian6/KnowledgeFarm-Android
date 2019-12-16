@@ -1,5 +1,7 @@
 package  com.farm.user.service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -97,9 +99,13 @@ public class UserService {
 	public boolean updateUserGrade(String accout, int grade) {
 		return new UserDao().updateUserGrade(accout, grade);
 	}
-	//修改用户密码，根据账号查询到
+	//设置密码，根据账号查询到
 	public boolean updateUserPassword(String accout,String password) {
 		return new UserDao().updateUserPassword(accout, password);
+	}
+	//判断旧密码是否正确，修改用户密码，根据账号查询到
+	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
+		return new UserDao().updateUserPassword(oldPassword, newPassword, accout);
 	}
 	//修改用户的头像，根据账号查询到
 	public boolean updateUserPhoto(String accout, String photo, String photoName) {
@@ -148,6 +154,10 @@ public class UserService {
 	//添加用户经验，金币(User表）
 	public boolean addEandM(int id,int ex,int money) {
 		return new UserDao().addExandMoney(id, ex, money);
+	}
+	//添加用户经验，金币(User表）
+	public boolean addMoney(int id, int money) {
+		return new UserDao().addMoney(id, money);
 	}
 	//减少浇水（User表）
 	public boolean lessW(int id) {
@@ -321,5 +331,39 @@ public class UserService {
 			e.printStackTrace();
 		}
 	}
+	
+	//MD5加密
+	 public String stringMD5(String input) {
+		  try {
+		     // 拿到一个MD5转换器（如果想要SHA1参数换成”SHA1”）
+		     MessageDigest messageDigest =MessageDigest.getInstance("MD5");
+		     // 输入的字符串转换成字节数组
+		     byte[] inputByteArray = input.getBytes();
+		     // inputByteArray是输入字符串转换得到的字节数组
+		     messageDigest.update(inputByteArray);
+		     // 转换并返回结果，也是字节数组，包含16个元素
+		     byte[] resultByteArray = messageDigest.digest();
+		     // 字符数组转换成字符串返回
+		     return byteArrayToHex(resultByteArray);
+		  } catch (NoSuchAlgorithmException e) {
+		     return null;
+		  }
+	 }
+	 
+	 //将字节数组换成成16进制的字符串
+	 public String byteArrayToHex(byte[] byteArray) {
+	   // 首先初始化一个字符数组，用来存放每个16进制字符
+	   char[] hexDigits = {'0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F' };
+	   // new一个字符数组，这个就是用来组成结果字符串的（解释一下：一个byte是八位二进制，也就是2位十六进制字符（2的8次方等于16的2次方））
+	   char[] resultCharArray =new char[byteArray.length * 2];
+	   // 遍历字节数组，通过位运算（位运算效率高），转换成字符放到字符数组中去
+	   int index = 0;
+	   for (byte b : byteArray) {
+	      resultCharArray[index++] = hexDigits[b>>> 4 & 0xf];
+	      resultCharArray[index++] = hexDigits[b& 0xf];
+	   }
+	   // 字符数组组合成字符串返回
+	   return new String(resultCharArray);
+	 }
 
 }

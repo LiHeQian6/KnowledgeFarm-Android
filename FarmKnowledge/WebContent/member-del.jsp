@@ -137,7 +137,7 @@
 	                        <td><input type="checkbox" value="${page.id}" name="checkBox"></td>
 	                        <td>${page.id}</td>
 	                        <td>${page.accout}</td>
-	                        <td>${page.password}</td>
+	                        <td>******</td>
 	                        <td>${page.nickName}</td>
 	                        <td>
 	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">

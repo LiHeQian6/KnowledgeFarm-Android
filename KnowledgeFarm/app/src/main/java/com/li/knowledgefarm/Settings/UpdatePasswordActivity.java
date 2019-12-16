@@ -24,6 +24,8 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class UpdatePasswordActivity extends AppCompatActivity {
     /** 返回*/
@@ -101,7 +103,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
      * 保存
      */
     private void save(){
-        final String oldPassword = edtOldPassword.getText().toString().trim();
+        final String oldPassword = stringMD5(edtOldPassword.getText().toString().trim());
         final String newPassword = edtNemPassword.getText().toString().trim();
         final String newPasswordTest = edtNewPasswordTest.getText().toString().trim();
         if(oldPassword.equals("") || newPassword.equals("") || newPasswordTest.equals("")){
@@ -116,7 +118,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("oldPassword", oldPassword).add("newPassword", newPassword).build();
+                            FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("password", stringMD5(newPassword)).build();
                             final Request request = new Request.Builder().post(formBody).url(getApplicationContext().getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -157,6 +159,40 @@ public class UpdatePasswordActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
+    }
+
+    //MD5加密
+    public String stringMD5(String input) {
+        try {
+            // 拿到一个MD5转换器（如果想要SHA1参数换成”SHA1”）
+            MessageDigest messageDigest =MessageDigest.getInstance("MD5");
+            // 输入的字符串转换成字节数组
+            byte[] inputByteArray = input.getBytes();
+            // inputByteArray是输入字符串转换得到的字节数组
+            messageDigest.update(inputByteArray);
+            // 转换并返回结果，也是字节数组，包含16个元素
+            byte[] resultByteArray = messageDigest.digest();
+            // 字符数组转换成字符串返回
+            return byteArrayToHex(resultByteArray);
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    //将字节数组换成成16进制的字符串
+    public String byteArrayToHex(byte[] byteArray) {
+        // 首先初始化一个字符数组，用来存放每个16进制字符
+        char[] hexDigits = {'0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F' };
+        // new一个字符数组，这个就是用来组成结果字符串的（解释一下：一个byte是八位二进制，也就是2位十六进制字符（2的8次方等于16的2次方））
+        char[] resultCharArray =new char[byteArray.length * 2];
+        // 遍历字节数组，通过位运算（位运算效率高），转换成字符放到字符数组中去
+        int index = 0;
+        for (byte b : byteArray) {
+            resultCharArray[index++] = hexDigits[b>>> 4 & 0xf];
+            resultCharArray[index++] = hexDigits[b& 0xf];
+        }
+        // 字符数组组合成字符串返回
+        return new String(resultCharArray);
     }
 
 }

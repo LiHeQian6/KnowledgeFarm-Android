@@ -25,17 +25,15 @@
     		if(newPassword != testPassword){
     			layer.msg('两次输入密码不一致');
     		}else{
-				if(oldPassword != "${user.password}"){
-					layer.msg('旧密码错误');
-    			}else{
-    				$.post("${ctx}/admin/user/updateUserPassword",{"accout":"${user.accout}","password":newPassword},function(data){
-    					if(data == "succeed"){
-    						x_admin_close();
-    					}else if(data == "fail"){
-    						layer.msg('修改失败');
-    					}
-    			 	}) 
-    			}
+    			$.post("${ctx}/admin/user/updateUserPassword",{"accout":"${user.accout}","oldPassword":oldPassword,"newPassword":newPassword},function(data){
+					if(data == "PasswordError"){
+						layer.msg('旧密码输入错误');
+					}else if(data == "succeed"){
+						x_admin_close();
+					}else if(data == "fail"){
+						layer.msg('修改失败');
+					}
+			 	}) 
     		}
     	}
 		

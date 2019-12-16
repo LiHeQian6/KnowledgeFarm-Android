@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.farm.answer.dao.EnglishDao;
 import com.farm.entity.Question3Num;
+import com.farm.model.English;
 
 public class AnswerService {
+	
+	//一年级上册英语
+	public List<English> OneUpEnglish(){
+		return new EnglishDao().getEnglishWords();
+	}
 
 	//一年级上册数学
 	public List<Question3Num> getQuestion3OneUpMath(){
@@ -30,7 +37,6 @@ public class AnswerService {
 					num2 = random.nextInt(20-num1);
 					result = num1 + num2;
 				}else {
-					num1 = 5 + random.nextInt(15);
 					num2 = random.nextInt(num1+1);
 					result = num1 - num2;
 				}
@@ -89,7 +95,6 @@ public class AnswerService {
 				}
 			}else {
 				if(signal1.equals("-")) {
-					num1 = 5 + random.nextInt(15);
 					num2 = random.nextInt(num1+1);
 					num12 = num1 - num2;
 					if(signal2.equals("-")) {

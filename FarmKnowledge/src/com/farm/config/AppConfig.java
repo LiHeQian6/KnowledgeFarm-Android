@@ -5,6 +5,7 @@ import com.farm.config.routes.FrontRoutes;
 import com.farm.entity.RewardCountTimerManager;
 import com.farm.model.Admin;
 import com.farm.model.Crop;
+import com.farm.model.English;
 import com.farm.model.User;
 import com.farm.model.UserAuthority;
 import com.farm.model.UserBag;
@@ -67,6 +68,7 @@ public class AppConfig extends JFinalConfig {
 		arp.addMapping("crop", Crop.class);
 		arp.addMapping("userbag", UserBag.class);
 		arp.addMapping("usercrop", UserCrop.class);
+		arp.addMapping("english", English.class);
 	}
 
 	@Override

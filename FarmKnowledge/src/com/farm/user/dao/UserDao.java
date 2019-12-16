@@ -100,6 +100,22 @@ public class UserDao {
 		}
 		return false;
 	}
+	//判断旧密码是否正确，修改用户密码，根据账号查询到
+	public int updateUserPassword(String oldPassword, String newPassword, String accout) {
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			User user = list.get(0);
+			if(oldPassword.equals(user.get("password"))) {
+				boolean succeed = user.set("password", newPassword).update();
+				if(succeed) {
+					return 1;
+				}
+				return 2;
+			}
+			return 0;
+		}
+		return -1;
+	}
 	//修改用户的头像，根据账号查询到
 	public boolean updateUserPhoto(String accout, String photo, String photoName) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
@@ -140,6 +156,14 @@ public class UserDao {
 		User user = User.dao.findById(id);
 		if(user != null) {
 			return user.set("experience", user.getInt("experience")+ex).set("money", user.getInt("money")+money).update();
+		}
+		return false;
+	}
+	//User表增加金币（money）
+	public boolean addMoney(int id, int money) {
+		User user = User.dao.findById(id);
+		if(user != null) {
+			return user.set("money", user.getInt("money")+money).update();
 		}
 		return false;
 	}
