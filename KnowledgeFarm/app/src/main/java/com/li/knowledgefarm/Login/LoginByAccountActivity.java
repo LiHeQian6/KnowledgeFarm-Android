@@ -114,7 +114,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("account",user.getAccout());
                     if(tagPwd){
-                        editor.putString("password",user.getPassword());
+                        editor.putString("password",pwd.getText().toString());
                     }else {
                         editor.putString("password","");
                     }
