@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -95,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
     private int selected=-2;//选中的是水壶0，肥料-1，收获-2
     private Handler operatingHandleMessage;
     private int selectedPlant=0;//选中的植物是第几块土地
+    private int displayWidth;
+    private int displayHeight;
 
 
     @Override
@@ -108,8 +113,20 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
         setStatusBar();
         getViews();
+        setViewsSize();
         addListener();
         getCrop();
+    }
+
+    /**
+     * @Description 设置控件大小
+     * @Auther 孙建旺
+     * @Date 上午 9:18 2019/12/16
+     * @Param []
+     * @return void
+     */
+    private void setViewsSize() {
+
     }
 
     @Override
@@ -595,6 +612,10 @@ public class MainActivity extends AppCompatActivity {
                     xzs.setVisibility(View.VISIBLE);
                      break;
                 case R.id.bag:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
                     showBagMessages();
                     break;
                 case R.id.shop:
@@ -732,7 +753,19 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.bag_girdview, null);
         final GridView gridView = layout.findViewById(R.id.bag_grid_view);
-        //alertBuilder.setView(layout);
+        //设置gridView大小及位置
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.8));
+        params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
+        params_gridview.setMargins((int)(displayWidth*0.005),(int)(displayHeight*0.08),0,0);
+        gridView.setColumnWidth((int)(displayWidth*0.2));
+        gridView.setLayoutParams(params_gridview);
+        gridView.setVerticalSpacing((int)(displayHeight*0.02));
+        //添加layout布局文件
         bagDialog.setContentView(layout);
         bagDialog.show();
         getBagMessages();
@@ -746,7 +779,6 @@ public class MainActivity extends AppCompatActivity {
                     Type type = new TypeToken<List<BagCropNumber>>(){}.getType();
                     dataList = gson.fromJson(messages,type);
                     BagCustomerAdapter customerAdapter = new BagCustomerAdapter(bagDialog.getContext(),dataList,R.layout.gird_adapteritem);
-                    gridView.setColumnWidth(55);
                     gridView.setAdapter(customerAdapter);
                 }else{
                     Toast toast = Toast.makeText(MainActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);
@@ -761,8 +793,8 @@ public class MainActivity extends AppCompatActivity {
         }
         attrs.gravity = Gravity.RIGHT;
         final float scale = this.getResources().getDisplayMetrics().density;
-        attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(400*scale+0.5f);
+        attrs.width = (int)(displayWidth*0.40);
+        attrs.height = (int)(displayHeight*0.95);
         bagDialog.getWindow().setAttributes(attrs);
         Window dialogWindow = bagDialog.getWindow();
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);

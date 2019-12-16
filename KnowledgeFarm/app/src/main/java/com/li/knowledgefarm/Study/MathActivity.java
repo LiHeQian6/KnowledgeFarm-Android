@@ -108,6 +108,7 @@ public class MathActivity extends AppCompatActivity {
 
         LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.5),(int)(displayHeight*0.1));
         btnPre.setLayoutParams(params_btn);
+        params_btn.setMargins(0,0,0,(int)(displayHeight*0.02));
         btnPre.setTextSize((int)(displayWidth*0.015));
         btnPre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         btnNext.setLayoutParams(params_btn);
@@ -181,7 +182,7 @@ public class MathActivity extends AppCompatActivity {
                         isFalse.setVisibility(View.INVISIBLE);
                         isTrue.setVisibility(View.GONE);
                         question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
-                        question.setTextSize((int)(displayWidth*0.012));
+                        question.setTextSize((int)(displayWidth*0.011));
                         question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         if(returnHandlerFinish)
                             finish();
@@ -419,7 +420,7 @@ public class MathActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if(position==datalist.size()-1)
-                    btnNextQuestion.setText("我做完啦!");
+                    btnNextQuestion.setText("我做完啦 ");
             }
         });
     }
