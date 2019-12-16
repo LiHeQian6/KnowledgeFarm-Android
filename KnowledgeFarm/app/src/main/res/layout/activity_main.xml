@@ -278,9 +278,4 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="50dp"
-        android:id="@+id/jiaoshui"
-        android:layout_height="50dp"/>
-
 </RelativeLayout>

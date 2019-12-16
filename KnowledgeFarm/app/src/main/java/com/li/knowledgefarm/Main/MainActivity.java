@@ -106,9 +106,6 @@ public class MainActivity extends AppCompatActivity {
         dataList = new ArrayList<>();
         ImageView dog = findViewById(R.id.dog);
         Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
-
-//        ImageView jiaoshui = findViewById(R.id.jiaoshui);
-//        Glide.with(this).asGif().load(R.drawable.jiaoshui).into(jiaoshui);
         setStatusBar();
         getViews();
         addListener();
@@ -262,6 +259,8 @@ public class MainActivity extends AppCompatActivity {
             ImageView plant = new ImageView(this);
             final ImageView animation = new ImageView(this);
             Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
+            Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
+            Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
             animation.setVisibility(View.GONE);
             RelativeLayout relativeLayout = new RelativeLayout(this);
             relativeLayout.addView(land);
@@ -364,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
                                     land.setImageResource(R.drawable.land);
                                 }
                                 else{
-                                    animation.setVisibility(View.VISIBLE);
+                                    Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
                                     operating(0);//浇水
                                 }
                             }else if(selected==-1){
@@ -373,12 +372,15 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                     land.setImageResource(R.drawable.land);
                                 }else{
+                                    Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
                                     operating(-1);//施肥
                                 }
                             }else{
                                 selectedPlant=finalI;
-                                if(status==1)
+                                if(status==1) {
+                                    Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
                                     operating(-2);//成熟
+                                }
                                 else {
                                     Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
                                     land.setImageResource(R.drawable.land);
@@ -387,23 +389,30 @@ public class MainActivity extends AppCompatActivity {
                             waterMessagesHandler = new Handler() {
                                 @Override
                                 public void handleMessage(@NonNull Message msg) {
-                                    String messages = (String) msg.obj;
+                                    final String messages = (String) msg.obj;
                                     Log.e("Watering", messages);
                                     if (!messages.equals("Fail")) {
                                         if (messages.equals("false")) {
                                             Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                                         } else {
                                             //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
-                                            getCrop();
-                                            getUserInfo();
-                                            if(messages.equals("up")){
-                                                upLevel();
-                                            }
+                                            animation.setVisibility(View.VISIBLE);
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    getCrop();
+                                                    getUserInfo();
+                                                    if(messages.equals("up")){
+                                                        upLevel();
+                                                    }
+                                                    animation.setVisibility(View.GONE);
+                                                }
+                                            },1000);
+
                                         }
                                     } else {
                                         Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                     }
-                                    animation.setVisibility(View.GONE);
                                     land.setImageResource(R.drawable.land);
                                 }
                             };
@@ -553,6 +562,9 @@ public class MainActivity extends AppCompatActivity {
         xzf=findViewById(R.id.xzf);
         xzs=findViewById(R.id.xzs);
         harvest=findViewById(R.id.harvest);
+        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzw);
+        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzf);
+        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzs);
     }
     class MainListener implements View.OnClickListener {
 
