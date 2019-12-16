@@ -164,7 +164,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
         edtCount.setText(sp.getString("account",""));
         pwd.setText(sp.getString("password",""));
-        if(!sp.getString("password",null).equals("")){
+        if(!sp.getString("password","").equals("")){
             rememberPwd.setChecked(true);
         }
         rememberPwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
