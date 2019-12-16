@@ -73,6 +73,7 @@ public class ShopActivity extends AppCompatActivity {
     public static Boolean mIsScroll = false;
     private int displayWidth;
     private int displayHeight;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,8 +271,14 @@ public class ShopActivity extends AppCompatActivity {
                 if(addCallBack.equals("true")){
                     int newMoney = LoginActivity.user.getMoney() - Integer.parseInt(shopNumber.getText().toString().trim())*shopList.get(position).getPrice();
                     LoginActivity.user.setMoney(newMoney);
-                    Toast toast = Toast.makeText(alertBuilder.getContext(),"购买成功！",Toast.LENGTH_SHORT);
-                    toast.show();
+                    if(toast != null) {
+                        toast.cancel();
+                        toast = Toast.makeText(alertBuilder.getContext(), "购买成功！", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }else{
+                        toast = Toast.makeText(alertBuilder.getContext(), "购买成功！", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                     alertDialog.dismiss();
                 }else if(addCallBack.equals("notEnoughMoney")){
                     Toast toast = Toast.makeText(alertBuilder.getContext(),"你的钱不够了哦！",Toast.LENGTH_SHORT);
