@@ -13,7 +13,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -363,12 +362,16 @@ public class MainActivity extends AppCompatActivity {
                     value.setTextSize(8);
                     value.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     value.setLayoutParams(layoutParams);
+                    if(crop.getState()==0){
+                        land.setImageResource(R.drawable.land_gan);
+                    }
                     //添加视图
                     relativeLayout.addView(plant);
                     relativeLayout.addView(progressBar);
                     relativeLayout.addView(value);
                     relativeLayout.addView(animation);
                     //浇水、施肥、收获
+                    final UserCropItem finalCrop = crop;
                     plant.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -377,7 +380,10 @@ public class MainActivity extends AppCompatActivity {
                                 selectedPlant=finalI;
                                 if(status==1) {
                                     Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                    land.setImageResource(R.drawable.land);
+                                    if(finalCrop.getState()==0){
+                                        land.setImageResource(R.drawable.land_gan);
+                                    }else
+                                        land.setImageResource(R.drawable.land);
                                 }
                                 else{
                                     Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
@@ -387,7 +393,10 @@ public class MainActivity extends AppCompatActivity {
                                 selectedPlant=finalI;
                                 if(status==1) {
                                     Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                    land.setImageResource(R.drawable.land);
+                                    if(finalCrop.getState()==0){
+                                        land.setImageResource(R.drawable.land_gan);
+                                    }else
+                                        land.setImageResource(R.drawable.land);
                                 }else{
                                     Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
                                     operating(-1);//施肥
@@ -400,7 +409,10 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 else {
                                     Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
-                                    land.setImageResource(R.drawable.land);
+                                    if(finalCrop.getState()==0){
+                                        land.setImageResource(R.drawable.land_gan);
+                                    }else
+                                        land.setImageResource(R.drawable.land);
                                 }
                             }
                             waterMessagesHandler = new Handler() {

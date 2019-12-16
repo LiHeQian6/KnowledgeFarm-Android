@@ -278,4 +278,10 @@
         </LinearLayout>
     </LinearLayout>
 
+    <ImageView android:layout_width="40dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/dog"
+        android:id="@+id/friends"
+        android:layout_centerVertical="true"
+        android:layout_height="100dp"/>
 </RelativeLayout>
