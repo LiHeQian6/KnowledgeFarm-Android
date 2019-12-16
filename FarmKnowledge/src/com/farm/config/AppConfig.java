@@ -10,6 +10,7 @@ import com.farm.model.User;
 import com.farm.model.UserAuthority;
 import com.farm.model.UserBag;
 import com.farm.model.UserCrop;
+import com.farm.model.UserFriend;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -68,6 +69,7 @@ public class AppConfig extends JFinalConfig {
 		arp.addMapping("crop", Crop.class);
 		arp.addMapping("userbag", UserBag.class);
 		arp.addMapping("usercrop", UserCrop.class);
+		arp.addMapping("userfriend", UserFriend.class);
 		arp.addMapping("english", English.class);
 	}
 

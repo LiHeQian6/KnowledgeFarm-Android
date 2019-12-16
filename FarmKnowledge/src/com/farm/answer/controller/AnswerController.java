@@ -8,6 +8,7 @@ import com.farm.answer.service.AnswerService;
 import com.farm.entity.Question3Num;
 import com.farm.model.English;
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Page;
 public class AnswerController extends Controller{
 	//一年级上册数学
 	public void OneUpMath() {
@@ -24,9 +25,14 @@ public class AnswerController extends Controller{
 	
 	//一年级上册英语
 	public void OneUpEnglish() {
-		List<English> listWord = new AnswerService().OneUpEnglish();
-		
-		renderJson(listWord);
+		int pageNumber = (int)(Math.random()*10);
+		int pageSize = 20;
+		Page<English> page =  new AnswerService().OneUpEnglish(pageNumber, pageSize);
+		if(page != null) {
+			renderJson(page.getList());
+		}else {
+			renderJson("[]");
+		}
 	}
 
 }
