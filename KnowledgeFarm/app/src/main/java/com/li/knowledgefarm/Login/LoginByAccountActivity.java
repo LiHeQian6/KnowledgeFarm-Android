@@ -317,8 +317,6 @@ public class LoginByAccountActivity extends AppCompatActivity {
         displayWidth = ds.widthPixels;
         displayHeight = ds.heightPixels;
 
-        //LinearLayout.LayoutParams lpm = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
         LinearLayout.LayoutParams param_image = new LinearLayout.LayoutParams((int)(displayWidth*0.11),(int)(displayHeight*0.14));
         param_image.gravity = Gravity.CENTER_HORIZONTAL;
         titleImage.setLayoutParams(param_image);
@@ -326,9 +324,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         RelativeLayout relative_input = findViewById(R.id.relative_input);
         RelativeLayout.LayoutParams params_input = new RelativeLayout.LayoutParams((int)(displayWidth*0.45),(int)(displayHeight*0.5));
         params_input.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params_input.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        //params_input.topMargin = (int)(displayHeight*0.05);
-        //params_input.bottomMargin = (int)(displayHeight*0.05);
+        params_input.topMargin = (int)(displayHeight*0.45);
         relative_input.setLayoutParams(params_input);
 
         LinearLayout layout_input = findViewById(R.id.layout_input);
@@ -337,12 +333,18 @@ public class LoginByAccountActivity extends AppCompatActivity {
 
         EditText account = findViewById(R.id.accout);
         EditText pwd = findViewById(R.id.pwd);
-        account.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
-        pwd.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
+        account.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.012));
+        pwd.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.012));
+
+        CheckBox ifRember = findViewById(R.id.rememberPwd);
+        RelativeLayout.LayoutParams params_Rember = new RelativeLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.12));
+        params_Rember.setMargins(0,0,0,(int)(displayHeight*0.13));
+        params_Rember.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        ifRember.setLayoutParams(params_Rember);
 
         TextView login = findViewById(R.id.main_btn_login);
         RelativeLayout.LayoutParams params_login = new RelativeLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.12));
-        params_login.setMargins(0,0,0,(int)(displayHeight*0.06));
+        params_login.setMargins(0,0,0,(int)(displayHeight*0.02));
         params_login.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         params_login.addRule(RelativeLayout.CENTER_HORIZONTAL);
         login.setLayoutParams(params_login);

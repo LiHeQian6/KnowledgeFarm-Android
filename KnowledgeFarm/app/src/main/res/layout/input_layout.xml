@@ -9,7 +9,6 @@
         android:id="@+id/layout_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dip"
         android:background="@drawable/radius_drawable_bg"
         android:orientation="vertical"
         android:padding="10dip" >
@@ -32,7 +31,6 @@
                 android:id="@+id/accout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
                 android:textAlignment="center"
                 android:textColorHint="#cecece"
                 android:textColor="#000"
@@ -68,7 +66,6 @@
                 android:id="@+id/pwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
                 android:hint="密码"
                 android:textColor="#000"
                 android:textColorHint="#cecece"

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/loginRelative"
-    android:background="@drawable/logindialogbac"
+    android:background="@drawable/loginbackground"
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="wrap_content"
