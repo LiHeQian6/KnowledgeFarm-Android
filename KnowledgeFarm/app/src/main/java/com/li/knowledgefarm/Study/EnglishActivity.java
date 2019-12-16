@@ -188,7 +188,7 @@ public class EnglishActivity extends AppCompatActivity {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        //LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
+                        LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
                         isFalse.setVisibility(View.INVISIBLE);

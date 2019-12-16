@@ -178,6 +178,10 @@ public class FindPassword extends AppCompatActivity {
         emailEdt.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
         codeEdt.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
         getCode.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.008));
+
+        LinearLayout.LayoutParams params_back = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.12));
+        params_back.setMargins((int)(displayWidth*0.02),(int)(displayHeight*0.03),0,0);
+        returnPwd.setLayoutParams(params_back);
     }
 
     private void registListener() {
