@@ -417,4 +417,9 @@ public class UserController extends Controller{
 		}
 	}
 	
+	public void aaa() {
+		int ucId = getInt("ucId");
+		renderJson(new UserCropService().findUserCropById(ucId));
+	}
+	
 }

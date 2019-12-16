@@ -3,6 +3,7 @@ package com.farm.admin.dao;
 import java.util.List;
 
 import com.farm.model.Admin;
+import com.farm.model.User;
 import com.jfinal.plugin.activerecord.Page;
 
 public class AdminDao {
@@ -44,14 +45,21 @@ public class AdminDao {
 		}
 		return succeed;
 	}
-	//修改管理员信息（密码），根据修改前账号索引到
-	public boolean updateAdminPassword(String accout, String password) {
+	//判断旧密码是否正确，修改管理员密码，根据账号查询到
+	public int updateAdminPassword(String oldPassword, String newPassword, String accout) {
 		List<Admin> list = Admin.dao.find("select * from admin where accout=? and exist=1",accout);
-		boolean succeed = false;
 		if(list.size() != 0) {
-			succeed = list.get(0).set("password", password).update();
+			Admin admin = list.get(0);
+			if(oldPassword.equals(""+admin.get("password"))) {
+				boolean succeed = admin.set("password", newPassword).update();
+				if(succeed) {
+					return 1;
+				}
+				return 2;
+			}
+			return 0;
 		}
-		return succeed;
+		return -1;
 	}
 	//删除Admin表内单个管理员信息（Admin表修改exist字段为0）
 	public boolean deleteOneAdmin(int id) {

@@ -1,7 +1,6 @@
 package com.farm.usercrop.service;
 
 import java.sql.SQLException;
-import java.util.Calendar;
 
 import com.farm.crop.dao.CropDao;
 import com.farm.crop.service.CropService;
@@ -109,19 +108,26 @@ public class UserCropService {
 			public boolean run() throws SQLException {
 				UserService service = new UserService();
 				boolean a1 = new UserCropDao().deleteCrop(ucId);
-				boolean a2 = service.addEandM(userId,experience,price);
+				boolean a2 = false;
 				boolean a3 = service.updateLandCrop(userId, landNumber, 0);
-				
 				boolean a4 = false;
+				
 				User user = service.getUpdateUserInfo(userId);
 				int userLevel = user.getInt("level");
 				int userExperience = user.getInt("experience");
-				if(userExperience >= Strings.userLevel[userLevel]) {
-					isLevel = 1;
-					a4 = user.set("level", userLevel+1).update();
+				if(userLevel < Strings.userLevel.length) {
+					a2 = service.addEandM(userId,experience,price);
+					if(userExperience >= Strings.userLevel[userLevel]) {
+						isLevel = 1;
+						a4 = user.set("level", userLevel+1).update();
+					}else {
+						a4 = true;
+					}
 				}else {
+					a2 = service.addMoney(userId, price);
 					a4 = true;
 				}
+					
 				if(a1 == true && a2 == true && a3 == true && a4 == true) {
 					if(isLevel == 1) {
 						result = "up";
@@ -156,6 +162,9 @@ public class UserCropService {
 				}
 				
 				if(userCropId != 0 && a2 && a3) {
+					System.out.println("÷÷÷≤≥…π¶");
+					System.out.println("userCropId:"+userCropId);
+					System.out.println(findUserCropById(userCropId).toJson());
 					new UserCropTimerManager(userCropId,cropId); 
 					return true;
 				}

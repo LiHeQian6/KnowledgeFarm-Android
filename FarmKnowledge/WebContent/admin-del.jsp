@@ -130,7 +130,7 @@
 	                        <td><input type="checkbox" value="${adminPage.id}" name="checkBox"></td>
 	                        <td>${adminPage.id}</td>
 	                        <td>${adminPage.accout}</td>
-	                        <td>${adminPage.password}</td>
+	                        <td>******</td>
 	                        <td class="td-status">
 	                        	<span class="layui-btn layui-btn-danger layui-btn-mini">已删除</span>
 	                        </td>

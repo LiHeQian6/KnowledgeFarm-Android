@@ -35,9 +35,9 @@ public class AdminService {
 	public boolean updateAdminAccout(String oldAccout, String newAccout) {
 		return new AdminDao().updateAdminAccout(oldAccout, newAccout);
 	}
-	//修改管理员信息（密码），根据修改前账号索引到
-	public boolean updateAdminPassword(String accout, String password) {
-		return new AdminDao().updateAdminPassword(accout, password);
+	//判断旧密码是否正确，修改管理员密码，根据账号查询到
+	public int updateAdminPassword(String oldPassword, String newPassword, String accout) {
+		return new AdminDao().updateAdminPassword(oldPassword, newPassword, accout);
 	}
 	//删除Admin表内单个管理员信息（Admin表修改exist字段为0）
 	public boolean deleteOneAdmin(int id) {
