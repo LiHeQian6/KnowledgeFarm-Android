@@ -14,6 +14,7 @@ import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -42,6 +43,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -79,6 +82,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
     private int displayWidth;
     private int displayHeight;
     private ImageView titleImage;
+    private CheckBox rememberPwd;
+    private boolean tagPwd;
+    private EditText edtCount;
+    private EditText pwd;
+    private ImageView returnImg;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -100,13 +108,21 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     break;
                 case 5:
                     user = (User) msg.obj;
+                    SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("account",user.getAccout());
+                    if(tagPwd){
+                        editor.putString("password",user.getPassword());
+                    }else {
+                        editor.putString("password","");
+                    }
+                    editor.commit();
                     Intent intentToStart = new Intent(LoginByAccountActivity.this,StartActivity.class);
                     intentToStart.setAction("accountLogin");
                     startActivity(intentToStart);
                     finish();
                     break;
-                default:
-                    Toast.makeText(getApplicationContext(),"登录失败",Toast.LENGTH_SHORT).show();
+                case 8:
                     recovery();
                     break;
             }
@@ -128,51 +144,6 @@ public class LoginByAccountActivity extends AppCompatActivity {
         setViewSize();
     }
 
-    /**
-     * @Description 设置控件屏幕适配
-     * @Auther 孙建旺
-     * @Date 下午 6:23 2019/12/14
-     * @Param []
-     * @return void
-     */
-    private void setViewSize() {
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayWidth = ds.widthPixels;
-        displayHeight = ds.heightPixels;
-
-        //LinearLayout.LayoutParams lpm = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        LinearLayout.LayoutParams param_image = new LinearLayout.LayoutParams((int)(displayWidth*0.11),(int)(displayHeight*0.14));
-        param_image.gravity = Gravity.CENTER_HORIZONTAL;
-        titleImage.setLayoutParams(param_image);
-
-        RelativeLayout relative_input = findViewById(R.id.relative_input);
-        RelativeLayout.LayoutParams params_input = new RelativeLayout.LayoutParams((int)(displayWidth*0.45),(int)(displayHeight*0.5));
-        params_input.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params_input.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        //params_input.topMargin = (int)(displayHeight*0.05);
-        //params_input.bottomMargin = (int)(displayHeight*0.05);
-        relative_input.setLayoutParams(params_input);
-
-        LinearLayout layout_input = findViewById(R.id.layout_input);
-        LinearLayout.LayoutParams param_layout_input = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)(displayHeight*0.25));
-        layout_input.setLayoutParams(param_layout_input);
-
-        EditText account = findViewById(R.id.accout);
-        EditText pwd = findViewById(R.id.pwd);
-        account.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
-        pwd.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
-
-        TextView login = findViewById(R.id.main_btn_login);
-        RelativeLayout.LayoutParams params_login = new RelativeLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.12));
-        params_login.setMargins(0,0,0,(int)(displayHeight*0.06));
-        params_login.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        params_login.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        login.setLayoutParams(params_login);
-    }
-
     private void initView() {
         mBtnLogin = findViewById(R.id.main_btn_login);
         progress = findViewById(R.id.layout_progress);
@@ -183,12 +154,28 @@ public class LoginByAccountActivity extends AppCompatActivity {
         registAccount = findViewById(R.id.registAccount);
         layout_title = findViewById(R.id.layout_title);
         titleImage = findViewById(R.id.titleImage);
+        rememberPwd = findViewById(R.id.rememberPwd);
+        returnImg = findViewById(R.id.loginByAccountReturn);
+        edtCount = findViewById(R.id.accout);
+        pwd = findViewById(R.id.pwd);
+
+        SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
+        edtCount.setText(sp.getString("account",null));
+        pwd.setText(sp.getString("password",null));
+        rememberPwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    tagPwd = true;
+                }else {
+                    tagPwd = false;
+                }
+            }
+        });
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText edtCount = findViewById(R.id.accout);
-                EditText pwd = findViewById(R.id.pwd);
                 accountStr = edtCount.getText().toString();
                 pwdStr = pwd.getText().toString();
                 if(accountStr.equals("")||pwdStr.equals("")){
@@ -203,6 +190,9 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 mPsw.setVisibility(View.INVISIBLE);
                 mBtnLogin.setVisibility(View.INVISIBLE);
                 inputAnimator(mInputLayout, mWidth, mHeight);
+                registAccount.setVisibility(View.INVISIBLE);
+                rememberPwd.setVisibility(View.INVISIBLE);
+                forget.setVisibility(View.INVISIBLE);
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
@@ -215,10 +205,10 @@ public class LoginByAccountActivity extends AppCompatActivity {
                                 if(!isConnByHttp()){
                                     Looper.prepare();
                                     Toast.makeText(getApplicationContext(),"未连接服务器",Toast.LENGTH_SHORT).show();
-                                    Looper.loop();
                                     Message message = new Message();
                                     message.what = 8;
                                     handler.sendMessage(message);
+                                    Looper.loop();
                                     return;
                                 }
                                 loginByAccount(accountStr,pwdStr);
@@ -243,6 +233,13 @@ public class LoginByAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intentFindPwd = new Intent(LoginByAccountActivity.this,FindPassword.class);
                 startActivity(intentFindPwd);
+            }
+        });
+
+        returnImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
@@ -302,6 +299,51 @@ public class LoginByAccountActivity extends AppCompatActivity {
     }
 
     /**
+     * @Description 设置控件屏幕适配
+     * @Auther 孙建旺
+     * @Date 下午 6:23 2019/12/14
+     * @Param []
+     * @return void
+     */
+    private void setViewSize() {
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayWidth = ds.widthPixels;
+        displayHeight = ds.heightPixels;
+
+        //LinearLayout.LayoutParams lpm = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        LinearLayout.LayoutParams param_image = new LinearLayout.LayoutParams((int)(displayWidth*0.11),(int)(displayHeight*0.14));
+        param_image.gravity = Gravity.CENTER_HORIZONTAL;
+        titleImage.setLayoutParams(param_image);
+
+        RelativeLayout relative_input = findViewById(R.id.relative_input);
+        RelativeLayout.LayoutParams params_input = new RelativeLayout.LayoutParams((int)(displayWidth*0.45),(int)(displayHeight*0.5));
+        params_input.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params_input.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        //params_input.topMargin = (int)(displayHeight*0.05);
+        //params_input.bottomMargin = (int)(displayHeight*0.05);
+        relative_input.setLayoutParams(params_input);
+
+        LinearLayout layout_input = findViewById(R.id.layout_input);
+        LinearLayout.LayoutParams param_layout_input = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)(displayHeight*0.25));
+        layout_input.setLayoutParams(param_layout_input);
+
+        EditText account = findViewById(R.id.accout);
+        EditText pwd = findViewById(R.id.pwd);
+        account.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
+        pwd.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
+
+        TextView login = findViewById(R.id.main_btn_login);
+        RelativeLayout.LayoutParams params_login = new RelativeLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.12));
+        params_login.setMargins(0,0,0,(int)(displayHeight*0.06));
+        params_login.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params_login.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        login.setLayoutParams(params_login);
+    }
+
+    /**
      * 输入框的动画效果
      *
      * @param view
@@ -355,8 +397,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 progress.setVisibility(View.VISIBLE);
                 progressAnimator(progress);
                 mInputLayout.setVisibility(View.INVISIBLE);
-                registAccount.setVisibility(View.INVISIBLE);
-                forget.setVisibility(View.INVISIBLE);
+
 
             }
 
@@ -393,6 +434,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         mBtnLogin.setVisibility(View.VISIBLE);
         registAccount.setVisibility(View.VISIBLE);
         forget.setVisibility(View.VISIBLE);
+        rememberPwd.setVisibility(View.VISIBLE);
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
         params.leftMargin = 0;

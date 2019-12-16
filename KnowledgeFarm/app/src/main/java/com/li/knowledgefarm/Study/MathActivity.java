@@ -106,7 +106,8 @@ public class MathActivity extends AppCompatActivity {
         TextView btnNext = findViewById(R.id.btnNextQuestion);
         LinearLayout question  = findViewById(R.id.linearQuestion);
 
-        LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.5),(int)(displayHeight*0.1));
+        LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.1));
+        params_btn.gravity = Gravity.CENTER_HORIZONTAL;
         btnPre.setLayoutParams(params_btn);
         params_btn.setMargins(0,0,0,(int)(displayHeight*0.02));
         btnPre.setTextSize((int)(displayWidth*0.015));

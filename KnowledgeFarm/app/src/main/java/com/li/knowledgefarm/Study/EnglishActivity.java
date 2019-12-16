@@ -201,12 +201,21 @@ public class EnglishActivity extends AppCompatActivity {
      * @return void
      */
     private void showQuestion(int pos){
-        if(datalist.get(pos).getIfDone().equals("true")) {
-            isFalse.setText(" ");
+        if(!datalist.get(pos).getIfDone().equals("true")) {
+            isFalse.setText("");
             isTrue.setVisibility(View.INVISIBLE);
             question.setText(datalist.get(pos).getWord());
-            answer1.setText(datalist.get(new Random().nextInt(datalist.size())).getTrans());
-            answer2.setText(datalist.get(new Random().nextInt(datalist.size())).getTrans());
+            if(new Random().nextInt(2) == 0) {
+                answer1.setText(datalist.get(pos).getTrans());
+                answer2.setText(datalist.get(new Random().nextInt(datalist.size())).getTrans());
+            }else{
+                answer2.setText(datalist.get(pos).getTrans());
+                answer1.setText(datalist.get(new Random().nextInt(datalist.size())).getTrans());
+            }
+        }else {
+            isTrue.setVisibility(View.VISIBLE);
+            question.setText(datalist.get(pos).getWord());
+            answer1.setText(datalist.get(pos).getTrans());
         }
     }
 
@@ -236,7 +245,7 @@ public class EnglishActivity extends AppCompatActivity {
     }
 
     /**
-     * @Description 获取数学题
+     * @Description 获取英语题
      * @Auther 景光赞
      * @Date 上午 8:56 2019/12/11
      * @Param []
@@ -298,7 +307,7 @@ public class EnglishActivity extends AppCompatActivity {
                     else
                         finish();
                     break;
-                case R.id.btnPreQuestion:
+                case R.id.btnPreEnglish:
                     if((position-1)>=0) {
                         position = --position;
                         showQuestion(position);
@@ -312,41 +321,55 @@ public class EnglishActivity extends AppCompatActivity {
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         isFalse.setVisibility(View.VISIBLE);
-
+                        if((position+1)<=datalist.size()-1) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    datalist.get(position).setIfDone("true");
+                                    position = ++position;
+                                    showQuestion(position);
+                                }
+                            }, 1000);
+                        }
                     }else{
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue.setVisibility(View.VISIBLE);
-                        isFalse.setText("你还差一点就答对了哦！");
+                        isFalse.setText("哎呀，选错了！");
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
                 case R.id.transTwo:
                     String t2 = answer2.getText().toString().trim();
                     if(t2.equals(datalist.get(position).getTrans())){
+                        datalist.get(position).setIfDone("true");
                         TrueAnswerNumber++;
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         isFalse.setVisibility(View.VISIBLE);
-
+                        if((position+1)<=datalist.size()-1) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    datalist.get(position).setIfDone("true");
+                                    position = ++position;
+                                    showQuestion(position);
+                                }
+                            }, 1000);
+                        }
                     }else{
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue.setVisibility(View.VISIBLE);
-                        isFalse.setText("你还差一点就答对了哦！");
+                        isFalse.setText("哎呀，选错了！");
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
-                case R.id.btnNextQuestion:
+                case R.id.btnNextEnglish:
                     if((position+1)<=datalist.size()-1) {
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                datalist.get(position).setIfDone("true");
-                                position = ++position;
-                                showQuestion(position);
-                            }
-                        }, 1000);
+                        position = ++position;
+                        showQuestion(position);
                     }else{
                         getWandFCallBack();
                         getWaterAndFertilizer();

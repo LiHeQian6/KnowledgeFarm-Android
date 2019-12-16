@@ -68,22 +68,33 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/linearQuestion">
-            <TextView
-                android:id="@+id/btnPreQuestion"
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="30dp"
-                android:textColor="#ffffff"
-                android:text="上一题"/>
-            <TextView
-                android:id="@+id/btnNextQuestion"
+                android:gravity="center"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/btnPreQuestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:textColor="#ffffff"
+                    android:text="上一题"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="0dp"
+                android:gravity="center"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="30dp"
-                android:textColor="#ffffff"
-                android:text="下一题"/>
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/btnNextQuestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:textColor="#ffffff"
+                    android:text="下一题"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
