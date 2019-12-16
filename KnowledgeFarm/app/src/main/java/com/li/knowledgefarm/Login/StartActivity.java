@@ -72,7 +72,6 @@ public class StartActivity extends AppCompatActivity {
         getViews();
         registListener();
         Intent getInfo = getIntent();
-        Log.e("user",user.toString());
         if(getInfo.getAction().equals("QQFirstLogin")&&user!=null){
             nickName.setText(user.getNickName());
 //            urlToImgBitmap(user.getPhoto());
@@ -127,10 +126,14 @@ public class StartActivity extends AppCompatActivity {
     private void regout() {
         mTencent.logout(getApplicationContext());
         //注销登陆
-        SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.commit();
+        SharedPreferences qq = getSharedPreferences("token",MODE_PRIVATE);
+        SharedPreferences.Editor editorQQ = qq.edit();
+        editorQQ.clear();
+        editorQQ.commit();
+        SharedPreferences account = getSharedPreferences("user",MODE_PRIVATE);
+        SharedPreferences.Editor editorAccount = account.edit();
+        editorAccount.putString("password","");
+        editorAccount.commit();
         user = null;
         Intent backToLogin = new Intent(StartActivity.this,LoginActivity.class);
         backToLogin.setAction("logout");

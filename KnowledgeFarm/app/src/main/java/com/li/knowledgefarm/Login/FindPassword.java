@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +66,7 @@ public class FindPassword extends AppCompatActivity {
     private LinearLayout layout_email;
     private LinearLayout layout_code;
     private LinearLayout layout_button;
+    private ImageView returnPwd;
     private int displayWidth;
     private int displayHeight;
     @SuppressLint("HandlerLeak")
@@ -176,6 +178,10 @@ public class FindPassword extends AppCompatActivity {
         emailEdt.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
         codeEdt.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.009));
         getCode.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.008));
+
+        LinearLayout.LayoutParams params_back = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.12));
+        params_back.setMargins((int)(displayWidth*0.02),(int)(displayHeight*0.03),0,0);
+        returnPwd.setLayoutParams(params_back);
     }
 
     private void registListener() {
@@ -183,6 +189,7 @@ public class FindPassword extends AppCompatActivity {
         getCode.setOnClickListener(listener);
         btnSure.setOnClickListener(listener);
         resetPwd.setOnClickListener(listener);
+        returnPwd.setOnClickListener(listener);
     }
 
     private void getViews() {
@@ -191,7 +198,7 @@ public class FindPassword extends AppCompatActivity {
         emailEdt = findViewById(R.id.findPwdEmail);
 
         codeEdt = findViewById(R.id.identifyCode);
-
+        returnPwd = findViewById(R.id.findPwdReturn);
         getCode = findViewById(R.id.getCode);
         btnSure = findViewById(R.id.btnSubmit);
         newPwdEdt = findViewById(R.id.newPwd);
@@ -247,6 +254,9 @@ public class FindPassword extends AppCompatActivity {
                     }else {
                         resetPwdToServer(getResources().getString(R.string.URL)+"/user/resetUserPassword");
                     }
+                    break;
+                case R.id.findPwdReturn:
+                    finish();
                     break;
             }
         }

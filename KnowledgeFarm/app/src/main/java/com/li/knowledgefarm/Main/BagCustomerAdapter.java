@@ -3,8 +3,10 @@ package com.li.knowledgefarm.Main;
 import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +31,8 @@ public class BagCustomerAdapter extends BaseAdapter {
     private Context context;
     private List<BagCropNumber> dataList;
     private int resource;
+    private int displayHeight;
+    private int displayWidth;
 
     public BagCustomerAdapter(Context context, List<BagCropNumber> dataList, int resource) {
         this.context = context;
@@ -56,6 +60,15 @@ public class BagCustomerAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if(convertView == null){
             convertView = View.inflate(context,resource,null);
+            WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+            DisplayMetrics ds = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(ds);
+            displayHeight = ds.heightPixels;
+            displayWidth = ds.widthPixels;
+            LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.09), ViewGroup.LayoutParams.WRAP_CONTENT);
+            params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
+            params_gridview.setMargins(0,(int)(displayHeight*0.05),0,0);
+            convertView.setLayoutParams(params_gridview);
             viewHolder = new ViewHolder();
             viewHolder.flowerImg = convertView.findViewById(R.id.bag_flower_img);
             viewHolder.name = convertView.findViewById(R.id.bag_flower_name);
