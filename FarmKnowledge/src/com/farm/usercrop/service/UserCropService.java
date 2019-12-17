@@ -46,7 +46,7 @@ public class UserCropService {
 				if(a1 == true && a2 == true) {
 					if(userCrop.getInt("state") == 0) {
 						a3 = dao.updateCropState(ucId, 1);
-						new UserCropTimerManager(ucId,cropId); 
+						new UserCropTimerManager(ucId); 
 					}else {
 						a3 = true;
 					}
@@ -164,10 +164,7 @@ public class UserCropService {
 				}
 				
 				if(userCropId != 0 && a2 && a3) {
-					System.out.println("÷÷÷≤≥…π¶");
-					System.out.println("userCropId:"+userCropId);
-					System.out.println(findUserCropById(userCropId).toJson());
-					new UserCropTimerManager(userCropId,cropId); 
+					new UserCropTimerManager(userCropId); 
 					return true;
 				}
 				return false;

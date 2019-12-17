@@ -102,4 +102,23 @@ public class UserFriendController extends Controller{
 		renderJson(""+succeed);
 	}
 	
+	//帮好友浇水
+	public void waterForFriend() {
+		int userId = getInt("userId");
+		int friendId = getInt("friendId");
+		String landNumber = get("landNumber");
+		
+		boolean succeed = new UserFriendService().waterForFriend(userId, friendId, landNumber);
+		renderJson(""+succeed);
+	}
+	
+	//帮好友施肥
+	public void fertilizerForFriend() {
+		int userId = getInt("userId");
+		int friendId = getInt("friendId");
+		String landNumber = get("landNumber");
+		
+		boolean succeed = new UserFriendService().fertilizerForFriend(userId, friendId, landNumber);
+		renderJson(""+succeed);
+	}
 }

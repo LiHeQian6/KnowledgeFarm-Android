@@ -345,7 +345,6 @@ public class UserController extends Controller{
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
 		
-		//progress为作物当前进度；若为-1，则浇水失败
 		boolean succeed = new UserCropService().waterCr(userId, landNumber);
 		renderJson(""+succeed);
 	}
@@ -355,7 +354,6 @@ public class UserController extends Controller{
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
 		
-		//progress为作物当前进度；若为-1，则施肥失败
 		boolean succeed = new UserCropService().fertilizerCr(userId, landNumber);
 		renderJson(""+succeed);
 	}

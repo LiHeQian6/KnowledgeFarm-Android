@@ -153,7 +153,7 @@ public class UserService {
 	public boolean addEandM(int id,int ex,int money) {
 		return new UserDao().addExandMoney(id, ex, money);
 	}
-	//添加用户经验，金币(User表）
+	//添加用户金币(User表）
 	public boolean addMoney(int id, int money) {
 		return new UserDao().addMoney(id, money);
 	}
