@@ -1,39 +1,7 @@
-package com.li.knowledgefarm.Login.dialog;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.li.knowledgefarm.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+package com.li.knowledgefarm.Login;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -41,13 +9,41 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class RegistAccountDialog extends DialogFragment {
+import com.li.knowledgefarm.Login.dialog.SpinnerAdapter;
+import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.EvenBean;
 
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class RegisteActivity extends AppCompatActivity {
     private String rName;
     private String grade;
     private String password;
-    private RelativeLayout closeImg;
+    private ImageView closeImg;
     private LinearLayout linearAccount;
     private LinearLayout linearRegist;
     private TextView newAccount;
@@ -55,46 +51,63 @@ public class RegistAccountDialog extends DialogFragment {
     private SpinnerAdapter arrayAdapter;
     private int displayWidth;
     private int displayHeight;
-
-    @SuppressLint("HandlerLeak")
+    private EventBus eventBus;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
                 case 4:
-                    Toast.makeText(getContext(),"注册成功！",Toast.LENGTH_SHORT).show();
-                    linearRegist.setVisibility(View.GONE);
-                    linearAccount.setVisibility(View.VISIBLE);
-                    newAccount.setText(msg.obj.toString());
+                    Toast.makeText(RegisteActivity.this,"注册成功，请登录",Toast.LENGTH_SHORT).show();
+                    EvenBean evenBean = new EvenBean();
+                    evenBean.setAccount(msg.obj.toString());
+                    eventBus.post(evenBean);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    },1000);
                     break;
                 case 5:
-                    Toast.makeText(getContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
-                    dismiss();
+                    Toast.makeText(RegisteActivity.this,msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
             }
         }
     };
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.regist_dialog,container,false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_registe);
 
-        setViewSize(view);
+        getViews();
+        setViewSize();
+        setStatusBar();
+    }
+
+    /**
+     * @Description 获取控件Id
+     * @Auther 孙建旺
+     * @Date 上午 11:17 2019/12/17
+     * @Param []
+     * @return void
+     */
+    private void getViews() {
+        eventBus = EventBus.getDefault();
         array = getResources().getStringArray(R.array.sarry);
-        Spinner spinner = view.findViewById(R.id.spinner);
-        arrayAdapter = new SpinnerAdapter(getContext(),array);
+        Spinner spinner = findViewById(R.id.spinner);
+        arrayAdapter = new SpinnerAdapter(this,array);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new ProvOnItemSelectedListener());
-        linearAccount = view.findViewById(R.id.linearCount);
-        linearRegist = view.findViewById(R.id.linearRegist);
-        closeImg = view.findViewById(R.id.closeImg);
-        newAccount = view.findViewById(R.id.newAccount);
-        final EditText registName = view.findViewById(R.id.registName);
-        final EditText pwd = view.findViewById(R.id.registPwd2);
-        final EditText configPwd = view.findViewById(R.id.configPwd2);
-        Button button = view.findViewById(R.id.btnRegist2);
+        linearAccount = findViewById(R.id.linearCount);
+        linearRegist = findViewById(R.id.linearRegist);
+        closeImg = findViewById(R.id.RegisteReturn);
+        newAccount = findViewById(R.id.newAccount);
+        final EditText registName = findViewById(R.id.registName);
+        final EditText pwd = findViewById(R.id.registPwd2);
+        final EditText configPwd = findViewById(R.id.configPwd2);
+        TextView button = findViewById(R.id.btnRegist2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,10 +115,10 @@ public class RegistAccountDialog extends DialogFragment {
                 password = pwd.getText().toString();
                 String config = configPwd.getText().toString();
                 if(rName.equals("")||password.equals("")||config.equals("")){
-                    Toast.makeText(getContext(),"请完善注册信息！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisteActivity.this,"请完善注册信息！",Toast.LENGTH_SHORT).show();
                     return;
                 }else if(!password.equals(config)){
-                    Toast.makeText(getContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisteActivity.this,"密码输入不一致！",Toast.LENGTH_SHORT).show();
                     return;
                 }else {
                     new Thread(){
@@ -117,15 +130,15 @@ public class RegistAccountDialog extends DialogFragment {
                 }
             }
         });
+
         closeImg.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                dismiss();
+            public void onClick(View v) {
+                finish();
             }
         });
-
-        return view;
     }
+
 
     /**
      * @Description 设置控件适配屏幕
@@ -134,18 +147,18 @@ public class RegistAccountDialog extends DialogFragment {
      * @Param []
      * @return void
      */
-    private void setViewSize(View view) {
-        WindowManager wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+    private void setViewSize() {
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics ds = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(ds);
         displayWidth = ds.widthPixels;
         displayHeight = ds.heightPixels;
 
-        EditText nickname = view.findViewById(R.id.registName);
-        EditText pwd = view.findViewById(R.id.registPwd2);
-        EditText configPwd = view.findViewById(R.id.configPwd2);
-        Spinner grade = view.findViewById(R.id.spinner);
-        Button registe = view.findViewById(R.id.btnRegist2);
+        EditText nickname = findViewById(R.id.registName);
+        EditText pwd = findViewById(R.id.registPwd2);
+        EditText configPwd = findViewById(R.id.configPwd2);
+        Spinner grade = findViewById(R.id.spinner);
+        TextView registe = findViewById(R.id.btnRegist2);
 
         LinearLayout.LayoutParams params_nickname = new LinearLayout.LayoutParams((int)(displayWidth*0.4),(int)(displayHeight*0.1));
         params_nickname.gravity = Gravity.CENTER_HORIZONTAL;
@@ -266,5 +279,20 @@ public class RegistAccountDialog extends DialogFragment {
         }
         // 字符数组组合成字符串返回
         return new String(resultCharArray);
+    }
+
+    /**
+     * @Description 设置状态栏
+     * @Auther 孙建旺
+     * @Date 上午 11:23 2019/12/17
+     * @Param []
+     * @return void
+     */
+    protected void setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
+        }
     }
 }

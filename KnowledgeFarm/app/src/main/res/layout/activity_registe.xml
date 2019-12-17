@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/loginbackground">
+
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/RegisteReturn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/returns"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/linearCount"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"
+                android:text="您的账号是："/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="50dp"
+                android:id="@+id/newAccount"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearRegist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:paddingTop="10dp">
+            <EditText
+                android:id="@+id/registName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/eradius"
+                android:textAlignment="center"
+                android:imeOptions="flagNoExtractUi"
+                android:textCursorDrawable="@color/cursorCorlor"
+                android:hint="昵称"
+                android:textColor="@color/blackTextColor"
+                android:textColorHint="@color/editTextCorlor"
+                android:textSize="20sp" />
+            <EditText
+                android:id="@+id/registPwd2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/eradius"
+                android:textAlignment="center"
+                android:textColorHint="@color/editTextCorlor"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textPassword"
+                android:textCursorDrawable="@color/cursorCorlor"
+                android:textColor="@color/blackTextColor"
+                android:hint="密码"
+                android:textSize="20sp" />
+            <EditText
+                android:id="@+id/configPwd2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:inputType="textPassword"
+                android:textAlignment="center"
+                android:textColorHint="@color/editTextCorlor"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/eradius"
+                android:gravity="center_horizontal"
+                android:imeOptions="flagNoExtractUi"
+                android:textColor="@color/blackTextColor"
+                android:textCursorDrawable="@color/cursorCorlor"
+                android:hint="确认密码"
+                android:textSize="20sp" />
+            <Spinner
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:id="@+id/spinner"
+                android:entries="@array/sarry"
+                android:textAlignment="center"
+                android:background="@drawable/grade"
+                android:layout_width="match_parent"
+                android:textColor="@color/blackTextColor"
+                android:layout_height="50dp" />
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"/>
+            <TextView
+                android:id="@+id/btnRegist2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                android:text="注册"
+                android:textColor="#ffffff"
+                android:textSize="18dp"
+                android:background="@drawable/text_bg" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

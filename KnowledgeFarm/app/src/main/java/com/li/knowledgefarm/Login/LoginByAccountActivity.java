@@ -21,9 +21,8 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.li.knowledgefarm.Login.Interpolator.JellyInterpolator;
-import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
-import com.li.knowledgefarm.Login.dialog.RegistAccountDialog;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.EvenBean;
 import com.li.knowledgefarm.entity.User;
 
 import android.animation.Animator;
@@ -51,6 +50,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -89,7 +92,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
     private EditText edtCount;
     private EditText pwd;
     private ImageView returnImg;
-
+    private EventBus eventBus;
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
@@ -145,6 +148,18 @@ public class LoginByAccountActivity extends AppCompatActivity {
         setViewSize();
     }
 
+    /**
+     * @Description
+     * @Auther 孙建旺
+     * @Date 下午 2:19 2019/12/17
+     * @Param []        
+     * @return void 
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void EventBus(EvenBean evenBean){
+        edtCount.setText(evenBean.getAccount());
+    }
+    
     private void initView() {
         mBtnLogin = findViewById(R.id.main_btn_login);
         progress = findViewById(R.id.layout_progress);
@@ -159,6 +174,10 @@ public class LoginByAccountActivity extends AppCompatActivity {
         returnImg = findViewById(R.id.loginByAccountReturn);
         edtCount = findViewById(R.id.accout);
         pwd = findViewById(R.id.pwd);
+        eventBus = EventBus.getDefault();
+        if(!eventBus.isRegistered(this)){
+            eventBus.register(LoginByAccountActivity.this);
+        }
 
         SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
         edtCount.setText(sp.getString("account",""));
@@ -229,7 +248,9 @@ public class LoginByAccountActivity extends AppCompatActivity {
         registAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showRegistDialog();
+                Intent intent = new Intent();
+                intent.setClass(LoginByAccountActivity.this,RegisteActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -290,17 +311,6 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void showRegistDialog() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        RegistAccountDialog registAccountDialog = new RegistAccountDialog();
-        if(!registAccountDialog.isAdded()){
-            transaction.add(registAccountDialog,"notify");
-        }
-        transaction.show(registAccountDialog);
-        transaction.commit();
     }
 
     /**
