@@ -35,11 +35,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.Chinese;
 import com.li.knowledgefarm.entity.English;
 import com.li.knowledgefarm.entity.Question3Num;
 
@@ -63,21 +65,26 @@ public class ChineseActivity extends AppCompatActivity {
     private TextView isFalse;
     private ImageView isTrue;
     private ImageView isTrue2;
+    private ImageView isTrue3;
     private Handler getMath;
     private Handler getWAF;
     private Gson gson;
-    private List<English> datalist;
+    private List<Chinese> datalist;
     private int position=0;
     private int TrueAnswerNumber = 0;
     private Dialog ifReturn;
     private Boolean returnHandlerFinish = false;
     private TextView answer1;
     private TextView answer2;
+    private TextView answer3;
     private int displayWidth;
     private int displayHeight;
     private LinearLayout answerA;
     private LinearLayout answerB;
+    private LinearLayout answerC;
     private TextView trueAnswer;
+    private TextView yiText;
+    private LinearLayout tipText;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -91,7 +98,7 @@ public class ChineseActivity extends AppCompatActivity {
         /** 注册点击事件监听器*/
         registListener();
         setStatusBar();
-        getMaths();
+        getChineseQuestion();
         getMathHandler();
     }
 
@@ -156,9 +163,10 @@ public class ChineseActivity extends AppCompatActivity {
 
         LinearLayout tipText = findViewById(R.id.tipText);
         TextView tip = findViewById(R.id.tip);
-        ImageView isTrue = findViewById(R.id.englishIsTrue);
-        TextView trans2 = findViewById(R.id.transTwo);
-        ImageView isTrue2 = findViewById(R.id.englishIsTrue2);
+        ImageView isTrue = findViewById(R.id.chineseIsTrue);
+        TextView trans2 = findViewById(R.id.ClassifierTwo);
+        ImageView isTrue2 = findViewById(R.id.chineseIsTrue2);
+        ImageView isTrue3 = findViewById(R.id.chineseIsTrue3);
 
         RelativeLayout.LayoutParams params_tip = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params_tip.setMargins((int)(displayWidth*0.1),(int)(displayHeight*0.2),0,0);
@@ -181,6 +189,14 @@ public class ChineseActivity extends AppCompatActivity {
         LinearLayout.LayoutParams params_isTrue2 = new LinearLayout.LayoutParams((int)(displayWidth*0.05),(int)(displayHeight*0.1));
         params_isTrue2.setMargins(0,0,0,0);
         isTrue2.setLayoutParams(params_isTrue2);
+        isTrue3.setLayoutParams(params_isTrue2);
+
+        LinearLayout.LayoutParams params_trueanswer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_trueanswer.gravity = Gravity.CENTER_HORIZONTAL;
+        trueAnswer.setLayoutParams(params_trueanswer);
+        trueAnswer.setTextSize((int)(displayWidth*0.02));
+        trueAnswer.setTextColor(getResources().getColor(R.color.ShopTextColor));
+        trueAnswer.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 
     /**
@@ -238,11 +254,19 @@ public class ChineseActivity extends AppCompatActivity {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
+                        LoginActivity.user.setChineseRewardCount(LoginActivity.user.getChineseRewardCount() - 1);
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
+                        answer3.setVisibility(View.INVISIBLE);
+                        trueAnswer.setVisibility(View.GONE);
+                        yiText.setVisibility(View.GONE);
                         isFalse.setVisibility(View.INVISIBLE);
                         isTrue.setVisibility(View.GONE);
+                        isTrue2.setVisibility(View.GONE);
+                        isTrue3.setVisibility(View.GONE);
+                        tipText.setVisibility(View.GONE);
+                        btnPreQuestion.setVisibility(View.GONE);
+                        btnNextQuestion.setVisibility(View.GONE);
                         question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
                         question.setTextSize(28);
                         if(returnHandlerFinish)
@@ -270,8 +294,9 @@ public class ChineseActivity extends AppCompatActivity {
                 FormBody formBody = new FormBody.Builder()
                         .add("userId", LoginActivity.user.getId()+"")
                         .add("water",TrueAnswerNumber*2+"")
-                        .add("fertilizer",TrueAnswerNumber*2+"").build();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/addUserWater").post(formBody).build();
+                        .add("fertilizer",TrueAnswerNumber*2+"")
+                        .add("subject","chinese").build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/lessRewardCount").post(formBody).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -300,42 +325,65 @@ public class ChineseActivity extends AppCompatActivity {
      * @return void
      */
     private void showQuestion(int pos){
+        String quan1 = null;
+        String quan2 = null;
+        if(position == datalist.size()-1){
+            btnNextQuestion.setText("我答完啦！");
+        }
         if(!datalist.get(pos).getIfDone().equals("true")) {
             isFalse.setText("");
+            trueAnswer.setText("(  )");
             answerA.setVisibility(View.VISIBLE);
             answerB.setVisibility(View.VISIBLE);
-            trueAnswer.setVisibility(View.GONE);
+            answerC.setVisibility(View.VISIBLE);
+            trueAnswer.setVisibility(View.VISIBLE);
             isTrue.setVisibility(View.INVISIBLE);
             isTrue2.setVisibility(View.INVISIBLE);
+            isTrue3.setVisibility(View.INVISIBLE);
             question.setText(datalist.get(pos).getWord());
-            if(new Random().nextInt(2) == 0) {
-                answer1.setText(datalist.get(pos).getTrans());
-                String trans = null;
+            int randomNum = new Random().nextInt(3);
+            if(randomNum == 0) {
+                answer1.setText(datalist.get(pos).getQuantify());
                 do{
-                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
-                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
-                answer2.setText(trans);
+                    quan1 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
+                    quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
+                }while (quan1.equals(datalist.get(pos).getQuantify())
+                        || quan2.equals(datalist.get(pos).getQuantify())
+                        && quan1 != null
+                        && quan2 != null);
+                answer2.setText(quan1);
+                answer3.setText(quan2);
+            }else if(randomNum == 1){
+                answer2.setText(datalist.get(pos).getQuantify());
+                do{
+                    quan1 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
+                    quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
+                }while (quan1.equals(datalist.get(pos).getQuantify())
+                        || quan2.equals(datalist.get(pos).getQuantify())
+                        && quan1 != null
+                        && quan2 != null);
+                answer1.setText(quan1);
+                answer3.setText(quan2);
             }else{
-                answer2.setText(datalist.get(pos).getTrans());
-                String trans = null;
+                answer3.setText(datalist.get(pos).getQuantify());
                 do{
-                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
-                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
-                answer1.setText(trans);
+                    quan1 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
+                    quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
+                }while (quan1.equals(datalist.get(pos).getQuantify())
+                        || quan2.equals(datalist.get(pos).getQuantify())
+                        && quan1 != null
+                        && quan2 != null);
+                answer2.setText(quan1);
+                answer1.setText(quan2);
             }
         }else {
             isTrue.setVisibility(View.VISIBLE);
-            answerA.setVisibility(View.GONE);
-            answerB.setVisibility(View.GONE);
+            answerA.setVisibility(View.INVISIBLE);
+            answerB.setVisibility(View.INVISIBLE);
+            answerC.setVisibility(View.INVISIBLE);
             trueAnswer.setVisibility(View.VISIBLE);
             question.setText(datalist.get(pos).getWord());
-            trueAnswer.setText(datalist.get(pos).getTrans());
-
-            LinearLayout.LayoutParams params_trueanswer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params_trueanswer.gravity = Gravity.CENTER_HORIZONTAL;
-            trueAnswer.setLayoutParams(params_trueanswer);
-            trueAnswer.setTextSize((int)(displayWidth*0.02));
-            trueAnswer.setTextColor(getResources().getColor(R.color.ShopTextColor));
+            trueAnswer.setText(datalist.get(pos).getQuantify());
         }
     }
 
@@ -355,7 +403,7 @@ public class ChineseActivity extends AppCompatActivity {
                 String data = (String)msg.obj;
                 Log.e("enlish",data);
                 if(data != null) {
-                    Type type = new TypeToken<List<English>>() {
+                    Type type = new TypeToken<List<Chinese>>() {
                     }.getType();
                     datalist = gson.fromJson(data, type);
                     showQuestion(position);
@@ -371,26 +419,30 @@ public class ChineseActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void getMaths() {
+    private void getChineseQuestion() {
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                if (LoginActivity.user.getRewardCount() <= 0) {
+                if (LoginActivity.user.getChineseRewardCount() <= 0) {
                     question.setText("今天的任务都做完了哦！");
-                    question.setTextSize(10);
+                    question.setTextSize((int)(displayWidth*0.02));
                     answer1.setVisibility(View.GONE);
                     answer2.setVisibility(View.GONE);
+                    answer3.setVisibility(View.GONE);
+                    trueAnswer.setVisibility(View.GONE);
+                    tipText.setVisibility(View.GONE);
+                    yiText.setVisibility(View.GONE);
                     btnNextQuestion.setVisibility(View.GONE);
                     btnPreQuestion.setVisibility(View.GONE);
                 } else {
                     Request request = null;
                     switch (LoginActivity.user.getGrade()) {
                         case 1:
-                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneUpEnglish").build();
+                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneUpChinese").build();
                             break;
                         case 2:
-                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneDownEnglish").build();
+                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneDownChinese").build();
                             break;
                     }
                     Call call = okHttpClient.newCall(request);
@@ -422,24 +474,25 @@ public class ChineseActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getChineseRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
                     break;
-                case R.id.btnPreEnglish:
+                case R.id.btnPreChinese:
                     if((position-1)>=0) {
                         position = --position;
                         showQuestion(position);
                     }
                     break;
-                case R.id.transOne:
+                case R.id.ClassifierOne:
                     String t1 = answer1.getText().toString().trim();
-                    if(t1.equals(datalist.get(position).getTrans())){
+                    if(t1.equals(datalist.get(position).getQuantify())){
                         TrueAnswerNumber++;
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue.setVisibility(View.VISIBLE);
                         isTrue2.setVisibility(View.INVISIBLE);
+                        isTrue3.setVisibility(View.INVISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         PlayTrueSound();
                         isFalse.setVisibility(View.VISIBLE);
@@ -462,14 +515,15 @@ public class ChineseActivity extends AppCompatActivity {
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
-                case R.id.transTwo:
+                case R.id.ClassifierTwo:
                     String t2 = answer2.getText().toString().trim();
-                    if(t2.equals(datalist.get(position).getTrans())){
+                    if(t2.equals(datalist.get(position).getQuantify())){
                         datalist.get(position).setIfDone("true");
                         TrueAnswerNumber++;
                         isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue2.setVisibility(View.VISIBLE);
                         isTrue.setVisibility(View.INVISIBLE);
+                        isTrue3.setVisibility(View.INVISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         PlayTrueSound();
                         isFalse.setVisibility(View.VISIBLE);
@@ -492,14 +546,49 @@ public class ChineseActivity extends AppCompatActivity {
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
-                case R.id.btnNextEnglish:
+                case R.id.ClassifierThree:
+                    String t3 = answer3.getText().toString().trim();
+                    if(t3.equals(datalist.get(position).getQuantify())){
+                        datalist.get(position).setIfDone("true");
+                        TrueAnswerNumber++;
+                        isTrue3.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
+                        isTrue3.setVisibility(View.VISIBLE);
+                        isTrue.setVisibility(View.INVISIBLE);
+                        isTrue2.setVisibility(View.INVISIBLE);
+                        isFalse.setText("答对啦！获得了奖励哦！");
+                        PlayTrueSound();
+                        isFalse.setVisibility(View.VISIBLE);
+                        if((position+1)<=datalist.size()-1) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    datalist.get(position).setIfDone("true");
+                                    position = ++position;
+                                    showQuestion(position);
+                                }
+                            }, 1000);
+                        }
+                    }else{
+                        isTrue3.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
+                        isTrue3.setVisibility(View.VISIBLE);
+                        isFalse.setText("哎呀，选错了！");
+                        PlayFalseSound();
+                        isFalse.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case R.id.btnNextChinese:
                     if((position+1)<=datalist.size()-1) {
                         position = ++position;
                         showQuestion(position);
                     }else{
-                        getWandFCallBack();
-                        getWaterAndFertilizer();
-                        btnNextQuestion.setClickable(false);
+                        if(TrueAnswerNumber < datalist.size()){
+                            Toast.makeText(ChineseActivity.this,"你还没有答完哦",Toast.LENGTH_SHORT).show();;
+                        }else {
+                            getWandFCallBack();
+                            getWaterAndFertilizer();
+                            btnNextQuestion.setClickable(false);
+                        }
                     }
                     break;
             }
@@ -519,12 +608,17 @@ public class ChineseActivity extends AppCompatActivity {
         question = findViewById(R.id.chineseQuestion);
         answer1 = findViewById(R.id.ClassifierOne);
         answer2 = findViewById(R.id.ClassifierTwo);
+        answer3 = findViewById(R.id.ClassifierThree);
         isTrue = findViewById(R.id.chineseIsTrue);
         isTrue2 = findViewById(R.id.chineseIsTrue2);
+        isTrue3 = findViewById(R.id.chineseIsTrue3);
         isFalse = findViewById(R.id.chineseIsFalse);
         answerA = findViewById(R.id.AnswerA);
         answerB = findViewById(R.id.AnswerB);
-        trueAnswer = findViewById(R.id.trueAnswer);
+        answerC = findViewById(R.id.AnswerC);
+        trueAnswer = findViewById(R.id.TrueAnswer);
+        yiText = findViewById(R.id.yiText);
+        tipText = findViewById(R.id.tipText);
     }
 
     /**
@@ -537,6 +631,7 @@ public class ChineseActivity extends AppCompatActivity {
         btnNextQuestion.setOnClickListener(listener);
         answer1.setOnClickListener(listener);
         answer2.setOnClickListener(listener);
+        answer3.setOnClickListener(listener);
     }
 
     protected void setStatusBar() {

@@ -74,6 +74,7 @@ public class EnglishActivity extends AppCompatActivity {
     private LinearLayout answerA;
     private LinearLayout answerB;
     private TextView trueAnswer;
+    private LinearLayout tipText;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -150,7 +151,6 @@ public class EnglishActivity extends AppCompatActivity {
         displayWidth = ds.widthPixels;
         displayHeight = ds.heightPixels;
 
-        LinearLayout tipText = findViewById(R.id.tipText);
         TextView tip = findViewById(R.id.tip);
         ImageView isTrue = findViewById(R.id.englishIsTrue);
         TextView trans2 = findViewById(R.id.transTwo);
@@ -234,7 +234,7 @@ public class EnglishActivity extends AppCompatActivity {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
+                        LoginActivity.user.setEnglishRewardCount(LoginActivity.user.getEnglishRewardCount() - 1);
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
                         isFalse.setVisibility(View.INVISIBLE);
@@ -265,9 +265,10 @@ public class EnglishActivity extends AppCompatActivity {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
                         .add("userId", LoginActivity.user.getId()+"")
-                        .add("water",TrueAnswerNumber*2+"")
-                        .add("fertilizer",TrueAnswerNumber*2+"").build();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/addUserWater").post(formBody).build();
+                        .add("water",TrueAnswerNumber*1+"")
+                        .add("fertilizer",TrueAnswerNumber*1+"")
+                        .add("subject","english").build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/lessRewardCount").post(formBody).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -372,11 +373,12 @@ public class EnglishActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                if (LoginActivity.user.getRewardCount() <= 0) {
+                if (LoginActivity.user.getEnglishRewardCount() <= 0) {
                     question.setText("今天的任务都做完了哦！");
-                    question.setTextSize(10);
+                    question.setTextSize((int)(displayWidth*0.02));
                     answer1.setVisibility(View.GONE);
                     answer2.setVisibility(View.GONE);
+                    tipText.setVisibility(View.GONE);
                     btnNextQuestion.setVisibility(View.GONE);
                     btnPreQuestion.setVisibility(View.GONE);
                 } else {
@@ -418,7 +420,7 @@ public class EnglishActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getEnglishRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
@@ -521,6 +523,7 @@ public class EnglishActivity extends AppCompatActivity {
         answerA = findViewById(R.id.AnswerA);
         answerB = findViewById(R.id.AnswerB);
         trueAnswer = findViewById(R.id.trueAnswer);
+        tipText = findViewById(R.id.tipText);
     }
 
     /**

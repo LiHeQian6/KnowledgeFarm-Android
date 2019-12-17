@@ -48,12 +48,28 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true">
             <TextView
-                android:id="@+id/chineseQuestion"
+                android:id="@+id/yiText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="50dp"
                 android:textColor="#ffffff"
-                android:text="hello" />
+                android:text="一" />
+
+            <TextView
+                android:id="@+id/TrueAnswer"
+                android:textSize="50dp"
+                android:textColor="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+
+            <TextView
+                android:id="@+id/chineseQuestion"
+                android:layout_width="wrap_content"
+                android:textSize="50dp"
+                android:textColor="#ffffff"
+                android:layout_height="wrap_content">
+            </TextView>
 
         </LinearLayout>
 
@@ -116,15 +132,6 @@
                 </ImageView>
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/trueAnswer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="True Answer"
-                android:textSize="30dp"
-                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/AnswerB"
