@@ -74,9 +74,6 @@
                         <input type="text" id="price" name="price" required="" lay-verify="nikename"
                         autocomplete="off" class="layui-input">
                     </div>
-                    <div class="layui-form-mid layui-word-aux">
-                    	*金币
-                    </div>
                 </div>
                 <div class="layui-form-item">
                     <label for="L_pass" class="layui-form-label">

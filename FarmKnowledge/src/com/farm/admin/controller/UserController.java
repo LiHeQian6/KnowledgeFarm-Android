@@ -187,6 +187,11 @@ public class UserController extends Controller{
 		int level = 0;
 		int experience = 0;
 		int money = 0;
+		int mathRewardCount = 0;
+		int englishRewardCount = 0;
+		int chineseRewardCount = 0;
+		int water = 0;
+		int fertilizer = 0;
 		int online = 0;
 		String newPhoto = "";
 		
@@ -231,6 +236,21 @@ public class UserController extends Controller{
 						case "money":
 							money = Integer.parseInt(aString);
 							break;
+						case "mathRewardCount":
+							mathRewardCount = Integer.parseInt(aString);
+							break;
+						case "englishRewardCount":
+							englishRewardCount = Integer.parseInt(aString);
+							break;
+						case "chineseRewardCount":
+							chineseRewardCount = Integer.parseInt(aString);
+							break;
+						case "water":
+							water = Integer.parseInt(aString);
+							break;
+						case "fertilizer":
+							fertilizer = Integer.parseInt(aString);
+							break;
 						case "online":
 							if(aString.equals("on")) {
 								online = 1;
@@ -262,7 +282,8 @@ public class UserController extends Controller{
 						File file = new File(Strings.userfilePath + photoName);
 						fi.write(file);
 					}
-					boolean succeed = service.updateUser(oldAccout, newAccout, nickName, newPhoto, photoName, email, grade, level, experience, money, online);
+					boolean succeed = service.updateUser(oldAccout, newAccout, nickName, newPhoto, photoName, email, grade, level, experience, money
+						, mathRewardCount, englishRewardCount, chineseRewardCount, water, fertilizer, online);
 					if(succeed == true) {
 						renderText("succeed");
 					}else {

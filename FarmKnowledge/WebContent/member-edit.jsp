@@ -124,6 +124,66 @@
                 </div>
                 <div class="layui-form-item">
                     <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>数学
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="mathRewardCount" type="text" id="L_username" name="mathRewardCount" required lay-verify="required"
+                        autocomplete="off" class="layui-input" value="${user.mathRewardCount}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                    	*剩余奖励次数
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>英语
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="englishRewardCount" type="text" id="L_username" name="englishRewardCount" required lay-verify="required"
+                        autocomplete="off" class="layui-input" value="${user.englishRewardCount}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                    	*剩余奖励次数
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>语文
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="chineseRewardCount" type="text" id="L_username" name="chineseRewardCount" required lay-verify="required"
+                        autocomplete="off" class="layui-input" value="${user.chineseRewardCount}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                    	*剩余奖励次数
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>浇水
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="water" type="text" id="L_username" name="water" required lay-verify="required"
+                        autocomplete="off" class="layui-input" value="${user.water}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                    	*剩余次数
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                    	<font color="red">*</font>施肥
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="fertilizer" type="text" id="L_username" name="fertilizer" required lay-verify="required"
+                        autocomplete="off" class="layui-input" value="${user.fertilizer}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                    	*剩余次数
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
                     	<font color="red">*</font>在线
                     </label>
 				    <div class="layui-input-block">
