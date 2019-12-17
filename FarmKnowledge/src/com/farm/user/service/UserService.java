@@ -120,36 +120,33 @@ public class UserService {
 		return new UserDao().decreaseMoney(id, money);
 	}
 	//添加浇水，施肥（User表）
-	public int addWaterAndFer(int id,int water, int fertilizer) {
+	public int lessRewardCount(int id,int water, int fertilizer, String subject) {
 		UserDao dao = new UserDao();
-		if(dao.getRewardCount(id) > 0) {
-			boolean succeed = Db.tx(new IAtom() {
-				@Override
-				public boolean run() throws SQLException {
-					boolean a1 = false;
-					boolean a2 = false;
-					int rewardCount = dao.getUpdateUserInfo(id).getInt("rewardCount");
-					if(rewardCount >= 1) {
-						a1 = dao.lessRewardCount(id,rewardCount-1);
-						a2 = dao.addWaterAndFertilizer(id, water, fertilizer);
-					}else {
-						a1 = true;
-						a2 = true;
-					}
-					
-					if(a1 && a2) {
-						return true;
-					}
-					return false;
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				boolean a1 = false;
+				boolean a2 = false;
+				int rewardCount = dao.getUpdateUserInfo(id).getInt(subject+"RewardCount");
+				if(rewardCount >= 1) {
+					a1 = dao.lessRewardCount(id,rewardCount-1,subject);
+					a2 = dao.addWaterAndFertilizer(id, water, fertilizer);
+				}else {
+					a1 = true;
+					a2 = true;
 				}
-			});
-			if(succeed) {
-				return dao.getRewardCount(id);
-			}else {
-				return -1;
+				
+				if(a1 && a2) {
+					return true;
+				}
+				return false;
 			}
+		});
+		if(succeed) {
+			return dao.getUpdateUserInfo(id).getInt(subject+"RewardCount");
+		}else {
+			return -1;
 		}
-		return -1;
 	}
 	//添加用户经验，金币(User表）
 	public boolean addEandM(int id,int ex,int money) {
@@ -212,6 +209,10 @@ public class UserService {
 	 * @throws
 	 */
 	//查询User表内用户信息（User表）
+	public Page<User> findUserPageAll(int pageNumber,int everyCount,String accout) {
+		return new UserDao().findUserPageAll(pageNumber, everyCount, accout);
+	}
+	//查询User表内用户信息（User表）
 	public Page<User> findUserPage(int pageNumber,int everyCount,String accout,int exist) {
 		return new UserDao().findUserPage(pageNumber,everyCount,accout,exist);
 	}
@@ -262,10 +263,6 @@ public class UserService {
 	//根据userId查询userCropId列表
 	public List<Integer> getUserCropIdById(int id) {
 		return new UserDao().getUserCropIdById(id);
-	}
-	//User表查询剩余奖励次数
-	public int getRewardCount(int id) {
-		return new UserDao().getRewardCount(id);
 	}
 	//判断账号是否绑定QQ
 	public boolean isBindingQQ(String accout) {

@@ -4,16 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.farm.answer.dao.EnglishDao;
+import com.farm.answer.dao.AnswerDao;
 import com.farm.entity.Question3Num;
+import com.farm.model.Chinese;
 import com.farm.model.English;
 import com.jfinal.plugin.activerecord.Page;
 
 public class AnswerService {
 	
+	//一年级上册语文
+	public Page<Chinese> OneUpChinese(int pageNumber, int pageSize){
+		return new AnswerDao().getChineseWords(pageNumber, pageSize);
+	}
+	
 	//一年级上册英语
 	public Page<English> OneUpEnglish(int pageNumber, int pageSize){
-		return new EnglishDao().getEnglishWords(pageNumber, pageSize);
+		return new AnswerDao().getEnglishWords(pageNumber, pageSize);
 	}
 
 	//一年级上册数学
@@ -38,11 +44,13 @@ public class AnswerService {
 					num2 = random.nextInt(20-num1);
 					result = num1 + num2;
 				}else {
+					num1 = random.nextInt(15)+5;
 					num2 = random.nextInt(num1+1);
 					result = num1 - num2;
 				}
 			}else {
 				if(signal1.equals("-")) {
+					num1 = random.nextInt(15)+5;
 					num2 = random.nextInt(num1+1);
 					num12 = num1 - num2;
 					if(signal2.equals("-")) {
@@ -78,7 +86,7 @@ public class AnswerService {
 			String signal1 = random.nextBoolean()? "+": "-";
 			String x = random.nextBoolean()? "+": "-";
 			String signal2 = random.nextBoolean()? x:"";
-			int num1 = random.nextInt(90)+10;
+			int num1 = random.nextInt(100);
 			int num2 = random.nextInt(100);
 			int num3 = 0;
 			if(!signal2.equals("")) {
@@ -91,11 +99,13 @@ public class AnswerService {
 					num2 = random.nextInt(100-num1);
 					result = num1 + num2;
 				}else {
+					num1 = random.nextInt(80)+20;
 					num2 = random.nextInt(num1+1);
 					result = num1 - num2;
 				}
 			}else {
 				if(signal1.equals("-")) {
+					num1 = random.nextInt(80)+20;
 					num2 = random.nextInt(num1+1);
 					num12 = num1 - num2;
 					if(signal2.equals("-")) {

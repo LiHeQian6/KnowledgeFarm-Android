@@ -194,10 +194,10 @@ public class UserDao {
 		return User.dao.findById(userId).set(landNumber, userCropId).update();
 	}
 	//设置奖励次数
-	public boolean lessRewardCount(int id, int rewardCount) {
+	public boolean lessRewardCount(int id, int rewardCount, String subject) {
 		User user = User.dao.findById(id);
 		if(user != null) {
-			return User.dao.findById(id).set("rewardCount", rewardCount).update();
+			return User.dao.findById(id).set(subject+"RewardCount", rewardCount).update();
 		}
 		return false;
 	}
@@ -319,13 +319,25 @@ public class UserDao {
 
 	//根据账号查询用户id
 	public int getUserIdByAccout(String accout) {
-		int userId = Db.queryInt("select id from user where accout=?",accout);
-		return userId;
+		if(!(""+Db.queryInt("select id from user where accout=?",accout)).equals("null") ) {
+			return Db.queryInt("select id from user where accout=?",accout);
+		}
+		return 0;
 	}
 	//获得User表最后一条数据的userId
 	public int getLastUserId(){
 		int id =  Db.queryInt("select id from user order by id desc limit 1");
 		return id;
+	}
+	//查询User表内用户信息（User表）
+	public Page<User> findUserPageAll(int pageNumber,int everyCount,String accout) {
+		Page<User> userPage;
+		if(accout == null || accout.equals("")) {
+			userPage = User.dao.paginate(pageNumber, everyCount, "select *","from user");	
+		}else {
+			userPage = User.dao.paginate(pageNumber, everyCount, "select *","from user where accout like?","%"+accout+"%");
+		}
+		return userPage;
 	}
 	//查询User表内用户信息（User表）
 	public Page<User> findUserPage(int pageNumber,int everyCount,String accout,int exist) {
@@ -366,14 +378,6 @@ public class UserDao {
 		}
 		return 0;
 	}	
-	//User表查询剩余奖励次数
-	public int getRewardCount(int id) {
-		User user = User.dao.findById(id);
-		if(user != null) {
-			return user.getInt("rewardCount");
-		}
-		return -1;
-	}
 	//判断账号是否绑定QQ
 	public boolean isBindingQQ(String accout) {
 		int userId = getUserIdByAccout(accout);

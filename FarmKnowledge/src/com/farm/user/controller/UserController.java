@@ -321,21 +321,23 @@ public class UserController extends Controller{
 		renderJson("" +succeed);
 	}
 	
-	//增加浇水、施肥次数（userId，数量）
-	public void addUserWater() {
+	//减少奖励次数，增加浇水、施肥次数
+	public void lessRewardCount() {
 		int userId = getInt("userId");
 		int water = getInt("water");
 		int fertilizer = getInt("fertilizer");
+		String subject = get("subject");
 		
 		//返回为"-1":操作失败；返回为"非-1":剩余奖励次数
-		int rewardCount = new UserService().addWaterAndFer(userId, water, fertilizer);
+		int rewardCount = new UserService().lessRewardCount(userId, water, fertilizer, subject);
 		renderJson(rewardCount);
 	}
 	
 	//查询剩余奖励次数
 	public void getRewardCount() {
 		int userId = getInt("userId");
-		renderJson(""+new UserService().getRewardCount(userId));
+		String subject = get("subject");
+		renderJson(""+new UserService().getUpdateUserInfo(userId).get(subject+"RewardCount"));
 	}
 
 	//浇水（userId）

@@ -51,7 +51,6 @@ public class UserController extends Controller{
 		}else {
 			renderJsp("/member-del.jsp");
 		}
-		
 	}
 
 	//删除User表内单个用户信息，跳转到用户列表页面（User、UserAuthority表修改exist字段为0）
