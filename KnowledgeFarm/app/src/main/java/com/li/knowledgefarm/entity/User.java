@@ -1,6 +1,8 @@
 package com.li.knowledgefarm.entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private int id;
     private String accout;
     private String password;

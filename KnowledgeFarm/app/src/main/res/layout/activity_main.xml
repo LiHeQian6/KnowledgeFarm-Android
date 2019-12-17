@@ -114,6 +114,7 @@
             <LinearLayout android:layout_width="wrap_content"
                           android:orientation="vertical"
                           android:gravity="center"
+                          android:id="@+id/shopbox"
                           android:layout_marginRight="20dp"
                           android:layout_height="wrap_content">
                 <ImageView android:layout_width="50dp"
@@ -135,11 +136,13 @@
                            android:layout_height="50dp"/>
                 <TextView android:layout_width="wrap_content"
                           android:text="宠物"
+                          android:id="@+id/pett"
                           android:layout_height="wrap_content"/>
             </LinearLayout>
             <LinearLayout android:layout_width="wrap_content"
                          android:orientation="vertical"
                          android:gravity="center"
+                         android:id="@+id/settingbox"
                          android:layout_marginRight="20dp"
                          android:layout_height="wrap_content">
                 <ImageView android:layout_width="50dp"
@@ -242,6 +245,7 @@
         <LinearLayout android:layout_width="wrap_content"
                       android:orientation="vertical"
                       android:gravity="center"
+                      android:id="@+id/harvestbox"
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
             <RelativeLayout
@@ -266,6 +270,7 @@
         <LinearLayout android:layout_width="wrap_content"
                       android:orientation="vertical"
                       android:gravity="center"
+                      android:id="@+id/bagbox"
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
             <ImageView android:layout_width="60dp"

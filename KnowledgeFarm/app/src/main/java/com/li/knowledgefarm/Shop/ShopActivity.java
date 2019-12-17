@@ -256,11 +256,16 @@ public class ShopActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buyFlowers(
-                        LoginActivity.user.getId(),
-                        shopList.get(position).getId(),
-                        Integer.parseInt(shopNumber.getText().toString().trim())
-                );
+                if(shopNumber.getText().toString().equals("")){
+                    Toast.makeText(getBaseContext(),"购买数量不能为空哦！",Toast.LENGTH_SHORT).show();
+                }else{
+                    buyFlowers(
+                            LoginActivity.user.getId(),
+                            shopList.get(position).getId(),
+                            Integer.parseInt(shopNumber.getText().toString().trim())
+                    );
+                }
+
             }
         });
         doAfterAdd = new Handler(){
