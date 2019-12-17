@@ -14,6 +14,8 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -87,6 +89,50 @@ public class EnglishActivity extends AppCompatActivity {
         setStatusBar();
         getMaths();
         getMathHandler();
+    }
+
+    /**
+     * @Description 播放回答错误提示音效
+     * @Auther 孙建旺
+     * @Date 上午 9:19 2019/12/17
+     * @Param []
+     * @return void
+     */
+    private void PlayFalseSound(){
+        MediaPlayer player = new MediaPlayer();
+        AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.cuowu);
+        try {
+            player.setDataSource(file.getFileDescriptor(),file.getStartOffset(),file.getLength());
+            file.close();
+            if(!player.isPlaying()){
+                player.prepare();
+                player.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @Description 播放回答正确提示音效
+     * @Auther 孙建旺
+     * @Date 上午 9:01 2019/12/17
+     * @Param []
+     * @return void
+     */
+    private void PlayTrueSound(){
+        MediaPlayer player = new MediaPlayer();
+        AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.yinxiao1041);
+        try {
+            player.setDataSource(file.getFileDescriptor(),file.getStartOffset(),file.getLength());
+            file.close();
+            if(!player.isPlaying()){
+                player.prepare();
+                player.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -391,6 +437,7 @@ public class EnglishActivity extends AppCompatActivity {
                         isTrue.setVisibility(View.VISIBLE);
                         isTrue2.setVisibility(View.INVISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
+                        PlayTrueSound();
                         isFalse.setVisibility(View.VISIBLE);
                         if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
@@ -407,6 +454,7 @@ public class EnglishActivity extends AppCompatActivity {
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("哎呀，选错了！");
+                        PlayFalseSound();
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -419,6 +467,7 @@ public class EnglishActivity extends AppCompatActivity {
                         isTrue2.setVisibility(View.VISIBLE);
                         isTrue.setVisibility(View.INVISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
+                        PlayTrueSound();
                         isFalse.setVisibility(View.VISIBLE);
                         if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
@@ -435,6 +484,7 @@ public class EnglishActivity extends AppCompatActivity {
                         isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue2.setVisibility(View.VISIBLE);
                         isFalse.setText("哎呀，选错了！");
+                        PlayFalseSound();
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;

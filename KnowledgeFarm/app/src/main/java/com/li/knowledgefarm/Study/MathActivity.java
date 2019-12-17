@@ -390,6 +390,7 @@ public class MathActivity extends AppCompatActivity {
                     break;
                 case R.id.btnPreQuestion:
                     if((position-1)>=0) {
+                        answer.setText("");
                         position = --position;
                         showQuestion(position);
                     }
@@ -398,6 +399,12 @@ public class MathActivity extends AppCompatActivity {
                     String inputRes = answer.getText().toString().trim();
                     if(answer.getVisibility() == View.INVISIBLE){
                         position++;
+                        showQuestion(position);
+                        return;
+                    }
+                    if(inputRes.equals("")) {
+                        answer.setText("");
+                        position = ++position;
                         showQuestion(position);
                         return;
                     }
