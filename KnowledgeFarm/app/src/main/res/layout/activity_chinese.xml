@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Study.ChineseActivity"
+    android:background="@drawable/mathbg">
+    <ImageView
+        android:id="@+id/iv_return"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:src="@drawable/jiantou"/>
+    <LinearLayout
+        android:id="@+id/tipText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerHorizontal="true">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择一个你认为正确的答案">
+            </TextView>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+        </TextView>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+        <LinearLayout
+            android:id="@+id/linearChineseQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+            <TextView
+                android:id="@+id/chineseQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="50dp"
+                android:textColor="#ffffff"
+                android:text="hello" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Classifier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@+id/linearChineseQuestion"
+            android:layout_marginTop="15dp">
+
+            <LinearLayout
+                android:id="@+id/AnswerA"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right|center">
+
+                <TextView
+                    android:id="@+id/ClassifierOne"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你好"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="30dp" />
+
+                <ImageView
+                    android:id="@+id/chineseIsTrue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:src="@drawable/cha">
+                </ImageView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/AnswerC"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/ClassifierThree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你好"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="30dp" />
+
+                <ImageView
+                    android:id="@+id/chineseIsTrue3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:src="@drawable/cha">
+                </ImageView>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/trueAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="True Answer"
+                android:textSize="30dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/AnswerB"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left|center">
+
+                <TextView
+                    android:id="@+id/ClassifierTwo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="再见"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="30dp" />
+                <ImageView
+                    android:id="@+id/chineseIsTrue2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:src="@drawable/cha">
+                </ImageView>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/qs"
+            android:gravity="center"
+            android:layout_below="@id/Classifier">
+
+            <TextView
+                android:id="@+id/chineseIsFalse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="哎呀，选错了！"
+                android:textColor="@color/ShopTextColor"
+                android:visibility="invisible"
+                android:textSize="20sp">
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/qs">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/btnPreChinese"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:textColor="#ffffff"
+                    android:text="上一题"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/btnNextChinese"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:textColor="#ffffff"
+                    android:text="下一题"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
