@@ -13,6 +13,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.wifi.aware.DiscoverySession;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,13 +28,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,11 +48,13 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.li.knowledgefarm.MyFriends.MyFriendActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.entity.BagCropNumber;
+import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
 import org.jetbrains.annotations.NotNull;
@@ -73,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView xzw;
     private ImageView xzf;
     private ImageView xzs;
+    private ImageView myFriends;
     private TextView nickName;
     private TextView level;
     private TextView account;
@@ -80,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar experience;
     private TextView experienceValue;
     private GridLayout lands;
+    private ListView friendsListView;
     private Dialog bagDialog;
     private Dialog ifExtention;
     private OkHttpClient okHttpClient;
@@ -87,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
     private Gson gson;
     private List<BagCropNumber> dataList;
     private List<UserCropItem> cropList;
+    private FriendsPage<User> friendsPage;
     private Handler UpdataLands;
     private Handler cropMessagesHandler;
     private int selectLand=0;//选中第几块土地
@@ -99,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
     private int selectedPlant=0;//选中的植物是第几块土地
     private int displayWidth;
     private int displayHeight;
+    private Handler friendsMessagesHandler;
+    private EditText searchAccount;
+    private RadioGroup searchSelected;
+    private int searchSelectedItem=0;
 
 
     @Override
@@ -319,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 RequestOptions requestOptions = new RequestOptions()
-                        .placeholder(R.drawable.huancun2)
+                        .placeholder(R.drawable.loading)
                         .error(R.drawable.meigui)
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
@@ -353,13 +368,14 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setMax(crop.getCrop().getMatureTime());
                     progressBar.setProgress(crop.getProgress());
                     progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar_bg));
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(140,20);
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(140,30);
                     layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
                     progressBar.setLayoutParams(layoutParams);
                     //植物成长值
                     final TextView value = new TextView(this);
                     value.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
                     value.setTextSize(8);
+                    value.setTextColor(Color.BLACK);
                     value.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     value.setLayoutParams(layoutParams);
                     if(crop.getState()==0){
@@ -442,7 +458,10 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                     }
-                                    land.setImageResource(R.drawable.land);
+                                    if(finalCrop.getState()==0){
+                                        land.setImageResource(R.drawable.land_gan);
+                                    }else
+                                        land.setImageResource(R.drawable.land);
                                 }
                             };
                         }
@@ -493,7 +512,7 @@ public class MainActivity extends AppCompatActivity {
         pet.setOnClickListener(new MainListener());
         setting.setOnClickListener(new MainListener());
         harvest.setOnClickListener(new MainListener());
-
+        myFriends.setOnClickListener(new MainListener());
     }
 
     /**
@@ -594,6 +613,7 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzw);
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzf);
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzs);
+        myFriends=findViewById(R.id.friends);
     }
     class MainListener implements View.OnClickListener {
 
@@ -642,8 +662,241 @@ public class MainActivity extends AppCompatActivity {
                     intent.setClass(MainActivity.this, SettingActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.friends:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    showFriends();
+                    myFriends.setVisibility(View.GONE);
+                    break;
+                case R.id.pre:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    if (searchSelectedItem==0)
+                        getFriendsInfo(friendsPage.getPrePageNum());
+                    else
+                        getAllInfo(friendsPage.getPrePageNum());
+                    break;
+                case R.id.next:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    if (searchSelectedItem==0)
+                        getFriendsInfo(friendsPage.getNextPageNum());
+                    else
+                        getAllInfo(friendsPage.getNextPageNum());
+                    break;
+                case R.id.search:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    Log.e("searchSelectedItem",searchSelectedItem+"");
+                    if (searchSelectedItem==0)
+                        findFriendInfo(searchAccount.getText().toString());
+                    else
+                        findPeopleByAccount(searchAccount.getText().toString());
+                    break;
+
             }
         }
+    }
+
+    /**
+     * 根据账号在所有人中查询
+     * @param account
+     */
+    private void findPeopleByAccount(final String account) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/findAllUser?accout="+account).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        friendsMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        friendsMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    /**
+     * 根据账号查询好友
+     */
+    private void findFriendInfo(final String account) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/findUserFriend?userId="+LoginActivity.user.getId()+"&accout="+account).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        friendsMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        friendsMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private void showFriends() {
+        final Dialog friendsDialog = new Dialog(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.friends_dialog, null);
+        friendsListView=layout.findViewById(R.id.friends_lv);
+        searchAccount=layout.findViewById(R.id.search_account);
+        searchSelected=layout.findViewById(R.id.searchSelected);
+        searchSelected.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i){
+                    case R.id.my:
+                        friendsPage.setPrePageNum(1);
+                        friendsPage.setNextPageNum(1);
+                        searchSelectedItem=0;
+                        break;
+                    case R.id.all:
+                        friendsPage.setPrePageNum(1);
+                        friendsPage.setNextPageNum(1);
+                        searchSelectedItem=1;
+                        break;
+                }
+
+            }
+        });
+        Button search=layout.findViewById(R.id.search);
+        ImageView per = layout.findViewById(R.id.pre);
+        ImageView next = layout.findViewById(R.id.next);
+        final TextView now = layout.findViewById(R.id.now);
+        per.setOnClickListener(new MainListener());
+        next.setOnClickListener(new MainListener());
+        search.setOnClickListener(new MainListener());
+        friendsMessagesHandler=new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                String messages = (String)msg.obj;
+                Log.e("好友",messages);
+                if(!messages.equals("Fail")){
+                    Type type = new TypeToken<FriendsPage<User>>(){}.getType();
+                    friendsPage = gson.fromJson(messages,type);
+                    now.setText(friendsPage.getCurrentPageNum()+"/"+friendsPage.getTotalPageNum());
+                    FriendsCustomerAdapter customerAdapter = new FriendsCustomerAdapter(friendsDialog.getContext(),friendsPage.getList(),R.layout.friends_list_item);
+                    friendsListView.setAdapter(customerAdapter);
+                    customerAdapter.notifyDataSetChanged();
+                }else{
+                    Toast toast = Toast.makeText(MainActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
+        getFriendsInfo(1);
+        friendsDialog.setContentView(layout);
+        friendsDialog.show();
+        if (friendsDialog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            friendsDialog.getWindow().setDimAmount(0f);//去除遮罩
+        }
+        WindowManager.LayoutParams attrs = friendsDialog .getWindow().getAttributes();
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+        attrs.gravity = Gravity.RIGHT;
+        attrs.width = (int)(displayWidth*0.40);
+        attrs.height = (int)(displayHeight*0.95);
+        friendsDialog.getWindow().setAttributes(attrs);
+        Window dialogWindow = friendsDialog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
+        friendsDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                myFriends.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    /**
+     * 获得好友分页
+     * @param pageNumber
+     */
+    private void getFriendsInfo(final int pageNumber) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/findUserFriend?userId="+LoginActivity.user.getId()+"&pageNumber="+pageNumber).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        friendsMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        friendsMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+
+    }
+
+    /**
+     * 获得所有人分页
+     * @param pageNumber
+     */
+    private void getAllInfo(final int pageNumber){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/findAllUser?pageNumber="+pageNumber).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        friendsMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        friendsMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
     }
 
     /**
@@ -804,7 +1057,6 @@ public class MainActivity extends AppCompatActivity {
             bagDialog.getWindow().setDimAmount(0f);//去除遮罩
         }
         attrs.gravity = Gravity.RIGHT;
-        final float scale = this.getResources().getDisplayMetrics().density;
         attrs.width = (int)(displayWidth*0.40);
         attrs.height = (int)(displayHeight*0.95);
         bagDialog.getWindow().setAttributes(attrs);

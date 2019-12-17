@@ -50,7 +50,6 @@
                       android:layout_alignParentLeft="true"
                       android:id="@+id/userInfo"
                       android:paddingLeft="10dp"
-                      android:background="@drawable/photobg"
                       android:gravity="center_vertical"
                       android:layout_height="80dp">
             <ImageView android:layout_width="50dp"
@@ -282,8 +281,9 @@
 
     <ImageView android:layout_width="40dp"
         android:layout_alignParentRight="true"
-        android:src="@drawable/dog"
+        android:src="@drawable/myfriends"
         android:id="@+id/friends"
+        android:layout_marginRight="-10dp"
         android:layout_centerVertical="true"
         android:layout_height="100dp"/>
 </RelativeLayout>

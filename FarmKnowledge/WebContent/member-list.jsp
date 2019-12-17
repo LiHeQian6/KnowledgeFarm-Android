@@ -142,6 +142,11 @@
                         <th style="text-align:center;">等级</th>
                         <th style="text-align:center;">经验</th>
                         <th style="text-align:center;">金币</th>
+                        <th style="text-align:center;">数学</th>
+                        <th style="text-align:center;">英语</th>
+                        <th style="text-align:center;">语文</th>
+                        <th style="text-align:center;">浇水</th>
+                        <th style="text-align:center;">施肥</th>
                         <th style="text-align:center;">是否在线</th>
                         <th style="text-align:center;">状态</th>
                         <th style="text-align:center;">操作</th>
@@ -153,7 +158,7 @@
 	                        <td><input type="checkbox" value="${userPage.id}" name="checkBox"></td>
 	                        <td>${userPage.id}</td>
 	                        <td>${userPage.accout}</td>
-	                        <td>******</td>
+	                        <td>********</td>
 	                        <td>${userPage.nickName}</td>
 	                        <td>
 	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
@@ -174,6 +179,11 @@
 	                        <td>${userPage.level}</td>
 	                        <td>${userPage.experience}</td>
 	                        <td>${userPage.money}</td>
+	                        <td>${userPage.mathRewardCount}</td>
+	                        <td>${userPage.englishRewardCount}</td>
+	                        <td>${userPage.chineseRewardCount}</td>
+	                        <td>${userPage.water}</td>
+	                        <td>${userPage.fertilizer}</td>
 	                        <td>
 	                        	<c:if test="${userPage.online == 1}">
 	                        		在线

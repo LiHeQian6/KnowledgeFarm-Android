@@ -122,10 +122,17 @@
                         <th style="text-align:center;">密码</th>
                         <th style="text-align:center;">名称</th>
                         <th style="text-align:center;">头像</th>
+                        <th style="text-align:center;">年级</th>
+                        <th style="text-align:center;">邮箱</th>
                         <th style="text-align:center;">等级</th>
                         <th style="text-align:center;">经验</th>
                         <th style="text-align:center;">年级</th>
                         <th style="text-align:center;">金币</th>
+                        <th style="text-align:center;">数学</th>
+                        <th style="text-align:center;">英语</th>
+                        <th style="text-align:center;">语文</th>
+                        <th style="text-align:center;">浇水</th>
+                        <th style="text-align:center;">施肥</th>
                         <th style="text-align:center;">是否在线</th>
                         <th style="text-align:center;">状态</th>
                         <th style="text-align:center;">操作</th>
@@ -137,17 +144,33 @@
 	                        <td><input type="checkbox" value="${page.id}" name="checkBox"></td>
 	                        <td>${page.id}</td>
 	                        <td>${page.accout}</td>
-	                        <td>******</td>
+	                        <td>********</td>
 	                        <td>${page.nickName}</td>
 	                        <td>
 	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
 	                        		<img style="width:50px;height:50px;" src="${page.photo}"/>
 	                        	</div>
 	                        </td>
+	                        <td>
+	                        	<c:choose>
+	                        		<c:when test="${page.grade == '1'}">一年级上</c:when>
+	                        		<c:when test="${page.grade == '2'}">一年级下</c:when>
+	                        		<c:when test="${page.grade == '3'}">二年级上</c:when>
+	                        		<c:when test="${page.grade == '4'}">二年级下</c:when>
+	                        		<c:when test="${page.grade == '5'}">三年级上</c:when>
+	                        		<c:when test="${page.grade == '6'}">三年级下</c:when>
+	                        	</c:choose>
+	                        </td>
+	                        <td>${page.email}</td>
 	                        <td>${page.level}</td>
 	                        <td>${page.experience}</td>
 	                        <td>${page.grade}</td>
 	                        <td>${page.money}</td>
+	                        <td>${page.mathRewardCount}</td>
+	                        <td>${page.englishRewardCount}</td>
+	                        <td>${page.chineseRewardCount}</td>
+	                        <td>${page.water}</td>
+	                        <td>${page.fertilizer}</td>
 	                        <td>离线</td>
 	                        <td class="td-status">
 	                        	<span class="layui-btn layui-btn-danger layui-btn-mini">已删除</span>

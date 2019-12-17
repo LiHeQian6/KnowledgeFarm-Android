@@ -7,7 +7,8 @@ import java.util.Random;
 import com.farm.answer.dao.AnswerDao;
 import com.farm.entity.Question3Num;
 import com.farm.model.Chinese;
-import com.farm.model.English;
+import com.farm.model.EnglishOneDown;
+import com.farm.model.EnglishOneUp;
 import com.jfinal.plugin.activerecord.Page;
 
 public class AnswerService {
@@ -18,8 +19,13 @@ public class AnswerService {
 	}
 	
 	//一年级上册英语
-	public Page<English> OneUpEnglish(int pageNumber, int pageSize){
-		return new AnswerDao().getEnglishWords(pageNumber, pageSize);
+	public Page<EnglishOneUp> OneUpEnglish(int pageNumber, int pageSize){
+		return new AnswerDao().getEnglishWordOneUp(pageNumber, pageSize);
+	}
+	
+	//英语一年级下册
+	public Page<EnglishOneDown> OneDownEnglish(int pageNumber, int pageSize){
+		return new AnswerDao().getEnglishWordOneDown(pageNumber, pageSize);
 	}
 
 	//一年级上册数学
