@@ -34,7 +34,7 @@ public class UserFriendService {
 	 * 查
 	 */
 	//根据userId分页查询friendId
-	public Page<UserFriend> findUserFriendByUserId(int userId, Integer friendId, int pageNumber, int pageSize){
+	public Page<UserFriend> findUserFriendByUserId(int userId, int friendId, int pageNumber, int pageSize){
 		return new UserFriendDao().findUserFriendByUserId(userId, friendId, pageNumber, pageSize);
 	}
 	

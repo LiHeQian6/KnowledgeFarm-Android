@@ -43,15 +43,17 @@ public class UserCropService {
 					a1 = dao.waterCrop(ucId, progress+5);
 				}
 				
-				if(userCrop.getInt("state") == 0) {
-					a3 = dao.updateCropState(ucId, 1);
-					new UserCropTimerManager(ucId,cropId); 
-				}else {
-					a3 = true;
-				}
-				
-				if(a1 == true && a2 == true && a3 == true) {
-					return true;
+				if(a1 == true && a2 == true) {
+					if(userCrop.getInt("state") == 0) {
+						a3 = dao.updateCropState(ucId, 1);
+						new UserCropTimerManager(ucId,cropId); 
+					}else {
+						a3 = true;
+					}
+					if(a3) {
+						return true;
+					}
+					return false;
 				}
 				return false;
 			}

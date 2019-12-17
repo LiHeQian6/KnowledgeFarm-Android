@@ -36,22 +36,25 @@ public class UserFriendController extends Controller{
 			pageSize = Integer.parseInt(size);
 		}
 		if(accout == null || accout.equals("")) {
-			friendId = 0;
+			friendId = -1;
 		}else {
 			friendId = new UserService().getUserIdByAccout(accout);
-			
 		}
 		
 		Page<UserFriend> friendPage = service.findUserFriendByUserId(userId, friendId, pageNumber, pageSize);
 		List<User> userList = new ArrayList<User>();
 		UserPage<User> userPage = new UserPage<User>(pageNumber,pageSize);
-		if(friendPage.getTotalRow() != 0) {
-			for(UserFriend userFriend : friendPage.getList()) {
-				User user = userService.getUpdateUserInfo(userFriend.getInt("friendId"));
-				userList.add(user);
+		if(friendPage != null) {
+			if(friendPage.getTotalRow() != 0) {
+				for(UserFriend userFriend : friendPage.getList()) {
+					User user = userService.getUpdateUserInfo(userFriend.getInt("friendId"));
+					userList.add(user);
+				}
 			}
+			userPage.setTotalCount(friendPage.getTotalRow());
+		}else {
+			userPage.setTotalCount(0);
 		}
-		userPage.setTotalCount(friendPage.getTotalRow());
 		userPage.setList(userList);
 		renderJson(userPage);
 	}
@@ -89,7 +92,6 @@ public class UserFriendController extends Controller{
 		
 		
 	}
-	
 	
 	//É¾³ýºÃÓÑ
 	public void deleteFriend() {

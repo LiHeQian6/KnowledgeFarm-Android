@@ -28,7 +28,7 @@ public class RewardCountTimerManager {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				Db.update("update user set rewardCount = 3");
+				Db.update("update user set mathRewardCount=3,englishRewardCount=3,ChineseRewardCount=3");
 			}
 		},date,PERIOD_DAY);    
     }
