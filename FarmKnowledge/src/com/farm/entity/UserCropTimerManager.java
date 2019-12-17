@@ -1,4 +1,6 @@
 package com.farm.entity;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,6 +22,14 @@ public class UserCropTimerManager {
     }
     
     private void addProgress() {
+    	Calendar calendar = Calendar.getInstance(); 
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);  
+        calendar.set(Calendar.SECOND, second+30); 
+        Date date=calendar.getTime(); //第一次执行定时任务的时间  
        	
         Timer timer = new Timer();  
         timer.schedule(new TimerTask() {
@@ -58,7 +68,7 @@ public class UserCropTimerManager {
 				}
 				count ++;
 			}
-		},0,PERIOD_DAY); 
+		},date,PERIOD_DAY); 
 	}
 
 }

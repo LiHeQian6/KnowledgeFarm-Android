@@ -13,7 +13,7 @@ public class RewardCountTimerManager {
     
     public RewardCountTimerManager() {  
         Calendar calendar = Calendar.getInstance();  
-        calendar.set(Calendar.HOUR_OF_DAY, 24);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);  
         calendar.set(Calendar.SECOND, 0);  
         Date date=calendar.getTime(); //第一次执行定时任务的时间  

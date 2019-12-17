@@ -212,6 +212,10 @@ public class UserService {
 	 * @throws
 	 */
 	//查询User表内用户信息（User表）
+	public Page<User> findUserPageAll(int pageNumber,int everyCount,String accout) {
+		return new UserDao().findUserPageAll(pageNumber, everyCount, accout);
+	}
+	//查询User表内用户信息（User表）
 	public Page<User> findUserPage(int pageNumber,int everyCount,String accout,int exist) {
 		return new UserDao().findUserPage(pageNumber,everyCount,accout,exist);
 	}

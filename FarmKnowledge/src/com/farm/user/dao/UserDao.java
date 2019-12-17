@@ -319,13 +319,25 @@ public class UserDao {
 
 	//根据账号查询用户id
 	public int getUserIdByAccout(String accout) {
-		int userId = Db.queryInt("select id from user where accout=?",accout);
-		return userId;
+		if(!(""+Db.queryInt("select id from user where accout=?",accout)).equals("null") ) {
+			return Db.queryInt("select id from user where accout=?",accout);
+		}
+		return 0;
 	}
 	//获得User表最后一条数据的userId
 	public int getLastUserId(){
 		int id =  Db.queryInt("select id from user order by id desc limit 1");
 		return id;
+	}
+	//查询User表内用户信息（User表）
+	public Page<User> findUserPageAll(int pageNumber,int everyCount,String accout) {
+		Page<User> userPage;
+		if(accout == null || accout.equals("")) {
+			userPage = User.dao.paginate(pageNumber, everyCount, "select *","from user");	
+		}else {
+			userPage = User.dao.paginate(pageNumber, everyCount, "select *","from user where accout like?","%"+accout+"%");
+		}
+		return userPage;
 	}
 	//查询User表内用户信息（User表）
 	public Page<User> findUserPage(int pageNumber,int everyCount,String accout,int exist) {

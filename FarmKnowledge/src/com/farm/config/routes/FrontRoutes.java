@@ -5,6 +5,7 @@ import com.farm.crop.control.CropController;
 import com.farm.user.controller.UserController;
 import com.farm.userbag.controller.BagController;
 import com.farm.usercrop.controller.UserCropController;
+import com.farm.userfriend.control.UserFriendController;
 import com.jfinal.config.Routes;
 
 public class FrontRoutes extends Routes {
@@ -15,6 +16,7 @@ public class FrontRoutes extends Routes {
         add("answer",AnswerController.class);
         add("bag",BagController.class);
         add("usercrop",UserCropController.class);
+        add("userfriend",UserFriendController.class);
     }
 
 }
