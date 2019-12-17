@@ -253,6 +253,12 @@ public class FindPassword extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"密码输入为空！",Toast.LENGTH_SHORT).show();
                     }else if(!newPwd.equals(configPwd)){
                         Toast.makeText(getApplicationContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
+                    }else if(newPwd.length()<8||newPwd.length()>14){
+                        Toast.makeText(getApplicationContext(),"请输入8-14位字符",Toast.LENGTH_SHORT).show();
+                        return;
+                    }else if(newPwd.contains(" ")){
+                        Toast.makeText(getApplicationContext(),"含有非法字符",Toast.LENGTH_SHORT).show();
+                        return;
                     }else {
                         resetPwdToServer(getResources().getString(R.string.URL)+"/user/resetUserPassword");
                     }
