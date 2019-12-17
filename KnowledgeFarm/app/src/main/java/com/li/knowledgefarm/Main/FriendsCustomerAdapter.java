@@ -22,6 +22,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.User;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class FriendsCustomerAdapter extends BaseAdapter {
@@ -90,7 +91,7 @@ public class FriendsCustomerAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent go = new Intent(context, MyFriendActivity.class);
-                go.putExtra("account",dataList.get(position).getAccout());
+                go.putExtra("friend", (Serializable) dataList.get(position));
                 context.startActivity(go);
             }
         });

@@ -17,7 +17,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".Login.RegisteActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".Study.ChineseActivity" android:screenOrientation="landscape"/>
-        <activity android:name=".MyFriends.MyFriendActivity" />
+        <activity android:name=".MyFriends.MyFriendActivity" android:screenOrientation="landscape"/>
         <activity
             android:name=".Study.EnglishActivity"
             android:screenOrientation="landscape" />
