@@ -113,12 +113,11 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("account",user.getAccout());
+
                     if(tagPwd){
                         editor.putString("password",pwd.getText().toString());
-                    }else {
-                        editor.putString("password","");
                     }
-                    editor.commit();
+                    editor.apply();
                     Intent intentToStart = new Intent(LoginByAccountActivity.this,StartActivity.class);
                     intentToStart.setAction("accountLogin");
                     startActivity(intentToStart);
@@ -170,6 +169,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         rememberPwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
                 if(b){
                     tagPwd = true;
                 }else {
