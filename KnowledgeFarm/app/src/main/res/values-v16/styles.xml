@@ -8,5 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
         <item name="android:fontFamily">@font/font</item>
+        <item name="android:screenOrientation">landscape</item>
     </style>
 </resources>
