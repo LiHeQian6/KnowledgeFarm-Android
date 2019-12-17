@@ -28,7 +28,7 @@ public class UserCropTimerManager {
         int second = calendar.get(Calendar.SECOND);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);  
-        calendar.set(Calendar.SECOND, second+30); 
+        calendar.set(Calendar.SECOND, second+5); 
         Date date=calendar.getTime(); //第一次执行定时任务的时间  
        	
         Timer timer = new Timer();  

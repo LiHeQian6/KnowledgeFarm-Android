@@ -194,10 +194,10 @@ public class UserDao {
 		return User.dao.findById(userId).set(landNumber, userCropId).update();
 	}
 	//设置奖励次数
-	public boolean lessRewardCount(int id, int rewardCount) {
+	public boolean lessRewardCount(int id, int rewardCount, String subject) {
 		User user = User.dao.findById(id);
 		if(user != null) {
-			return User.dao.findById(id).set("rewardCount", rewardCount).update();
+			return User.dao.findById(id).set(subject+"RewardCount", rewardCount).update();
 		}
 		return false;
 	}
@@ -378,14 +378,6 @@ public class UserDao {
 		}
 		return 0;
 	}	
-	//User表查询剩余奖励次数
-	public int getRewardCount(int id) {
-		User user = User.dao.findById(id);
-		if(user != null) {
-			return user.getInt("rewardCount");
-		}
-		return -1;
-	}
 	//判断账号是否绑定QQ
 	public boolean isBindingQQ(String accout) {
 		int userId = getUserIdByAccout(accout);

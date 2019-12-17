@@ -45,7 +45,7 @@ public class UserFriendDao {
 	public Page<UserFriend> findUserFriendByUserId(int userId, int friendId, int pageNumber, int pageSize){
 		Page<UserFriend> userPage;
 		if(friendId == 0) {
-			userPage = UserFriend.dao.paginate(pageNumber, pageSize, "select *","from userfriend where userId=? status=1",userId);
+			userPage = UserFriend.dao.paginate(pageNumber, pageSize, "select *","from userfriend where userId=? and status=1",userId);
 		}else {
 			userPage = UserFriend.dao.paginate(pageNumber, pageSize, "select *","from userfriend where userId=? and friendId=? and status=1",userId,friendId);
 		}
