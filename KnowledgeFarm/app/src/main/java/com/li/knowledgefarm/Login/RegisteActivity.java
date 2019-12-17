@@ -121,10 +121,10 @@ public class RegisteActivity extends AppCompatActivity {
                     Toast.makeText(RegisteActivity.this,"密码输入不一致！",Toast.LENGTH_SHORT).show();
                     return;
                 }else if(password.length()<8||password.length()>14){
-                    Toast.makeText(getContext(),"请输入8-14位字符",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"请输入8-14位字符",Toast.LENGTH_SHORT).show();
                     return;
                 }else if(password.contains(" ")){
-                    Toast.makeText(getContext(),"含有非法字符",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"含有非法字符",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else {
