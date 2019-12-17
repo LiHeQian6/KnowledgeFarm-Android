@@ -15,6 +15,7 @@ public class AdminInterceptor implements Interceptor{
 
 	@Override
 	public void intercept(Invocation inv) {
+		
 		HttpServletRequest request = inv.getController().getRequest();
 		HttpServletResponse response = inv.getController().getResponse();
 		HttpSession session = request.getSession();
@@ -22,7 +23,6 @@ public class AdminInterceptor implements Interceptor{
 		Admin admin = (Admin) session.getAttribute("admin");
 		if(admin == null) {
 			System.out.println("aaa");
-			//inv.getController().forwardAction("/login.jsp");
 			try {
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
 			} catch (ServletException e) {
@@ -31,7 +31,9 @@ public class AdminInterceptor implements Interceptor{
 				e.printStackTrace();
 			}
 		}
+		
 		inv.invoke();
-		System.out.println("over");
+		
+		System.out.println("AdminOver");
 	}
 }

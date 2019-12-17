@@ -16,12 +16,12 @@ import com.farm.model.Admin;
  * Servlet Filter implementation class LoginFilter
  */
 //@WebFilter("/admin/*")
-public class LoginFilter implements Filter {
+public class JspFilter implements Filter {
 
     /**
      * Default constructor. 
      */
-    public LoginFilter() {
+    public JspFilter() {
         // TODO Auto-generated constructor stub
     }
 
@@ -41,11 +41,13 @@ public class LoginFilter implements Filter {
 		HttpSession session = httpRequest.getSession();
 
 		Admin admin = (Admin) session.getAttribute("admin");
-		System.out.println("aaa");
 		if(admin == null) {
 			request.getRequestDispatcher("/login.jsp").forward(request, response);
 		}
+		
 		chain.doFilter(request, response);
+		
+		System.out.println("JspOver");
 	}
 
 	/**

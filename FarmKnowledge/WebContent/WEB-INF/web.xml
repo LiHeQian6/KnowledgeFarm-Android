@@ -17,11 +17,11 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter>
-		<filter-name>loginFilter</filter-name>
-		<filter-class>com.farm.config.LoginFilter</filter-class>
+		<filter-name>JspFilter</filter-name>
+		<filter-class>com.farm.config.JspFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>loginFilter</filter-name>
+		<filter-name>JspFilter</filter-name>
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
 </web-app>
