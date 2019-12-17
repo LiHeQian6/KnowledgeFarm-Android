@@ -12,7 +12,9 @@ public class User {
     private long experience;
     private int grade;
     private int money;
-    private int rewardCount;
+    private int mathRewardCount;
+    private int englishRewardCount;
+    private int chineseRewardCount;
     private int water;
     private int fertilizer;
     private int online;
@@ -61,12 +63,28 @@ public class User {
         this.email = email;
     }
 
-    public int getRewardCount() {
-        return rewardCount;
+    public int getMathRewardCount() {
+        return mathRewardCount;
     }
 
-    public void setRewardCount(int rewardCount) {
-        this.rewardCount = rewardCount;
+    public void setMathRewardCount(int mathRewardCount) {
+        this.mathRewardCount = mathRewardCount;
+    }
+
+    public int getEnglishRewardCount() {
+        return englishRewardCount;
+    }
+
+    public void setEnglishRewardCount(int englishRewardCount) {
+        this.englishRewardCount = englishRewardCount;
+    }
+
+    public int getChineseRewardCount() {
+        return chineseRewardCount;
+    }
+
+    public void setChineseRewardCount(int chineseRewardCount) {
+        this.chineseRewardCount = chineseRewardCount;
     }
 
     public int getWater() {
@@ -443,7 +461,6 @@ public class User {
                 ", experience=" + experience +
                 ", grade=" + grade +
                 ", money=" + money +
-                ", rewardCount=" + rewardCount +
                 ", water=" + water +
                 ", fertilizer=" + fertilizer +
                 ", online=" + online +

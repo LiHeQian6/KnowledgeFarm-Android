@@ -225,7 +225,7 @@ public class MathActivity extends AppCompatActivity {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setRewardCount(LoginActivity.user.getRewardCount() - 1);
+                        LoginActivity.user.setMathRewardCount(LoginActivity.user.getMathRewardCount() - 1);
                         answer.setVisibility(View.GONE);
                         isFalse.setVisibility(View.INVISIBLE);
                         isTrue.setVisibility(View.GONE);
@@ -256,9 +256,10 @@ public class MathActivity extends AppCompatActivity {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
                         .add("userId", LoginActivity.user.getId()+"")
-                        .add("water",TrueAnswerNumber*2+"")
-                        .add("fertilizer",TrueAnswerNumber*2+"").build();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/addUserWater").post(formBody).build();
+                        .add("water",TrueAnswerNumber*1+"")
+                        .add("fertilizer",TrueAnswerNumber*1+"")
+                        .add("subject","math").build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/lessRewardCount").post(formBody).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -338,9 +339,9 @@ public class MathActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                if (LoginActivity.user.getRewardCount() <= 0) {
+                if (LoginActivity.user.getMathRewardCount() <= 0) {
                     question.setText("今天的任务都做完了哦！");
-                    question.setTextSize((int)(displayWidth*0.015));
+                    question.setTextSize((int)(displayWidth*0.02));
                     question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     answer.setVisibility(View.GONE);
                     btnNextQuestion.setVisibility(View.GONE);
@@ -383,7 +384,7 @@ public class MathActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
@@ -501,7 +502,7 @@ public class MathActivity extends AppCompatActivity {
     }
 
     public void exit() {
-        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getRewardCount()>0)
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
             showIfReturn();
         else
             finish();
