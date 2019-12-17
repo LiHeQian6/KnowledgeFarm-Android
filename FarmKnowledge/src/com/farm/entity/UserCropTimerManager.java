@@ -12,7 +12,7 @@ public class UserCropTimerManager {
 	private int userCropId;
 	private int count = 0;
 	
-    private static final long PERIOD_DAY = 2000;  //24 * 60 * 60 * 1000
+    private static final long PERIOD_HOUR = 60 * 60 * 1000;  //24 * 60 * 60 * 1000
     
     public UserCropTimerManager(int userCropId) {  
     	this.userCropId = userCropId;
@@ -24,10 +24,18 @@ public class UserCropTimerManager {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         int second = calendar.get(Calendar.SECOND);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        int nextHour;
+        
+        if(hour == 23) {
+        	nextHour = 0;
+        }else {
+        	nextHour = hour + 1;
+        }
+        
+        calendar.set(Calendar.HOUR_OF_DAY, nextHour);
         calendar.set(Calendar.MINUTE, minute);  
-        calendar.set(Calendar.SECOND, second+5); 
-        Date date=calendar.getTime(); //第一次执行定时任务的时间  
+        calendar.set(Calendar.SECOND, second); 
+        Date date=calendar.getTime();
        	
         Timer timer = new Timer();  
         timer.schedule(new TimerTask() {
@@ -57,7 +65,7 @@ public class UserCropTimerManager {
 				}
 				count ++;
 			}
-		},date,PERIOD_DAY); 
+		},date,PERIOD_HOUR); 
 	}
 
 }
