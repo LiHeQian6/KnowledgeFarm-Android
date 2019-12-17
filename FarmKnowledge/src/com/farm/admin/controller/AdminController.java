@@ -19,8 +19,8 @@ public class AdminController extends Controller{
 	
 	//注销
 	public void registAdmin() {
-		getSession().invalidate();
 		renderJsp("/login.jsp");
+		getSession().invalidate();
 	}
 	
 	//跳转到主页面
