@@ -715,7 +715,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/findAllUser?account="+account).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/findAllUser?accout="+account).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -743,7 +743,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/findUserFriend?userId="+LoginActivity.user.getId()+"&account="+account).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/findUserFriend?userId="+LoginActivity.user.getId()+"&accout="+account).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
