@@ -13,6 +13,8 @@ import okhttp3.Response;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +39,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.entity.Question3Num;
@@ -85,6 +88,50 @@ public class MathActivity extends AppCompatActivity {
         setStatusBar();
         getMaths();
         getMathHandler();
+    }
+
+    /**
+     * @Description 播放回答错误提示音效
+     * @Auther 孙建旺
+     * @Date 上午 9:19 2019/12/17
+     * @Param []
+     * @return void
+     */
+    private void PlayFalseSound(){
+        MediaPlayer player = new MediaPlayer();
+        AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.cuowu);
+        try {
+            player.setDataSource(file.getFileDescriptor(),file.getStartOffset(),file.getLength());
+            file.close();
+            if(!player.isPlaying()){
+                player.prepare();
+                player.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @Description 播放回答正确提示音效
+     * @Auther 孙建旺
+     * @Date 上午 9:01 2019/12/17
+     * @Param []
+     * @return void
+     */
+    private void PlayTrueSound(){
+        MediaPlayer player = new MediaPlayer();
+        AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.yinxiao1041);
+        try {
+            player.setDataSource(file.getFileDescriptor(),file.getStartOffset(),file.getLength());
+            file.close();
+            if(!player.isPlaying()){
+                player.prepare();
+                player.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -360,6 +407,7 @@ public class MathActivity extends AppCompatActivity {
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         isFalse.setVisibility(View.VISIBLE);
+                        PlayTrueSound();
                         if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
@@ -380,6 +428,7 @@ public class MathActivity extends AppCompatActivity {
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("你还差一点就答对了哦！");
+                        PlayFalseSound();
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -433,4 +482,21 @@ public class MathActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+
+            exit();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void exit() {
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getRewardCount()>0)
+            showIfReturn();
+        else
+            finish();
+    }
 }
