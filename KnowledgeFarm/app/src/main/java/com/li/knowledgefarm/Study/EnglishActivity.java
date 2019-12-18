@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -229,6 +230,7 @@ public class EnglishActivity extends AppCompatActivity {
     @SuppressLint("HandlerLeak")
     private void getWandFCallBack(){
         getWAF = new Handler(){
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
@@ -239,9 +241,14 @@ public class EnglishActivity extends AppCompatActivity {
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
                         isFalse.setVisibility(View.INVISIBLE);
+                        tipText.setVisibility(View.GONE);
                         isTrue.setVisibility(View.GONE);
+                        isTrue2.setVisibility(View.GONE);
+                        btnNextQuestion.setVisibility(View.GONE);
+                        btnPreQuestion.setVisibility(View.GONE);
                         question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
-                        question.setTextSize(28);
+                        question.setTextSize((int)(displayWidth*0.011));
+                        question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         if(returnHandlerFinish)
                             finish();
                     }else{
@@ -298,6 +305,11 @@ public class EnglishActivity extends AppCompatActivity {
      * @return void
      */
     private void showQuestion(int pos){
+        if(position == datalist.size()-1){
+            btnNextQuestion.setText("我答完啦");
+        }else{
+            btnNextQuestion.setText("下一题");
+        }
         if(!datalist.get(pos).getIfDone().equals("true")) {
             isFalse.setText("");
             answerA.setVisibility(View.VISIBLE);
@@ -496,9 +508,13 @@ public class EnglishActivity extends AppCompatActivity {
                         position = ++position;
                         showQuestion(position);
                     }else{
-                        getWandFCallBack();
-                        getWaterAndFertilizer();
-                        btnNextQuestion.setClickable(false);
+                        if(TrueAnswerNumber < datalist.size()){
+                            Toast.makeText(EnglishActivity.this,"你还没有答完哦",Toast.LENGTH_SHORT).show();;
+                        }else {
+                            getWandFCallBack();
+                            getWaterAndFertilizer();
+                            btnNextQuestion.setClickable(false);
+                        }
                     }
                     break;
             }

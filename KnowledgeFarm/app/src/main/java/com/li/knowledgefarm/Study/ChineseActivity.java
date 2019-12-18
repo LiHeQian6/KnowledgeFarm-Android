@@ -268,7 +268,8 @@ public class ChineseActivity extends AppCompatActivity {
                         btnPreQuestion.setVisibility(View.GONE);
                         btnNextQuestion.setVisibility(View.GONE);
                         question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
-                        question.setTextSize(28);
+                        question.setTextSize((int)(displayWidth*0.011));
+                        question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         if(returnHandlerFinish)
                             finish();
                     }else{
@@ -328,7 +329,9 @@ public class ChineseActivity extends AppCompatActivity {
         String quan1 = null;
         String quan2 = null;
         if(position == datalist.size()-1){
-            btnNextQuestion.setText("我答完啦！");
+            btnNextQuestion.setText("我答完啦");
+        }else{
+            btnNextQuestion.setText("下一题");
         }
         if(!datalist.get(pos).getIfDone().equals("true")) {
             isFalse.setText("");
@@ -349,6 +352,7 @@ public class ChineseActivity extends AppCompatActivity {
                     quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
                 }while (quan1.equals(datalist.get(pos).getQuantify())
                         || quan2.equals(datalist.get(pos).getQuantify())
+                        || quan2.equals(quan1)
                         && quan1 != null
                         && quan2 != null);
                 answer2.setText(quan1);
@@ -360,6 +364,7 @@ public class ChineseActivity extends AppCompatActivity {
                     quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
                 }while (quan1.equals(datalist.get(pos).getQuantify())
                         || quan2.equals(datalist.get(pos).getQuantify())
+                        || quan2.equals(quan1)
                         && quan1 != null
                         && quan2 != null);
                 answer1.setText(quan1);
@@ -371,6 +376,7 @@ public class ChineseActivity extends AppCompatActivity {
                     quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
                 }while (quan1.equals(datalist.get(pos).getQuantify())
                         || quan2.equals(datalist.get(pos).getQuantify())
+                        || quan2.equals(quan1)
                         && quan1 != null
                         && quan2 != null);
                 answer2.setText(quan1);
