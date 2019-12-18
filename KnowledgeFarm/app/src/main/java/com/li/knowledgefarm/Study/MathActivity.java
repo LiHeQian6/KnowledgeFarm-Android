@@ -27,6 +27,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -169,6 +170,32 @@ public class MathActivity extends AppCompatActivity {
         question.setLayoutParams(params_question);
     }
 
+    /**
+     * @Description 设置弹窗控件大小
+     * @Auther 孙建旺
+     * @Date 下午 4:13 2019/12/18
+     * @Param [view]
+     * @return void
+     */
+    private void setDialogSize(View view){
+        ImageView cancel = view.findViewById(R.id.cancel_return);
+        ImageView sure = view.findViewById(R.id.sure_return);
+        TextView warning = view.findViewById(R.id.waringText);
+        LinearLayout panduan = view.findViewById(R.id.panduan);
+
+        LinearLayout.LayoutParams params_cancel = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
+        params_cancel.setMargins(0,0,(int)(displayWidth*0.08),0);
+        cancel.setLayoutParams(params_cancel);
+
+        LinearLayout.LayoutParams params_sure = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
+        sure.setLayoutParams(params_sure);
+
+        warning.setTextSize((int)(displayWidth*0.012));
+
+        LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_layout.setMargins(0,(int)(displayHeight*0.12),0,0);
+        panduan.setLayoutParams(params_layout);
+    }
 
     /**
      * @Description  确认是否返回
@@ -181,8 +208,9 @@ public class MathActivity extends AppCompatActivity {
         ifReturn = new Dialog(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.math_return_dialog,null);
-        Button cancel = layout.findViewById(R.id.cancel_return);
-        Button sure = layout.findViewById(R.id.sure_return);
+        ImageView cancel = layout.findViewById(R.id.cancel_return);
+        ImageView sure = layout.findViewById(R.id.sure_return);
+        setDialogSize(layout);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,6 +235,8 @@ public class MathActivity extends AppCompatActivity {
         attrs.width = (int)(300*scale+0.5f);
         attrs.height =(int)(300*scale+0.5f);
         ifReturn.getWindow().setAttributes(attrs);
+        Window dialogWindow = ifReturn.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     /**

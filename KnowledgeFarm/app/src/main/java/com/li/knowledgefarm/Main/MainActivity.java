@@ -481,15 +481,15 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.up_level_dialog, null);
-        Button right = layout.findViewById(R.id.right);
+        //Button right = layout.findViewById(R.id.right);
         alertBuilder.setView(layout);
         final AlertDialog upDiaLog = alertBuilder.create();
-        right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                upDiaLog.cancel();
-            }
-        });
+//        right.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                upDiaLog.cancel();
+//            }
+//        });
 
         upDiaLog.show();
         WindowManager.LayoutParams attrs = upDiaLog.getWindow().getAttributes();
@@ -502,6 +502,12 @@ public class MainActivity extends AppCompatActivity {
         attrs.width = (int)(300*scale+0.5f);
         attrs.height =(int)(250*scale+0.5f);
         upDiaLog.getWindow().setAttributes(attrs);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                upDiaLog.dismiss();
+            }
+        },1000);
     }
 
     private void addListener() {
