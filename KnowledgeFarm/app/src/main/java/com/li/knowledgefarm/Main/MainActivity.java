@@ -56,6 +56,8 @@ import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
@@ -778,6 +780,8 @@ public class MainActivity extends AppCompatActivity {
         friendsListView=layout.findViewById(R.id.friends_lv);
         searchAccount=layout.findViewById(R.id.search_account);
         searchSelected=layout.findViewById(R.id.searchSelected);
+        //设置控件大小
+        setFriendSize(layout);
         searchSelected.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -840,6 +844,55 @@ public class MainActivity extends AppCompatActivity {
                 myFriends.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    /**
+     * @Description 设置好友弹出框屏幕适配
+     * @Auther 孙建旺
+     * @Date 上午 9:00 2019/12/18
+     * @Param []
+     * @return void
+     */
+    private void setFriendSize(View view) {
+        LinearLayout layout_search = view.findViewById(R.id.layout_search);
+        Button search=view.findViewById(R.id.search);
+        ImageView pre = view.findViewById(R.id.pre);
+        ImageView next = view.findViewById(R.id.next);
+        TextView now = view.findViewById(R.id.now);
+
+        LinearLayout.LayoutParams params_search = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.08));
+        params_search.gravity = Gravity.CENTER_HORIZONTAL;
+        layout_search.setLayoutParams(params_search);
+
+        LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int)(displayWidth*0.24),(int)(displayHeight*0.1));
+        params_edit.gravity = Gravity.CENTER;
+        searchAccount.setLayoutParams(params_edit);
+        searchAccount.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        searchAccount.setHintTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.07));
+        params_button.gravity = Gravity.CENTER;
+        search.setLayoutParams(params_button);
+        search.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        search.setTextSize((int)(displayHeight*0.02));
+        search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.06));
+        params_select.setMargins((int)(displayWidth*0.02),0,0,0);
+        searchSelected.setLayoutParams(params_select);
+
+        LinearLayout.LayoutParams params_listview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.6));
+        params_listview.gravity = Gravity.CENTER_HORIZONTAL;
+        params_listview.setMargins(0,(int)(displayHeight*0.018),0,(int)(displayHeight*0.018));
+        friendsListView.setLayoutParams(params_listview);
+        friendsListView.setDividerHeight((int)(displayHeight*0.015));
+
+        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
+        pre.setLayoutParams(params_pre);
+        next.setLayoutParams(params_pre);
+        now.setLayoutParams(params_pre);
+        now.setTextSize((int)(displayHeight*0.02));
     }
 
     /**

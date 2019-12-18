@@ -3,6 +3,7 @@ package com.li.knowledgefarm.MyFriends;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +25,8 @@ import com.li.knowledgefarm.entity.User;
 
 import java.io.Serializable;
 import java.util.List;
+
+import androidx.annotation.RequiresApi;
 
 public class FriendsCustomerAdapter extends BaseAdapter {
 
@@ -69,6 +73,7 @@ public class FriendsCustomerAdapter extends BaseAdapter {
             viewHolder.level = convertView.findViewById(R.id.level);
             viewHolder.account = convertView.findViewById(R.id.account);
             viewHolder.go=convertView.findViewById(R.id.go);
+            setViewSize(convertView,viewHolder);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
@@ -97,6 +102,37 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         });
         notifyDataSetChanged();
         return convertView;
+    }
+
+    /**
+     * @Description 设置控件大小
+     * @Auther 孙建旺
+     * @Date 上午 10:14 2019/12/18
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setViewSize(View convertView, ViewHolder viewHolder) {
+        LinearLayout.LayoutParams params_view = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.138));
+        convertView.setLayoutParams(params_view);
+
+        viewHolder.name.setTextSize((int)(displayHeight*0.012));
+        viewHolder.name.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
+
+        LinearLayout.LayoutParams params_level = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_level.setMargins(0,(int)(displayHeight*0.014),0,(int)(displayHeight*0.014));
+        viewHolder.level.setLayoutParams(params_level);
+        viewHolder.level.setTextSize((int)(displayHeight*0.012));
+        viewHolder.level.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
+
+        viewHolder.account.setTextSize((int)(displayHeight*0.012));
+        viewHolder.account.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
+
+        LinearLayout.LayoutParams params_go = new LinearLayout.LayoutParams((int)(displayWidth*0.07),(int)(displayHeight*0.09));
+        params_go.gravity = Gravity.CENTER_VERTICAL;
+        viewHolder.go.setLayoutParams(params_go);
+        viewHolder.go.setTextSize((int)(displayHeight*0.014));
+        viewHolder.go.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 
     private class ViewHolder{
