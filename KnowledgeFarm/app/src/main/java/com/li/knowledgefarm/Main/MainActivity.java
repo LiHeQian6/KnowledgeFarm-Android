@@ -621,6 +621,7 @@ public class MainActivity extends AppCompatActivity {
     }
     class MainListener implements View.OnClickListener {
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void onClick(View view) {
             switch (view.getId()){
@@ -767,6 +768,7 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFriends() {
         final Dialog friendsDialog = new Dialog(this);
         //获取屏幕显示区域尺寸
