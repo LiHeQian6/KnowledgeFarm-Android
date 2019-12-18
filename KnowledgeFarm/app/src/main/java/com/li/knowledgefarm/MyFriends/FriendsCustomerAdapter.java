@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Main;
+package com.li.knowledgefarm.MyFriends;
 
 
 import android.content.Context;
@@ -11,15 +11,14 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.li.knowledgefarm.MyFriends.MyFriendActivity;
+import com.li.knowledgefarm.Login.LoginActivity;
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.User;
 
 import java.io.Serializable;
@@ -64,10 +63,6 @@ public class FriendsCustomerAdapter extends BaseAdapter {
             wm.getDefaultDisplay().getMetrics(ds);
             displayHeight = ds.heightPixels;
             displayWidth = ds.widthPixels;
-//            LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.09), ViewGroup.LayoutParams.WRAP_CONTENT);
-//            params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
-//            params_gridview.setMargins(0,(int)(displayHeight*0.05),0,0);
-//            convertView.setLayoutParams(params_gridview);
             viewHolder = new ViewHolder();
             viewHolder.photo = convertView.findViewById(R.id.photo);
             viewHolder.name = convertView.findViewById(R.id.nickName);
@@ -90,9 +85,14 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         viewHolder.go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent go = new Intent(context, MyFriendActivity.class);
-                go.putExtra("friend", (Serializable) dataList.get(position));
-                context.startActivity(go);
+                if(!dataList.get(position).getAccout().equals(LoginActivity.user.getAccout())) {
+                    Intent go = new Intent(context, MyFriendActivity.class);
+                    go.putExtra("friend", (Serializable) dataList.get(position));
+                    context.startActivity(go);
+                }else{
+                    Intent go = new Intent(context, MainActivity.class);
+                    context.startActivity(go);
+                }
             }
         });
         notifyDataSetChanged();
