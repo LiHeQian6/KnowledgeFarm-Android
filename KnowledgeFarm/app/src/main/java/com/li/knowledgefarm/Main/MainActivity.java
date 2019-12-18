@@ -1,6 +1,7 @@
 package com.li.knowledgefarm.Main;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
@@ -855,6 +856,7 @@ public class MainActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setFriendSize(View view) {
         LinearLayout layout_search = view.findViewById(R.id.layout_search);
         Button search=view.findViewById(R.id.search);
