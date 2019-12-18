@@ -498,12 +498,8 @@ public class MainActivity extends AppCompatActivity {
         attrs.width = (int)(300*scale+0.5f);
         attrs.height =(int)(250*scale+0.5f);
         upDiaLog.getWindow().setAttributes(attrs);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                upDiaLog.dismiss();
-            }
-        },1000);
+        Window dialogWindow = upDiaLog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     private void addListener() {
