@@ -202,6 +202,11 @@ public class UserService {
 	public boolean recoveryOneUserAuthority(int userId) {
 		return new UserDao().recoveryOneUserAuthority(userId);
 	}
+	//ÐÞ¸Äland1-18
+	public boolean updateLand1_18(String accout, int land1, int land2, int land3, int land4, int land5, int land6, int land7, int land8, int land9, int land10
+			, int land11, int land12, int land13, int land14, int land15, int land16, int land17, int land18){
+		return new UserDao().updateLand1_18(accout, land1, land2, land3, land4, land5, land6, land7, land8, land9, land10, land11, land12, land13, land14, land15, land16, land17, land18);
+	}
 	
 	
 	

@@ -28,7 +28,7 @@ public class UserController extends Controller{
 		String accout = get("accout");
 		String page = get("pageNumber");
 		String count = get("pageSize");
-		int exist = getInt("exist");
+		String exist = get("exist");
 		int pageNumber;
 		int everyCount;
 		
@@ -44,12 +44,19 @@ public class UserController extends Controller{
 		}
 		
 		removeSessionAttr("user");
-		Page<User> list = new UserService().findUserPage(pageNumber,everyCount,accout,exist);
-		setAttr("userPage", list);
-		if(exist == 1) {
-			renderJsp("/member-list.jsp");
+		Page<User> list;
+		if(exist == null || exist.equals("")) {
+			list = new UserService().findUserPageAll(pageNumber, everyCount, accout);
+			setAttr("userPage", list);
+			renderJsp("/member-land-list.jsp");
 		}else {
-			renderJsp("/member-del.jsp");
+			list = new UserService().findUserPage(pageNumber,everyCount,accout,Integer.parseInt(exist));
+			setAttr("userPage", list);
+			if(Integer.parseInt(exist) == 1) {
+				renderJsp("/member-list.jsp");
+			}else {
+				renderJsp("/member-del.jsp");
+			}
 		}
 	}
 
@@ -311,6 +318,37 @@ public class UserController extends Controller{
 		}else if(result == 1){
 			renderText("succeed");
 		}else if(result == 2){
+			renderText("fail");
+		}
+	}
+	
+	//修改用户土地1-18
+	public void updateUserLand() {
+		String accout = get("accout");
+		int land1 = getInt("land1");
+		int land2 = getInt("land2");
+		int land3 = getInt("land3");
+		int land4 = getInt("land4");
+		int land5 = getInt("land5");
+		int land6 = getInt("land6");
+		int land7 = getInt("land7");
+		int land8 = getInt("land8");
+		int land9 = getInt("land9");
+		int land10 = getInt("land10");
+		int land11 = getInt("land11");
+		int land12 = getInt("land12");
+		int land13 = getInt("land13");
+		int land14 = getInt("land14");
+		int land15 = getInt("land15");
+		int land16 = getInt("land16");
+		int land17 = getInt("land17");
+		int land18 = getInt("land18");
+		
+		boolean succeed = new UserService().updateLand1_18(accout, land1, land2, land3, land4, land5, land6,
+				land7, land8, land9, land10, land11, land12, land13, land14, land15, land16, land17, land18);
+		if(succeed) {
+			renderText("succeed");
+		}else {
 			renderText("fail");
 		}
 	}

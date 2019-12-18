@@ -790,11 +790,13 @@ public class MainActivity extends AppCompatActivity {
                         friendsPage.setPrePageNum(1);
                         friendsPage.setNextPageNum(1);
                         searchSelectedItem=0;
+                        getFriendsInfo(1);
                         break;
                     case R.id.all:
                         friendsPage.setPrePageNum(1);
                         friendsPage.setNextPageNum(1);
                         searchSelectedItem=1;
+                        getAllInfo(1);
                         break;
                 }
 

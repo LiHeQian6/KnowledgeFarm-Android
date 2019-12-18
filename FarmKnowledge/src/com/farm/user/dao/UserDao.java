@@ -251,7 +251,18 @@ public class UserDao {
 		}
 		return succeed;
 	}
-
+	//ĞŞ¸Äland1-18
+	public boolean updateLand1_18(String accout, int land1, int land2, int land3, int land4, int land5, int land6, int land7, int land8, int land9, int land10
+			, int land11, int land12, int land13, int land14, int land15, int land16, int land17, int land18){
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			return list.get(0).set("land1", land1).set("land2", land2).set("land3", land3).set("land4", land4).set("land5", land5).set("land6", land6)
+				.set("land7", land7).set("land8", land8).set("land9", land9).set("land10", land10).set("land11", land11).set("land12", land12)
+				.set("land13", land13).set("land14", land14).set("land15", land15).set("land16", land16).set("land17", land17).set("land18", land18).update();
+			
+		}
+		return false;
+	}
 	
 	
 	
