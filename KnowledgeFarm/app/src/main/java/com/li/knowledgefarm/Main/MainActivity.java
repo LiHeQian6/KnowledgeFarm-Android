@@ -269,15 +269,10 @@ public class MainActivity extends AppCompatActivity {
         fertilizerCount.setText(LoginActivity.user.getFertilizer()+"");
         int[] levelExperience = getResources().getIntArray(R.array.levelExperience);
         int l = LoginActivity.user.getLevel() ;
-        if(levelExperience.length<=l){
-            experience.setMax(levelExperience[levelExperience.length-1]);
-            experience.setProgress(levelExperience[levelExperience.length-1]);
-            experienceValue.setText(""+levelExperience[levelExperience.length-1]+"/"+levelExperience[levelExperience.length-1]);
-        }else {
-            experience.setMax(levelExperience[l]-(l>1?levelExperience[l-2]:levelExperience[0]));
-            experience.setProgress((int) LoginActivity.user.getExperience()-(l>1?levelExperience[l-2]:levelExperience[0]));
-            experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l - 1]);
-        }
+        experience.setMax(levelExperience[l]-levelExperience[l-1]);
+        experience.setProgress((int) LoginActivity.user.getExperience()-levelExperience[l-1]);
+        experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l]);
+
     }
 
     /**

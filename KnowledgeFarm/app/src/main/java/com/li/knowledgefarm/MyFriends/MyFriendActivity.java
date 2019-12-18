@@ -1,6 +1,7 @@
 package com.li.knowledgefarm.MyFriends;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -252,15 +253,9 @@ public class MyFriendActivity extends AppCompatActivity {
         fertilizerCount.setText(LoginActivity.user.getFertilizer()+"");
         int[] levelExperience = getResources().getIntArray(R.array.levelExperience);
         int l = user.getLevel() ;
-        if(levelExperience.length<=l){
-            experience.setMax(levelExperience[levelExperience.length-1]);
-            experience.setProgress(levelExperience[levelExperience.length-1]);
-            experienceValue.setText(""+levelExperience[levelExperience.length-1]+"/"+levelExperience[levelExperience.length-1]);
-        }else {
-            experience.setMax(levelExperience[l - 1]);
-            experience.setProgress((int) user.getExperience());
-            experienceValue.setText("" + user.getExperience() + "/" + levelExperience[l - 1]);
-        }
+        experience.setMax(levelExperience[l]-levelExperience[l-1]);
+        experience.setProgress((int) user.getExperience()-levelExperience[l-1]);
+        experienceValue.setText("" + user.getExperience() + "/" + levelExperience[l]);
     }
 
     /**
@@ -775,6 +770,7 @@ public class MyFriendActivity extends AppCompatActivity {
         }.start();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFriends() {
         final Dialog friendsDialog = new Dialog(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -782,6 +778,8 @@ public class MyFriendActivity extends AppCompatActivity {
         friendsListView=layout.findViewById(R.id.friends_lv);
         searchAccount=layout.findViewById(R.id.search_account);
         searchSelected=layout.findViewById(R.id.searchSelected);
+        //设置控件大小
+        setFriendSize(layout);
         searchSelected.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -853,6 +851,57 @@ public class MyFriendActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * @Description 设置好友弹出框屏幕适配
+     * @Auther 孙建旺
+     * @Date 上午 9:00 2019/12/18
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setFriendSize(View view) {
+        LinearLayout layout_search = view.findViewById(R.id.layout_search);
+        Button search=view.findViewById(R.id.search);
+        ImageView pre = view.findViewById(R.id.pre);
+        ImageView next = view.findViewById(R.id.next);
+        TextView now = view.findViewById(R.id.now);
+
+        LinearLayout.LayoutParams params_search = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.08));
+        params_search.gravity = Gravity.CENTER_HORIZONTAL;
+        layout_search.setLayoutParams(params_search);
+
+        LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int)(displayWidth*0.24),(int)(displayHeight*0.1));
+        params_edit.gravity = Gravity.CENTER;
+        searchAccount.setLayoutParams(params_edit);
+        searchAccount.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        searchAccount.setHintTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.07));
+        params_button.gravity = Gravity.CENTER;
+        search.setLayoutParams(params_button);
+        search.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        search.setTextSize((int)(displayHeight*0.02));
+        search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.06));
+        params_select.setMargins((int)(displayWidth*0.02),0,0,0);
+        searchSelected.setLayoutParams(params_select);
+
+        LinearLayout.LayoutParams params_listview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.6));
+        params_listview.gravity = Gravity.CENTER_HORIZONTAL;
+        params_listview.setMargins(0,(int)(displayHeight*0.018),0,(int)(displayHeight*0.018));
+        friendsListView.setLayoutParams(params_listview);
+        friendsListView.setDividerHeight((int)(displayHeight*0.015));
+
+        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
+        pre.setLayoutParams(params_pre);
+        next.setLayoutParams(params_pre);
+        now.setLayoutParams(params_pre);
+        now.setTextSize((int)(displayHeight*0.02));
+    }
+
 
     /**
      * 获得好友分页

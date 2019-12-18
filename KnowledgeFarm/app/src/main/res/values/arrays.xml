@@ -9,25 +9,26 @@
         <item>三年级 下</item>
     </string-array>
     <integer-array name="levelExperience">
-        <item>1000</item>
-        <item>3000</item>
-        <item>5000</item>
-        <item>8000</item>
-        <item>14000</item>
-        <item>19000</item>
-        <item>25000</item>
-        <item>32000</item>
-        <item>40000</item>
-        <item>49000</item>
-        <item>59000</item>
-        <item>70000</item>
-        <item>82000</item>
-        <item>95000</item>
-        <item>109000</item>
-        <item>114000</item>
-        <item>130000</item>
-        <item>147000</item>
-        <item>165000</item>
-        <item>184000</item>
+        <item>0</item>
+        <item>999</item>
+        <item>2999</item>
+        <item>4999</item>
+        <item>7999</item>
+        <item>14999</item>
+        <item>18999</item>
+        <item>24999</item>
+        <item>31999</item>
+        <item>39999</item>
+        <item>48999</item>
+        <item>58999</item>
+        <item>69999</item>
+        <item>81999</item>
+        <item>94999</item>
+        <item>108999</item>
+        <item>113999</item>
+        <item>129999</item>
+        <item>146999</item>
+        <item>164999</item>
+        <item>179999</item>
     </integer-array>
 </resources>
