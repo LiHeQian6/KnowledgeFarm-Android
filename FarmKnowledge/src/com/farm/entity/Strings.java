@@ -14,7 +14,7 @@ public class Strings {
 	public static String userfilePath1 = "/home/admin/Tomcat/apache-tomcat-8.5.39/webapps/photo/";
 	
 	//用户等级
-	public static int userLevel[] = {0,100,300,500,1000,2000,3000,4000,5000,6000,7000,8000,9000,10000};
+	public static int userLevel[] = {0,1000,3000,5000,8000,14000,19000,25000,32000,40000,49000,59000,70000,82000,95000,109000,114000,130000,147000,165000,184000};
 	
 	/**
 	 * 本机服务器
