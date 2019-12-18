@@ -273,8 +273,8 @@ public class MainActivity extends AppCompatActivity {
             experience.setProgress(levelExperience[levelExperience.length-1]);
             experienceValue.setText(""+levelExperience[levelExperience.length-1]+"/"+levelExperience[levelExperience.length-1]);
         }else {
-            experience.setMax(levelExperience[l - 1]);
-            experience.setProgress((int) LoginActivity.user.getExperience());
+            experience.setMax(levelExperience[l]-(l>1?levelExperience[l-2]:levelExperience[0]));
+            experience.setProgress((int) LoginActivity.user.getExperience()-(l>1?levelExperience[l-2]:levelExperience[0]));
             experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l - 1]);
         }
     }
