@@ -62,7 +62,6 @@
                   <div class="layui-form-item" style="display: inline-block;">
                     <div class="layui-input-inline">
                       <input type="text" name="accout" placeholder="请输入账号" autocomplete="off" class="layui-input" value="${param.accout}">
-                      <input type="hidden" name="exist" value="1"/>
                     </div>
                     <div class="layui-input-inline" style="width:80px">
                         <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
@@ -78,7 +77,7 @@
             			</i>刷新
             		</button>
             	</a>
-            	<span>"-1"表示土地未开垦，"0"表示土地已开垦</span>
+            	<span>"0"表示土地已开垦，"-1"表示土地未开垦</span>
             	<span class="x-right" style="line-height:40px">共有数据：${userPage.totalRow} 条</span>
             </xblock>
             <table class="layui-table">

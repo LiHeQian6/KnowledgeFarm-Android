@@ -2,9 +2,11 @@ package com.farm.admin.controller;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -16,12 +18,14 @@ import com.farm.crop.service.CropService;
 import com.farm.entity.Strings;
 import com.farm.model.User;
 import com.farm.user.service.UserService;
+import com.farm.usercrop.service.UserCropService;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 
 public class UserController extends Controller{
+	private boolean isDelete = false;
 	
 	//查询User表内用户信息，跳转到用户列表页面（User表）
 	public void findUserPage() {
@@ -309,43 +313,75 @@ public class UserController extends Controller{
 	public void updateUserPassword() {
 		UserService service = new UserService();
 		String accout = get("accout");
-		String oldPassword = service.stringMD5(get("oldPassword"));
-		String newPassword = service.stringMD5(get("newPassword"));
+		String password = service.stringMD5(get("password"));
 		
-		int result = new UserService().updateUserPassword(oldPassword, newPassword, accout);
-		if(result == 0) {
-			renderText("PasswordError");
-		}else if(result == 1){
+		boolean succeed = new UserService().updateUserPassword(accout, password);
+		if(succeed == true) {
 			renderText("succeed");
-		}else if(result == 2){
+		}else {
 			renderText("fail");
-		}
+		}	
 	}
 	
 	//修改用户土地1-18
 	public void updateUserLand() {
+		HttpServletRequest request = getRequest();
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		List<Integer> land = new ArrayList<Integer>();
+		List<Integer> list = new ArrayList<Integer>();
 		String accout = get("accout");
-		int land1 = getInt("land1");
-		int land2 = getInt("land2");
-		int land3 = getInt("land3");
-		int land4 = getInt("land4");
-		int land5 = getInt("land5");
-		int land6 = getInt("land6");
-		int land7 = getInt("land7");
-		int land8 = getInt("land8");
-		int land9 = getInt("land9");
-		int land10 = getInt("land10");
-		int land11 = getInt("land11");
-		int land12 = getInt("land12");
-		int land13 = getInt("land13");
-		int land14 = getInt("land14");
-		int land15 = getInt("land15");
-		int land16 = getInt("land16");
-		int land17 = getInt("land17");
-		int land18 = getInt("land18");
 		
-		boolean succeed = new UserService().updateLand1_18(accout, land1, land2, land3, land4, land5, land6,
-				land7, land8, land9, land10, land11, land12, land13, land14, land15, land16, land17, land18);
+		land.add(0);
+		land.add(getInt("land1"));
+		land.add(getInt("land2"));
+		land.add(getInt("land3"));
+		land.add(getInt("land4"));
+		land.add(getInt("land5"));
+		land.add(getInt("land6"));
+		land.add(getInt("land7"));
+		land.add(getInt("land8"));
+		land.add(getInt("land9"));
+		land.add(getInt("land10"));
+		land.add(getInt("land11"));
+		land.add(getInt("land12"));
+		land.add(getInt("land13"));
+		land.add(getInt("land14"));
+		land.add(getInt("land15"));
+		land.add(getInt("land16"));
+		land.add(getInt("land17"));
+		land.add(getInt("land18"));
+		
+
+		for(int i = 1;i < 19;i++) {
+			if(land.get(i) != user.getInt("land"+i)) {
+				list.add(user.getInt("land"+i));
+			}
+		}
+		
+		UserCropService userCropService = new UserCropService();
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				for(int value : list) {
+					if(value != 0 && value != -1){
+						isDelete = userCropService.deleteCrop(value);
+						if(!isDelete) {
+							return false;
+						}
+						System.out.println(value);
+					}
+				}
+				isDelete = new UserService().updateLand1_18(accout, land.get(1), land.get(2), land.get(3), land.get(4), land.get(5), land.get(6),
+						land.get(7), land.get(8), land.get(9), land.get(10), land.get(11), land.get(12), land.get(13), land.get(14), land.get(15), 
+						land.get(16), land.get(17), land.get(18));
+				if(isDelete) {
+					return true;
+				}
+				return false;
+			}
+		});
+			
 		if(succeed) {
 			renderText("succeed");
 		}else {

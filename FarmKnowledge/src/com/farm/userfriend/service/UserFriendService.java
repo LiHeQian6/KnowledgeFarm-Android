@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import com.farm.crop.dao.CropDao;
 import com.farm.entity.UserCropTimerManager;
 import com.farm.model.Crop;
-import com.farm.model.User;
 import com.farm.model.UserCrop;
 import com.farm.model.UserFriend;
 import com.farm.user.service.UserService;
@@ -62,7 +61,6 @@ public class UserFriendService {
 		int ucId = userService.findUcId(friendId, landNumber);
 		UserCropDao dao = new UserCropDao();
 		UserCrop userCrop = dao.findUserCropById(ucId);
-		User user = userService.getUpdateUserInfo(userId);
 		
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
@@ -70,7 +68,7 @@ public class UserFriendService {
 				boolean a1 = false;
 				boolean a2 = userService.lessW(userId);
 				boolean a3 = false;
-				boolean a4 = userService.addMoney(userId, user.getInt("money")+10);
+				boolean a4 = userService.addMoney(userId, 10);
 				
 				int cropId = userCrop.getInt("cropId");
 				int progress = dao.getCropProgress(ucId);
@@ -110,29 +108,32 @@ public class UserFriendService {
 		UserService userService = new UserService();
 		UserCropDao dao = new UserCropDao();
 		int ucId = new UserService().findUcId(friendId, landNumber);
-		User user = userService.getUpdateUserInfo(userId);
 		
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				boolean a1 = false;
-				boolean a2 = new UserService().lessF(userId);
-				boolean a3 = userService.addMoney(userId, user.getInt("money")+20);
-				
-				Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(ucId));
-				int progress = dao.getCropProgress(ucId);
-				int matureTime = crop.getInt("matureTime");
-				
-				if(progress+10 >= matureTime) {
-					a1 = dao.fertilizerCrop(ucId, crop.getInt("matureTime"));
+				if(dao.findUserCropById(ucId).getInt("state") != 0) {
+					boolean a1 = false;
+					boolean a2 = new UserService().lessF(userId);
+					boolean a3 = userService.addMoney(userId, 20);
+					
+					Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(ucId));
+					int progress = dao.getCropProgress(ucId);
+					int matureTime = crop.getInt("matureTime");
+					
+					if(progress+10 >= matureTime) {
+						a1 = dao.fertilizerCrop(ucId, crop.getInt("matureTime"));
+					}else {
+						a1 = dao.fertilizerCrop(ucId, progress+10);
+					}
+					
+					if(a1 == true && a2 == true && a3 == true) {
+						return true;
+					}
+					return false;
 				}else {
-					a1 = dao.fertilizerCrop(ucId, progress+10);
+					return false;
 				}
-				
-				if(a1 == true && a2 == true && a3 == true) {
-					return true;
-				}
-				return false;
 			}
 		});
 		

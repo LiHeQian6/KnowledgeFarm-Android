@@ -25,8 +25,8 @@ public class UserCropService {
 		int ucId = new UserService().findUcId(userId, landNumber);
 		UserCropDao dao = new UserCropDao();
 		UserCrop userCrop = dao.findUserCropById(ucId);
+		
 		boolean succeed = Db.tx(new IAtom() {
-			
 			@Override
 			public boolean run() throws SQLException {
 				boolean a1 = false;
@@ -58,6 +58,7 @@ public class UserCropService {
 				return false;
 			}
 		});
+		
 		if(succeed) {
 			return true;
 		}
@@ -109,8 +110,8 @@ public class UserCropService {
 		int experience= crop.getInt("experience");
 		result = "";
 		isLevel = 0;
+		
 		boolean succeed = Db.tx(new IAtom() {
-			
 			@Override
 			public boolean run() throws SQLException {
 				UserService service = new UserService();
@@ -122,19 +123,26 @@ public class UserCropService {
 				User user = service.getUpdateUserInfo(userId);
 				int userLevel = user.getInt("level");
 				int userExperience = user.getInt("experience");
-				if(userLevel < Strings.userLevel.length) {
-					a2 = service.addEandM(userId,experience,price);
-					if(userExperience >= Strings.userLevel[userLevel]) {
-						isLevel = 1;
-						a4 = user.set("level", userLevel+1).update();
-					}else {
+				if(userLevel < Strings.userLevel.length-1) {
+					if(userExperience + experience <= Strings.userLevel[userLevel]) {
+						a2 = service.addEandM(userId,experience,price);
 						a4 = true;
+					}else {
+						isLevel = 1;
+						a2 = service.addEandM(userId,experience,price);
+						a4 = user.set("level", userLevel+1).update();
 					}
 				}else {
-					a2 = service.addMoney(userId, price);
-					a4 = true;
+					if(userExperience + experience <= Strings.userLevel[userLevel]) {
+						a2 = service.addEandM(userId,experience,price);
+						a4 = true;
+					}else {
+						a2 = service.addMoney(userId, price);
+						a4 = true;
+
+					}
 				}
-					
+				
 				if(a1 == true && a2 == true && a3 == true && a4 == true) {
 					if(isLevel == 1) {
 						result = "up";
@@ -147,6 +155,7 @@ public class UserCropService {
 				return false;
 			}
 		});
+		
 		return result;		
 	}
 	
@@ -206,6 +215,11 @@ public class UserCropService {
 	//修改土地状态
 	public boolean updateCropState(int userCropId, int state) {
 		return new UserCropDao().updateCropState(userCropId, state);
+	}
+	
+	//删除已收获的作物
+	public boolean deleteCrop(int ucId) {
+		return new UserCropDao().deleteCrop(ucId);
 	}
 	
 }
