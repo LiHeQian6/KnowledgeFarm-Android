@@ -7,6 +7,8 @@ import com.farm.model.Admin;
 import com.farm.model.Chinese;
 import com.farm.model.Crop;
 import com.farm.model.English;
+import com.farm.model.EnglishOneDown;
+import com.farm.model.EnglishOneUp;
 import com.farm.model.User;
 import com.farm.model.UserAuthority;
 import com.farm.model.UserBag;
@@ -72,8 +74,8 @@ public class AppConfig extends JFinalConfig {
 		arp.addMapping("usercrop", UserCrop.class);
 		arp.addMapping("userfriend", UserFriend.class);
 		arp.addMapping("english", English.class);
-		arp.addMapping("englishoneup", English.class);
-		arp.addMapping("englishonedown", English.class);
+		arp.addMapping("englishoneup", EnglishOneUp.class);
+		arp.addMapping("englishonedown", EnglishOneDown.class);
 		arp.addMapping("chinese", Chinese.class);
 	}
 

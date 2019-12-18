@@ -3,8 +3,10 @@ package com.farm.admin.controller;
 import java.sql.SQLException;
 
 import com.farm.admin.service.AdminService;
+import com.farm.config.AdminInterceptor;
 import com.farm.model.Admin;
 import com.farm.user.service.UserService;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -13,8 +15,14 @@ import com.jfinal.plugin.activerecord.Page;
 public class AdminController extends Controller{
 	
 	//跳转到登录页面
+	@Clear(AdminInterceptor.class)
 	public void index() {
 		renderJsp("/login.jsp");
+	}
+	
+	//跳转到主页面
+	public void gotoIndex() {
+		renderJsp("/index.jsp");
 	}
 	
 	//注销
@@ -22,11 +30,6 @@ public class AdminController extends Controller{
 		renderJsp("/login.jsp");
 		getSession().invalidate();
 	}
-	
-	//跳转到主页面
-	public void gotoIndex() {
-		renderJsp("/index.jsp");
-	}			
 	
 	//管理员登陆
 	public void login() {
