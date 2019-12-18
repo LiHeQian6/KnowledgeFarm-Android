@@ -510,6 +510,8 @@ public class ChineseActivity extends AppCompatActivity {
                     }else{
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue.setVisibility(View.VISIBLE);
+                        isTrue3.setVisibility(View.INVISIBLE);
+                        isTrue2.setVisibility(View.INVISIBLE);
                         isFalse.setText("哎呀，选错了！");
                         PlayFalseSound();
                         isFalse.setVisibility(View.VISIBLE);
@@ -541,6 +543,8 @@ public class ChineseActivity extends AppCompatActivity {
                     }else{
                         isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue2.setVisibility(View.VISIBLE);
+                        isTrue3.setVisibility(View.INVISIBLE);
+                        isTrue.setVisibility(View.INVISIBLE);
                         isFalse.setText("哎呀，选错了！");
                         PlayFalseSound();
                         isFalse.setVisibility(View.VISIBLE);
@@ -572,6 +576,8 @@ public class ChineseActivity extends AppCompatActivity {
                     }else{
                         isTrue3.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue3.setVisibility(View.VISIBLE);
+                        isTrue2.setVisibility(View.INVISIBLE);
+                        isTrue.setVisibility(View.INVISIBLE);
                         isFalse.setText("哎呀，选错了！");
                         PlayFalseSound();
                         isFalse.setVisibility(View.VISIBLE);
@@ -640,6 +646,24 @@ public class ChineseActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+
+            exit();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void exit() {
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
+            showIfReturn();
+        else
+            finish();
     }
 
 }

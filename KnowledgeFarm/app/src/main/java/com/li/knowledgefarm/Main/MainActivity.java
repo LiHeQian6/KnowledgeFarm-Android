@@ -765,6 +765,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void showFriends() {
         final Dialog friendsDialog = new Dialog(this);
+        //获取屏幕显示区域尺寸
+        WindowManager.LayoutParams attrs = friendsDialog .getWindow().getAttributes();
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.friends_dialog, null);
         friendsListView=layout.findViewById(R.id.friends_lv);
@@ -820,12 +827,6 @@ public class MainActivity extends AppCompatActivity {
             //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             friendsDialog.getWindow().setDimAmount(0f);//去除遮罩
         }
-        WindowManager.LayoutParams attrs = friendsDialog .getWindow().getAttributes();
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayHeight = ds.heightPixels;
-        displayWidth = ds.widthPixels;
         attrs.gravity = Gravity.RIGHT;
         attrs.width = (int)(displayWidth*0.40);
         attrs.height = (int)(displayHeight*0.95);
