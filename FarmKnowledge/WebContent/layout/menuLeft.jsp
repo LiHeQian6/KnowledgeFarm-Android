@@ -74,6 +74,21 @@
                         </li>
                     </ul>
                 </li>
+                <li class="list">
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
+                        	土地管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initUserLandManager" class="sub-menu">
+                        <li id="initUserLandManager1">
+                            <a href="${ctx}/admin/user/findUserPage">
+                                <i class="iconfont">&#xe6a7;</i>
+                        	土地列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
           </div>
     </div>

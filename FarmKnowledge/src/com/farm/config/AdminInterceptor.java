@@ -22,7 +22,6 @@ public class AdminInterceptor implements Interceptor{
 
 		Admin admin = (Admin) session.getAttribute("admin");
 		if(admin == null) {
-			System.out.println("aaa");
 			try {
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
 			} catch (ServletException e) {

@@ -67,29 +67,34 @@ public class UserCropService {
 	//Ê©·Ê
 	public boolean fertilizerCr(int userId,String landNumber) {
 		int ucId = new UserService().findUcId(userId, landNumber);
+		
 		boolean succeed = Db.tx(new IAtom() {
-			
 			@Override
 			public boolean run() throws SQLException {
 				UserCropDao dao = new UserCropDao();
-				boolean a1 = false;
-				boolean a2 = new UserService().lessF(userId);
-				Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(ucId));
-				int progress = dao.getCropProgress(ucId);
-				int matureTime = crop.getInt("matureTime");
-				
-				if(progress+10 >= matureTime) {
-					a1 = dao.fertilizerCrop(ucId, crop.getInt("matureTime"));
+				if(dao.findUserCropById(ucId).getInt("state") != 0) {
+					boolean a1 = false;
+					boolean a2 = new UserService().lessF(userId);
+					Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(ucId));
+					int progress = dao.getCropProgress(ucId);
+					int matureTime = crop.getInt("matureTime");
+					
+					if(progress+10 >= matureTime) {
+						a1 = dao.fertilizerCrop(ucId, crop.getInt("matureTime"));
+					}else {
+						a1 = dao.fertilizerCrop(ucId, progress+10);
+					}
+					
+					if(a1 == true && a2 == true) {
+						return true;
+					}
+					return false;
 				}else {
-					a1 = dao.fertilizerCrop(ucId, progress+10);
+					return false;
 				}
-				
-				if(a1 == true && a2 == true) {
-					return true;
-				}
-				return false;
 			}
 		});
+		
 		if(succeed) {
 			return true;
 		}

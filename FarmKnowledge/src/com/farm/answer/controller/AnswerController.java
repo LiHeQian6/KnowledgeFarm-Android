@@ -35,7 +35,6 @@ public class AnswerController extends Controller{
 		}else {
 			pageSize = 25;
 		}
-		
 		Page<EnglishOneUp> page =  new AnswerService().OneUpEnglish(pageNumber, pageSize);
 		if(page != null) {
 			renderJson(page.getList());
