@@ -116,16 +116,16 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         LinearLayout.LayoutParams params_view = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.138));
         convertView.setLayoutParams(params_view);
 
-        viewHolder.name.setTextSize((int)(displayHeight*0.012));
+        viewHolder.name.setTextSize((int)(displayHeight*0.013));
         viewHolder.name.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
 
         LinearLayout.LayoutParams params_level = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params_level.setMargins(0,(int)(displayHeight*0.014),0,(int)(displayHeight*0.014));
         viewHolder.level.setLayoutParams(params_level);
-        viewHolder.level.setTextSize((int)(displayHeight*0.012));
+        viewHolder.level.setTextSize((int)(displayHeight*0.013));
         viewHolder.level.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
 
-        viewHolder.account.setTextSize((int)(displayHeight*0.012));
+        viewHolder.account.setTextSize((int)(displayHeight*0.013));
         viewHolder.account.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
 
         LinearLayout.LayoutParams params_go = new LinearLayout.LayoutParams((int)(displayWidth*0.07),(int)(displayHeight*0.09));
