@@ -4,7 +4,7 @@
     android:layout_height="300dp"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/logindialogbac"
+    android:background="@drawable/loginbackground"
     android:gravity="center">
     <TextView
         android:layout_marginTop="20dp"
