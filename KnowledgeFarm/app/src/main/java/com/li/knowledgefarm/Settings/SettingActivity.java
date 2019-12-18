@@ -122,9 +122,10 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
-                            tv_QQ.setText("账号已绑定QQ");
+                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"已绑定QQ");
                             break;
                         case "false":
+                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定QQ");
                             break;
                     }
                     break;
@@ -133,7 +134,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
-                            tv_QQ.setText("账号已绑定QQ");
+                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"已绑定QQ");
                             /** 存入SharedPreferences*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -157,7 +158,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.VISIBLE);
                             btnUnBindingQQ.setVisibility(View.GONE);
-                            tv_QQ.setText("账号未绑定QQ");
+                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定QQ");
                             /** 删除SharedPreferences内Token信息*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -176,7 +177,7 @@ public class SettingActivity extends AppCompatActivity {
                             LoginActivity.user.setEmail("");
                             btnBindingEmail.setVisibility(View.VISIBLE);
                             btnUnBindingEmail.setVisibility(View.GONE);
-                            tv_email.setText("账号未绑定邮箱");
+                            tv_email.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定邮箱");
                             Toast.makeText(getApplicationContext(),"解绑邮箱成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
@@ -447,7 +448,9 @@ public class SettingActivity extends AppCompatActivity {
         if(!LoginActivity.user.getEmail().equals("")){
             btnBindingEmail.setVisibility(View.GONE);
             btnUnBindingEmail.setVisibility(View.VISIBLE);
-            tv_email.setText("账号已绑定邮箱：" + LoginActivity.user.getEmail());
+            tv_email.setText("您的账号"+LoginActivity.user.getAccout()+"已绑定邮箱：" + LoginActivity.user.getEmail());
+        }else{
+            tv_email.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定邮箱");
         }
     }
 
