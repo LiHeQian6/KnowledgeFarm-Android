@@ -229,6 +229,8 @@ public class MathActivity extends AppCompatActivity {
                         answer.setVisibility(View.GONE);
                         isFalse.setVisibility(View.INVISIBLE);
                         isTrue.setVisibility(View.GONE);
+                        btnPreQuestion.setVisibility(View.GONE);
+                        btnNextQuestion.setVisibility(View.GONE);
                         question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
                         question.setTextSize((int)(displayWidth*0.011));
                         question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -288,6 +290,11 @@ public class MathActivity extends AppCompatActivity {
      * @return void
      */
     private void showQuestion(int pos){
+        if(position == datalist.size()-1){
+            btnNextQuestion.setText("我答完啦");
+        }else{
+            btnNextQuestion.setText("下一题");
+        }
         if(datalist.get(pos).getIfDone().equals("true")) {
             isFalse.setText(" ");
             isTrue.setVisibility(View.INVISIBLE);
@@ -398,15 +405,16 @@ public class MathActivity extends AppCompatActivity {
                     break;
                 case R.id.btnNextQuestion:
                     String inputRes = answer.getText().toString().trim();
-                    if(answer.getVisibility() == View.INVISIBLE){
-                        position++;
-                        showQuestion(position);
-                        return;
-                    }
                     if(inputRes.equals("")) {
                         answer.setText("");
-                        position = ++position;
-                        showQuestion(position);
+                        if((position+1)<=datalist.size()-1) {
+                            position = ++position;
+                            showQuestion(position);
+                        }else{
+                            if(TrueAnswerNumber < datalist.size()){
+                                Toast.makeText(MathActivity.this,"你还没有答完哦",Toast.LENGTH_SHORT).show();;
+                            }
+                        }
                         return;
                     }
                     if(inputRes.equals(datalist.get(position).getResult()+"")) {
