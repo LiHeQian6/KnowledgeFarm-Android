@@ -19,13 +19,12 @@
     <script type="text/javascript">
     	//修改用户密码
     	function updateUser(){
-    		var oldPassword = $("#oldPassword").val();
-    		var newPassword = $("#newPassword").val();
+    		var password = $("#password").val();
     		var testPassword = $("#testPassword").val();
-    		if(newPassword != testPassword){
+    		if(password != testPassword){
     			layer.msg('两次输入密码不一致');
     		}else{
-    			$.post("${ctx}/admin/user/updateUserPassword",{"accout":"${user.accout}","oldPassword":oldPassword,"newPassword":newPassword},function(data){
+    			$.post("${ctx}/admin/user/updateUserPassword",{"accout":"${user.accout}","password":password},function(data){
 					if(data == "PasswordError"){
 						layer.msg('旧密码输入错误');
 					}else if(data == "succeed"){
@@ -50,19 +49,10 @@
             <form class="layui-form" action="javascript:updateUser()">
                 <div class="layui-form-item">
                     <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>旧密码
+                        	<font color="red">*</font>密码
                     </label>
                     <div class="layui-input-inline">
-                        <input type="password" id="oldPassword" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>新密码
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="password" id="newPassword" name="pass" required="" lay-verify="pass"
+                        <input type="password" id="password" name="pass" required="" lay-verify="pass"
                         autocomplete="off" class="layui-input">
                     </div>
                 </div>

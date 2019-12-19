@@ -19,6 +19,7 @@
     <script type="text/javascript">
     	//修改用户土地信息
     	function updateUserLand(){
+    		var grade = $("#grade option:selected").val();
     		var land1 = $("#land1").val();
     		var land2 = $("#land2").val();
     		var land3 = $("#land3").val();
@@ -61,165 +62,220 @@
             <!-- 右侧内容框架，更改从这里开始 -->
             <form class="layui-form" action="javascript:updateUserLand()">
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land1
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land1
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land1" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land1}">
+                    	 <select id="land1" name="interest" lay-filter="aihao">
+					        <option value="${user.land1}" selected="">${user.land1}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
+                        
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land2
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land2
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land2" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land2}">
+                        <select id="land2" name="interest" lay-filter="aihao">
+					        <option value="${user.land2}" selected="">${user.land2}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land3
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land3
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land3" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land3}">
+                        <select id="land3" name="interest" lay-filter="aihao">
+					        <option value="${user.land3}" selected="">${user.land3}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land4
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land4
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land4" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land4}">
+                        <select id="land4" name="interest" lay-filter="aihao">
+					        <option value="${user.land4}" selected="">${user.land4}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land5
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land5
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land5" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land5}">
+                        <select id="land5" name="interest" lay-filter="aihao">
+					        <option value="${user.land5}" selected="">${user.land5}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land6
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land6
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land6" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land6}">
+                        <select id="land6" name="interest" lay-filter="aihao">
+					        <option value="${user.land6}" selected="">${user.land6}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land7
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land7
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land7" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land7}">
+                        <select id="land7" name="interest" lay-filter="aihao">
+					        <option value="${user.land7}" selected="">${user.land7}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land8
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land8
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land8" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land8}">
+                        <select id="land8" name="interest" lay-filter="aihao">
+					        <option value="${user.land8}" selected="">${user.land8}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land9
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land9
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land9" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land9}">
+                        <select id="land9" name="interest" lay-filter="aihao">
+					        <option value="${user.land9}" selected="">${user.land9}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land10
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land10
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land10" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land10}">
-                    </div>
-                </div>
-                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land11
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="land11" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land11}">
+                        <select id="land10" name="interest" lay-filter="aihao">
+					        <option value="${user.land10}" selected="">${user.land10}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land12
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land11
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land12" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land12}">
+                        <select id="land11" name="interest" lay-filter="aihao">
+					        <option value="${user.land11}" selected="">${user.land11}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land13
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land12
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land13" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land13}">
+                        <select id="land12" name="interest" lay-filter="aihao">
+					        <option value="${user.land12}" selected="">${user.land12}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land14
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land13
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land14" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land14}">
+                        <select id="land13" name="interest" lay-filter="aihao">
+					        <option value="${user.land13}" selected="">${user.land13}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land15
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land14
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land15" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land15}">
+                        <select id="land14" name="interest" lay-filter="aihao">
+					        <option value="${user.land14}" selected="">${user.land14}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land16
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land15
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land16" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land16}">
+                        <select id="land15" name="interest" lay-filter="aihao">
+					        <option value="${user.land15}" selected="">${user.land15}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land17
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land16
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land17" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land17}">
+                        <select id="land16" name="interest" lay-filter="aihao">
+					        <option value="${user.land16}" selected="">${user.land16}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>land18
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land17
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="land18" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input" value="${user.land18}">
+                        <select id="land17" name="interest" lay-filter="aihao">
+					        <option value="${user.land17}" selected="">${user.land17}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="L_username" class="layui-form-label">
+                        <font color="red">*</font>land18
+                    </label>
+                    <div class="layui-input-inline">
+                        <select id="land18" name="interest" lay-filter="aihao">
+					        <option value="${user.land18}" selected="">${user.land18}</option>
+					        <option value="0">开垦</option>
+					        <option value="-1">未开垦</option>
+					     </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
