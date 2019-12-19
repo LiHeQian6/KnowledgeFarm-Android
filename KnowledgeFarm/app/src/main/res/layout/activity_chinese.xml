@@ -9,7 +9,7 @@
         android:id="@+id/iv_return"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:src="@drawable/jiantou"/>
+        android:src="@drawable/returns"/>
     <LinearLayout
         android:id="@+id/tipText"
         android:layout_width="match_parent"
