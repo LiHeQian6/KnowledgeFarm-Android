@@ -144,7 +144,7 @@ public class MyFriendActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId?userId="+user.getId())
+                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId?userId="+LoginActivity.user.getId())
                         .build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
@@ -162,7 +162,7 @@ public class MyFriendActivity extends AppCompatActivity {
                             Log.e("用户信息",result);
                             Message message = new Message();
                             message.obj = LoginActivity.parsr(URLDecoder.decode(result), User.class);
-                            user = (User) message.obj;
+                            LoginActivity.user = (User) message.obj;
                             Message msg = new Message();
                             msg.obj="true";
                             operatingHandleMessage.sendMessage(msg);
@@ -622,6 +622,7 @@ public class MyFriendActivity extends AppCompatActivity {
     }
     class MainListener implements View.OnClickListener {
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void onClick(View view) {
             switch (view.getId()){
@@ -773,8 +774,15 @@ public class MyFriendActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFriends() {
         final Dialog friendsDialog = new Dialog(this);
+        //获取屏幕显示区域尺寸
+        WindowManager.LayoutParams attrs = friendsDialog .getWindow().getAttributes();
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
         LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.friends_dialog, null);
+        final View layout = inflater.inflate(R.layout.friends_dialog, null);
         friendsListView=layout.findViewById(R.id.friends_lv);
         searchAccount=layout.findViewById(R.id.search_account);
         searchSelected=layout.findViewById(R.id.searchSelected);
@@ -832,12 +840,6 @@ public class MyFriendActivity extends AppCompatActivity {
             //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             friendsDialog.getWindow().setDimAmount(0f);//去除遮罩
         }
-        WindowManager.LayoutParams attrs = friendsDialog .getWindow().getAttributes();
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayHeight = ds.heightPixels;
-        displayWidth = ds.widthPixels;
         attrs.gravity = Gravity.RIGHT;
         attrs.width = (int)(displayWidth*0.40);
         attrs.height = (int)(displayHeight*0.95);
