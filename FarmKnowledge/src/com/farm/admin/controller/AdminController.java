@@ -31,6 +31,7 @@ public class AdminController extends Controller{
 		getSession().invalidate();
 	}
 	
+	@Clear(AdminInterceptor.class)
 	//π‹¿Ì‘±µ«¬Ω
 	public void login() {
 		String accout = get("accout");

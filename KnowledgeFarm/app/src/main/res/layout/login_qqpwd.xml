@@ -38,7 +38,7 @@
         android:textColor="@color/blackTextColor"
         android:inputType="textPassword"
         android:imeOptions="flagNoExtractUi"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
     <Spinner
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"

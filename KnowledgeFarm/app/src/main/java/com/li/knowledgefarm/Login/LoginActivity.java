@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 其中mAppId是分配给第三方应用的appid，类型为String
      */
-    public String mAppId = "101827462";//101827370
+    public String mAppId = "1110065654";//101827370 1110127580
     /**
      * 授权登录监听器
      */

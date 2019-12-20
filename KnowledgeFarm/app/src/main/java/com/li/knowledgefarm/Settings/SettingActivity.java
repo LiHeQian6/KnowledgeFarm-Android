@@ -42,6 +42,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.tencent.connect.UserInfo;
+import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -101,7 +102,7 @@ public class SettingActivity extends AppCompatActivity {
     /** Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI*/
     private Tencent mTencent;
     /** 其中mAppId是分配给第三方应用的appid，类型为String*/
-    public String mAppId = "101827462";//101827370
+    public String mAppId = "1110065654";//101827370
     /** 用户信息*/
     private UserInfo mInfo;
     /** 授权登录监听器*/
@@ -159,6 +160,7 @@ public class SettingActivity extends AppCompatActivity {
                             btnBindingQQ.setVisibility(View.VISIBLE);
                             btnUnBindingQQ.setVisibility(View.GONE);
                             tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定QQ");
+                            mTencent.logout(getApplicationContext());
                             /** 删除SharedPreferences内Token信息*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -742,18 +744,26 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(data != null){
-            final Uri uri = data.getData();
-            Bitmap bitmap = null;
-            try {
-                bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(uri));
-                updatePhoto(saveBitmapFile(bitmap));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+        mTencent.onActivityResultData(requestCode, resultCode, data, loginListener);
+        if (requestCode == Constants.REQUEST_API) {
+            if (resultCode == Constants.REQUEST_QQ_SHARE || resultCode == Constants.REQUEST_QZONE_SHARE || resultCode == Constants.REQUEST_OLD_SHARE) {
+                mTencent.handleResultData(data, loginListener);
             }
-            Log.i("lww",uri.getPath());
-        }else{
-            Log.i("lww","打开相册返回data为null");
+        }
+        if(requestCode == 1){
+            if (data != null) {
+                final Uri uri = data.getData();
+                Bitmap bitmap = null;
+                try {
+                    bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(uri));
+                    updatePhoto(saveBitmapFile(bitmap));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Log.i("lww", uri.getPath());
+            } else {
+                Log.i("lww", "打开相册返回data为null");
+            }
         }
     }
 
