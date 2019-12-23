@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.entity.User;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
@@ -63,7 +65,6 @@ public class QQFirstActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 4:
-                    user = (User) msg.obj;
                     Toast.makeText(getApplicationContext(),"注册成功！",Toast.LENGTH_SHORT).show();
                     Intent autoToStart = new Intent(QQFirstActivity.this,StartActivity.class);
                     autoToStart.setAction("QQFirstLogin");
@@ -127,7 +128,7 @@ public class QQFirstActivity extends AppCompatActivity {
                 .add("grade",grade)
                 .add("password",stringMD5(password))
                 .add("openId",openId)
-                .add("photo",Path)
+                .add("photo", URLEncoder.encode(Path))
                 .add("nickName",Nickname)
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/addQQUser").build();
@@ -150,20 +151,13 @@ public class QQFirstActivity extends AppCompatActivity {
                     mHandler.sendMessage(message);
                 }else {
                     message.what = 4;
-                    message.obj = parsr(result, User.class);
+                    message.obj = parsr(URLDecoder.decode(result), User.class);
+                    user = (User) message.obj;
                     mHandler.sendMessage(message);
                 }
             }
         });
     }
-
-    public boolean isEmail(String email) {
-        String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
-        Pattern p = Pattern.compile(str);
-        Matcher m = p.matcher(email);
-        return m.matches();
-    }
-
 
     private class ProvOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
         @Override
