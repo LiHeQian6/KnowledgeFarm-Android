@@ -269,7 +269,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("tk",accessToken);
                             editor.putLong("start",new Date().getTime());
                             editor.putInt("expires", Integer.parseInt(expires));
-                            editor.commit();
+                            editor.apply();
                             mTencent.setOpenId(openID);
                             mTencent.setAccessToken(accessToken, expires);
                         }
@@ -436,12 +436,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                if(!isConnByHttp()){
-                    Looper.prepare();
-                    Toast.makeText(getApplicationContext(),"未连接服务器",Toast.LENGTH_SHORT).show();
-                    Looper.loop();
-                    return;
-                }
                 MediaType type = MediaType.parse("text/plain");
                 RequestBody body = RequestBody.create(Json,type);
                 Request request = new Request.Builder()

@@ -67,7 +67,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent1110065654" /> <!-- 开放平台获取的APPID 101827462 1110127580-->
+                <data android:scheme="tencent1110065654" /> <!-- 开放平台获取的APPID  101827462  1110127580-->
             </intent-filter>
         </activity>
         <activity
