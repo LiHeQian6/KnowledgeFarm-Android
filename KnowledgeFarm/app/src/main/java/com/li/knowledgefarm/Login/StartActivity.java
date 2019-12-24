@@ -12,6 +12,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
@@ -48,16 +51,22 @@ public class StartActivity extends AppCompatActivity {
         getViews();
         registListener();
         Intent getInfo = getIntent();
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.huancun2)
+                .error(R.drawable.meigui)
+                .fallback(R.drawable.meigui)
+                .circleCrop()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         if(getInfo.getAction().equals("QQFirstLogin")&&user!=null){
             nickName.setText(user.getNickName());
-            Glide.with(this).load(user.getPhoto()).centerCrop().fitCenter().circleCrop().into(photo);
+            Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(photo);
             showNotifyDialog();
         }else if(getInfo.getAction().equals("autoLogin")&&user!=null){
             nickName.setText(user.getNickName());
-            Glide.with(this).load(user.getPhoto()).centerCrop().fitCenter().circleCrop().into(photo);
+            Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(photo);
         }else if(getInfo.getAction().equals("accountLogin")){
             nickName.setText(user.getNickName());
-            Glide.with(this).load(user.getPhoto()).centerCrop().fitCenter().circleCrop().into(photo);
+            Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(photo);
         }
     }
 

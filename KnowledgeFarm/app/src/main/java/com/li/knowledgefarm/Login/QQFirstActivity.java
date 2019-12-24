@@ -128,7 +128,7 @@ public class QQFirstActivity extends AppCompatActivity {
                 .add("grade",grade)
                 .add("password",stringMD5(password))
                 .add("openId",openId)
-                .add("photo", URLEncoder.encode(Path))
+                .add("photo", Path)
                 .add("nickName",Nickname)
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/addQQUser").build();
