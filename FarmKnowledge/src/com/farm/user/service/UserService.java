@@ -250,6 +250,10 @@ public class UserService {
 	public User findUserByAccountPassword(String account,String pwd){
 		return new UserDao().findUserByAccountPassword(account, pwd);
 	}
+	//后台 根据用户id获取到要修改的用户信息（账号、别名、头像）
+	public User getUpdateUserInfo0(int id) {
+		return new UserDao().getUpdateUserInfo0(id);
+	}
 	//根据用户id获取到要修改的用户信息（账号、别名、头像）
 	public User getUpdateUserInfo(int id) {
 		return new UserDao().getUpdateUserInfo(id);
