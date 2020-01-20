@@ -71,7 +71,7 @@ public class UserController extends Controller{
 		if(email == null) {
 			email = "";
 		}
-		if(service.addUser(service.generateAccout(), openId, nickName, password, photo, "", email, grade, "QQ")) {
+		if(service.addUser(service.generateAccout(), openId, nickName, password, "0.png", "", email, grade, "QQ")) {
 			User user = service.findUserByOpenId(openId);
 			renderJson(user);
 		}else {
@@ -114,7 +114,7 @@ public class UserController extends Controller{
 			email = "";
 		}
 		String accout = service.generateAccout();
-		if(service.addUser(accout, nickName, password, Strings.userPhotoUrl + "0.png", "", email, grade)) {
+		if(service.addUser(accout, nickName, password, "0.png", "", email, grade)) {
 			User user = service.findUserByAccout(accout);
 			renderJson(user);
 		}else {
@@ -225,7 +225,7 @@ public class UserController extends Controller{
 					//构造photo，并判断是否与上次的photo重复
 					do {
 						newPhoto = "";
-						newPhoto = Strings.userPhotoUrl + photoName + "?" + cropService.generateRandom();
+						newPhoto = photoName + "?" + cropService.generateRandom();
 					} while (newPhoto.equals(photo));
 					
 					//把头像写入文件

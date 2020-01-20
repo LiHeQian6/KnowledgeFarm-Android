@@ -197,7 +197,7 @@ public class CropController extends Controller{
 					}				
 					
 					//构造img
-					realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+					realPath[count] = count + cropPhotoName + "?" + service.generateRandom();
 					
 					//把图片写入文件
 					File file = new File(Strings.cropfilePath + count + cropPhotoName);
@@ -224,7 +224,7 @@ public class CropController extends Controller{
 	//根据作物id获取到要修改的作物信息
 	public void getUpdateCropInfo() {
 		int id = getInt("id");
-		Crop crop = new CropService().getUpdateCropInfo(id);
+		Crop crop = new CropService().getUpdateCropInfo0(id);
 		if(crop != null) {
 			setSessionAttr("crop", crop);
 			renderText("succeed");
@@ -296,6 +296,7 @@ public class CropController extends Controller{
 					}	
 				}else {
 					if(fi.getName().equals("")) { //图片为空，默认展示之前的图片
+						
 						switch(count) {
 							case 0:
 								realPath[count] = img1;
@@ -310,31 +311,32 @@ public class CropController extends Controller{
 								realPath[count] = img4;
 								break;
 						}
+						System.out.println(realPath[count]);
 					}else { //图片不为空
 						//构造img，并判断是否与上次的img重复
 						switch (count) {
 							case 0:
 								do {
 									realPath[count] = "";
-									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+									realPath[count] = count + cropPhotoName + "?" + service.generateRandom();
 								} while (realPath[count].equals(img1));
 								break;
 							case 1:
 								do {
 									realPath[count] = "";
-									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+									realPath[count] = count + cropPhotoName + "?" + service.generateRandom();
 								} while (realPath[count].equals(img2));
 								break;
 							case 2:
 								do {
 									realPath[count] = "";
-									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+									realPath[count] = count + cropPhotoName + "?" + service.generateRandom();
 								} while (realPath[count].equals(img3));
 								break;
 							case 3:
 								do {
 									realPath[count] = "";
-									realPath[count] = Strings.cropPhotoUrl + count + cropPhotoName + "?" + service.generateRandom();
+									realPath[count] = count + cropPhotoName + "?" + service.generateRandom();
 								} while (realPath[count].equals(img4));
 								break;
 						}

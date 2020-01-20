@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.farm.entity.Strings;
 import com.farm.model.User;
 import com.farm.model.UserAuthority;
 import com.jfinal.plugin.activerecord.Db;
@@ -259,7 +260,7 @@ public class UserDao {
 		List<User> list = User.dao.find("select user.* from user,userauthority where user.id=userauthority.userId and userauthority.openId=?",openId);
 		if(list.size() != 0) {
 			User user = list.get(0);
-			user.set("photo", URLEncoder.encode(user.getStr("photo")));
+			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.get("photo")));
 			return user;
 		}
 		return null;
@@ -269,7 +270,7 @@ public class UserDao {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
 			User user = list.get(0);
-			user.set("photo", URLEncoder.encode(user.getStr("photo")));
+			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.get("photo")));
 			return user;
 		}
 		return null;
@@ -324,6 +325,7 @@ public class UserDao {
 		List<User> list = User.dao.find("select * from user where accout=? and password=?",account,pwd);
 		if(list.size() != 0) {
 			User user = list.get(0);
+			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.getStr("photo")));
 			return user;
 		}
 		return null;
@@ -349,6 +351,17 @@ public class UserDao {
 		}else {
 			userPage = User.dao.paginate(pageNumber, everyCount, "select *","from user where accout like?","%"+accout+"%");
 		}
+		if(userPage != null) {
+			List<User> list = userPage.getList();
+			if(list.size() != 0) {
+				int i = 0;
+				for(User user : list) {
+					list.set(i, user.set("photo", Strings.userPhotoUrl + user.get("photo")));
+					i++;
+				}
+				userPage.setList(list);
+			}
+		}
 		return userPage;
 	}
 	//查询User表内用户信息（User表）
@@ -359,11 +372,28 @@ public class UserDao {
 		}else {
 			userPage = User.dao.paginate(pageNumber, everyCount, "select *","from user where exist=? and accout like?",exist,"%"+accout+"%");
 		}
+		if(userPage != null) {
+			List<User> list = userPage.getList();
+			if(list.size() != 0) {
+				int i = 0;
+				for(User user : list) {
+					list.set(i, user.set("photo", Strings.userPhotoUrl + user.get("photo")));
+					i++;
+				}
+				userPage.setList(list);
+			}
+		}
 		return userPage;
+	}
+	//后台 根据用户id获取到要修改的用户信息
+	public User getUpdateUserInfo0(int id) {
+		User user = User.dao.findById(id);
+		return user;
 	}
 	//根据用户id获取到要修改的用户信息
 	public User getUpdateUserInfo(int id) {
 		User user = User.dao.findById(id);
+		user.set("photo", Strings.userPhotoUrl + user.getStr("photo"));
 		return user;
 	}
 	//根据userId查询userCropId列表

@@ -161,19 +161,18 @@ public class UserController extends Controller{
 		String email = get("email");
 		int grade = getInt("grade");
 		
-		boolean succeed = service.addUser(service.generateAccout(), nickName, password, Strings.userPhotoUrl + "0.png", "", email, grade);
+		boolean succeed = service.addUser(service.generateAccout(), nickName, password, "0.png", "", email, grade);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
 			renderText("fail");
 		}
-		
 	}
 
 	//根据用户id获取到要修改的用户信息（账号、别名、头像）
 	public void getUpdateUserInfo() {
 		int id = getInt("id");
-		User user = new UserService().getUpdateUserInfo(id);
+		User user = new UserService().getUpdateUserInfo0(id);
 		if(user != null) {
 			setSessionAttr("user", user);
 			renderText("succeed");
@@ -286,7 +285,7 @@ public class UserController extends Controller{
 						//构造photo，并判断是否与上次的photo重复
 						do {
 							newPhoto = "";
-							newPhoto = Strings.userPhotoUrl + photoName + "?" + cropService.generateRandom();
+							newPhoto = photoName + "?" + cropService.generateRandom();
 						} while (newPhoto.equals(photo));
 						
 						//把头像写入文件

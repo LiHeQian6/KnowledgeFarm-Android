@@ -3,6 +3,7 @@ package com.farm.crop.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.farm.entity.Strings;
 import com.farm.model.Crop;
 import com.jfinal.plugin.activerecord.Page;
 
@@ -67,6 +68,17 @@ public class CropDao {
 		}else {
 			cropPage = Crop.dao.paginate(pageNumber, everyCount, "select *","from crop where exist=? and name like?",exist,"%"+name+"%");
 		}
+		if(cropPage != null) {
+			List<Crop> list = cropPage.getList();
+			if(list.size() != 0) {
+				int i = 0;
+				for(Crop crop : list) {
+					list.set(i, crop.set("img1", Strings.cropPhotoUrl+crop.get("img1")).set("img2", Strings.cropPhotoUrl+crop.get("img2")).set("img3", Strings.cropPhotoUrl+crop.get("img3")).set("img4", Strings.cropPhotoUrl+crop.get("img4")));
+					i++;
+				}
+				cropPage.setList(list);
+			}
+		}
 		return cropPage;
 	}
 	//查询商店所有作物信息
@@ -74,13 +86,24 @@ public class CropDao {
 		List<Crop> list = new ArrayList<Crop>();
 		list = Crop.dao.find("select * from crop where exist=1");
 		if(list.size() != 0) {
+			int i = 0;
+			for(Crop crop : list) {
+				list.set(i, crop.set("img1", Strings.cropPhotoUrl+crop.get("img1")).set("img2", Strings.cropPhotoUrl+crop.get("img2")).set("img3", Strings.cropPhotoUrl+crop.get("img3")).set("img4", Strings.cropPhotoUrl+crop.get("img4")));
+				i++;
+			}
 			return list;
 		}
 		return null;
 	}
+	//后台 根据作物id获取到要修改的作物信息
+	public Crop getUpdateCropInfo0(int id) {
+		Crop crop = Crop.dao.findById(id);
+		return crop;
+	}
 	//根据作物id获取到要修改的作物信息
 	public Crop getUpdateCropInfo(int id) {
 		Crop crop = Crop.dao.findById(id);
+		crop.set("img1", Strings.cropPhotoUrl+crop.get("img1")).set("img2", Strings.cropPhotoUrl+crop.get("img2")).set("img3", Strings.cropPhotoUrl+crop.get("img3")).set("img4", Strings.cropPhotoUrl+crop.get("img4"));
 		return crop;
 	}
 	//查询是否已存在该cropPhotoName

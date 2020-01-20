@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.farm.crop.dao.CropDao;
+import com.farm.entity.Strings;
 import com.farm.model.Crop;
 import com.jfinal.plugin.activerecord.Page;
 
@@ -62,6 +63,10 @@ public class CropService {
 	//查询商店所有作物信息
 	public List<Crop> findCrop(){
 		return new CropDao().findCrop();
+	}
+	//后台 根据作物id获取到要修改的作物信息
+	public Crop getUpdateCropInfo0(int id) {
+		return new CropDao().getUpdateCropInfo0(id);
 	}
 	//根据作物id获取到要修改的作物信息
 	public Crop getUpdateCropInfo(int id) {

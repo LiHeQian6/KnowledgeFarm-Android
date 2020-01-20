@@ -19,12 +19,12 @@ public class Strings {
 	/**
 	 * 本机服务器
 	 */
-	//作物图片
-	public static String cropPhotoUrl = "http://10.7.89.89:8080/img/"; //10.7.89.89
+	//作物图片 192.168.1.68
+	public static String cropPhotoUrl = "http://192.168.1.68:8080/img/"; //10.7.89.89
 	public static String cropfilePath = "D:/eclipse/Workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/ROOT/img/";
 	
 	//用户头像
-	public static String userPhotoUrl = "http://10.7.89.89:8080/photo/";
+	public static String userPhotoUrl = "http://192.168.1.68:8080/photo/";
 	public static String userfilePath = "D:/eclipse/Workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/ROOT/photo/";
 	
 }
