@@ -81,28 +81,28 @@ public class UserController extends Controller{
 	public void deleteMultiUser() {
 		String deleteStr = get("deleteStr");
 		String deleteId[] = deleteStr.split(",");
+		UserService service = new UserService();
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				boolean a = false;
-				UserService service = new UserService();
+				boolean deleteMultiUser = false;
 				for(String aString : deleteId) {
-					a = service.deleteOneUser(Integer.parseInt(aString));
-					if(a == false) {
+					deleteMultiUser = service.deleteOneUser(Integer.parseInt(aString));
+					if(!deleteMultiUser) {
 						return false;
 					}
 				}
 				return true;
 			}
 		});
-		if(succeed == true) {
+		if(succeed) {
 			renderText("succeed");
 		}else {
 			renderText("fail");
 		}
 	}
 	
-	//恢复User表内单个用户信息，跳转到用户列表页面（User、UserAuthority表修改exist字段为1）
+	//恢复User表内单个用户信息，跳转到用户列表页面
 	public void recoveryOneUser() {
 		int userId = getInt("userId");
 		
@@ -115,25 +115,25 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//恢复User表内批量用户信息，跳转到用户列表页面（User、UserAuthority表修改exist字段为1）
+	//恢复User表内批量用户信息，跳转到用户列表页面
 	public void recoveryMultiUser() {
 		String recoveryStr = get("recoveryStr");
 		String recoveryId[] = recoveryStr.split(",");
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				boolean a = false;
+				boolean recoveryMultiUser = false;
 				UserService service = new UserService();
 				for(String aString : recoveryId) {
-					a = service.recoveryOneUser(Integer.parseInt(aString));
-					if(a == false) {
+					recoveryMultiUser = service.recoveryOneUser(Integer.parseInt(aString));
+					if(!recoveryMultiUser) {
 						return false;
 					}
 				}
 				return true;
 			}
 		});
-		if(succeed == true) {
+		if(succeed) {
 			renderText("succeed");
 		}else {
 			renderText("fail");

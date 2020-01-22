@@ -16,12 +16,12 @@ public class UserDao {
 	 * 	增
 	 * @throws
 	 */
-	//User表插入账号、别名、头像（accout、nickName、photo）
+	//user表插入accout、nickName、password、photo、photoName、email、grade
 	public boolean addUser(String accout, String nickName, String password, String photo, String photoName, String email, int grade){
 		boolean succeed =  new User().set("accout", accout).set("nickName", nickName).set("password", password).set("photo", photo).set("photoName", photoName).set("email", email).set("grade", grade).save();
 		return succeed;
 	}
-	//UserAuthority表内插入userId、openId、type
+	//userauthority表内插入userId、openId、type
 	public boolean addUserAuthority(int userId, String openId, String type){
 		boolean succeed =  new UserAuthority().set("userId", userId).set("openId", openId).set("type", type).save();
 		return succeed;
@@ -34,7 +34,12 @@ public class UserDao {
 	 * 	删
 	 * @throws
 	 */
-	//删除openId信息
+	//user表删除整条数据（指定id）
+	public boolean deleteThoroughUser(int id) {
+		boolean succeed = User.dao.deleteById(id);
+		return succeed;
+	}
+	//userauthority表删除整条数据（指定userId）
 	public boolean deleteOpenIdByUserId(int userId) {
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		if(list.size() != 0) {
@@ -43,20 +48,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//彻底删除User表内用户信息（User表delete）
-	public boolean deleteThoroughUser(int userId) {
-		boolean succeed = User.dao.deleteById(userId);
-		return succeed;
-	}
-	//彻底删除UserAuthority表内授权信息（User表delete）
-	public boolean deleteThoroughUserAuthority(int userId) {
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
-		boolean succeed = false;
-		if(list.size() != 0) {
-			succeed = UserAuthority.dao.deleteById(list.get(0).get("id"));
-		}
-		return succeed;
-	}
+	
 	
 	
 	
@@ -64,8 +56,8 @@ public class UserDao {
 	/**
 	 * 	改
 	 * @throws
-	 */
-	//修改用户信息，根据修改前账号索引到
+	 */                                                                                                                   
+	//user表修改整条数据（指定accout）
 	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName, String email, int grade, int level, int experience, int money
 			, int mathRewardCount, int englishRewardCount, int chineseRewardCount, int water, int fertilizer, int online) {
 		List<User> list = User.dao.find("select * from user where accout=?",oldAccout);
@@ -91,7 +83,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//修改用户昵称，根据账号查询到
+	//user表修改nickName（指定accout）
 	public boolean updateUserNickName(String accout, String nickName) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		boolean succeed = false;
@@ -100,7 +92,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//修改用户年级，根据账号查询到
+	//user表修改grade（指定accout）
 	public boolean updateUserGrade(String accout, int grade) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		boolean succeed = false;
@@ -109,7 +101,7 @@ public class UserDao {
 		}
 		return succeed;
 	}	
-	//设置密码，根据账号查询到
+	//user表修改password（指定accout）
 	public boolean updateUserPassword(String accout,String password) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
@@ -118,7 +110,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//修改用户的头像，根据账号查询到
+	//user表修改photo、photoName（指定accout）
 	public boolean updateUserPhoto(String accout, String photo, String photoName) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
@@ -127,7 +119,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//设置email，根据账号查询到
+	//user表修改email（指定accout）
 	public boolean updateUserEmail(String accout, String email) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
@@ -136,7 +128,15 @@ public class UserDao {
 		}
 		return false;
 	}
-	//购买作物后，减少金币
+	//user表增加money（指定id）
+	public boolean addMoney(int id, int money) {
+		User user = User.dao.findById(id);
+		if(user != null) {
+			return user.set("money", user.getInt("money")+money).update();
+		}
+		return false;
+	}
+	//user表减少money（指定id）
 	public boolean decreaseMoney(int id, int money) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -144,7 +144,15 @@ public class UserDao {
 		}
 		return false;
 	}
-	//User表增加浇水、施肥次数（water、fertilizer）
+	//user表增加experience，money（指定id）
+	public boolean addExandMoney(int id,int ex,int money) {
+		User user = User.dao.findById(id);
+		if(user != null) {
+			return user.set("experience", user.getInt("experience")+ex).set("money", user.getInt("money")+money).update();
+		}
+		return false;
+	}
+	//user表增加water、fertilizer（指定id）
 	public boolean addWaterAndFertilizer(int id, int water, int fertilizer) {
 		User user = User.dao.findById(id);
 		boolean succeed = false;
@@ -153,23 +161,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//User表增加经验，金币（experience，money）
-	public boolean addExandMoney(int id,int ex,int money) {
-		User user = User.dao.findById(id);
-		if(user != null) {
-			return user.set("experience", user.getInt("experience")+ex).set("money", user.getInt("money")+money).update();
-		}
-		return false;
-	}
-	//User表增加金币（money）
-	public boolean addMoney(int id, int money) {
-		User user = User.dao.findById(id);
-		if(user != null) {
-			return user.set("money", user.getInt("money")+money).update();
-		}
-		return false;
-	}
-	//User表减少浇水（water）
+	//user表减少water（指定id）
 	public boolean lessWater(int id) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -180,7 +172,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//User表减少施肥（fertilizer）
+	//user表减少fertilizer（指定id）
 	public boolean lessFertilizer(int id) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -191,11 +183,11 @@ public class UserDao {
 		}
 		return false;
 	}
-	//设置用户指定土地种植何种作物
-	public boolean updateLandCrop(int userId,String landNumber,int userCropId) {
-		return User.dao.findById(userId).set(landNumber, userCropId).update();
+	//user表修改landNumber（指定id）
+	public boolean updateLandCrop(int id,String landNumber,int userCropId) {
+		return User.dao.findById(id).set(landNumber, userCropId).update();
 	}
-	//设置奖励次数
+	//user表修改rewardCount（指定id和subject）
 	public boolean lessRewardCount(int id, int rewardCount, String subject) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -203,17 +195,17 @@ public class UserDao {
 		}
 		return false;
 	}
-	//扩建土地
-	public boolean extensionLand(int userId, String landNumber) {
-		boolean succeed = User.dao.findById(userId).set(landNumber, 0).update();
+	//user表修改landNumber为0（指定id）
+	public boolean extensionLand(int id, String landNumber) {
+		boolean succeed = User.dao.findById(id).set(landNumber, 0).update();
 		return succeed;
 	}
-	//删除User表内单个用户信息（User表修改exist字段为0）
-	public boolean deleteOneUser(int userId) {
-		boolean succeed = User.dao.findById(userId).set("exist", 0).update();
+	//user表修改exist为0（指定id）
+	public boolean deleteOneUser(int id) {
+		boolean succeed = User.dao.findById(id).set("exist", 0).update();
 		return succeed;
 	}
-	//删除UserAuthority表内单个授权信息（UserAuthority表修改exist字段为0）
+	//userauthority表修改exist为0（指定userId）
 	public boolean deleteOneUserAuthority(int userId) {
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		boolean succeed = false;
@@ -222,12 +214,12 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//恢复User表内单个用户信息（User表修改exist字段为1）
+	//user表修改exist为1（指定id）
 	public boolean recoveryOneUser(int userId) {
 		boolean succeed = User.dao.findById(userId).set("exist", 1).update();
 		return succeed;
 	}
-	//恢复UserAuthority表内单个授权信息（UserAuthority表修改exist字段为1）
+	//userauthority表修改exist为1（指定userId）
 	public boolean recoveryOneUserAuthority(int userId) {
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		boolean succeed = false;
@@ -236,7 +228,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//修改land1-18
+	//user表修改land1-18（指定accout）
 	public boolean updateLand1_18(String accout, int land1, int land2, int land3, int land4, int land5, int land6, int land7, int land8, int land9, int land10
 			, int land11, int land12, int land13, int land14, int land15, int land16, int land17, int land18){
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
@@ -255,7 +247,7 @@ public class UserDao {
 	 * 	查
 	 * @throws
 	 */
-	//根据openId查询User表内用户信息
+	//user表查询整条数据（指定openId）
 	public User findUserByOpenId(String openId){
 		List<User> list = User.dao.find("select user.* from user,userauthority where user.id=userauthority.userId and userauthority.openId=?",openId);
 		if(list.size() != 0) {
@@ -265,7 +257,7 @@ public class UserDao {
 		}
 		return null;
 	}
-	//根据账号查询User表内用户信息
+	//user表查询整条数据（指定accout）
 	public User findUserByAccout(String accout){
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
@@ -275,7 +267,7 @@ public class UserDao {
 		}
 		return null;
 	}
-	//根据openId判断UserAuthority表内是否存在该用户exist=1
+	//userauthority表判断某条数据的exist是否为1（指定openId）
 	public boolean isExistUserByOpenId(String openId){
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=? and exist=1",openId);
 		if(list.size() != 0) {
@@ -284,7 +276,7 @@ public class UserDao {
 			return false;
 		}
 	}
-	//根据openId判断UserAuthority表内是否存在该用户
+	//userauthority表判断某条数据是否存在（指定openId）
 	public boolean isExistUserByOpenIdAll(String openId){
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=?",openId);
 		if(list.size() != 0) {
@@ -293,7 +285,16 @@ public class UserDao {
 			return false;
 		}
 	}
-	//根据账号判断User表内是否存在该用户（User表）
+	//userauthority表判断某条数据是否存在（指定userId）
+	public boolean isExistUserByUserId(int userId){
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
+		if(list.size() != 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	//user表判断某条数据的exist是否为1（指定accout）
 	public boolean isExistUserByAccout(String accout){
 		List<User> list = User.dao.find("select * from user where accout=? and exist=1",accout);
 		if(list.size() != 0) {
@@ -302,7 +303,7 @@ public class UserDao {
 			return false;
 		}
 	}
-	//根据账号判断User表内是否存在该用户（User表）
+	//user表判断某条数据是否存在（指定accout）
 	public boolean isExistUserByAccoutAll(String accout){
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
@@ -311,7 +312,7 @@ public class UserDao {
 			return false;
 		}
 	}
-	//根据账号判断User表内是否存在该用户，除指定账号外（User表）
+	//user表判断某条数据是否存在，除accout1外（指定accout2）
 	public boolean isExistUserByAccout(String accout1,String accout2){
 		List<User> list = User.dao.find("select * from user where accout=? and accout!=?",accout2,accout1);
 		if(list.size() != 0) {
@@ -320,7 +321,7 @@ public class UserDao {
 			return false;
 		}
 	}
-	//账号密码判断正误
+	//user表查询整条数据（指定accout和password）
 	public User findUserByAccountPassword(String account,String pwd){
 		List<User> list = User.dao.find("select * from user where accout=? and password=?",account,pwd);
 		if(list.size() != 0) {
@@ -330,20 +331,19 @@ public class UserDao {
 		}
 		return null;
 	}
-
-	//根据账号查询用户id
+	//user表查询id（指定accout）
 	public int getUserIdByAccout(String accout) {
 		if(!(""+Db.queryInt("select id from user where accout=?",accout)).equals("null") ) {
 			return Db.queryInt("select id from user where accout=?",accout);
 		}
 		return 0;
 	}
-	//获得User表最后一条数据的userId
+	//user表获得最后一条数据的id
 	public int getLastUserId(){
 		int id =  Db.queryInt("select id from user order by id desc limit 1");
 		return id;
 	}
-	//查询User表内用户信息（User表）
+	//user表分页查询数据（指定accout、pageNumber、pageSize）
 	public Page<User> findUserPageAll(int pageNumber,int everyCount,String accout) {
 		Page<User> userPage;
 		if(accout == null || accout.equals("")) {
@@ -364,7 +364,7 @@ public class UserDao {
 		}
 		return userPage;
 	}
-	//查询User表内用户信息（User表）
+	//user表分页查询数据（指定accout、pageNumber、pageSize、exist）
 	public Page<User> findUserPage(int pageNumber,int everyCount,String accout,int exist) {
 		Page<User> userPage;
 		if(accout == null || accout.equals("")) {
@@ -385,18 +385,27 @@ public class UserDao {
 		}
 		return userPage;
 	}
-	//后台 根据用户id获取到要修改的用户信息
+	//后台 user表查询整条数据（指定id）
 	public User getUpdateUserInfo0(int id) {
 		User user = User.dao.findById(id);
 		return user;
 	}
-	//根据用户id获取到要修改的用户信息
+	//user表查询整条数据（指定id）
 	public User getUpdateUserInfo(int id) {
 		User user = User.dao.findById(id);
 		user.set("photo", Strings.userPhotoUrl + user.getStr("photo"));
 		return user;
 	}
-	//根据userId查询userCropId列表
+	//user表查询userCropId（指定id，landNumber）
+	public int findUcIdByLand(int userId,String landNumber) {
+		User user = User.dao.findById(userId);
+		if(user != null) {
+			int ucId = user.getInt(landNumber);
+			return ucId;
+		}
+		return 0;
+	}
+	//user表查询userCropId列表（指定id）
 	public List<Integer> getUserCropIdById(int id) {
 		User user = User.dao.findById(id);
 		List<Integer> list = new ArrayList<Integer>();
@@ -411,16 +420,7 @@ public class UserDao {
 		}
 		return null;		
 	}
-	//根据userId，landId查询userCropId
-	public int findUcIdByLand(int userId,String landNumber) {
-		User user = User.dao.findById(userId);
-		if(user != null) {
-			int ucId = user.getInt(landNumber);
-			return ucId;
-		}
-		return 0;
-	}	
-	//判断账号是否绑定QQ
+	//user表判断是否绑定QQ(指定accout)
 	public boolean isBindingQQ(String accout) {
 		int userId = getUserIdByAccout(accout);
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
@@ -429,7 +429,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//判断邮箱是否已被其它账号绑定
+	//user表判断email是否已存在
 	public boolean isBindingEmail(String email) {
 		List<User> list = User.dao.find("select * from user where email=?",email);
 		if(list.size() != 0) {
@@ -437,7 +437,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//查询是否已存在该photoName
+	//user表判断photoName是否已存在
 	public boolean isExistPhotoName(String photoName) {
 		List<User> list = User.dao.find("select * from user where photoName=?",photoName);
 		if(list.size() != 0) {
