@@ -51,7 +51,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//查询Admin表内所有管理员信息，跳转到管理员列表页面（Admin表）
+	//分页查询管理员信息，跳转到管理员列表页面
 	public void findAdminPage() {
 		String accout = get("accout");
 		String page = get("pageNumber");
@@ -81,10 +81,10 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//删除Admin表内单个管理员信息，跳转到管理员列表页面（Admin表修改exist字段为0）
+	//后台管理系统删除单个管理员信息，跳转到管理员列表页面
 	public void deleteOneAdmin() {
 		int id = getInt("id");
-		boolean succeed = new AdminService().deleteOneAdmin(id);
+		boolean succeed = new AdminService().updateExist(id, 0);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
@@ -92,7 +92,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//删除Admin表内批量管理员信息，跳转到管理员列表页面（Admin表修改exist字段为0）
+	//后台管理系统删除批量管理员信息，跳转到管理员列表页面
 	public void deleteMultiAdmin() {
 		String deleteStr = get("deleteStr");
 		String deleteId[] = deleteStr.split(",");
@@ -102,7 +102,7 @@ public class AdminController extends Controller{
 				boolean a = true;
 				AdminService service = new AdminService();
 				for(String aString : deleteId) {
-					a = service.deleteOneAdmin(Integer.parseInt(aString));
+					a = service.updateExist(Integer.parseInt(aString), 0);
 				}
 				if(a == true) {
 					return true;
@@ -118,10 +118,10 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//恢复Admin表内单个管理员信息，跳转到管理员列表页面（Admin表修改exist字段为1）
+	//后台管理系统恢复单个管理员信息，跳转到管理员列表页面
 	public void recoveryOneAdmin() {
 		int id = getInt("id");
-		boolean succeed = new AdminService().recoveryOneAdmin(id);
+		boolean succeed = new AdminService().updateExist(id, 1);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
@@ -129,7 +129,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//恢复Admin表内批量管理员信息，跳转到管理员列表页面（Admin表修改exist字段为1）
+	//后台管理系统恢复批量管理员信息，跳转到管理员列表页面
 	public void recoveryMultiAdmin() {
 		String recoveryStr = get("recoveryStr");
 		String recoveryId[] = recoveryStr.split(",");
@@ -139,7 +139,7 @@ public class AdminController extends Controller{
 				boolean a = true;
 				AdminService service = new AdminService();
 				for(String aString : recoveryId) {
-					a = service.recoveryOneAdmin(Integer.parseInt(aString));
+					a = service.updateExist(Integer.parseInt(aString), 1);
 				}
 				if(a == true) {
 					return true;
@@ -155,7 +155,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//彻底删除Admin表内管理员信息，跳转到管理员列表页面（Admin表delete）
+	//后台管理系统彻底删除单个管理员信息，跳转到管理员列表页面
 	public void deleteThoroughAdmin() {
 		int id = getInt("id");
 		boolean succeed = new AdminService().deleteThoroughAdmin(id);
@@ -184,7 +184,7 @@ public class AdminController extends Controller{
 		}		
 	}
 	
-	//根据管理员id获取到要修改的管理员信息
+	//查询要修改的管理员信息（指定id）
 	public void getUpdateAdminInfo() {
 		int id = getInt("id");
 		Admin admin = new AdminService().getUpdateAdminInfo(id);
@@ -196,7 +196,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//修改管理员信息（账号），根据修改前账号索引到
+	//修改管理员账号
 	public void updateAdminAccout() {
 		String oldAccout = get("oldAccout");
 		String newAccout = get("newAccout");
@@ -214,7 +214,7 @@ public class AdminController extends Controller{
 		}	
 	}
 	
-	//修改管理员信息（密码），根据管理员账号索引到
+	//修改管理员密码
 	public void updateAdminPassword() {
 		UserService service = new UserService();
 		String accout = get("accout");

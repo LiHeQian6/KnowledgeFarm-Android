@@ -86,10 +86,10 @@ public class UserService {
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				boolean deleteUser = userDao.deleteOneUser(id);
+				boolean deleteUser = userDao.updateUserExist(id, 0);
 				boolean deleteUserAuthority = false;
 				if(userDao.isExistUserByUserId(id)) {
-					deleteUserAuthority = userDao.deleteOneUserAuthority(id);
+					deleteUserAuthority = userDao.updateUserAuthorityExist(id, 0);
 				}else {
 					deleteUserAuthority = true;
 				}
@@ -107,10 +107,10 @@ public class UserService {
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				boolean recoveryUser = userDao.recoveryOneUser(id);
+				boolean recoveryUser = userDao.updateUserExist(id, 1);
 				boolean recoveryUserAuthority = false;
 				if(userDao.isExistUserByUserId(id)) {
-					recoveryUserAuthority = userDao.recoveryOneUserAuthority(id);
+					recoveryUserAuthority = userDao.updateUserAuthorityExist(id, 1);
 				}else {
 					recoveryUserAuthority = true;
 				}
@@ -146,7 +146,7 @@ public class UserService {
 	 * 	删
 	 * @throws
 	 */
-	//后台管理系统彻底删除用户信息
+	//后台管理系统彻底删除单个用户信息
 	public boolean deleteThoroughUser(int id) {
 		return new UserDao().deleteThoroughUser(id);
 	}
@@ -162,7 +162,7 @@ public class UserService {
 	 * 	改
 	 * @throws
 	 */
-	//修改用户信息（指定账号）
+	//修改用户信息
 	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName, String email, int grade, int level, int experience, int money
 			, int mathRewardCount, int englishRewardCount, int chineseRewardCount, int water, int fertilizer, int online) {
 		return new UserDao().updateUser(oldAccout, newAccout, nickName, photo, photoName, email, grade, level, experience, money, mathRewardCount, englishRewardCount, chineseRewardCount, water, fertilizer, online);
@@ -187,7 +187,7 @@ public class UserService {
 	public boolean updateUserEmail(String accout, String email) {
 		return new UserDao().updateUserEmail(accout, email);
 	}
-	//购买作物后，减少金币
+	//减少金币
 	public boolean decreaseMoney(int id, int money) {
 		return new UserDao().decreaseMoney(id, money);
 	}
@@ -223,11 +223,11 @@ public class UserService {
 	 * 	查
 	 * @throws
 	 */
-	//分页查询所有用户信息（指定账号）
+	//分页查询用户信息（指定accout、pageNumber、pageSize）
 	public Page<User> findUserPageAll(int pageNumber,int everyCount,String accout) {
 		return new UserDao().findUserPageAll(pageNumber, everyCount, accout);
 	}
-	//分页查询User表内用户信息（指定账号、exist）
+	//分页查询用户信息（指定accout、pageNumber、pageSize、exist）
 	public Page<User> findUserPage(int pageNumber,int everyCount,String accout,int exist) {
 		return new UserDao().findUserPage(pageNumber,everyCount,accout,exist);
 	}
@@ -239,7 +239,7 @@ public class UserService {
 	public User findUserByAccout(String accout){
 		return new UserDao().findUserByAccout(accout);
 	}
-	//判断UserAuthority表内是否存在该用户（指定openId）
+	//判断userauthority表内是否存在该用户（指定openId）
 	public boolean isExistUserByOpenIdAll(String openId){
 		return new UserDao().isExistUserByOpenIdAll(openId);
 	}
@@ -259,7 +259,7 @@ public class UserService {
 	public boolean isExistUserByAccout(String accout1,String accout2){
         return new UserDao().isExistUserByAccout(accout1,accout2);
     }
-	//根据账号密码判断是否可以登陆
+	//查询用户信息（指定账号、密码）
 	public User findUserByAccountPassword(String account,String pwd){
 		return new UserDao().findUserByAccountPassword(account, pwd);
 	}
@@ -271,15 +271,15 @@ public class UserService {
 	public User getUpdateUserInfo(int id) {
 		return new UserDao().getUpdateUserInfo(id);
 	}
-	//查询用户id（指定账号）
+	//查询user表用户id（指定账号）
 	public int getUserIdByAccout(String accout) {
 		return new UserDao().getUserIdByAccout(accout);
 	}
-	//根据id，landNumber查询userCropId
+	//user表查询某块土地的userCropId（指定id，landNumber）
 	public int findUcId(int userId,String landNumber) {
 		return new UserDao().findUcIdByLand(userId, landNumber);
 	}
-	//根据userId查询userCropId列表
+	//user表查询用户所有土地的userCropId列表（指定id）
 	public List<Integer> getUserCropIdById(int id) {
 		return new UserDao().getUserCropIdById(id);
 	}

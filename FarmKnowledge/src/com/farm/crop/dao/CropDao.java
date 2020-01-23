@@ -14,7 +14,7 @@ public class CropDao {
 	 * 	增
 	 * @throws
 	 */
-	//添加作物信息
+	//crop表插入整条数据
 	public boolean addCrop(String name, int price, String img1, String img2, String img3, String img4, String cropPhotoName, int matureTime, int value, int experience) {
 		boolean succeed = new Crop().set("name", name).set("price", price).set("img1", img1).set("img2", img2).set("img3", img3).set("img4", img4).set("cropPhotoName", cropPhotoName).set("matureTime", matureTime).set("value", value).set("experience", experience).save();
 		return succeed;
@@ -22,37 +22,38 @@ public class CropDao {
 	
 	
 	
+	
+	
 	/**
 	 * 	删
 	 * @throws
 	 */
-	//彻底删除Crop表内作物信息（Crop表delete）
+	//crop表删除整条数据
 	public boolean deleteThoroughCrop(int id) {
 		boolean succeed = Crop.dao.deleteById(id);
 		return succeed;
 	}
 	
 	
+	
+	
+	
 	/**
 	 * 	改
 	 * @throws
 	 */
-	//修改作物信息
+	//crop表修改数据
 	public boolean updateCrop(int id, String name, int price, String img1, String img2, String img3, String img4, String cropPhotoName, int matureTime, int value, int experience) {
 		boolean succeed = Crop.dao.findById(id).set("name", name).set("price", price).set("img1", img1).set("img2", img2).set("img3", img3).set("img4", img4).set("cropPhotoName", cropPhotoName).set("matureTime", matureTime).set("value", value).set("experience", experience).update();
 		return succeed;
 	}
-	//删除Crop表内单个作物信息（Crop表修改exist字段为0）
-	public boolean deleteOneCrop(int id) {
-		boolean succeed = Crop.dao.findById(id).set("exist", 0).update();
+	//crop表修改exist
+	public boolean updateExist(int id, int exist) {
+		boolean succeed = Crop.dao.findById(id).set("exist", exist).update();
 		return succeed;
 	}
+
 	
-	//恢复Crop表内单个作物信息（Crop表修改exist字段为1）
-	public boolean recoveryOneCrop(int id) {
-		boolean succeed = Crop.dao.findById(id).set("exist", 1).update();
-		return succeed;
-	}
 	
 	
 	
@@ -60,7 +61,7 @@ public class CropDao {
 	 * 	查
 	 * @throws
 	 */
-	//查询Crop表内所有作物信息（Crop表）
+	//分页查询crop表数据（指定name、pageNumber、pageSize、exist）
 	public Page<Crop> findCropPage(int pageNumber,int everyCount,String name,int exist) {
 		Page<Crop> cropPage;
 		if(name == null || name.equals("")) {
@@ -81,7 +82,7 @@ public class CropDao {
 		}
 		return cropPage;
 	}
-	//查询商店所有作物信息
+	//crop表查询所有数据（指定exist=1）
 	public List<Crop> findCrop(){
 		List<Crop> list = new ArrayList<Crop>();
 		list = Crop.dao.find("select * from crop where exist=1");
@@ -95,18 +96,18 @@ public class CropDao {
 		}
 		return null;
 	}
-	//后台 根据作物id获取到要修改的作物信息
+	//后台 crop表查询整条数据（指定id）
 	public Crop getUpdateCropInfo0(int id) {
 		Crop crop = Crop.dao.findById(id);
 		return crop;
 	}
-	//根据作物id获取到要修改的作物信息
+	//crop表查询整条数据（指定id）
 	public Crop getUpdateCropInfo(int id) {
 		Crop crop = Crop.dao.findById(id);
 		crop.set("img1", Strings.cropPhotoUrl+crop.get("img1")).set("img2", Strings.cropPhotoUrl+crop.get("img2")).set("img3", Strings.cropPhotoUrl+crop.get("img3")).set("img4", Strings.cropPhotoUrl+crop.get("img4"));
 		return crop;
 	}
-	//查询是否已存在该cropPhotoName
+	//crop表判断是否已存在该cropPhotoName
 	public boolean isExistCropPhotoName(String cropPhotoName) {
 		List<Crop> list = Crop.dao.find("select * from crop where cropPhotoName=?",cropPhotoName);
 		if(list.size() != 0) {

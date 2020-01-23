@@ -22,7 +22,7 @@ import com.jfinal.plugin.activerecord.Page;
 
 public class CropController extends Controller{
 	
-	//查询Crop表内所有作物信息，跳转到作物列表页面（Crop表）
+	//分页查询作物信息，跳转到作物列表页面
 	public void findCropPage() {
 		String name = get("name");
 		String page = get("pageNumber");
@@ -52,10 +52,10 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//删除Crop表内单个作物信息，跳转到作物列表页面（Crop表修改exist字段为0）
+	//后台管理系统删除单个作物信息，跳转到作物列表页面
 	public void deleteOneCrop() {
 		int id = getInt("id");
-		boolean succeed = new CropService().deleteOneCrop(id);
+		boolean succeed = new CropService().updateExist(id, 0);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
@@ -63,7 +63,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//删除Crop表内批量作物信息，跳转到作物列表页面（Crop表修改exist字段为0）
+	//后台管理系统删除批量作物信息，跳转到作物列表页面
 	public void deleteMultiCrop() {
 		String deleteStr = get("deleteStr");
 		String deleteId[] = deleteStr.split(",");
@@ -73,7 +73,7 @@ public class CropController extends Controller{
 				boolean a = true;
 				CropService service = new CropService();
 				for(String aString : deleteId) {
-					a = service.deleteOneCrop(Integer.parseInt(aString));
+					a = service.updateExist(Integer.parseInt(aString), 0);
 				}
 				if(a == true) {
 					return true;
@@ -89,10 +89,10 @@ public class CropController extends Controller{
 		}
 	}
 
-	//恢复Crop表内单个作物信息，跳转到作物列表页面（Crop表修改exist字段为1）
+	//后台管理系统恢复单个作物信息，跳转到作物列表页面
 	public void recoveryOneCrop() {
 		int id = getInt("id");
-		boolean succeed = new CropService().recoveryOneCrop(id);
+		boolean succeed = new CropService().updateExist(id, 1);
 		if(succeed == true) {
 			renderText("succeed");
 		}else {
@@ -100,7 +100,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//恢复Crop表内批量作物信息，跳转到作物列表页面（Crop表修改exist字段为1）
+	//后台管理系统恢复批量作物信息，跳转到作物列表页面
 	public void recoveryMultiCrop() {
 		String recoveryStr = get("recoveryStr");
 		String recoveryId[] = recoveryStr.split(",");
@@ -110,7 +110,7 @@ public class CropController extends Controller{
 				boolean a = true;
 				CropService service = new CropService();
 				for(String aString : recoveryId) {
-					a = service.recoveryOneCrop(Integer.parseInt(aString));
+					a = service.updateExist(Integer.parseInt(aString), 1);
 				}
 				if(a == true) {
 					return true;
@@ -126,7 +126,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//彻底删除Crop表内作物信息，跳转到作物列表页面（Crop表delete）
+	//后台管理系统彻底删除单个作物信息，跳转到作物列表页面
 	public void deleteThoroughCrop() {
 		int id = getInt("id");
 		boolean succeed = new CropService().deleteThoroughCrop(id);
@@ -221,7 +221,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//根据作物id获取到要修改的作物信息
+	//查询要修改的作物信息（指定id）
 	public void getUpdateCropInfo() {
 		int id = getInt("id");
 		Crop crop = new CropService().getUpdateCropInfo0(id);

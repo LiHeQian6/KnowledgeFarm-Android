@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.farm.crop.dao.CropDao;
-import com.farm.entity.Strings;
 import com.farm.model.Crop;
 import com.jfinal.plugin.activerecord.Page;
 
@@ -22,15 +21,19 @@ public class CropService {
 	
 	
 	
+	
+	
 	/**
 	 * 	删
 	 * @throws
 	 */
-	//彻底删除Crop表内作物信息（Crop表delete）
+	//后台管理系统彻底删除单个作物信息
 	public boolean deleteThoroughCrop(int id) {
 		return new CropDao().deleteThoroughCrop(id);
 	}
 
+	
+	
 	
 	
 	/**
@@ -41,38 +44,36 @@ public class CropService {
 	public boolean updateCrop(int id, String name, int price, String img1, String img2, String img3, String img4, String cropPhotoName, int matureTime, int value, int experience) {
 		return new CropDao().updateCrop(id, name, price, img1, img2, img3, img4, cropPhotoName, matureTime, value, experience);
 	}
-	//删除Crop表内单个作物信息（Crop表修改exist字段为0）
-	public boolean deleteOneCrop(int id) {
-		return new CropDao().deleteOneCrop(id);
-	}
-	//恢复Crop表内单个作物信息（Crop表修改exist字段为1）
-	public boolean recoveryOneCrop(int id) {
-		return new CropDao().recoveryOneCrop(id);
+	//后台管理系统修改单个作物信息的exist
+	public boolean updateExist(int id, int exist) {
+		return new CropDao().updateExist(id, exist);
 	}
 
+
+	
 	
 	
 	/**
 	 * 	查
 	 * @throws
 	 */
-	//查询Crop表内所有作物信息（Crop表）
+	//分页查询所有作物信息（指定name、pageNumber、pageSize、exist）
 	public Page<Crop> findCropPage(int pageNumber,int everyCount,String name,int exist) {
 		return new CropDao().findCropPage(pageNumber,everyCount,name,exist);
 	}
-	//查询商店所有作物信息
+	//查询商店所有作物信息（指定exist=1）
 	public List<Crop> findCrop(){
 		return new CropDao().findCrop();
 	}
-	//后台 根据作物id获取到要修改的作物信息
+	//后台 查询作物信息（指定id）
 	public Crop getUpdateCropInfo0(int id) {
 		return new CropDao().getUpdateCropInfo0(id);
 	}
-	//根据作物id获取到要修改的作物信息
+	//查询作物信息（指定id）
 	public Crop getUpdateCropInfo(int id) {
 		return new CropDao().getUpdateCropInfo(id);
 	}
-	//查询是否已存在该cropPhotoName
+	//判断是否已存在该cropPhotoName
 	public boolean isExistCropPhotoName(String cropPhotoName) {
 		return new CropDao().isExistCropPhotoName(cropPhotoName);
 	}
@@ -82,7 +83,6 @@ public class CropService {
 		String cropPhotoUrlLast = generateShortUuid();
 		return cropPhotoUrlLast;
 	}
-	
 	public static String[] chars = new String[] { "a", "b", "c", "d", "e", "f",
 			"g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
 			"t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5",

@@ -34,12 +34,12 @@ public class UserDao {
 	 * 	删
 	 * @throws
 	 */
-	//user表删除整条数据（指定id）
+	//user表删除整条数据
 	public boolean deleteThoroughUser(int id) {
 		boolean succeed = User.dao.deleteById(id);
 		return succeed;
 	}
-	//userauthority表删除整条数据（指定userId）
+	//userauthority表删除整条数据
 	public boolean deleteOpenIdByUserId(int userId) {
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		if(list.size() != 0) {
@@ -57,7 +57,7 @@ public class UserDao {
 	 * 	改
 	 * @throws
 	 */                                                                                                                   
-	//user表修改整条数据（指定accout）
+	//user表修改数据
 	public boolean updateUser(String oldAccout, String newAccout, String nickName, String photo, String photoName, String email, int grade, int level, int experience, int money
 			, int mathRewardCount, int englishRewardCount, int chineseRewardCount, int water, int fertilizer, int online) {
 		List<User> list = User.dao.find("select * from user where accout=?",oldAccout);
@@ -83,7 +83,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//user表修改nickName（指定accout）
+	//user表修改nickName
 	public boolean updateUserNickName(String accout, String nickName) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		boolean succeed = false;
@@ -92,7 +92,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//user表修改grade（指定accout）
+	//user表修改grade
 	public boolean updateUserGrade(String accout, int grade) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		boolean succeed = false;
@@ -101,7 +101,7 @@ public class UserDao {
 		}
 		return succeed;
 	}	
-	//user表修改password（指定accout）
+	//user表修改password
 	public boolean updateUserPassword(String accout,String password) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
@@ -110,7 +110,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表修改photo、photoName（指定accout）
+	//user表修改photo、photoName
 	public boolean updateUserPhoto(String accout, String photo, String photoName) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
@@ -119,7 +119,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表修改email（指定accout）
+	//user表修改email
 	public boolean updateUserEmail(String accout, String email) {
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
@@ -128,7 +128,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表增加money（指定id）
+	//user表增加money
 	public boolean addMoney(int id, int money) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -136,7 +136,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表减少money（指定id）
+	//user表减少money
 	public boolean decreaseMoney(int id, int money) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -144,7 +144,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表增加experience，money（指定id）
+	//user表增加experience，money
 	public boolean addExandMoney(int id,int ex,int money) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -152,7 +152,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表增加water、fertilizer（指定id）
+	//user表增加water、fertilizer
 	public boolean addWaterAndFertilizer(int id, int water, int fertilizer) {
 		User user = User.dao.findById(id);
 		boolean succeed = false;
@@ -161,7 +161,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//user表减少water（指定id）
+	//user表减少water
 	public boolean lessWater(int id) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -172,7 +172,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表减少fertilizer（指定id）
+	//user表减少fertilizer
 	public boolean lessFertilizer(int id) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -183,11 +183,11 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表修改landNumber（指定id）
+	//user表修改landNumber
 	public boolean updateLandCrop(int id,String landNumber,int userCropId) {
 		return User.dao.findById(id).set(landNumber, userCropId).update();
 	}
-	//user表修改rewardCount（指定id和subject）
+	//user表修改rewardCount
 	public boolean lessRewardCount(int id, int rewardCount, String subject) {
 		User user = User.dao.findById(id);
 		if(user != null) {
@@ -195,18 +195,18 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表修改landNumber为0（指定id）
+	//user表修改landNumber为0
 	public boolean extensionLand(int id, String landNumber) {
 		boolean succeed = User.dao.findById(id).set(landNumber, 0).update();
 		return succeed;
 	}
-	//user表修改exist为0（指定id）
-	public boolean deleteOneUser(int id) {
-		boolean succeed = User.dao.findById(id).set("exist", 0).update();
+	//user表修改exist
+	public boolean updateUserExist(int id, int exist) {
+		boolean succeed = User.dao.findById(id).set("exist", exist).update();
 		return succeed;
 	}
-	//userauthority表修改exist为0（指定userId）
-	public boolean deleteOneUserAuthority(int userId) {
+	//userauthority表修改exist
+	public boolean updateUserAuthorityExist(int userId, int exist) {
 		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
 		boolean succeed = false;
 		if(list.size() != 0) {
@@ -214,21 +214,7 @@ public class UserDao {
 		}
 		return succeed;
 	}
-	//user表修改exist为1（指定id）
-	public boolean recoveryOneUser(int userId) {
-		boolean succeed = User.dao.findById(userId).set("exist", 1).update();
-		return succeed;
-	}
-	//userauthority表修改exist为1（指定userId）
-	public boolean recoveryOneUserAuthority(int userId) {
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
-		boolean succeed = false;
-		if(list.size() != 0) {
-			succeed = list.get(0).set("exist", 1).update();
-		}
-		return succeed;
-	}
-	//user表修改land1-18（指定accout）
+	//user表修改land1-18
 	public boolean updateLand1_18(String accout, int land1, int land2, int land3, int land4, int land5, int land6, int land7, int land8, int land9, int land10
 			, int land11, int land12, int land13, int land14, int land15, int land16, int land17, int land18){
 		List<User> list = User.dao.find("select * from user where accout=?",accout);
@@ -267,18 +253,18 @@ public class UserDao {
 		}
 		return null;
 	}
-	//userauthority表判断某条数据的exist是否为1（指定openId）
-	public boolean isExistUserByOpenId(String openId){
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=? and exist=1",openId);
+	//userauthority表判断某条数据是否存在（指定openId）
+	public boolean isExistUserByOpenIdAll(String openId){
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=?",openId);
 		if(list.size() != 0) {
 			return true;
 		}else {
 			return false;
 		}
 	}
-	//userauthority表判断某条数据是否存在（指定openId）
-	public boolean isExistUserByOpenIdAll(String openId){
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=?",openId);
+	//userauthority表判断是否存在某条数据（指定openId，exist=1）
+	public boolean isExistUserByOpenId(String openId){
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=? and exist=1",openId);
 		if(list.size() != 0) {
 			return true;
 		}else {
@@ -294,18 +280,18 @@ public class UserDao {
 			return false;
 		}
 	}
-	//user表判断某条数据的exist是否为1（指定accout）
-	public boolean isExistUserByAccout(String accout){
-		List<User> list = User.dao.find("select * from user where accout=? and exist=1",accout);
+	//user表判断某条数据是否存在（指定accout）
+	public boolean isExistUserByAccoutAll(String accout){
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
 		if(list.size() != 0) {
 			return true;
 		}else {
 			return false;
 		}
 	}
-	//user表判断某条数据是否存在（指定accout）
-	public boolean isExistUserByAccoutAll(String accout){
-		List<User> list = User.dao.find("select * from user where accout=?",accout);
+	//user表判断是否存在某条数据（指定accout，exist=1）
+	public boolean isExistUserByAccout(String accout){
+		List<User> list = User.dao.find("select * from user where accout=? and exist=1",accout);
 		if(list.size() != 0) {
 			return true;
 		}else {
@@ -429,7 +415,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表判断email是否已存在
+	//user表判断是否已存在该email
 	public boolean isBindingEmail(String email) {
 		List<User> list = User.dao.find("select * from user where email=?",email);
 		if(list.size() != 0) {
@@ -437,7 +423,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	//user表判断photoName是否已存在
+	//user表判断是否已存在该photoName
 	public boolean isExistPhotoName(String photoName) {
 		List<User> list = User.dao.find("select * from user where photoName=?",photoName);
 		if(list.size() != 0) {

@@ -27,7 +27,7 @@ import com.jfinal.plugin.activerecord.Page;
 public class UserController extends Controller{
 	private boolean isDelete = false;
 	
-	//查询User表内用户信息，跳转到用户列表页面（User表）
+	//分页查询用户信息，跳转到用户列表页面
 	public void findUserPage() {
 		String accout = get("accout");
 		String page = get("pageNumber");
@@ -64,7 +64,7 @@ public class UserController extends Controller{
 		}
 	}
 
-	//删除User表内单个用户信息，跳转到用户列表页面（User、UserAuthority表修改exist字段为0）
+	//后台管理系统删除单个用户信息，跳转到用户列表页面
 	public void deleteOneUser() {
 		int userId = getInt("userId");
 		
@@ -77,7 +77,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//删除User表内批量用户信息，跳转到用户列表页面（User、UserAuthority表修改exist字段为0）
+	//后台管理系统删除User表内批量用户信息，跳转到用户列表页面（User、UserAuthority表修改exist字段为0）
 	public void deleteMultiUser() {
 		String deleteStr = get("deleteStr");
 		String deleteId[] = deleteStr.split(",");
@@ -102,7 +102,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//恢复User表内单个用户信息，跳转到用户列表页面
+	//后台管理系统恢复U单个用户信息，跳转到用户列表页面
 	public void recoveryOneUser() {
 		int userId = getInt("userId");
 		
@@ -115,7 +115,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//恢复User表内批量用户信息，跳转到用户列表页面
+	//后台管理系统恢复批量用户信息，跳转到用户列表页面
 	public void recoveryMultiUser() {
 		String recoveryStr = get("recoveryStr");
 		String recoveryId[] = recoveryStr.split(",");
@@ -140,7 +140,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//彻底删除User表内用户信息，跳转到用户列表页面（User、UserAuthority表delete）
+	//后台管理系统彻底删除单个用户信息，跳转到用户列表页面
 	public void deleteThoroughUser() {
 		int userId = getInt("userId");
 		
@@ -169,7 +169,7 @@ public class UserController extends Controller{
 		}
 	}
 
-	//根据用户id获取到要修改的用户信息（账号、别名、头像）
+	//查询要修改的用户信息（指定id）
 	public void getUpdateUserInfo() {
 		int id = getInt("id");
 		User user = new UserService().getUpdateUserInfo0(id);
@@ -181,7 +181,7 @@ public class UserController extends Controller{
 		}			
 	}
 	
-	//修改用户信息（账号、别名、头像），根据修改前账号索引到
+	//修改用户信息
 	public void updateUser() {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
