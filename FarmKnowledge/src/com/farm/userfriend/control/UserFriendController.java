@@ -38,7 +38,7 @@ public class UserFriendController extends Controller{
 		if(accout == null || accout.equals("")) {
 			friendId = -1;
 		}else {
-			friendId = new UserService().getUserIdByAccout(accout);
+			friendId = new UserService().findUserByAccout(accout).getInt("id");
 		}
 		
 		Page<UserFriend> friendPage = service.findUserFriendByUserId(userId, friendId, pageNumber, pageSize);

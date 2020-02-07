@@ -1,11 +1,9 @@
 package com.farm.userbag.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.farm.crop.service.CropService;
 import com.farm.entity.BagCropItem;
-import com.farm.entity.CropItem;
 import com.farm.model.Crop;
 import com.farm.userbag.service.BagService;
 import com.jfinal.core.Controller;
@@ -16,16 +14,17 @@ public class BagController extends Controller{
 	public void initUserBag() {
 		int userId = getInt("userId");
 		
-		List<CropItem> cropItemList = new BagService().getCropIdByUserId(userId);
-		if(cropItemList != null) {
-			List<BagCropItem> list = new ArrayList<>();
-			CropService service = new CropService();
-			for(CropItem cropItem : cropItemList) {
-				Crop crop = service.getUpdateCropInfo(cropItem.getCropId());
-				BagCropItem item = new BagCropItem(cropItem.getNumber(),crop);
-				list.add(item);
+		List<BagCropItem> bagCropItems = new BagService().getCropIdByUserId(userId);
+		CropService service = new CropService();
+		if(bagCropItems != null) {
+			for(int i = 0;i < bagCropItems.size();i++) {
+				BagCropItem item = new BagCropItem();
+				Crop crop = service.getUpdateCropInfo(bagCropItems.get(i).getCrop().getInt("id"));
+				item.setCrop(crop);
+				item.setNumber(bagCropItems.get(i).getNumber());
+				bagCropItems.set(i, item);
 			}
-			renderJson(list);
+			renderJson(bagCropItems);
 		}else {
 			renderJson("[]");
 		}

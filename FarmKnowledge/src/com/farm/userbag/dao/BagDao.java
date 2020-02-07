@@ -3,7 +3,8 @@ package com.farm.userbag.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.farm.entity.CropItem;
+import com.farm.entity.BagCropItem;
+import com.farm.model.Crop;
 import com.farm.model.UserBag;
 
 public class BagDao {
@@ -66,12 +67,16 @@ public class BagDao {
 		return false;
 	}
 	//userbag表查询cropId列表（指定userId）
-	public List<CropItem> getCropIdByUserId(int userId){
+	public List<BagCropItem> getCropIdByUserId(int userId){
 		List<UserBag> userBag = UserBag.dao.find("select * from userbag where userId=? order by cropId ASC",userId);
-		List<CropItem> cropIdList = new ArrayList<CropItem>();
+		List<BagCropItem> cropIdList = new ArrayList<BagCropItem>();
 		if(userBag.size() != 0) {
 			for(UserBag userBag2 : userBag) {
-				CropItem item = new CropItem(userBag2.getInt("cropId"),userBag2.getInt("number"));
+				BagCropItem item = new BagCropItem();
+				Crop crop = new Crop();
+				crop.set("id", userBag2.getInt("cropId"));
+				item.setCrop(crop);
+				item.setNumber(userBag2.getInt("number"));
 				cropIdList.add(item);
 			}
 			return cropIdList;

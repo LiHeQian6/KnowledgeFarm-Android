@@ -58,21 +58,13 @@ public class UserCropService {
 	 * 	查
 	 * @throws
 	 */
-	//查询cropId(指定id)
-	public int getCropIdByUserCropId(int id){
-		return new UserCropDao().getCropIdByUserCropId(id);
+	//查询整条作物信息（指定id）
+	public UserCrop findUserCropById(int id) {
+		return new UserCropDao().findUserCropById(id);
 	}
 	//根据id查询cropId、progress（放到UserCropItem中cropId当成userCropId）
 	public UserCropItem getCropIdProgressStateByUserCropId(int id){
 		return new UserCropDao().getCropIdProgressStateByUserCropId(id);
-	}
-	//查询作物进度（指定id）
-	public int getCropProgress(int id) {
-		return new UserCropDao().getCropProgress(id);
-	}
-	//查询整条作物信息（指定id）
-	public UserCrop findUserCropById(int id) {
-		return new UserCropDao().findUserCropById(id);
 	}
 	
 	
@@ -94,7 +86,7 @@ public class UserCropService {
 				boolean a3 = false;
 				int cropId = userCrop.getInt("cropId");
 				Crop crop = new CropDao().getUpdateCropInfo(cropId);
-				int progress = dao.getCropProgress(id);
+				int progress = userCrop.getInt("progress");
 				int matureTime = crop.getInt("matureTime");
 				
 				if(progress+5 >= matureTime) {
@@ -127,16 +119,17 @@ public class UserCropService {
 	//施肥
 	public boolean fertilizerCr(int userId,String landNumber) {
 		int id = new UserService().findUcId(userId, landNumber);
+		UserCropDao dao = new UserCropDao();
+		UserCrop userCrop = dao.findUserCropById(id);
 		
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				UserCropDao dao = new UserCropDao();
-				if(dao.findUserCropById(id).getInt("state") != 0) {
+				if(userCrop.getInt("state") != 0) {
 					boolean a1 = false;
 					boolean a2 = new UserService().lessF(userId);
-					Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(id));
-					int progress = dao.getCropProgress(id);
+					Crop crop = new CropDao().getUpdateCropInfo(userCrop.getInt("cropId"));
+					int progress = userCrop.getInt("progress");
 					int matureTime = crop.getInt("matureTime");
 					
 					if(progress+10 >= matureTime) {
@@ -163,7 +156,7 @@ public class UserCropService {
 	//收获
 	public String getCrop(int userId, String landNumber) {
 		int id = new UserService().findUcId(userId, landNumber);
-		Crop crop = new CropService().getUpdateCropInfo(getCropIdByUserCropId(id));
+		Crop crop = new CropService().getUpdateCropInfo(findUserCropById(id).getInt("cropId"));
 		int price = crop.getInt("value");
 		int experience= crop.getInt("experience");
 		result = "";

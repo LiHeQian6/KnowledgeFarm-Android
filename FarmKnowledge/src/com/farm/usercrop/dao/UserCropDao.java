@@ -67,21 +67,13 @@ public class UserCropDao {
 	 * 	查
 	 * @throws
 	 */
-	//usercrop表查询progress（指定id）
-	public int getCropProgress(int id) {
-		UserCrop userCrop = UserCrop.dao.findById(id);
-		if(userCrop != null) {
-			return userCrop.getInt("progress");
+	//usercrop表查询数据（指定id）
+	public UserCrop findUserCropById(int id) {
+		List<UserCrop> list = UserCrop.dao.find("select * from usercrop where id=?",id);
+		if(list.size() != 0) {
+			return list.get(0);
 		}
-		return 0;
-	}
-	//usercrop表查询cropId（指定id）
-	public int getCropIdByUserCropId(int id){
-		UserCrop userCrop = UserCrop.dao.findById(id);
-		if(userCrop != null) {
-			return userCrop.getInt("cropId");
-		}
-		return 0;
+		return null;
 	}
 	//usercrop表根据id查询cropId、progress（放到UserCropItem中cropId当成userCropId）
 	public UserCropItem getCropIdProgressStateByUserCropId(int id){
@@ -92,14 +84,6 @@ public class UserCropDao {
 			item.setProgress(userCrop.getInt("progress"));
 			item.setState(userCrop.getInt("state"));
 			return item;
-		}
-		return null;
-	}
-	//usercrop表查询数据（指定id）
-	public UserCrop findUserCropById(int id) {
-		List<UserCrop> list = UserCrop.dao.find("select * from usercrop where id=?",id);
-		if(list.size() != 0) {
-			return list.get(0);
 		}
 		return null;
 	}

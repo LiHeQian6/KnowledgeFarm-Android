@@ -24,7 +24,6 @@ public class UserCropController extends Controller{
 		CropService service = new CropService();
 		if(userCropIdList != null) {
 			List<UserCropItem> userCropItems = new ArrayList<>();	
-			
 			for(int userCropId : userCropIdList) {
 				//¸ù¾ÝuserCropId²éÑ¯cropId¡¢progress
 				UserCropItem item = userCropService.getCropIdProgressStateByUserCropId(userCropId);
@@ -46,7 +45,7 @@ public class UserCropController extends Controller{
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
 		int ucId = new UserDao().findUcIdByLand(userId, landNumber);
-		renderText(""+new UserCropService().getCropProgress(ucId));
+		renderText(""+new UserCropService().findUserCropById(ucId).getInt("progress"));
 	}
 
 }

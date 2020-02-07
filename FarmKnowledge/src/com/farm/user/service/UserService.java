@@ -126,14 +126,30 @@ public class UserService {
 	public User findUserByAccout(String accout){
 		return new UserDao().findUserByAccout(accout);
 	}
-	//判断userauthority表内是否存在该用户（指定openId）
-	public boolean isExistUserByOpenIdAll(String openId){
-		return new UserDao().isExistUserByOpenIdAll(openId);
+	//查询用户信息（指定账号、密码）
+	public User findUserByAccountPassword(String account,String pwd){
+		return new UserDao().findUserByAccountPassword(account, pwd);
 	}
-	//判断UserAuthority表内是否存在该用户（指定openId、exist=1）
-	public boolean isExistUserByOpenId(String openId){
-        return new UserDao().isExistUserByOpenId(openId);
-    }
+	//查询要修改的用户信息（指定id）
+	public User getUpdateUserInfo(int id) {
+		return new UserDao().getUpdateUserInfo(id);
+	}
+	//后台管理系统 查询要修改的用户信息（指定id）
+	public User getUpdateUserInfo0(int id) {
+		return new UserDao().getUpdateUserInfo0(id);
+	}
+	//user表查询某块土地的userCropId（指定id，landNumber）
+	public int findUcId(int userId,String landNumber) {
+		return new UserDao().findUcIdByLand(userId, landNumber);
+	}
+	//user表查询用户所有土地的userCropId列表（指定id）
+	public List<Integer> getUserCropIdById(int id) {
+		return new UserDao().getUserCropIdById(id);
+	}
+	//user表判断是否已存在该photoName
+	public boolean isExistPhotoName(String photoName) {
+		return new UserDao().isExistPhotoName(photoName);
+	}
 	//判断是否存在该用户（指定账号）
 	public boolean isExistUserByAccoutAll(String accout){
         return new UserDao().isExistUserByAccoutAll(accout);
@@ -146,30 +162,6 @@ public class UserService {
 	public boolean isExistUserByAccout(String accout1,String accout2){
         return new UserDao().isExistUserByAccout(accout1,accout2);
     }
-	//查询用户信息（指定账号、密码）
-	public User findUserByAccountPassword(String account,String pwd){
-		return new UserDao().findUserByAccountPassword(account, pwd);
-	}
-	//后台管理系统 查询要修改的用户信息（指定id）
-	public User getUpdateUserInfo0(int id) {
-		return new UserDao().getUpdateUserInfo0(id);
-	}
-	//查询要修改的用户信息（指定id）
-	public User getUpdateUserInfo(int id) {
-		return new UserDao().getUpdateUserInfo(id);
-	}
-	//查询user表用户id（指定账号）
-	public int getUserIdByAccout(String accout) {
-		return new UserDao().getUserIdByAccout(accout);
-	}
-	//user表查询某块土地的userCropId（指定id，landNumber）
-	public int findUcId(int userId,String landNumber) {
-		return new UserDao().findUcIdByLand(userId, landNumber);
-	}
-	//user表查询用户所有土地的userCropId列表（指定id）
-	public List<Integer> getUserCropIdById(int id) {
-		return new UserDao().getUserCropIdById(id);
-	}
 	//判断账号是否已绑定QQ
 	public boolean isBindingQQ(String accout) {
 		return new UserDao().isBindingQQ(accout);
@@ -178,10 +170,15 @@ public class UserService {
 	public boolean isBindingEmail(String email) {
 		return new UserDao().isBindingEmail(email);
 	}
-	//查询是否已存在该photoName
-	public boolean isExistPhotoName(String photoName) {
-		return new UserDao().isExistPhotoName(photoName);
+	//判断userauthority表内是否存在该用户（指定openId）
+	public boolean isExistUserByOpenIdAll(String openId){
+		return new UserDao().isExistUserByOpenIdAll(openId);
 	}
+	//判断userAuthority表内是否存在该用户（指定openId、exist=1）
+	public boolean isExistUserByOpenId(String openId){
+        return new UserDao().isExistUserByOpenId(openId);
+    }
+
 	
 	
 	/**
@@ -311,7 +308,7 @@ public class UserService {
 		return accout;
 	}
 	//MD5加密
-	 public String stringMD5(String input) {
+	public String stringMD5(String input) {
 		  try {
 		     // 拿到一个MD5转换器（如果想要SHA1参数换成”SHA1”）
 		     MessageDigest messageDigest =MessageDigest.getInstance("MD5");
@@ -327,8 +324,8 @@ public class UserService {
 		     return null;
 		  }
 	 }
-	 //将字节数组换成成16进制的字符串
-	 public String byteArrayToHex(byte[] byteArray) {
+	//将字节数组换成成16进制的字符串
+	public String byteArrayToHex(byte[] byteArray) {
 	   // 首先初始化一个字符数组，用来存放每个16进制字符
 	   char[] hexDigits = {'0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F' };
 	   // new一个字符数组，这个就是用来组成结果字符串的（解释一下：一个byte是八位二进制，也就是2位十六进制字符（2的8次方等于16的2次方））

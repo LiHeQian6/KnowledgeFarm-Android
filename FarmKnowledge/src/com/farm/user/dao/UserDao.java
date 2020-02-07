@@ -233,102 +233,6 @@ public class UserDao {
 	 * 	查
 	 * @throws
 	 */
-	//user表查询整条数据（指定openId）
-	public User findUserByOpenId(String openId){
-		List<User> list = User.dao.find("select user.* from user,userauthority where user.id=userauthority.userId and userauthority.openId=?",openId);
-		if(list.size() != 0) {
-			User user = list.get(0);
-			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.get("photo")));
-			return user;
-		}
-		return null;
-	}
-	//user表查询整条数据（指定accout）
-	public User findUserByAccout(String accout){
-		List<User> list = User.dao.find("select * from user where accout=?",accout);
-		if(list.size() != 0) {
-			User user = list.get(0);
-			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.get("photo")));
-			return user;
-		}
-		return null;
-	}
-	//userauthority表判断某条数据是否存在（指定openId）
-	public boolean isExistUserByOpenIdAll(String openId){
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=?",openId);
-		if(list.size() != 0) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-	//userauthority表判断是否存在某条数据（指定openId，exist=1）
-	public boolean isExistUserByOpenId(String openId){
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=? and exist=1",openId);
-		if(list.size() != 0) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-	//userauthority表判断某条数据是否存在（指定userId）
-	public boolean isExistUserByUserId(int userId){
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
-		if(list.size() != 0) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-	//user表判断某条数据是否存在（指定accout）
-	public boolean isExistUserByAccoutAll(String accout){
-		List<User> list = User.dao.find("select * from user where accout=?",accout);
-		if(list.size() != 0) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-	//user表判断是否存在某条数据（指定accout，exist=1）
-	public boolean isExistUserByAccout(String accout){
-		List<User> list = User.dao.find("select * from user where accout=? and exist=1",accout);
-		if(list.size() != 0) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-	//user表判断某条数据是否存在，除accout1外（指定accout2）
-	public boolean isExistUserByAccout(String accout1,String accout2){
-		List<User> list = User.dao.find("select * from user where accout=? and accout!=?",accout2,accout1);
-		if(list.size() != 0) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-	//user表查询整条数据（指定accout和password）
-	public User findUserByAccountPassword(String account,String pwd){
-		List<User> list = User.dao.find("select * from user where accout=? and password=?",account,pwd);
-		if(list.size() != 0) {
-			User user = list.get(0);
-			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.getStr("photo")));
-			return user;
-		}
-		return null;
-	}
-	//user表查询id（指定accout）
-	public int getUserIdByAccout(String accout) {
-		if(!(""+Db.queryInt("select id from user where accout=?",accout)).equals("null") ) {
-			return Db.queryInt("select id from user where accout=?",accout);
-		}
-		return 0;
-	}
-	//user表获得最后一条数据的id
-	public int getLastUserId(){
-		int id =  Db.queryInt("select id from user order by id desc limit 1");
-		return id;
-	}
 	//user表分页查询数据（指定accout、pageNumber、pageSize）
 	public Page<User> findUserPageAll(int pageNumber,int everyCount,String accout) {
 		Page<User> userPage;
@@ -371,16 +275,51 @@ public class UserDao {
 		}
 		return userPage;
 	}
+	//user表查询整条数据（指定openId）
+	public User findUserByOpenId(String openId){
+		List<User> list = User.dao.find("select user.* from user,userauthority where user.id=userauthority.userId and userauthority.openId=?",openId);
+		if(list.size() != 0) {
+			User user = list.get(0);
+			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.get("photo")));
+			return user;
+		}
+		return null;
+	}
+	//user表查询整条数据（指定accout）
+	public User findUserByAccout(String accout){
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			User user = list.get(0);
+			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.get("photo")));
+			return user;
+		}
+		return null;
+	}
+	//user表查询整条数据（指定accout和password）
+	public User findUserByAccountPassword(String account,String pwd){
+		List<User> list = User.dao.find("select * from user where accout=? and password=?",account,pwd);
+		if(list.size() != 0) {
+			User user = list.get(0);
+			user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.getStr("photo")));
+			return user;
+		}
+		return null;
+	}
+	//user表查询整条数据（指定id）
+	public User getUpdateUserInfo(int id) {
+		User user = User.dao.findById(id);
+		user.set("photo", URLEncoder.encode(Strings.userPhotoUrl + user.getStr("photo")));
+		return user;
+	}
 	//后台 user表查询整条数据（指定id）
 	public User getUpdateUserInfo0(int id) {
 		User user = User.dao.findById(id);
 		return user;
 	}
-	//user表查询整条数据（指定id）
-	public User getUpdateUserInfo(int id) {
-		User user = User.dao.findById(id);
-		user.set("photo", Strings.userPhotoUrl + user.getStr("photo"));
-		return user;
+	//user表查询最后一条数据的id
+	public int getLastUserId(){
+		int id =  Db.queryInt("select id from user order by id desc limit 1");
+		return id;
 	}
 	//user表查询userCropId（指定id，landNumber）
 	public int findUcIdByLand(int userId,String landNumber) {
@@ -406,10 +345,36 @@ public class UserDao {
 		}
 		return null;		
 	}
+	//user表判断某条数据是否存在（指定accout）
+	public boolean isExistUserByAccoutAll(String accout){
+		List<User> list = User.dao.find("select * from user where accout=?",accout);
+		if(list.size() != 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	//user表判断是否存在某条数据（指定accout，exist=1）
+	public boolean isExistUserByAccout(String accout){
+		List<User> list = User.dao.find("select * from user where accout=? and exist=1",accout);
+		if(list.size() != 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	//user表判断某条数据是否存在，除accout1外（指定accout2）
+	public boolean isExistUserByAccout(String accout1,String accout2){
+		List<User> list = User.dao.find("select * from user where accout=? and accout!=?",accout2,accout1);
+		if(list.size() != 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 	//user表判断是否绑定QQ(指定accout)
 	public boolean isBindingQQ(String accout) {
-		int userId = getUserIdByAccout(accout);
-		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
+		List<UserAuthority> list = UserAuthority.dao.find("select userauthority.* from user,userauthority where user.id=userauthority.userId and user.accout=?",accout);
 		if(list.size() != 0) {
 			return true;
 		}
@@ -430,6 +395,33 @@ public class UserDao {
 			return true;
 		}
 		return false;
+	}
+	//userauthority表判断某条数据是否存在（指定openId）
+	public boolean isExistUserByOpenIdAll(String openId){
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=?",openId);
+		if(list.size() != 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	//userauthority表判断是否存在某条数据（指定openId，exist=1）
+	public boolean isExistUserByOpenId(String openId){
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where openId=? and exist=1",openId);
+		if(list.size() != 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	//userauthority表判断某条数据是否存在（指定userId）
+	public boolean isExistUserByUserId(int userId){
+		List<UserAuthority> list = UserAuthority.dao.find("select * from userauthority where userId=?",userId);
+		if(list.size() != 0) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 }

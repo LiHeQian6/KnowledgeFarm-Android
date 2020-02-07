@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.farm.crop.service.CropService;
-import com.farm.entity.CropItem;
+import com.farm.entity.BagCropItem;
 import com.farm.user.service.UserService;
 import com.farm.userbag.dao.BagDao;
 import com.jfinal.plugin.activerecord.Db;
@@ -49,7 +49,7 @@ public class BagService {
 		return new BagDao().isExistCrop(userId, cropId);
 	}
 	//查询用户背包cropId列表（指定userId）
-	public List<CropItem> getCropIdByUserId(int userId){
+	public List<BagCropItem> getCropIdByUserId(int userId){
 		return new BagDao().getCropIdByUserId(userId);
 	}
 	//查询指定作物的剩余数量（指定userId、cropId）

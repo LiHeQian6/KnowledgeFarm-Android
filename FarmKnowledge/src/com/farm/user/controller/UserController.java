@@ -27,7 +27,7 @@ import com.jfinal.kit.HttpKit;
 
 public class UserController extends Controller{
 	
-	//用户登录(QQ)（openId）
+	//用户QQ登录（openId）
 	public void loginByOpenId() {
 		String jsonStr =  HttpKit.readData(getRequest());
 		JSONObject jsonObject = new JSONObject(jsonStr);
@@ -269,7 +269,7 @@ public class UserController extends Controller{
 		
 		UserService service = new UserService();
 		if(!service.isExistUserByOpenIdAll(openId)) {
-			boolean succeed = service.addUserAuthority(service.getUserIdByAccout(accout), openId, "QQ"); //添加到授权表
+			boolean succeed = service.addUserAuthority(service.findUserByAccout(accout).getInt("id"), openId, "QQ");
 			renderJson(""+succeed);
 		}else { //该QQ号已被绑定
 			renderJson("already");
@@ -281,7 +281,7 @@ public class UserController extends Controller{
 		String accout = get("accout");
 		
 		UserService service = new UserService();
-		boolean succeed = service.deleteOpenIdByUserId(service.getUserIdByAccout(accout)); //从授权表删除
+		boolean succeed = service.deleteOpenIdByUserId(service.findUserByAccout(accout).getInt("id")); 
 		renderJson(""+succeed);
 	}
 	

@@ -71,7 +71,7 @@ public class UserFriendService {
 				boolean a4 = userService.addMoney(userId, 10);
 				
 				int cropId = userCrop.getInt("cropId");
-				int progress = dao.getCropProgress(ucId);
+				int progress = userCrop.getInt("progress");
 				Crop crop = new CropDao().getUpdateCropInfo(cropId);
 				int matureTime = crop.getInt("matureTime");
 				
@@ -107,17 +107,18 @@ public class UserFriendService {
 		UserService userService = new UserService();
 		UserCropDao dao = new UserCropDao();
 		int ucId = new UserService().findUcId(friendId, landNumber);
+		UserCrop userCrop = dao.findUserCropById(ucId);
 		
 		boolean succeed = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				if(dao.findUserCropById(ucId).getInt("state") != 0) {
+				if(userCrop.getInt("state") != 0) {
 					boolean a1 = false;
 					boolean a2 = new UserService().lessF(userId);
 					boolean a3 = userService.addMoney(userId, 20);
 					
-					Crop crop = new CropDao().getUpdateCropInfo(dao.getCropIdByUserCropId(ucId));
-					int progress = dao.getCropProgress(ucId);
+					Crop crop = new CropDao().getUpdateCropInfo(userCrop.getInt("cropId"));
+					int progress = userCrop.getInt("progress");
 					int matureTime = crop.getInt("matureTime");
 					
 					if(progress+10 >= matureTime) {
