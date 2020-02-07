@@ -45,7 +45,7 @@ public class UserFriendService {
 	/**
 	 * 查
 	 */
-	//根据userId分页查询friendId
+	//userfriend表分页查询数据（指定userId、friendId、pageNumber、pageSize）
 	public Page<UserFriend> findUserFriendByUserId(int userId, int friendId, int pageNumber, int pageSize){
 		return new UserFriendDao().findUserFriendByUserId(userId, friendId, pageNumber, pageSize);
 	}
@@ -76,9 +76,9 @@ public class UserFriendService {
 				int matureTime = crop.getInt("matureTime");
 				
 				if(progress+5 >= matureTime) {
-					a1 = dao.waterCrop(ucId, crop.getInt("matureTime"));
+					a1 = dao.updateProgress(ucId, crop.getInt("matureTime"));
 				}else {
-					a1 = dao.waterCrop(ucId, progress+5);
+					a1 = dao.updateProgress(ucId, progress+5);
 				}
 				
 				if(a1 == true && a2 == true && a4 == true) {
@@ -102,7 +102,6 @@ public class UserFriendService {
 		}
 		return false;				
 	}
-	
 	//施肥
 	public boolean fertilizerForFriend(int userId, int friendId, String landNumber) {
 		UserService userService = new UserService();
@@ -122,9 +121,9 @@ public class UserFriendService {
 					int matureTime = crop.getInt("matureTime");
 					
 					if(progress+10 >= matureTime) {
-						a1 = dao.fertilizerCrop(ucId, crop.getInt("matureTime"));
+						a1 = dao.updateProgress(ucId, crop.getInt("matureTime"));
 					}else {
-						a1 = dao.fertilizerCrop(ucId, progress+10);
+						a1 = dao.updateProgress(ucId, progress+10);
 					}
 					
 					if(a1 == true && a2 == true && a3 == true) {
@@ -142,6 +141,5 @@ public class UserFriendService {
 		}
 		return false;	
 	}
-	
 	
 }

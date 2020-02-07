@@ -13,7 +13,7 @@ import com.jfinal.core.Controller;
 
 public class UserCropController extends Controller{
 
-	//加载用户种植作物信息
+	//加载用户种植作物信息（userId）
 	public void initUserCrop() {
 		//获取客户端发送的用户Id
 		int userId = getInt("userId");
@@ -41,7 +41,7 @@ public class UserCropController extends Controller{
 		
 	}
 	
-	//查看作物进度
+	//查看作物进度（指定userId、langNumber）
 	public void getCropProgress() {
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");

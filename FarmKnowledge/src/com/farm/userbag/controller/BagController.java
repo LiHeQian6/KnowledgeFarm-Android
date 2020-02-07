@@ -12,7 +12,7 @@ import com.jfinal.core.Controller;
 
 public class BagController extends Controller{
 	
-	//加载用户背包
+	//加载用户背包中所有作物信息（userId）
 	public void initUserBag() {
 		int userId = getInt("userId");
 		

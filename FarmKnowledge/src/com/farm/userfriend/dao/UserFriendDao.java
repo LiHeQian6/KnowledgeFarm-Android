@@ -10,7 +10,7 @@ public class UserFriendDao {
 	/**
 	 * 增
 	 */
-	//添加好友
+	//userfriend表添加数据
 	public boolean addFriend(int userId, int friendId) {
 		boolean succeed = UserFriend.dao.set("userId", userId).set("friendId", friendId).save();
 		return succeed;
@@ -21,7 +21,7 @@ public class UserFriendDao {
 	/**
 	 * 删
 	 */
-	//删除好友
+	//userfriend表删除整条数据
 	public boolean deleteFriend(int userId, int friendId) {
 		List<UserFriend> list = UserFriend.dao.find("select * from userfriend where userId=? and friendId=?",userId,friendId);
 		if(list.size() != 0) {
@@ -41,7 +41,7 @@ public class UserFriendDao {
 	/**
 	 * 查
 	 */
-	//根据userId分页查询friendId
+	//userfriend表分页查询数据（指定userId、friendId、pageNumber、pageSize）
 	public Page<UserFriend> findUserFriendByUserId(int userId, int friendId, int pageNumber, int pageSize){
 		Page<UserFriend> userPage;
 		switch (friendId) {

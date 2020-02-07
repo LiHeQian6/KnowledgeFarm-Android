@@ -13,7 +13,7 @@ public class BagDao {
 	 * 	增
 	 * @throws
 	 */
-	//添加种子到背包（UserBag）
+	//userbag表添加整条数据
 	public boolean addCropToBag(int userId,int cropId,int num) {
 		return new UserBag().set("userId", userId).set("cropId", cropId).set("number", num).save();
 	}
@@ -24,7 +24,7 @@ public class BagDao {
 	 * 	删
 	 * @throws
 	 */
-	//删除指定作物
+	//userbag表删除整条数据
 	public boolean deleteCropByUserIdAndCropId(int userId,int cropId) {
 		List<UserBag> list = UserBag.dao.find("select * from userbag where userId = ? and cropId = ?",userId,cropId);
 		if(list.size() != 0) {
@@ -40,37 +40,16 @@ public class BagDao {
 	 * 	改
 	 * @throws
 	 */
-	//增加指定作物的数量（UserBag）
-	public boolean addCropNumber(int userId,int cropId,int num) {
+	//userbag表修改number
+	public boolean updateNumber(int userId,int cropId,int num) {
 		List<UserBag> list = UserBag.dao.find("select * from userbag where userId = ? and cropId = ?",userId,cropId);
 		if(list.size()!=0) {
 			UserBag bag = list.get(0);
-			return bag.set("number", bag.getInt("number")+num).update();
+			return bag.set("number", num).update();
 		}
 		return false;
 	}
-	//减少指定作物一个（UserBag）
-	public boolean decreaseOneCrop(int userId,int cropId) {
-		List<UserBag> list = UserBag.dao.find("select * from userbag where userId = ? and cropId = ?",userId,cropId);
-		if(list.size()!=0) {
-			UserBag bag = list.get(0);
-			return bag.set("number", bag.getInt("number")-1).update();
-		}
-		return false;
-	}
-	//使用背包中种子
-	public boolean lessCropInBag(int userId,int cropId) {
-		List<UserBag> list = UserBag.dao.find("select * from userbag where userId = ? and cropId = ?",userId,cropId);
-		if(list.size()!=0) {
-			UserBag bag = list.get(0);
-			if(bag.getInt("number")==1) {
-				return UserBag.dao.deleteById(bag.getInt("id"));
-			}else {
-				return bag.set("number", bag.getInt("number")-1).update();
-			}
-		}
-		return false;
-	}
+
 	
 	
 	
@@ -78,7 +57,7 @@ public class BagDao {
 	 * 	查
 	 * @throws
 	 */
-	//查询背包是否存在该作物
+	//userbag表判断是否存在该条数据（指定userId、cropId）
 	public boolean isExistCrop(int userId, int cropId) {
 		List<UserBag> list = UserBag.dao.find("select * from userbag where userId = ? and cropId = ?",userId,cropId);
 		if(list.size()!=0) {
@@ -86,7 +65,7 @@ public class BagDao {
 		}
 		return false;
 	}
-	//根据userId查询用户背包cropId列表
+	//userbag表查询cropId列表（指定userId）
 	public List<CropItem> getCropIdByUserId(int userId){
 		List<UserBag> userBag = UserBag.dao.find("select * from userbag where userId=? order by cropId ASC",userId);
 		List<CropItem> cropIdList = new ArrayList<CropItem>();
@@ -99,7 +78,7 @@ public class BagDao {
 		}
 		return null;
 	}
-	//查询指定作物的剩余数量
+	//userbag表查询number（指定userId、cropId）
 	public int findNumberByCropId(int userId, int cropId) {
 		List<UserBag> list = UserBag.dao.find("select * from userbag where userId=? and cropId=?",userId,cropId);
 		if(list.size() != 0) {

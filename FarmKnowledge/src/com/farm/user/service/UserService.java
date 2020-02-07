@@ -12,119 +12,6 @@ import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 
 public class UserService {
-	//QQ第一次登录，添加用户信息
-	public boolean addUser(String accout, String openId, String nickName, String password, String photo, String photoName, String email, int grade, String type){
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				UserDao userDao = new UserDao();
-				
-				//user表插入别名、头像
-				boolean a1 = userDao.addUser(accout, nickName, password, photo, photoName, email, grade);
-				//获得user表刚插入数据的userId
-				int userId = userDao.getLastUserId();
-				//UserAuthority表内插入userId、openId、token
-				boolean a2 = userDao.addUserAuthority(userId, openId, type);
-				
-				if(a1 == true && a2 == true) { //添加成功
-					return true;
-				}else { //添加失败，事务回调
-					return false;
-				}
-			}
-		});
-		return succeed;
-    }
-	//添加浇水，施肥次数，减少奖励次数
-	public int lessRewardCount(int id,int water, int fertilizer, String subject) {
-		UserDao dao = new UserDao();
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				boolean a1 = false;
-				boolean a2 = false;
-				int rewardCount = dao.getUpdateUserInfo(id).getInt(subject+"RewardCount");
-				if(rewardCount >= 1) {
-					a1 = dao.lessRewardCount(id,rewardCount-1,subject);
-					a2 = dao.addWaterAndFertilizer(id, water, fertilizer);
-				}else {
-					a1 = true;
-					a2 = true;
-				}
-				
-				if(a1 && a2) {
-					return true;
-				}
-				return false;
-			}
-		});
-		if(succeed) {
-			return dao.getUpdateUserInfo(id).getInt(subject+"RewardCount");
-		}else {
-			return -1;
-		}
-	}
-	//扩建土地
-	public boolean extensionLand(int userId, String landNumber, int money) {
-		UserDao userDao = new UserDao();
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				boolean a1 = userDao.decreaseMoney(userId, money);
-				boolean a2 = userDao.extensionLand(userId, landNumber);
-				if(a1 && a2) {
-					return true;
-				}
-				return false;
-			}
-		});
-		return succeed;
-	}
-	//后台管理系统删除单个用户信息
-	public boolean deleteOneUser(int id) {
-		UserDao userDao = new UserDao();
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				boolean deleteUser = userDao.updateUserExist(id, 0);
-				boolean deleteUserAuthority = false;
-				if(userDao.isExistUserByUserId(id)) {
-					deleteUserAuthority = userDao.updateUserAuthorityExist(id, 0);
-				}else {
-					deleteUserAuthority = true;
-				}
-				if(deleteUser && deleteUserAuthority) {
-					return true;
-				}
-				return false;
-			}
-		});
-		return succeed;
-	}
-	//后台管理系统恢复单个用户信息
-	public boolean recoveryOneUser(int id) {
-		UserDao userDao = new UserDao();
-		boolean succeed = Db.tx(new IAtom() {
-			@Override
-			public boolean run() throws SQLException {
-				boolean recoveryUser = userDao.updateUserExist(id, 1);
-				boolean recoveryUserAuthority = false;
-				if(userDao.isExistUserByUserId(id)) {
-					recoveryUserAuthority = userDao.updateUserAuthorityExist(id, 1);
-				}else {
-					recoveryUserAuthority = true;
-				}
-				if(recoveryUser && recoveryUserAuthority) {
-					return true;
-				}
-				return false;
-			}
-		});
-		return succeed;
-	}
-	
-	
-	
 	
 	/**
 	 * 	增
@@ -296,6 +183,121 @@ public class UserService {
 		return new UserDao().isExistPhotoName(photoName);
 	}
 	
+	
+	/**
+	 * 	操作
+	 * @throws
+	 */
+	//QQ第一次登录，添加用户信息
+	public boolean addUser(String accout, String openId, String nickName, String password, String photo, String photoName, String email, int grade, String type){
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				UserDao userDao = new UserDao();
+				
+				//user表插入别名、头像
+				boolean a1 = userDao.addUser(accout, nickName, password, photo, photoName, email, grade);
+				//获得user表刚插入数据的userId
+				int userId = userDao.getLastUserId();
+				//UserAuthority表内插入userId、openId、token
+				boolean a2 = userDao.addUserAuthority(userId, openId, type);
+				
+				if(a1 == true && a2 == true) { //添加成功
+					return true;
+				}else { //添加失败，事务回调
+					return false;
+				}
+			}
+		});
+		return succeed;
+    }
+	//添加浇水，施肥次数，减少奖励次数
+	public int lessRewardCount(int id,int water, int fertilizer, String subject) {
+		UserDao dao = new UserDao();
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				boolean a1 = false;
+				boolean a2 = false;
+				int rewardCount = dao.getUpdateUserInfo(id).getInt(subject+"RewardCount");
+				if(rewardCount >= 1) {
+					a1 = dao.lessRewardCount(id,rewardCount-1,subject);
+					a2 = dao.addWaterAndFertilizer(id, water, fertilizer);
+				}else {
+					a1 = true;
+					a2 = true;
+				}
+				
+				if(a1 && a2) {
+					return true;
+				}
+				return false;
+			}
+		});
+		if(succeed) {
+			return dao.getUpdateUserInfo(id).getInt(subject+"RewardCount");
+		}else {
+			return -1;
+		}
+	}
+	//扩建土地
+	public boolean extensionLand(int userId, String landNumber, int money) {
+		UserDao userDao = new UserDao();
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				boolean a1 = userDao.decreaseMoney(userId, money);
+				boolean a2 = userDao.extensionLand(userId, landNumber);
+				if(a1 && a2) {
+					return true;
+				}
+				return false;
+			}
+		});
+		return succeed;
+	}
+	//后台管理系统删除单个用户信息
+	public boolean deleteOneUser(int id) {
+		UserDao userDao = new UserDao();
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				boolean deleteUser = userDao.updateUserExist(id, 0);
+				boolean deleteUserAuthority = false;
+				if(userDao.isExistUserByUserId(id)) {
+					deleteUserAuthority = userDao.updateUserAuthorityExist(id, 0);
+				}else {
+					deleteUserAuthority = true;
+				}
+				if(deleteUser && deleteUserAuthority) {
+					return true;
+				}
+				return false;
+			}
+		});
+		return succeed;
+	}
+	//后台管理系统恢复单个用户信息
+	public boolean recoveryOneUser(int id) {
+		UserDao userDao = new UserDao();
+		boolean succeed = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				boolean recoveryUser = userDao.updateUserExist(id, 1);
+				boolean recoveryUserAuthority = false;
+				if(userDao.isExistUserByUserId(id)) {
+					recoveryUserAuthority = userDao.updateUserAuthorityExist(id, 1);
+				}else {
+					recoveryUserAuthority = true;
+				}
+				if(recoveryUser && recoveryUserAuthority) {
+					return true;
+				}
+				return false;
+			}
+		});
+		return succeed;
+	}
 	//生成八位数字随机数
 	public String generateAccout() {
 		String accout = "";
@@ -308,7 +310,6 @@ public class UserService {
 				accout.charAt(accout.length()-1) == '0');
 		return accout;
 	}
-	
 	//MD5加密
 	 public String stringMD5(String input) {
 		  try {
@@ -326,7 +327,6 @@ public class UserService {
 		     return null;
 		  }
 	 }
-	 
 	 //将字节数组换成成16进制的字符串
 	 public String byteArrayToHex(byte[] byteArray) {
 	   // 首先初始化一个字符数组，用来存放每个16进制字符

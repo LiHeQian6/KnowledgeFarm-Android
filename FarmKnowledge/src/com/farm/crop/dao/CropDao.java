@@ -61,7 +61,7 @@ public class CropDao {
 	 * 	查
 	 * @throws
 	 */
-	//分页查询crop表数据（指定name、pageNumber、pageSize、exist）
+	//crop表分页查询数据（指定name、pageNumber、pageSize、exist）
 	public Page<Crop> findCropPage(int pageNumber,int everyCount,String name,int exist) {
 		Page<Crop> cropPage;
 		if(name == null || name.equals("")) {

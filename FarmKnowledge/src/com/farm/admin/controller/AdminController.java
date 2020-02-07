@@ -32,10 +32,11 @@ public class AdminController extends Controller{
 	}
 	
 	@Clear(AdminInterceptor.class)
-	//管理员登陆
+	//管理员登陆（accout、password）
 	public void login() {
 		String accout = get("accout");
 		String password = new UserService().stringMD5(get("password"));
+		
 		AdminService service = new AdminService();
 		boolean isExist = service.isExistAdminByAccout(accout);
 		if(isExist) {
@@ -51,7 +52,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//分页查询管理员信息，跳转到管理员列表页面
+	//分页查询管理员信息，跳转到管理员列表页面（accout、pageNumber、pageSize、exist）
 	public void findAdminPage() {
 		String accout = get("accout");
 		String page = get("pageNumber");
@@ -81,7 +82,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//后台管理系统删除单个管理员信息，跳转到管理员列表页面
+	//后台管理系统删除单个管理员信息，跳转到管理员列表页面（id）
 	public void deleteOneAdmin() {
 		int id = getInt("id");
 		boolean succeed = new AdminService().updateExist(id, 0);
@@ -92,7 +93,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//后台管理系统删除批量管理员信息，跳转到管理员列表页面
+	//后台管理系统删除批量管理员信息，跳转到管理员列表页面（id字符串）
 	public void deleteMultiAdmin() {
 		String deleteStr = get("deleteStr");
 		String deleteId[] = deleteStr.split(",");
@@ -118,7 +119,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//后台管理系统恢复单个管理员信息，跳转到管理员列表页面
+	//后台管理系统恢复单个管理员信息，跳转到管理员列表页面（id）
 	public void recoveryOneAdmin() {
 		int id = getInt("id");
 		boolean succeed = new AdminService().updateExist(id, 1);
@@ -129,7 +130,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//后台管理系统恢复批量管理员信息，跳转到管理员列表页面
+	//后台管理系统恢复批量管理员信息，跳转到管理员列表页面（id字符串）
 	public void recoveryMultiAdmin() {
 		String recoveryStr = get("recoveryStr");
 		String recoveryId[] = recoveryStr.split(",");
@@ -155,7 +156,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//后台管理系统彻底删除单个管理员信息，跳转到管理员列表页面
+	//后台管理系统彻底删除单个管理员信息，跳转到管理员列表页面（id）
 	public void deleteThoroughAdmin() {
 		int id = getInt("id");
 		boolean succeed = new AdminService().deleteThoroughAdmin(id);
@@ -166,7 +167,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//添加管理员信息
+	//添加管理员信息（accout、password）
 	public void addAdmin() {
 		String accout = get("accout");
 		String password = new UserService().stringMD5(get("password"));
@@ -184,7 +185,7 @@ public class AdminController extends Controller{
 		}		
 	}
 	
-	//查询要修改的管理员信息（指定id）
+	//查询要修改的管理员信息（id）
 	public void getUpdateAdminInfo() {
 		int id = getInt("id");
 		Admin admin = new AdminService().getUpdateAdminInfo(id);
@@ -196,7 +197,7 @@ public class AdminController extends Controller{
 		}
 	}
 	
-	//修改管理员账号
+	//修改管理员账号（oldAccout、newAccout）
 	public void updateAdminAccout() {
 		String oldAccout = get("oldAccout");
 		String newAccout = get("newAccout");
@@ -214,7 +215,7 @@ public class AdminController extends Controller{
 		}	
 	}
 	
-	//修改管理员密码
+	//修改管理员密码（accout、oldPassword、newPassword）
 	public void updateAdminPassword() {
 		UserService service = new UserService();
 		String accout = get("accout");

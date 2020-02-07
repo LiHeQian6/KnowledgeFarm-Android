@@ -27,7 +27,7 @@ import com.jfinal.plugin.activerecord.Page;
 public class UserController extends Controller{
 	private boolean isDelete = false;
 	
-	//分页查询用户信息，跳转到用户列表页面
+	//分页查询用户信息，跳转到用户列表页面（accout、pageNumber、pageSize、exist）
 	public void findUserPage() {
 		String accout = get("accout");
 		String page = get("pageNumber");
@@ -64,7 +64,7 @@ public class UserController extends Controller{
 		}
 	}
 
-	//后台管理系统删除单个用户信息，跳转到用户列表页面
+	//后台管理系统删除单个用户信息，跳转到用户列表页面（userId）
 	public void deleteOneUser() {
 		int userId = getInt("userId");
 		
@@ -77,7 +77,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//后台管理系统删除User表内批量用户信息，跳转到用户列表页面（User、UserAuthority表修改exist字段为0）
+	//后台管理系统删除批量用户信息，跳转到用户列表页面（id字符串）
 	public void deleteMultiUser() {
 		String deleteStr = get("deleteStr");
 		String deleteId[] = deleteStr.split(",");
@@ -102,7 +102,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//后台管理系统恢复U单个用户信息，跳转到用户列表页面
+	//后台管理系统恢复单个用户信息，跳转到用户列表页面（userId）
 	public void recoveryOneUser() {
 		int userId = getInt("userId");
 		
@@ -115,7 +115,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//后台管理系统恢复批量用户信息，跳转到用户列表页面
+	//后台管理系统恢复批量用户信息，跳转到用户列表页面（id字符串）
 	public void recoveryMultiUser() {
 		String recoveryStr = get("recoveryStr");
 		String recoveryId[] = recoveryStr.split(",");
@@ -140,7 +140,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//后台管理系统彻底删除单个用户信息，跳转到用户列表页面
+	//后台管理系统彻底删除单个用户信息，跳转到用户列表页面（userId）
 	public void deleteThoroughUser() {
 		int userId = getInt("userId");
 		
@@ -153,7 +153,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//添加用户信息
+	//添加用户信息（nickName、password、email、grade）
 	public void addUser() {		
 		UserService service = new UserService();
 		String nickName = get("nickName");
@@ -169,7 +169,7 @@ public class UserController extends Controller{
 		}
 	}
 
-	//查询要修改的用户信息（指定id）
+	//查询要修改的用户信息（id）
 	public void getUpdateUserInfo() {
 		int id = getInt("id");
 		User user = new UserService().getUpdateUserInfo0(id);
@@ -308,7 +308,7 @@ public class UserController extends Controller{
 		}		
 	}
 	
-	//修改用户密码
+	//修改用户密码（accout、password）
 	public void updateUserPassword() {
 		UserService service = new UserService();
 		String accout = get("accout");
@@ -322,7 +322,7 @@ public class UserController extends Controller{
 		}	
 	}
 	
-	//修改用户土地1-18
+	//修改用户土地1-18（accout、land...）
 	public void updateUserLand() {
 		HttpServletRequest request = getRequest();
 		HttpSession session = request.getSession();

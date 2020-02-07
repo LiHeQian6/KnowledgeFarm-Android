@@ -22,7 +22,7 @@ import com.jfinal.plugin.activerecord.Page;
 
 public class CropController extends Controller{
 	
-	//分页查询作物信息，跳转到作物列表页面
+	//分页查询作物信息，跳转到作物列表页面（name、pageNumber、pageSize、exist）
 	public void findCropPage() {
 		String name = get("name");
 		String page = get("pageNumber");
@@ -52,7 +52,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//后台管理系统删除单个作物信息，跳转到作物列表页面
+	//后台管理系统删除单个作物信息，跳转到作物列表页面（id）
 	public void deleteOneCrop() {
 		int id = getInt("id");
 		boolean succeed = new CropService().updateExist(id, 0);
@@ -63,7 +63,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//后台管理系统删除批量作物信息，跳转到作物列表页面
+	//后台管理系统删除批量作物信息，跳转到作物列表页面（id字符串）
 	public void deleteMultiCrop() {
 		String deleteStr = get("deleteStr");
 		String deleteId[] = deleteStr.split(",");
@@ -89,7 +89,7 @@ public class CropController extends Controller{
 		}
 	}
 
-	//后台管理系统恢复单个作物信息，跳转到作物列表页面
+	//后台管理系统恢复单个作物信息，跳转到作物列表页面（id）
 	public void recoveryOneCrop() {
 		int id = getInt("id");
 		boolean succeed = new CropService().updateExist(id, 1);
@@ -100,7 +100,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//后台管理系统恢复批量作物信息，跳转到作物列表页面
+	//后台管理系统恢复批量作物信息，跳转到作物列表页面（id字符串）
 	public void recoveryMultiCrop() {
 		String recoveryStr = get("recoveryStr");
 		String recoveryId[] = recoveryStr.split(",");
@@ -126,7 +126,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//后台管理系统彻底删除单个作物信息，跳转到作物列表页面
+	//后台管理系统彻底删除单个作物信息，跳转到作物列表页面（id）
 	public void deleteThoroughCrop() {
 		int id = getInt("id");
 		boolean succeed = new CropService().deleteThoroughCrop(id);
@@ -137,7 +137,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//添加作物信息
+	//添加作物信息（name、price、matureTime、value、experience、图片）
 	public void addCrop() {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
@@ -221,7 +221,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//查询要修改的作物信息（指定id）
+	//查询要修改的作物信息（id）
 	public void getUpdateCropInfo() {
 		int id = getInt("id");
 		Crop crop = new CropService().getUpdateCropInfo0(id);
@@ -233,7 +233,7 @@ public class CropController extends Controller{
 		}
 	}
 	
-	//修改作物信息
+	//修改作物信息（id、img...、cropPhotoName、name、price、matureTime、value、experience、图片）
 	public void updateCrop() {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);

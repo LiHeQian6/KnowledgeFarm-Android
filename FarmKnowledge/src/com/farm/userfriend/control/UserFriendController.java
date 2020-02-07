@@ -13,7 +13,7 @@ import com.jfinal.plugin.activerecord.Page;
 
 public class UserFriendController extends Controller{
 	
-	//查询用户的好友列表
+	//查询用户的好友列表（userId、accout、pageNumber、pageSize）
 	public void findUserFriend() {
 		int userId = getInt("userId");
 		String accout = get("accout");
@@ -59,7 +59,7 @@ public class UserFriendController extends Controller{
 		renderJson(userPage);
 	}
 	
-	//查询所有人
+	//查询所有人（accout、pageNumber、pageSize）
 	public void findAllUser() {
 		String accout = get("accout");
 		String page = get("pageNumber");
@@ -93,7 +93,7 @@ public class UserFriendController extends Controller{
 		
 	}
 	
-	//删除好友
+	//删除好友（userId、friendId）
 	public void deleteFriend() {
 		int userId = getInt("userId");
 		int friendId = getInt("friendId");
@@ -102,7 +102,7 @@ public class UserFriendController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//帮好友浇水
+	//帮好友浇水（userId、friendId、landNumber）
 	public void waterForFriend() {
 		int userId = getInt("userId");
 		int friendId = getInt("friendId");
@@ -112,7 +112,7 @@ public class UserFriendController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//帮好友施肥
+	//帮好友施肥（userId、friendId、landNumber）
 	public void fertilizerForFriend() {
 		int userId = getInt("userId");
 		int friendId = getInt("friendId");

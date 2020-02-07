@@ -27,7 +27,7 @@ import com.jfinal.kit.HttpKit;
 
 public class UserController extends Controller{
 	
-	//用户登录(QQ)
+	//用户登录(QQ)（openId）
 	public void loginByOpenId() {
 		String jsonStr =  HttpKit.readData(getRequest());
 		JSONObject jsonObject = new JSONObject(jsonStr);
@@ -46,7 +46,7 @@ public class UserController extends Controller{
 		}
 	}	
 	
-	//根据userId查询用户信息
+	//根据userId查询用户信息（userId）
 	public void findUserInfoByUserId() {
 		int userId = getInt("userId");
 		
@@ -58,7 +58,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//用户第一次登录QQ，添加用户
+	//用户第一次登录QQ，添加用户（openId、nickName、photo、grade、email、password）
 	public void addQQUser() {
 		String openId = get("openId");
 		String nickName = get("nickName");
@@ -79,7 +79,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//根据账号登录
+	//根据账号登录（accout、password）
 	public void loginByAccount() {
 		String account = get("accout");
 		String password = get("password");
@@ -101,7 +101,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//注册账号
+	//注册账号（nickName、grade、email、password）
 	public void registAccout() {
 		String nickName = get("nickName");
 		int grade = getInt("grade");
@@ -121,7 +121,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//发送验证码用于找回密码，并返回验证码
+	//发送验证码用于找回密码，并返回验证码（accout、email）
 	public void sendTestCodePassword() {
 		String accout = get("accout");
 		String email = get("email");
@@ -147,7 +147,7 @@ public class UserController extends Controller{
 		}
 	}
 
-	//找回密码（重新给账号设置密码）
+	//找回密码（重新给账号设置密码）（accout、password）
 	public void resetUserPassword() {
 		String accout = get("accout");
 		String password = get("password");
@@ -156,7 +156,7 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//修改用户昵称
+	//修改用户昵称（accout、nickName）
 	public void updateUserNickName() {
 		String accout = get("accout");
 		String nickName = get("nickName");
@@ -165,7 +165,7 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//修改用户年级
+	//修改用户年级（accout、grade）
 	public void updateUserGrade() {
 		String accout = get("accout");
 		int grade = getInt("grade");
@@ -174,17 +174,17 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//修改密码
+	//修改密码（accout、password）
 	public void updateUserPassword() {
-		String password = get("password");
 		String accout = get("accout");
+		String password = get("password");
 		
 		//返回0说明旧密码错误，返回1说明修改成功，返回2说明修改失败
 		boolean succeed = new UserService().updateUserPassword(accout, password);
 		renderJson(""+succeed);
 	}
 	
-	//修改头像
+	//修改头像（accout、photo、photoName、图片）
 	public void updatePhoto() {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
@@ -254,7 +254,7 @@ public class UserController extends Controller{
 		}	
 	}
 	
-	//验证是否已经绑定QQ
+	//验证是否已经绑定QQ（accout）
 	public void isBindingQQ() {
 		String accout = get("accout");
 		
@@ -262,7 +262,7 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//绑定QQ
+	//绑定QQ（accout、openId）
 	public void bindingQQ() {
 		String accout = get("accout");
 		String openId = get("openId");
@@ -276,7 +276,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//解绑QQ
+	//解绑QQ（accout）
 	public void unBindingQQ() {
 		String accout = get("accout");
 		
@@ -285,7 +285,7 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//发送验证码用于绑定邮箱，并返回验证码
+	//发送验证码用于绑定邮箱，并返回验证码（email）
 	public void sendTestCodeBingEmail() {
 		String email = get("email");
 		
@@ -301,7 +301,7 @@ public class UserController extends Controller{
 		}
 	}
 	
-	//绑定邮箱
+	//绑定邮箱（accout、email）
 	public void bindingEmail() {
 		String accout  = get("accout");
 		String email = get("email");
@@ -311,7 +311,7 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//解绑邮箱
+	//解绑邮箱（accout）
 	public void unBindingEmail() {
 		String accout = get("accout");
 		
@@ -320,7 +320,7 @@ public class UserController extends Controller{
 		renderJson("" +succeed);
 	}
 	
-	//减少奖励次数，增加浇水、施肥次数
+	//减少奖励次数，增加浇水、施肥次数（userId、water、fertilizer、subject）
 	public void lessRewardCount() {
 		int userId = getInt("userId");
 		int water = getInt("water");
@@ -332,14 +332,14 @@ public class UserController extends Controller{
 		renderJson(rewardCount);
 	}
 	
-	//查询剩余奖励次数
+	//查询剩余奖励次数（userId、subject）
 	public void getRewardCount() {
 		int userId = getInt("userId");
 		String subject = get("subject");
 		renderJson(""+new UserService().getUpdateUserInfo(userId).get(subject+"RewardCount"));
 	}
 
-	//浇水（userId）
+	//浇水（userId、landNumber）
 	public void waterCrop() {
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
@@ -348,7 +348,7 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//施肥（userId）
+	//施肥（userId、landNumber）
 	public void fertilizerCrop() {
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
@@ -357,7 +357,7 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//购买种子后添加到背包
+	//购买种子后添加到背包（userId、cropId、number）
 	public void buyCrop() {
 		int userId = getInt("userId");
 		int cropId = getInt("cropId");
@@ -379,7 +379,7 @@ public class UserController extends Controller{
 		}	
 	}
 	
-	//种植作物
+	//种植作物（userId、cropId、landNumber）
 	public void raiseCrop() {
 		int userId = getInt("userId");
 		int cropId = getInt("cropId");
@@ -390,7 +390,7 @@ public class UserController extends Controller{
 		renderJson(""+succeed);
 	}
 	
-	//收获
+	//收获（userId、landNumber）
 	public void harvest() {
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");
@@ -400,7 +400,7 @@ public class UserController extends Controller{
 		renderJson(result);
 	}
 	
-	//扩建土地
+	//扩建土地（userId、landNumber、needMoney）
 	public void extensionLand() {
 		int userId = getInt("userId");
 		String landNumber = get("landNumber");

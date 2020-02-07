@@ -6,7 +6,6 @@ import com.jfinal.plugin.activerecord.Page;
 
 public class AdminService {
 	
-	
 	/**
 	 * 	Ôö
 	 * @throws
