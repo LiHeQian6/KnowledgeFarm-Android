@@ -270,6 +270,7 @@ public class FindPassword extends AppCompatActivity {
         }
     }
 
+    //访问服务器，重置密码
     private void resetPwdToServer(String s) {
 
         FormBody formBody = new FormBody.Builder()
@@ -293,16 +294,17 @@ public class FindPassword extends AppCompatActivity {
                 Log.e("rs",result);
                 Message message = new Message();
                 if(result.equals("true")){
-                    message.what = 8;
+                    message.what = 8;                 //修改成功
                     handler.sendMessage(message);
                 }else {
-                    message.what = 9;
+                    message.what = 9;                //修改失败
                     handler.sendMessage(message);
                 }
             }
         });
     }
 
+    //访问服务器，获取验证码
     private void getCodeFromServer(final String urlPath) {
         FormBody formBody = new FormBody.Builder()
                 .add("accout", account)
@@ -324,20 +326,20 @@ public class FindPassword extends AppCompatActivity {
                 String result = response.body().string();
                 Log.e("rs",result);
                 Message message = new Message();
-                if(result.equals("notExistAccount")){
+                if(result.equals("notExistAccount")){             //账号不存在
                     message.what = 4;
                     handler.sendMessage(message);
-                }else if(result.equals("notBindingEmail")){
+                }else if(result.equals("notBindingEmail")){       //账号未绑定邮箱
                     message.what = 6;
                     handler.sendMessage(message);
-                }else if(result.equals("EmailError")){
+                }else if(result.equals("EmailError")){           //邮箱错误
                     message.what = 7;
                     handler.sendMessage(message);
-                }else if(result.equals("fail")){
+                }else if(result.equals("fail")){                // 验证码发送失败
                     message.what = 10;
                     handler.sendMessage(message);
                 } else {
-                    message.what = 5;
+                    message.what = 5;                         //验证码发送成功
                     message.obj = result;
                     handler.sendMessage(message);
                 }

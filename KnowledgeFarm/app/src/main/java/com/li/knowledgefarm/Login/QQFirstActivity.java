@@ -122,6 +122,7 @@ public class QQFirstActivity extends AppCompatActivity {
         });
     }
 
+    //首次登陆后注册信息
     private void registToServer() {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
@@ -158,6 +159,8 @@ public class QQFirstActivity extends AppCompatActivity {
             }
         });
     }
+
+    //年级选择
 
     private class ProvOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
         @Override

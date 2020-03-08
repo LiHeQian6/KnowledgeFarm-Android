@@ -159,7 +159,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
     public void EventBus(EvenBean evenBean){
         edtCount.setText(evenBean.getAccount());
     }
-    
+
+    //事件处理
     private void initView() {
         mBtnLogin = findViewById(R.id.main_btn_login);
         progress = findViewById(R.id.layout_progress);
@@ -270,6 +271,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         });
     }
 
+    //账号登录
     private void loginByAccount(String accountStr, String pwdStr) {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
@@ -292,20 +294,20 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 String result = response.body().string();
                 Log.e("rs",result);
                 Message message = new Message();
-                if(result.equals("PasswordError")){
+                if(result.equals("PasswordError")){            //密码错误
                     message.what = 4;
                     message.obj = result;
                     handler.sendMessage(message);
-                }else if(result.equals("notExist")){
+                }else if(result.equals("notExist")){            //账号不存在
                     message.what = 6;
                     message.obj = result;
                     handler.sendMessage(message);
-                }else if(result.equals("notEffect")){
+                }else if(result.equals("notEffect")){             //账号失效
                     message.what = 7;
                     message.obj = result;
                     handler.sendMessage(message);
                 } else {
-                    message.what = 5;
+                    message.what = 5;                             //登录成功
                     message.obj = parsr(URLDecoder.decode(result), User.class);
                     handler.sendMessage(message);
                 }
@@ -443,6 +445,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
         animator3.start();
 
     }
+
+    //恢复界面动画为原始状态
     private void recovery() {
         progress.setVisibility(View.GONE);
         mInputLayout.setVisibility(View.VISIBLE);
@@ -481,6 +485,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         }
     }
 
+    //加载图片
     public boolean isConnByHttp(){
         boolean isConn = false;
         URL url;

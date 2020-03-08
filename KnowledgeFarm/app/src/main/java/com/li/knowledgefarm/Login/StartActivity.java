@@ -123,6 +123,7 @@ public class StartActivity extends AppCompatActivity {
         finish();
     }
 
+    //第一次登录后，显示用户账号信息提示弹出框
     private void showNotifyDialog() {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

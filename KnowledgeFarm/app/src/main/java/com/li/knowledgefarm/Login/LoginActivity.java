@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                     intentFirst.putExtra("photo",Path);
                     startActivity(intentFirst);
                     break;
-                case 2:
+                case 2:       //账号失效
                     Toast.makeText(getApplicationContext(),"账号已失效！",Toast.LENGTH_SHORT).show();
                     break;
                 case 3:
@@ -128,9 +128,11 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                     break;
                 case 0:
+                    // 其他情况
                     finish();
                     break;
                 case 4:
+                    //  授权登录
                     onClickLogin();
                     break;
             }
@@ -303,6 +305,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("lww", "onClickLogin session有效");
         }
     }
+    //自动登录->访问服务器
     private void judgeAuths(final String openId){
         new Thread() {
             @Override
@@ -385,7 +388,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("lww", "updateUserInfo2");
         }
     }
-
+    //授权（点击）登录
     private void asyncByJson(final String urlPath, final String Json) {
         new Thread(){
             @Override
@@ -413,12 +416,12 @@ public class LoginActivity extends AppCompatActivity {
                         String result =  response.body().string();
                         Message message = new Message();
                         if (result.equals("notEffect")) {
-                            message.what = 2;
+                            message.what = 2;             //账号失效
                             mHandler.sendMessage(message);
                         } else if(result.equals("notExist")){//第一次登录
                             message.what = 1;
                             mHandler.sendMessage(message);
-                        }else {
+                        }else {                          //非第一次登录，自动
                             message.what = 3;
                             message.obj = parsr(URLDecoder.decode(result), User.class);
                             user = (User) message.obj;
@@ -431,6 +434,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    //自动登录
     private void asyncByJson2(final String urlPath, final String Json) {
         new Thread(){
             @Override
@@ -457,13 +461,13 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call call, Response response) throws IOException {
                         String result =  response.body().string();
                         Message message = new Message();
-                        if (result.equals("notEffect")) {
+                        if (result.equals("notEffect")) { //账号失效
                             message.what = 2;
                             mHandler.sendMessage(message);
                         } else if(result.equals("notExist")){//第一次登录
                             ;
                         }else {
-                            message.what = 3;
+                            message.what = 3;        //非第一次登录，自动登录
                             message.obj = parsr(URLDecoder.decode(result), User.class);
                             user = (User) message.obj;
                             mHandler.sendMessage(message);

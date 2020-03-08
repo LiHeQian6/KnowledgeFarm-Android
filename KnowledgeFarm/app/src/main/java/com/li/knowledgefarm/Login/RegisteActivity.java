@@ -1,5 +1,6 @@
 package com.li.knowledgefarm.Login;
 
+import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
@@ -52,6 +53,7 @@ public class RegisteActivity extends AppCompatActivity {
     private int displayWidth;
     private int displayHeight;
     private EventBus eventBus;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -186,6 +188,7 @@ public class RegisteActivity extends AppCompatActivity {
 
     }
 
+    //注册，访问服务器
     private void registToServer() {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
@@ -223,6 +226,7 @@ public class RegisteActivity extends AppCompatActivity {
         });
     }
 
+    //年级选择
     private class ProvOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

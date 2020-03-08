@@ -46,7 +46,7 @@
         android:entries="@array/sarry"
         android:textAlignment="center"
         android:textColorHint="@color/editTextCorlor"
-        android:textColor="@color/blackTextColor"
+        android:outlineSpotShadowColor="@color/blackTextColor"
         android:background="@drawable/grade"
         android:layout_width="300dp"
         android:layout_height="0dp"
