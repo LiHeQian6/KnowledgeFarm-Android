@@ -83,6 +83,7 @@ public class SubjectListActivity extends AppCompatActivity {
         iv_english.setOnClickListener(listener);
         iv_chinese.setOnClickListener(listener);
     }
+
     protected void setStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
