@@ -52,7 +52,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MathActivity extends AppCompatActivity {
+public class MathActivity extends AppCompatActivity implements StudyInterface{
     /** 返回*/
     private ImageView iv_return;
     /** 自定义点击事件监听器*/
@@ -98,7 +98,8 @@ public class MathActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void PlayFalseSound(){
+    @Override
+    public void PlayFalseSound(){
         MediaPlayer player = new MediaPlayer();
         AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.cuowu);
         try {
@@ -120,7 +121,8 @@ public class MathActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void PlayTrueSound(){
+    @Override
+    public void PlayTrueSound(){
         MediaPlayer player = new MediaPlayer();
         AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.yinxiao1041);
         try {
@@ -204,7 +206,8 @@ public class MathActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void showIfReturn(){
+    @Override
+    public void showIfReturn(){
         ifReturn = new Dialog(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.math_return_dialog,null);
@@ -246,7 +249,8 @@ public class MathActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void getWandFCallBack(){
+    @Override
+    public void getWandFCallBack(){
         getWAF = new Handler(){
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
@@ -281,7 +285,8 @@ public class MathActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void getWaterAndFertilizer(){
+    @Override
+    public void getWaterAndFertilizer(){
         new Thread(){
             @Override
             public void run() {
@@ -319,7 +324,8 @@ public class MathActivity extends AppCompatActivity {
      * @Param [pos]
      * @return void
      */
-    private void showQuestion(int pos){
+    @Override
+    public void showQuestion(int pos){
         if(position == datalist.size()-1){
             btnNextQuestion.setText("我答完啦");
         }else{
@@ -485,7 +491,8 @@ public class MathActivity extends AppCompatActivity {
     /**
      * 加载视图
      */
-    private void getViews(){
+    @Override
+    public void getViews(){
         iv_return = findViewById(R.id.iv_return);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
@@ -501,7 +508,8 @@ public class MathActivity extends AppCompatActivity {
     /**
      * 注册点击事件监听器
      */
-    private void registListener(){
+    @Override
+    public void registListener(){
         listener = new CustomerListener();
         iv_return.setOnClickListener(listener);
         btnPreQuestion.setOnClickListener(listener);
@@ -520,7 +528,9 @@ public class MathActivity extends AppCompatActivity {
             }
         });
     }
-    protected void setStatusBar() {
+
+    @Override
+    public void setStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
