@@ -35,7 +35,7 @@ public class SubjectListActivity extends AppCompatActivity {
         getViews();
         /** 注册点击事件监听器*/
         registListener();
-        setStatusBar();
+        StudyUtil.setStatusBar(this);
     }
 
     class CustomerListener implements View.OnClickListener{
@@ -82,14 +82,6 @@ public class SubjectListActivity extends AppCompatActivity {
         iv_math.setOnClickListener(listener);
         iv_english.setOnClickListener(listener);
         iv_chinese.setOnClickListener(listener);
-    }
-
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
     }
 
 }

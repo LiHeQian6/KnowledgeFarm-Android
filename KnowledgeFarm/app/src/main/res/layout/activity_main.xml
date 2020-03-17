@@ -274,7 +274,7 @@
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
             <ImageView android:layout_width="60dp"
-                       android:src="@drawable/beibao"
+                       android:src="@drawable/beibao1"
                        android:id="@+id/bag"
                        android:padding="5dp"
                        android:layout_height="60dp"/>

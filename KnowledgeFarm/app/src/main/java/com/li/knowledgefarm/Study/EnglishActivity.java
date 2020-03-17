@@ -90,55 +90,9 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         setViewSize();
         /** 注册点击事件监听器*/
         registListener();
-        setStatusBar();
+        StudyUtil.setStatusBar(this);
         getMaths();
         getMathHandler();
-    }
-
-    /**
-     * @Description 播放回答错误提示音效
-     * @Auther 孙建旺
-     * @Date 上午 9:19 2019/12/17
-     * @Param []
-     * @return void
-     */
-    @Override
-    public void PlayFalseSound(){
-        MediaPlayer player = new MediaPlayer();
-        AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.cuowu);
-        try {
-            player.setDataSource(file.getFileDescriptor(),file.getStartOffset(),file.getLength());
-            file.close();
-            if(!player.isPlaying()){
-                player.prepare();
-                player.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @Description 播放回答正确提示音效
-     * @Auther 孙建旺
-     * @Date 上午 9:01 2019/12/17
-     * @Param []
-     * @return void
-     */
-    @Override
-    public void PlayTrueSound(){
-        MediaPlayer player = new MediaPlayer();
-        AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.yinxiao1041);
-        try {
-            player.setDataSource(file.getFileDescriptor(),file.getStartOffset(),file.getLength());
-            file.close();
-            if(!player.isPlaying()){
-                player.prepare();
-                player.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -489,7 +443,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                         isTrue.setVisibility(View.VISIBLE);
                         isTrue2.setVisibility(View.INVISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
-                        PlayTrueSound();
+                        StudyUtil.PlayTrueSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
                         if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
@@ -506,7 +460,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("哎呀，选错了！");
-                        PlayFalseSound();
+                        StudyUtil.PlayFalseSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -519,7 +473,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                         isTrue2.setVisibility(View.VISIBLE);
                         isTrue.setVisibility(View.INVISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
-                        PlayTrueSound();
+                        StudyUtil.PlayTrueSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
                         if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
@@ -536,7 +490,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                         isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue2.setVisibility(View.VISIBLE);
                         isFalse.setText("哎呀，选错了！");
-                        PlayFalseSound();
+                        StudyUtil.PlayFalseSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -592,15 +546,6 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         btnNextQuestion.setOnClickListener(listener);
         answer1.setOnClickListener(listener);
         answer2.setOnClickListener(listener);
-    }
-
-    @Override
-    public void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
     }
 
     @Override

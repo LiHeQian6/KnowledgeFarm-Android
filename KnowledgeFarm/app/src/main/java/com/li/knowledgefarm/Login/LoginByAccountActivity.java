@@ -158,6 +158,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void EventBus(EvenBean evenBean){
         edtCount.setText(evenBean.getAccount());
+        pwd.setText("");
+        rememberPwd.setChecked(false);
     }
     
     private void initView() {

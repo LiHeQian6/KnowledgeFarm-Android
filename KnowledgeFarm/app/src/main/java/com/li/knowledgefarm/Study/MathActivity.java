@@ -86,55 +86,9 @@ public class MathActivity extends AppCompatActivity implements StudyInterface{
         setViewSize();
         /** 注册点击事件监听器*/
         registListener();
-        setStatusBar();
+        StudyUtil.setStatusBar(this);
         getMaths();
         getMathHandler();
-    }
-
-    /**
-     * @Description 播放回答错误提示音效
-     * @Auther 孙建旺
-     * @Date 上午 9:19 2019/12/17
-     * @Param []
-     * @return void
-     */
-    @Override
-    public void PlayFalseSound(){
-        MediaPlayer player = new MediaPlayer();
-        AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.cuowu);
-        try {
-            player.setDataSource(file.getFileDescriptor(),file.getStartOffset(),file.getLength());
-            file.close();
-            if(!player.isPlaying()){
-                player.prepare();
-                player.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @Description 播放回答正确提示音效
-     * @Auther 孙建旺
-     * @Date 上午 9:01 2019/12/17
-     * @Param []
-     * @return void
-     */
-    @Override
-    public void PlayTrueSound(){
-        MediaPlayer player = new MediaPlayer();
-        AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.yinxiao1041);
-        try {
-            player.setDataSource(file.getFileDescriptor(),file.getStartOffset(),file.getLength());
-            file.close();
-            if(!player.isPlaying()){
-                player.prepare();
-                player.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -459,7 +413,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface{
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         isFalse.setVisibility(View.VISIBLE);
-                        PlayTrueSound();
+                        StudyUtil.PlayTrueSound(getApplicationContext());
                         if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
@@ -480,7 +434,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface{
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("你还差一点就答对了哦！");
-                        PlayFalseSound();
+                        StudyUtil.PlayFalseSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -509,7 +463,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface{
      * 注册点击事件监听器
      */
     @Override
-    public void registListener(){
+    public void registListener() {
         listener = new CustomerListener();
         iv_return.setOnClickListener(listener);
         btnPreQuestion.setOnClickListener(listener);
@@ -518,24 +472,17 @@ public class MathActivity extends AppCompatActivity implements StudyInterface{
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
-                if(position==datalist.size()-1)
+                if (position == datalist.size() - 1)
                     btnNextQuestion.setText("我做完啦 ");
             }
         });
-    }
-
-    @Override
-    public void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
     }
 
     @Override

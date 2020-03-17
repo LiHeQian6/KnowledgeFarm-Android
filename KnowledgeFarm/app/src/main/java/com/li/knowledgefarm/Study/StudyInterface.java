@@ -3,24 +3,6 @@ package com.li.knowledgefarm.Study;
 public interface StudyInterface{
 
     /**
-     * @Description 播放回答错误音效
-     * @Auther 孙建旺
-     * @Date 上午 10:00 2020/03/09
-     * @Param []
-     * @return void
-     */
-    public void PlayFalseSound();
-
-    /**
-     * @Description 播放回答正确音效
-     * @Auther 孙建旺
-     * @Date 上午 10:00 2020/03/09
-     * @Param []
-     * @return void
-     */
-    public void PlayTrueSound();
-
-    /**
      * @Description 加载视图
      * @Auther 孙建旺
      * @Date 上午 10:02 2020/03/09
@@ -74,12 +56,4 @@ public interface StudyInterface{
      */
     public void showQuestion(int pos);
 
-    /**
-     * @Description 设置标题栏
-     * @Auther 孙建旺
-     * @Date 上午 10:16 2020/03/09
-     * @Param []
-     * @return void
-     */
-    public void setStatusBar();
 }
