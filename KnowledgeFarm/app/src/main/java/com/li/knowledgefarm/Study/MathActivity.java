@@ -53,27 +53,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MathActivity extends AppCompatActivity implements StudyInterface{
-    /** 返回*/
-    private ImageView iv_return;
-    /** 自定义点击事件监听器*/
-    private CustomerListener listener;
-    private OkHttpClient okHttpClient;
-    private TextView btnPreQuestion;
-    private TextView btnNextQuestion;
-    private TextView question;
-    private TextView isFalse;
-    private ImageView isTrue;
-    private EditText answer;
-    private Handler getMath;
-    private Handler getWAF;
-    private Gson gson;
-    private List<Question3Num> datalist;
-    private int position=0;
-    private int TrueAnswerNumber = 0;
-    private Dialog ifReturn;
-    private Boolean returnHandlerFinish = false;
-    private int displayWidth;
-    private int displayHeight;
+    private ImageView iv_return; //返回
+    private CustomerListener listener; //自定义点击事件监听器
+    private OkHttpClient okHttpClient; //Okhttp
+    private TextView btnPreQuestion; //下一题
+    private TextView btnNextQuestion; //上一题
+    private TextView question; //问题
+    private TextView isFalse; //回答错误文字提示
+    private ImageView isTrue; //回答正确图片提示
+    private EditText answer; //答案输入框
+    private Handler getMath; //接收数学题Handler
+    private Handler getWAF; //接收增加水和肥料结果
+    private Gson gson; //Gson
+    private List<Question3Num> datalist; //题目List
+    private int position=0; //题目位置
+    private int TrueAnswerNumber = 0; //回答正确计数器
+    private Dialog ifReturn; //询问是否返回弹窗
+    private Boolean returnHandlerFinish = false; //返回条件
+    private int displayWidth; //屏幕宽度
+    private int displayHeight; //屏幕高度
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -381,10 +379,11 @@ public class MathActivity extends AppCompatActivity implements StudyInterface{
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
+                    if ((TrueAnswerNumber > 0 && TrueAnswerNumber < datalist.size() && LoginActivity.user.getMathRewardCount() > 0)) {
                         showIfReturn();
-                    else
+                    } else {
                         finish();
+                    }
                     break;
                 case R.id.btnPreQuestion:
                     if((position-1)>=0) {
