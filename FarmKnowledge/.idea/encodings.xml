@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/com/farm/admin/dao/AdminDao.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/farm/answer/controller/AnswerController.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/farm/answer/service/AnswerService.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/farm/config/AppConfig.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/farm/entity/Strings.java" charset="GBK" />
+  </component>
+</project>

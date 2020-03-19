@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="FarmKnowledge">
+    <output-path>$PROJECT_DIR$/out/artifacts/FarmKnowledge</output-path>
+    <root id="archive" name="FarmKnowledge.war">
+      <element id="dir-copy" path="$PROJECT_DIR$/WebContent" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="FarmKnowledge" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

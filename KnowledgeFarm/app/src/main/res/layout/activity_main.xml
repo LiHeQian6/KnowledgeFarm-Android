@@ -168,7 +168,7 @@
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
             <ImageView android:layout_width="100dp"
-                       android:src="@drawable/learn"
+                       android:src="@drawable/xuexizhongxin"
                        android:id="@+id/learn"
                        android:layout_height="80dp"/>
             <TextView android:layout_width="wrap_content"
@@ -183,11 +183,11 @@
             <RelativeLayout
                 android:layout_width="60dp"
                 android:layout_height="60dp">
-                <ImageView android:layout_width="50dp"
+                <ImageView android:layout_width="55dp"
                     android:src="@drawable/shuihu"
                     android:id="@+id/water"
                     android:layout_centerInParent="true"
-                    android:layout_height="50dp"/>
+                    android:layout_height="55dp"/>
                 <ImageView
                     android:layout_width="60dp"
                     android:src="@drawable/xuanzhong"
@@ -251,11 +251,11 @@
             <RelativeLayout
                 android:layout_width="60dp"
                 android:layout_height="60dp">
-                <ImageView android:layout_width="50dp"
+                <ImageView android:layout_width="42dp"
                     android:src="@drawable/shouhuo"
                     android:id="@+id/harvest"
                     android:layout_centerInParent="true"
-                    android:layout_height="50dp"/>
+                    android:layout_height="42dp"/>
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_centerInParent="true"
@@ -273,11 +273,11 @@
                       android:id="@+id/bagbox"
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
-            <ImageView android:layout_width="60dp"
+            <ImageView android:layout_width="52dp"
                        android:src="@drawable/beibao1"
                        android:id="@+id/bag"
                        android:padding="5dp"
-                       android:layout_height="60dp"/>
+                       android:layout_height="52dp"/>
             <TextView android:layout_width="wrap_content"
                       android:text="背包"
                       android:layout_height="wrap_content"/>
