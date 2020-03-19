@@ -37,7 +37,7 @@ public class SubjectListActivity extends AppCompatActivity {
         registListener();
         StudyUtil.setStatusBar(this);
     }
-    
+
     class CustomerListener implements View.OnClickListener{
 
         @Override
