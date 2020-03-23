@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Study;
+package com.li.knowledgefarm.Study.Subject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -10,11 +10,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,21 +34,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
-import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.Settings.SettingActivity;
+import com.li.knowledgefarm.Study.Interface.StudyInterface;
+import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.entity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MathActivity extends AppCompatActivity implements StudyInterface{
+public class MathActivity extends AppCompatActivity implements StudyInterface {
     private ImageView iv_return; //返回
     private CustomerListener listener; //自定义点击事件监听器
     private OkHttpClient okHttpClient; //Okhttp
@@ -78,15 +72,14 @@ public class MathActivity extends AppCompatActivity implements StudyInterface{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_math);
-
         /** 加载视图*/
         getViews();
         setViewSize();
         /** 注册点击事件监听器*/
         registListener();
         StudyUtil.setStatusBar(this);
-        getMaths();
-        getMathHandler();
+        datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
+        showQuestion(position);
     }
 
     /**
@@ -298,79 +291,6 @@ public class MathActivity extends AppCompatActivity implements StudyInterface{
         }
     }
 
-    /**
-     * @Description 处理返回的Json串
-     * @Auther 孙建旺
-     * @Date 上午 9:10 2019/12/11
-     * @Param []
-     * @return void
-     */
-    private void getMathHandler(){
-        getMath = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String data = (String)msg.obj;
-                if(data != null) {
-                    Type type = new TypeToken<List<Question3Num>>() {
-                    }.getType();
-                    datalist = gson.fromJson(data, type);
-                    showQuestion(position);
-                }
-            }
-        };
-    }
-
-    /**
-     * @Description 获取数学题
-     * @Auther 孙建旺
-     * @Date 上午 8:56 2019/12/11
-     * @Param []
-     * @return void
-     */
-    private void getMaths() {
-        new Thread(){
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-            @Override
-            public void run() {
-                super.run();
-                if (LoginActivity.user.getMathRewardCount() <= 0) {
-                    question.setText("今天的任务都做完了哦！");
-                    question.setTextSize((int)(displayWidth*0.02));
-                    question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    answer.setVisibility(View.GONE);
-                    btnNextQuestion.setVisibility(View.GONE);
-                    btnPreQuestion.setVisibility(View.GONE);
-                } else {
-                    Request request = null;
-                    switch (LoginActivity.user.getGrade()) {
-                        case 1:
-                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneUpMath").build();
-                            break;
-                        case 2:
-                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneDownMath").build();
-                    }
-                    Call call = okHttpClient.newCall(request);
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Message message = Message.obtain();
-                            message.obj = "Fail";
-                            getMath.sendMessage(message);
-                        }
-
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            Message message = Message.obtain();
-                            message.obj = response.body().string();
-                            getMath.sendMessage(message);
-                        }
-                    });
-                }
-            }
-        }.start();
-
-    }
 
     class CustomerListener implements View.OnClickListener{
 

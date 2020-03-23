@@ -18,10 +18,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".Login.RegisteActivity" android:screenOrientation="landscape"></activity>
-        <activity android:name=".Study.ChineseActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".Study.Subject.ChineseActivity" android:screenOrientation="landscape"/>
         <activity android:name=".MyFriends.MyFriendActivity" android:screenOrientation="landscape"/>
         <activity
-            android:name=".Study.EnglishActivity"
+            android:name=".Study.Subject.EnglishActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".Settings.UpdatePasswordActivity"
@@ -76,7 +76,7 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".Study.MathActivity"
+            android:name=".Study.Subject.MathActivity"
             android:screenOrientation="landscape"
             android:theme="@style/customApp" />
         <activity

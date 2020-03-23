@@ -792,16 +792,24 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i){
                     case R.id.my:
-                        friendsPage.setPrePageNum(1);
-                        friendsPage.setNextPageNum(1);
-                        searchSelectedItem=0;
-                        getFriendsInfo(1);
+                        if(friendsPage != null) {
+                            friendsPage.setPrePageNum(1);
+                            friendsPage.setNextPageNum(1);
+                            searchSelectedItem = 0;
+                            getFriendsInfo(1);
+                        }else{
+                            Toast.makeText(MainActivity.this,"获取好友列表失败",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case R.id.all:
-                        friendsPage.setPrePageNum(1);
-                        friendsPage.setNextPageNum(1);
-                        searchSelectedItem=1;
-                        getAllInfo(1);
+                        if(friendsPage != null) {
+                            friendsPage.setPrePageNum(1);
+                            friendsPage.setNextPageNum(1);
+                            searchSelectedItem = 1;
+                            getAllInfo(1);
+                        }else{
+                            Toast.makeText(MainActivity.this,"获取好友列表失败",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
 
@@ -819,7 +827,7 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(@NonNull Message msg) {
                 String messages = (String)msg.obj;
                 Log.e("好友",messages);
-                if(!messages.equals("Fail")){
+                if(!messages.equals("Fail") && !messages.equals("html")){
                     Type type = new TypeToken<FriendsPage<User>>(){}.getType();
                     friendsPage = gson.fromJson(messages,type);
                     now.setText(friendsPage.getCurrentPageNum()+"/"+friendsPage.getTotalPageNum());

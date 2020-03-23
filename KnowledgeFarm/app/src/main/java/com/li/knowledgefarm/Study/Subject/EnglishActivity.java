@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Study;
+package com.li.knowledgefarm.Study.Subject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -12,11 +12,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,6 +38,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Study.Interface.StudyInterface;
+import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.entity.English;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class EnglishActivity extends AppCompatActivity implements StudyInterface{
+public class EnglishActivity extends AppCompatActivity implements StudyInterface {
     /** 返回*/
     private ImageView iv_return;
     /** 自定义点击事件监听器*/
@@ -92,8 +91,8 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         /** 注册点击事件监听器*/
         registListener();
         StudyUtil.setStatusBar(this);
-        getMaths();
-        getMathHandler();
+        datalist = (List<English>) getIntent().getSerializableExtra("english");
+        showQuestion(position);
     }
 
     /**
@@ -339,83 +338,6 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
             trueAnswer.setTextSize((int)(displayWidth*0.02));
             trueAnswer.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
         }
-    }
-
-    /**
-     * @Description 处理返回的Json串
-     * @Auther 景光赞
-     * @Date 上午 9:10 2019/12/11
-     * @Param []
-     * @return void
-     */
-    @SuppressLint("HandlerLeak")
-    private void getMathHandler(){
-        getMath = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String data = (String)msg.obj;
-                Log.e("enlish",data);
-                if(data != null) {
-                    Type type = new TypeToken<List<English>>() {
-                    }.getType();
-                    datalist = gson.fromJson(data, type);
-                    showQuestion(position);
-                }
-            }
-        };
-    }
-
-    /**
-     * @Description 获取英语题
-     * @Auther 景光赞
-     * @Date 上午 8:56 2019/12/11
-     * @Param []
-     * @return void
-     */
-    private void getMaths() {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                if (LoginActivity.user.getEnglishRewardCount() <= 0) {
-                    question.setText("今天的任务都做完了哦！");
-                    question.setTextSize((int)(displayWidth*0.02));
-                    answer1.setVisibility(View.GONE);
-                    answer2.setVisibility(View.GONE);
-                    tipText.setVisibility(View.GONE);
-                    btnNextQuestion.setVisibility(View.GONE);
-                    btnPreQuestion.setVisibility(View.GONE);
-                } else {
-                    Request request = null;
-                    switch (LoginActivity.user.getGrade()) {
-                        case 1:
-                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneUpEnglish").build();
-                            break;
-                        case 2:
-                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneDownEnglish").build();
-                            break;
-                    }
-                    Call call = okHttpClient.newCall(request);
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Message message = Message.obtain();
-                            message.obj = "Fail";
-                            getMath.sendMessage(message);
-                        }
-
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            Message message = Message.obtain();
-                            message.obj = response.body().string();
-                            getMath.sendMessage(message);
-                        }
-                    });
-                }
-            }
-        }.start();
-
     }
 
     class CustomerListener implements View.OnClickListener{

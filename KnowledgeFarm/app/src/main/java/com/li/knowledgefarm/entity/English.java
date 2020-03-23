@@ -1,6 +1,8 @@
 package com.li.knowledgefarm.entity;
 
-public class English {
+import java.io.Serializable;
+
+public class English implements Serializable {
     private int id;
     private String word;
     private String trans;

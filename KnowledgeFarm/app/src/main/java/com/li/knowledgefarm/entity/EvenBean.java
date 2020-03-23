@@ -1,5 +1,7 @@
 package com.li.knowledgefarm.entity;
 
+import java.util.List;
+
 /**
  * @auther 孙建旺
  * @description EvenBus
@@ -8,11 +10,20 @@ package com.li.knowledgefarm.entity;
 
 public class EvenBean {
     String account;
+    private List<Question3Num> mathList;
 
     public String getAccount() {
         return account;
     }
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public List<Question3Num> getMathList() {
+        return mathList;
+    }
+
+    public void setMathList(List<Question3Num> mathList) {
+        this.mathList = mathList;
     }
 }

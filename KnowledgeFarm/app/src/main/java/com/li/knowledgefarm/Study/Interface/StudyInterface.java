@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Study;
+package com.li.knowledgefarm.Study.Interface;
 
 public interface StudyInterface{
 

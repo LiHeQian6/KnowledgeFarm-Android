@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Study;
+package com.li.knowledgefarm.Study.Util;
 
 import android.app.Activity;
 import android.content.Context;

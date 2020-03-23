@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Study;
+package com.li.knowledgefarm.Study.Subject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -14,16 +14,11 @@ import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,8 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,9 +36,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Study.Interface.StudyInterface;
+import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.entity.Chinese;
-import com.li.knowledgefarm.entity.English;
-import com.li.knowledgefarm.entity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ChineseActivity extends AppCompatActivity implements StudyInterface{
+public class ChineseActivity extends AppCompatActivity implements StudyInterface {
     /** 返回*/
     private ImageView iv_return;
     /** 自定义点击事件监听器*/
@@ -100,8 +93,8 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
         /** 注册点击事件监听器*/
         registListener();
         StudyUtil.setStatusBar(this);
-        getChineseQuestion();
-        getMathHandler();
+        datalist = (List<Chinese>)getIntent().getSerializableExtra("chinese");
+        showQuestion(position);
     }
 
     /**
@@ -385,86 +378,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
             question.setText(datalist.get(pos).getWord());
             trueAnswer.setText(datalist.get(pos).getQuantify());
         }
-    }
-
-    /**
-     * @Description 处理返回的Json串
-     * @Auther 景光赞
-     * @Date 上午 9:10 2019/12/11
-     * @Param []
-     * @return void
-     */
-    @SuppressLint("HandlerLeak")
-    private void getMathHandler(){
-        getMath = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String data = (String)msg.obj;
-                Log.e("enlish",data);
-                if(data != null) {
-                    Type type = new TypeToken<List<Chinese>>() {
-                    }.getType();
-                    datalist = gson.fromJson(data, type);
-                    showQuestion(position);
-                }
-            }
-        };
-    }
-
-    /**
-     * @Description 获取英语题
-     * @Auther 景光赞
-     * @Date 上午 8:56 2019/12/11
-     * @Param []
-     * @return void
-     */
-    private void getChineseQuestion() {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                if (LoginActivity.user.getChineseRewardCount() <= 0) {
-                    question.setText("今天的任务都做完了哦！");
-                    question.setTextSize((int)(displayWidth*0.02));
-                    answer1.setVisibility(View.GONE);
-                    answer2.setVisibility(View.GONE);
-                    answer3.setVisibility(View.GONE);
-                    trueAnswer.setVisibility(View.GONE);
-                    tipText.setVisibility(View.GONE);
-                    yiText.setVisibility(View.GONE);
-                    btnNextQuestion.setVisibility(View.GONE);
-                    btnPreQuestion.setVisibility(View.GONE);
-                } else {
-                    Request request = null;
-                    switch (LoginActivity.user.getGrade()) {
-                        case 1:
-                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneUpChinese").build();
-                            break;
-                        case 2:
-                            request = new Request.Builder().url(getResources().getString(R.string.URL) + "/answer/OneDownChinese").build();
-                            break;
-                    }
-                    Call call = okHttpClient.newCall(request);
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Message message = Message.obtain();
-                            message.obj = "Fail";
-                            getMath.sendMessage(message);
-                        }
-
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            Message message = Message.obtain();
-                            message.obj = response.body().string();
-                            getMath.sendMessage(message);
-                        }
-                    });
-                }
-            }
-        }.start();
-
     }
 
     class CustomerListener implements View.OnClickListener{
