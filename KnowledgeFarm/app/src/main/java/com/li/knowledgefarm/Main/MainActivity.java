@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -766,6 +767,9 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * 展示朋友信息
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFriends() {
         final Dialog friendsDialog = new Dialog(this);
@@ -871,14 +875,14 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int)(displayWidth*0.24),(int)(displayHeight*0.1));
         params_edit.gravity = Gravity.CENTER;
         searchAccount.setLayoutParams(params_edit);
-        searchAccount.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
-        searchAccount.setHintTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        searchAccount.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+        searchAccount.setHintTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
         searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
         LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.07));
         params_button.gravity = Gravity.CENTER;
         search.setLayoutParams(params_button);
-        search.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        search.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
         search.setTextSize((int)(displayHeight*0.02));
         search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
@@ -1254,7 +1258,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
             //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色

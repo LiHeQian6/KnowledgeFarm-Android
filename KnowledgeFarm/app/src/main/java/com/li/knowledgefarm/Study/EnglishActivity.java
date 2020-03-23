@@ -3,6 +3,7 @@ package com.li.knowledgefarm.Study;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -123,7 +124,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         params_tiptext.gravity = Gravity.CENTER_HORIZONTAL;
         tip.setLayoutParams(params_tiptext);
         tip.setTextSize((int)(displayWidth*0.01));
-        tip.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        tip.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
 
         LinearLayout.LayoutParams params_isTrue = new LinearLayout.LayoutParams((int)(displayWidth*0.05),(int)(displayHeight*0.1));
         params_isTrue.setMargins(0,0,(int)(displayWidth*0.01),0);
@@ -336,7 +337,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
             params_trueanswer.gravity = Gravity.CENTER_HORIZONTAL;
             trueAnswer.setLayoutParams(params_trueanswer);
             trueAnswer.setTextSize((int)(displayWidth*0.02));
-            trueAnswer.setTextColor(getResources().getColor(R.color.ShopTextColor));
+            trueAnswer.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
         }
     }
 

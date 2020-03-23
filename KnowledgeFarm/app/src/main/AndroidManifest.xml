@@ -6,6 +6,8 @@
     <application
         android:allowBackup="true"
         android:fitsSystemWindows="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:isGame="true"
         android:label="@string/app_name"
