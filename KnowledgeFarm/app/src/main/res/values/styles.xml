@@ -8,4 +8,9 @@
         <item name="android:windowEnterAnimation">@anim/in</item>
         <item name="android:windowExitAnimation">@anim/out</item>
     </style>
+
+    <style name="notify_pop_animation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/notify_pop_in</item>
+        <item name="android:windowExitAnimation">@anim/notify_pop_out</item>
+    </style>
 </resources>

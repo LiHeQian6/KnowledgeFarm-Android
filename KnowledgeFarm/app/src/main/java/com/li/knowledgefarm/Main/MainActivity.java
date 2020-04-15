@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.PopupWindowCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -37,6 +39,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -117,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup searchSelected;
     private int searchSelectedItem=0;
     private int ExtensionLandMoney = 0;
+    private ImageView notify;
+    private NotifyPopUpWindow notifyPopUpWindow;
 
 
     @Override
@@ -133,6 +138,18 @@ public class MainActivity extends AppCompatActivity {
         setViewsSize();
         addListener();
         getCrop();
+    }
+
+    /**
+     * @Description 展示通知弹窗
+     * @Author 孙建旺
+     * @Date 下午3:37 2020/04/15
+     * @Param []
+     * @return void
+     */
+    private void showNotifyWindow(){
+        notifyPopUpWindow = new NotifyPopUpWindow(this);
+        notifyPopUpWindow.showAtLocation(notify,Gravity.CENTER,0,0);
     }
 
     /**
@@ -513,6 +530,7 @@ public class MainActivity extends AppCompatActivity {
         setting.setOnClickListener(new MainListener());
         harvest.setOnClickListener(new MainListener());
         myFriends.setOnClickListener(new MainListener());
+        notify.setOnClickListener(new MainListener());
     }
 
     /**
@@ -617,7 +635,9 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzf);
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzs);
         myFriends=findViewById(R.id.friends);
+        notify = findViewById(R.id.notify_img);
     }
+
     class MainListener implements View.OnClickListener {
 
         @RequiresApi(api = Build.VERSION_CODES.M)
@@ -705,7 +725,9 @@ public class MainActivity extends AppCompatActivity {
                     else
                         findPeopleByAccount(searchAccount.getText().toString());
                     break;
-
+                case R.id.notify_img:
+                    showNotifyWindow();
+                    break;
             }
         }
     }
