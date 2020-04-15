@@ -37,7 +37,9 @@ import com.google.gson.Gson;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
+import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
+import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.entity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +73,8 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setDensityLand.setDensity(getApplication());
+        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
         setContentView(R.layout.activity_math);
         /** 加载视图*/
         getViews();
@@ -91,30 +95,30 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void setViewSize() {
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayWidth = ds.widthPixels;
-        displayHeight = ds.heightPixels;
-
-        TextView btnPre = findViewById(R.id.btnPreQuestion);
-        TextView btnNext = findViewById(R.id.btnNextQuestion);
-        LinearLayout question  = findViewById(R.id.linearQuestion);
-
-        LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.1));
-        params_btn.gravity = Gravity.CENTER_HORIZONTAL;
-        btnPre.setLayoutParams(params_btn);
-        params_btn.setMargins(0,0,0,(int)(displayHeight*0.02));
-        btnPre.setTextSize((int)(displayWidth*0.015));
-        btnPre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        btnNext.setLayoutParams(params_btn);
-        btnNext.setTextSize((int)(displayWidth*0.015));
-        btnNext.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        RelativeLayout.LayoutParams params_question = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(displayHeight*0.2));
-        params_question.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params_question.bottomMargin = (int)(displayHeight*0.2);
-        question.setLayoutParams(params_question);
+//        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+//        DisplayMetrics ds = new DisplayMetrics();
+//        wm.getDefaultDisplay().getMetrics(ds);
+//        displayWidth = ds.widthPixels;
+//        displayHeight = ds.heightPixels;
+//
+//        TextView btnPre = findViewById(R.id.btnPreQuestion);
+//        TextView btnNext = findViewById(R.id.btnNextQuestion);
+//        LinearLayout question  = findViewById(R.id.linearQuestion);
+//
+//        LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.1));
+//        params_btn.gravity = Gravity.CENTER_HORIZONTAL;
+//        btnPre.setLayoutParams(params_btn);
+//        params_btn.setMargins(0,0,0,(int)(displayHeight*0.02));
+//        btnPre.setTextSize((int)(displayWidth*0.015));
+//        btnPre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//        btnNext.setLayoutParams(params_btn);
+//        btnNext.setTextSize((int)(displayWidth*0.015));
+//        btnNext.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//
+//        RelativeLayout.LayoutParams params_question = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(displayHeight*0.2));
+//        params_question.addRule(RelativeLayout.CENTER_HORIZONTAL);
+//        params_question.bottomMargin = (int)(displayHeight*0.2);
+//        question.setLayoutParams(params_question);
     }
 
     /**
