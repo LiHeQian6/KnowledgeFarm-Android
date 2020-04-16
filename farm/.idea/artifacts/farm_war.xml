@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="farm:war">
+    <output-path>$PROJECT_DIR$/farm/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>farm</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="knowledge_farm-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="farm:war exploded" />
+    </root>
+  </artifact>
+</component>
