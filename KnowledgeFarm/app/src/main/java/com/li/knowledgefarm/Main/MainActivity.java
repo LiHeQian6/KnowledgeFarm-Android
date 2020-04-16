@@ -20,11 +20,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -32,6 +34,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView money;
     private ProgressBar experience;
     private TextView experienceValue;
-    private GridLayout lands;
+    private FrameLayout lands;
     private ListView friendsListView;
     private Dialog bagDialog;
     private Dialog ifExtention;
@@ -117,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup searchSelected;
     private int searchSelectedItem=0;
     private int ExtensionLandMoney = 0;
-
+    private float LAND_WIDTH_2=160;
+    private float LAND_HEIGHT_2=80;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,55 +282,82 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 生成土地
+     * 初始化土地
      */
-    private void showLand() {
-        int flag=0;
+    private void showLand(){
         lands.removeAllViews();
-        for (int i=1;i<19;i++){
-            final ImageView land = new ImageView(this);
-            ImageView plant = new ImageView(this);
-            final ImageView animation = new ImageView(this);
-            Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
-            Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
-            Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
-            animation.setVisibility(View.GONE);
-            RelativeLayout relativeLayout = new RelativeLayout(this);
-            relativeLayout.addView(land);
-            ViewGroup.LayoutParams lp = new RelativeLayout.LayoutParams(160,160);
-            animation.setLayoutParams(lp);
-            land.setLayoutParams(lp);
-            plant.setLayoutParams(lp);
-            final int finalI = i;//第几块土地
-            if(LoginActivity.user.getLandStauts(finalI)==-1) {
-                if(flag==0){
+        int flag=0;
+        float x=0;
+        float y=0;
+        for (int i = 1; i <19 ; i++) {
+            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            final View landGroup = inflater.inflate(R.layout.land_group,null);
+            landGroup.setLayoutParams(new FrameLayout.LayoutParams(320,160));
+            if ((i-1)%3==0){
+                x=((i-1)/3)*LAND_WIDTH_2+LAND_WIDTH_2*2;
+                y=((i-1)/3)*LAND_HEIGHT_2;
+                landGroup.setTranslationX(x);
+                landGroup.setTranslationY(y);
+            }else{
+                x = x - LAND_WIDTH_2;
+                landGroup.setTranslationX(x);
+                y = y + LAND_HEIGHT_2;
+                landGroup.setTranslationY(y);
+            }
+            landGroup.setTag(""+i);
+            final ImageView land = (ImageView) landGroup.findViewWithTag("land");
+            ImageView plant=landGroup.findViewWithTag("plant");
+            TextView progressNum = (TextView) landGroup.findViewWithTag("progressNum");
+            ProgressBar progress = (ProgressBar) landGroup.findViewWithTag("progress");
+            final ImageView animation = (ImageView) landGroup.findViewWithTag("animation");
+            final int finalI = Integer.parseInt((String) landGroup.getTag());//第几块土地
+            if(LoginActivity.user.getLandStauts(finalI)==-1) {//土地状态为-1表示土地未开垦，当第一次运行到的时候表示该块土地上是扩建牌
+                if (flag==0){
+                    plant.setVisibility(View.VISIBLE);
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(160, 160);
+                    params.gravity=Gravity.CENTER;
+                    params.topMargin=-60;
+                    plant.setLayoutParams(params);
                     plant.setImageResource(R.drawable.kuojian);
-                    plant.setRotation(10);
-                    relativeLayout.addView(plant);
                     //扩建
-                    plant.setOnClickListener(new View.OnClickListener() {
+                    plant.setOnTouchListener(new View.OnTouchListener() {
                         @Override
-                        public void onClick(View view) {
-                            showIfExtensionLand(finalI);
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
+                                System.out.println("x"+motionEvent.getX()+"   y"+motionEvent.getY());
+                                if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
+                                    System.out.println(landGroup.getTag());
+                                    showIfExtensionLand(finalI);
+                                    return true;
+                                }
+                            }
+                            return false;
                         }
                     });
                     flag++;
                 }
-                land.setImageResource(R.drawable.land_green);
+//                land.setImageResource(R.drawable.land_green);
             }
             else if (LoginActivity.user.getLandStauts(finalI)==0) {
-                land.setImageResource(R.drawable.land);
+                land.setImageResource(R.drawable.land0);
                 //种植
-                land.setOnClickListener(new View.OnClickListener() {
+                land.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view) {
-                        if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                            return;
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
+                            System.out.println("x"+motionEvent.getX()+"   y"+motionEvent.getY());
+                            if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
+                                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                                    return true;
+                                }
+                                lastClickTime = System.currentTimeMillis();
+                                land.setImageResource(R.drawable.land_lights);
+                                selectLand=finalI;
+                                showBagMessages();
+                                return true;
+                            }
                         }
-                        lastClickTime = System.currentTimeMillis();
-                        land.setImageResource(R.drawable.land_light);
-                        selectLand=finalI;
-                        showBagMessages();
+                        return false;
                     }
                 });
             }
@@ -336,9 +367,7 @@ public class MainActivity extends AppCompatActivity {
                         .error(R.drawable.meigui)
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-                land.setImageResource(R.drawable.land);
-                plant.setRotationX(-50);
-                plant.setRotation(-5);
+                land.setImageResource(R.drawable.land0);
                 UserCropItem crop=null;
                 //得到植物信息
                 for (int j = 0; j < cropList.size(); j++) {
@@ -348,6 +377,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if (crop!=null){
+                    plant.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.VISIBLE);
+                    progressNum.setVisibility(View.VISIBLE);
                     //展示植物不同阶段
                     final double status = (crop.getProgress()+0.0) / crop.getCrop().getMatureTime();
                     if(status <0.2){
@@ -362,115 +394,232 @@ public class MainActivity extends AppCompatActivity {
                         Glide.with(this).load(crop.getCrop().getImg4()).apply(requestOptions).into(plant);
                     }
                     //植物成长进度条
-                    final ProgressBar progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
-                    progressBar.setMax(crop.getCrop().getMatureTime());
-                    progressBar.setProgress(crop.getProgress());
-                    progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar_bg));
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(140,30);
-                    layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                    progressBar.setLayoutParams(layoutParams);
+                    progress.setMax(crop.getCrop().getMatureTime());
+                    progress.setProgress(crop.getProgress());
+
                     //植物成长值
-                    final TextView value = new TextView(this);
-                    value.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
-                    value.setTextSize(8);
-                    value.setTextColor(Color.BLACK);
-                    value.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
-                    value.setLayoutParams(layoutParams);
+                    progressNum.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
+
                     if(crop.getState()==0){
-                        land.setImageResource(R.drawable.land_gan);
+                        land.setImageResource(R.drawable.land_ganhan);
                     }
-                    //添加视图
-                    relativeLayout.addView(plant);
-                    relativeLayout.addView(progressBar);
-                    relativeLayout.addView(value);
-                    relativeLayout.addView(animation);
                     //浇水、施肥、收获
                     final UserCropItem finalCrop = crop;
-                    plant.setOnClickListener(new View.OnClickListener() {
+                    land.setOnTouchListener(new View.OnTouchListener() {
                         @Override
-                        public void onClick(View view) {
-                            land.setImageResource(R.drawable.land_light);
-                            if(selected==0) {
-                                selectedPlant=finalI;
-                                if(status==1) {
-                                    Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                    if(finalCrop.getState()==0){
-                                        land.setImageResource(R.drawable.land_gan);
-                                    }else
-                                        land.setImageResource(R.drawable.land);
-                                }
-                                else{
-                                    Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
-                                    operating(0);//浇水
-                                }
-                            }else if(selected==-1){
-                                selectedPlant=finalI;
-                                if(status==1) {
-                                    Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                    if(finalCrop.getState()==0){
-                                        land.setImageResource(R.drawable.land_gan);
-                                    }else
-                                        land.setImageResource(R.drawable.land);
-                                }else{
-                                    Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
-                                    operating(-1);//施肥
-                                }
-                            }else{
-                                selectedPlant=finalI;
-                                if(status==1) {
-                                    Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
-                                    operating(-2);//成熟
-                                }
-                                else {
-                                    Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
-                                    if(finalCrop.getState()==0){
-                                        land.setImageResource(R.drawable.land_gan);
-                                    }else
-                                        land.setImageResource(R.drawable.land);
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
+                                System.out.println("x"+motionEvent.getX()+"   y"+motionEvent.getY());
+                                if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
+                                    land.setImageResource(R.drawable.land_lights);
+                                    if(selected==0) {
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            if(finalCrop.getState()==0){
+                                                land.setImageResource(R.drawable.land_ganhan);
+                                            }else
+                                                land.setImageResource(R.drawable.land0);
+                                        }
+                                        else{
+                                            Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
+                                            operating(0);//浇水
+                                        }
+                                    }else if(selected==-1){
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            if(finalCrop.getState()==0){
+                                                land.setImageResource(R.drawable.land_ganhan);
+                                            }else
+                                                land.setImageResource(R.drawable.land0);
+                                        }else{
+                                            Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
+                                            operating(-1);//施肥
+                                        }
+                                    }else{
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
+                                            operating(-2);//成熟
+                                        }
+                                        else {
+                                            Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
+                                            if(finalCrop.getState()==0){
+                                                land.setImageResource(R.drawable.land_ganhan);
+                                            }else
+                                                land.setImageResource(R.drawable.land0);
+                                        }
+                                    }
+                                    waterMessagesHandler = new Handler() {
+                                        @Override
+                                        public void handleMessage(@NonNull Message msg) {
+                                            final String messages = (String) msg.obj;
+                                            Log.e("Watering", messages);
+                                            if (!messages.equals("Fail")) {
+                                                if (messages.equals("false")) {
+                                                    animation.setVisibility(View.VISIBLE);
+                                                    Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            animation.setVisibility(View.GONE);
+                                                        }
+                                                    },1000);
+                                                } else {
+                                                    //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
+                                                    animation.setVisibility(View.VISIBLE);
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            getCrop();
+                                                            getUserInfo();
+                                                            if(messages.equals("up")){
+                                                                upLevel();
+                                                            }
+                                                            animation.setVisibility(View.GONE);
+                                                        }
+                                                    },1000);
+
+                                                }
+                                            } else {
+                                                animation.setVisibility(View.VISIBLE);
+                                                Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        animation.setVisibility(View.GONE);
+                                                    }
+                                                },1000);
+                                            }
+                                            if(finalCrop.getState()==0){
+                                                land.setImageResource(R.drawable.land_ganhan);
+                                            }else
+                                                land.setImageResource(R.drawable.land0);
+                                        }
+                                    };
+                                    return true;
                                 }
                             }
-                            waterMessagesHandler = new Handler() {
-                                @Override
-                                public void handleMessage(@NonNull Message msg) {
-                                    final String messages = (String) msg.obj;
-                                    Log.e("Watering", messages);
-                                    if (!messages.equals("Fail")) {
-                                        if (messages.equals("false")) {
-                                            Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
-                                            animation.setVisibility(View.VISIBLE);
-                                            new Handler().postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    getCrop();
-                                                    getUserInfo();
-                                                    if(messages.equals("up")){
-                                                        upLevel();
-                                                    }
-                                                    animation.setVisibility(View.GONE);
-                                                }
-                                            },1000);
-
-                                        }
-                                    } else {
-                                        Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
-                                    }
-                                    if(finalCrop.getState()==0){
-                                        land.setImageResource(R.drawable.land_gan);
-                                    }else
-                                        land.setImageResource(R.drawable.land);
-                                }
-                            };
+                            return false;
                         }
                     });
+//                    plant.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            land.setImageResource(R.drawable.land_lights);
+//                            if(selected==0) {
+//                                selectedPlant=finalI;
+//                                if(status==1) {
+//                                    Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+//                                    if(finalCrop.getState()==0){
+//                                        land.setImageResource(R.drawable.land_ganhan);
+//                                    }else
+//                                        land.setImageResource(R.drawable.land0);
+//                                }
+//                                else{
+//                                    Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
+//                                    operating(0);//浇水
+//                                }
+//                            }else if(selected==-1){
+//                                selectedPlant=finalI;
+//                                if(status==1) {
+//                                    Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+//                                    if(finalCrop.getState()==0){
+//                                        land.setImageResource(R.drawable.land_ganhan);
+//                                    }else
+//                                        land.setImageResource(R.drawable.land0);
+//                                }else{
+//                                    Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
+//                                    operating(-1);//施肥
+//                                }
+//                            }else{
+//                                selectedPlant=finalI;
+//                                if(status==1) {
+//                                    Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
+//                                    operating(-2);//成熟
+//                                }
+//                                else {
+//                                    Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
+//                                    if(finalCrop.getState()==0){
+//                                        land.setImageResource(R.drawable.land_ganhan);
+//                                    }else
+//                                        land.setImageResource(R.drawable.land0);
+//                                }
+//                            }
+//                            waterMessagesHandler = new Handler() {
+//                                @Override
+//                                public void handleMessage(@NonNull Message msg) {
+//                                    final String messages = (String) msg.obj;
+//                                    Log.e("Watering", messages);
+//                                    if (!messages.equals("Fail")) {
+//                                        if (messages.equals("false")) {
+//                                            animation.setVisibility(View.VISIBLE);
+//                                            Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+//                                            new Handler().postDelayed(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//                                                    animation.setVisibility(View.GONE);
+//                                                }
+//                                            },1000);
+//                                        } else {
+//                                            //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
+//                                            animation.setVisibility(View.VISIBLE);
+//                                            new Handler().postDelayed(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//                                                    getCrop();
+//                                                    getUserInfo();
+//                                                    if(messages.equals("up")){
+//                                                        upLevel();
+//                                                    }
+//                                                    animation.setVisibility(View.GONE);
+//                                                }
+//                                            },1000);
+//
+//                                        }
+//                                    } else {
+//                                        animation.setVisibility(View.VISIBLE);
+//                                        Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+//                                        new Handler().postDelayed(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                animation.setVisibility(View.GONE);
+//                                            }
+//                                        },1000);
+//                                    }
+//                                    if(finalCrop.getState()==0){
+//                                        land.setImageResource(R.drawable.land_ganhan);
+//                                    }else
+//                                        land.setImageResource(R.drawable.land0);
+//                                }
+//                            };
+//                        }
+//                    });
                 }
 
             }
-            lands.addView(relativeLayout);
+            lands.addView(landGroup);
+        }
+
+    }
+    /**
+     * @Author li
+     * @param x 横坐标
+     * @param y 纵坐标
+     * @return boolean
+     * @Description 判断是否选中该块土地(即点击的区域是否在菱形区域内)
+     * @Date 12:19 2020/3/19
+     **/
+    public boolean isSelectLand(float x,float y){
+        float rx = (x-LAND_WIDTH_2)*LAND_HEIGHT_2;
+        float ry = (LAND_HEIGHT_2-y)*LAND_WIDTH_2;
+        if((Math.abs(rx)+Math.abs(ry))<=(LAND_WIDTH_2*2*LAND_HEIGHT_2*2/4)){
+            return true;
+        }else{
+            return false;
         }
     }
-
     /**
      * 用户升级,弹窗提示
      */
@@ -560,7 +709,7 @@ public class MainActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void UpdataLand(final int position){
+    private void UpdateLand(final int position){
         UpdataLands = new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -572,7 +721,6 @@ public class MainActivity extends AppCompatActivity {
                     LoginActivity.user.setMoney(newMoney);
                     money.setText("金币:"+newMoney+"");
                     ifExtention.dismiss();
-                    lands.removeAllViews();
                     showLand();
                 }else if(message.equals("false")){
                     Toast toast = Toast.makeText(MainActivity.this,"没有扩建成功哦！",Toast.LENGTH_SHORT);
@@ -1087,7 +1235,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ExtensionLand(position,(200*position-800));
-                UpdataLand(position);
+                UpdateLand(position);
             }
         });
         ifExtention.setContentView(layout);

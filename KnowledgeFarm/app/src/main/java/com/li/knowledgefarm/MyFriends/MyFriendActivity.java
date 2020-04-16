@@ -3,6 +3,7 @@ package com.li.knowledgefarm.MyFriends;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -22,12 +23,14 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -83,24 +86,20 @@ public class MyFriendActivity extends AppCompatActivity {
     private TextView money;
     private ProgressBar experience;
     private TextView experienceValue;
-    private GridLayout lands;
+    private FrameLayout lands;
     private ListView friendsListView;
     private Dialog bagDialog;
-    private Dialog ifExtention;
     private OkHttpClient okHttpClient;
-    private Handler bagMessagesHandler;
     private Gson gson;
     private List<BagCropNumber> dataList;
     private List<UserCropItem> cropList;
     private FriendsPage<User> friendsPage;
-    private Handler UpdataLands;
     private Handler cropMessagesHandler;
     private int selectLand=0;//选中第几块土地
-    private Handler plantMessagesHandler;
     private long lastClickTime=0;
     private long FAST_CLICK_DELAY_TIME=500;
     private Handler waterMessagesHandler;
-    private int selected=-2;//选中的是水壶0，肥料-1，收获-2
+    private int selected=0;//选中的是水壶0，肥料-1，收获-2
     private Handler operatingHandleMessage;
     private int selectedPlant=0;//选中的植物是第几块土地
     private int displayWidth;
@@ -110,6 +109,8 @@ public class MyFriendActivity extends AppCompatActivity {
     private RadioGroup searchSelected;
     private int searchSelectedItem=0;
     private User user;
+    private float LAND_WIDTH_2=160;
+    private float LAND_HEIGHT_2=80;
 
 
     @Override
@@ -261,59 +262,60 @@ public class MyFriendActivity extends AppCompatActivity {
     /**
      * 生成土地
      */
-    private void showLand() {
-        int flag=0;
+    private void showLand(){
         lands.removeAllViews();
-        for (int i=1;i<19;i++){
-            final ImageView land = new ImageView(this);
-            ImageView plant = new ImageView(this);
-            final ImageView animation = new ImageView(this);
-            Glide.with(MyFriendActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
-            Glide.with(MyFriendActivity.this).asGif().load(R.drawable.shifei).into(animation);
-            Glide.with(MyFriendActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
-            animation.setVisibility(View.GONE);
-            RelativeLayout relativeLayout = new RelativeLayout(this);
-            relativeLayout.addView(land);
-            ViewGroup.LayoutParams lp = new RelativeLayout.LayoutParams(160,160);
-            animation.setLayoutParams(lp);
-            land.setLayoutParams(lp);
-            plant.setLayoutParams(lp);
-            final int finalI = i;//第几块土地
-            if(user.getLandStauts(finalI)==-1) {
-//                if(flag==0){
-//                    plant.setImageResource(R.drawable.kuojian);
-//                    plant.setRotation(10);
-//                    relativeLayout.addView(plant);
-//                    //扩建
-//                    plant.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            //showIfExtensionLand(finalI);
-//                        }
-//                    });
-//                    flag++;
-//                }
-                land.setImageResource(R.drawable.land_green);
+        int flag=0;
+        float x=0;
+        float y=0;
+        for (int i = 1; i <19 ; i++) {
+            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            View landGroup = inflater.inflate(R.layout.land_group,null);
+            landGroup.setLayoutParams(new FrameLayout.LayoutParams(320,160));
+            if ((i-1)%3==0){
+                x=((i-1)/3)*LAND_WIDTH_2+LAND_WIDTH_2*2;
+                y=((i-1)/3)*LAND_HEIGHT_2;
+                landGroup.setTranslationX(x);
+                landGroup.setTranslationY(y);
+            }else{
+                x = x - LAND_WIDTH_2;
+                landGroup.setTranslationX(x);
+                y = y + LAND_HEIGHT_2;
+                landGroup.setTranslationY(y);
+            }
+            landGroup.setTag(""+i);
+            final ImageView land = (ImageView) landGroup.findViewWithTag("land");
+            ImageView plant=landGroup.findViewWithTag("plant");
+            TextView progressNum = (TextView) landGroup.findViewWithTag("progressNum");
+            ProgressBar progress = (ProgressBar) landGroup.findViewWithTag("progress");
+            final ImageView animation = (ImageView) landGroup.findViewWithTag("animation");
+            final int finalI = Integer.parseInt((String) landGroup.getTag());//第几块土地
+            if(user.getLandStauts(finalI)==-1) {//土地状态为-1表示土地未开垦，当第一次运行到的时候表示该块土地上是扩建牌
             }
             else if (user.getLandStauts(finalI)==0) {
-                land.setImageResource(R.drawable.land);
+                land.setImageResource(R.drawable.land0);
                 //种植
-                land.setOnClickListener(new View.OnClickListener() {
+                land.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view) {
-                        if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                            return;
-                        }
-                        lastClickTime = System.currentTimeMillis();
-                        land.setImageResource(R.drawable.land_light);
-//                        selectLand=finalI;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                land.setImageResource(R.drawable.land);
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
+                            System.out.println("x"+motionEvent.getX()+"   y"+motionEvent.getY());
+                            if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
+                                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                                    return true;
+                                }
+                                lastClickTime = System.currentTimeMillis();
+                                land.setImageResource(R.drawable.land_lights);
+                                selectLand=finalI;
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        land.setImageResource(R.drawable.land0);
+                                    }
+                                },200);
+                                return true;
                             }
-                        },200);
-                        //showBagMessages();
+                        }
+                        return false;
                     }
                 });
             }
@@ -323,7 +325,7 @@ public class MyFriendActivity extends AppCompatActivity {
                         .error(R.drawable.meigui)
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-                land.setImageResource(R.drawable.land);
+                land.setImageResource(R.drawable.land0);
                 plant.setRotationX(-50);
                 plant.setRotation(-5);
                 UserCropItem crop=null;
@@ -335,6 +337,9 @@ public class MyFriendActivity extends AppCompatActivity {
                     }
                 }
                 if (crop!=null){
+                    plant.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.VISIBLE);
+                    progressNum.setVisibility(View.VISIBLE);
                     //展示植物不同阶段
                     final double status = (crop.getProgress()+0.0) / crop.getCrop().getMatureTime();
                     if(status <0.2){
@@ -349,154 +354,131 @@ public class MyFriendActivity extends AppCompatActivity {
                         Glide.with(this).load(crop.getCrop().getImg4()).apply(requestOptions).into(plant);
                     }
                     //植物成长进度条
-                    final ProgressBar progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
-                    progressBar.setMax(crop.getCrop().getMatureTime());
-                    progressBar.setProgress(crop.getProgress());
-                    progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar_bg));
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(140,30);
-                    layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                    progressBar.setLayoutParams(layoutParams);
+                    progress.setMax(crop.getCrop().getMatureTime());
+                    progress.setProgress(crop.getProgress());
                     //植物成长值
-                    final TextView value = new TextView(this);
-                    value.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
-                    value.setTextSize(8);
-                    value.setTextColor(Color.BLACK);
-                    value.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
-                    value.setLayoutParams(layoutParams);
+                    progressNum.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
                     if(crop.getState()==0){
-                        land.setImageResource(R.drawable.land_gan);
+                        land.setImageResource(R.drawable.land_ganhan);
                     }
-                    //添加视图
-                    relativeLayout.addView(plant);
-                    relativeLayout.addView(progressBar);
-                    relativeLayout.addView(value);
-                    relativeLayout.addView(animation);
                     //浇水、施肥、收获
                     final UserCropItem finalCrop = crop;
-                    plant.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            land.setImageResource(R.drawable.land_light);
-                            if(selected==0) {
-                                selectedPlant=finalI;
-                                if(status==1) {
-                                    Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                    if(finalCrop.getState()==0){
-                                        land.setImageResource(R.drawable.land_gan);
-                                    }else
-                                        land.setImageResource(R.drawable.land);
-                                }
-                                else{
-                                    Glide.with(MyFriendActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
-                                    operating(0);//浇水
-                                }
-                            }else if(selected==-1){
-                                selectedPlant=finalI;
-                                if(status==1) {
-                                    Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                    if(finalCrop.getState()==0){
-                                        land.setImageResource(R.drawable.land_gan);
-                                    }else
-                                        land.setImageResource(R.drawable.land);
-                                }else{
-                                    Glide.with(MyFriendActivity.this).asGif().load(R.drawable.shifei).into(animation);
-                                    operating(-1);//施肥
-                                }
-                            }else{
-//                                selectedPlant=finalI;
-//                                if(status==1) {
-//                                    Glide.with(MyFriendActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
-//                                    operating(-2);//成熟
-//                                }
-//                                else {
-//                                    Toast.makeText(MyFriendActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
-//                                    if(finalCrop.getState()==0){
-//                                        land.setImageResource(R.drawable.land_gan);
-//                                    }else
-//                                        land.setImageResource(R.drawable.land);
-//                                }
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(finalCrop.getState()==0){
-                                            land.setImageResource(R.drawable.land_gan);
-                                        }else
-                                            land.setImageResource(R.drawable.land);
-                                        }
-                                },200);
-                            }
-                            waterMessagesHandler = new Handler() {
-                                @Override
-                                public void handleMessage(@NonNull Message msg) {
-                                    final String messages = (String) msg.obj;
-                                    Log.e("Watering", messages);
-                                    if (!messages.equals("Fail")) {
-                                        if (messages.equals("false")) {
-                                            Toast.makeText(MyFriendActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            //Toast.makeText(MyFriendActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
-                                            animation.setVisibility(View.VISIBLE);
-                                            new Handler().postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    getCrop();
-                                                    getUserInfo();
-                                                    Toast.makeText(MyFriendActivity.this, "操作成功,获得了金币奖励哦！", Toast.LENGTH_SHORT).show();
-                                                    if(messages.equals("up")){
-                                                        //upLevel();
-                                                    }
-                                                    animation.setVisibility(View.GONE);
-                                                }
-                                            },1000);
 
+                    land.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
+                                System.out.println("x"+motionEvent.getX()+"   y"+motionEvent.getY());
+                                if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
+                                    land.setImageResource(R.drawable.land_lights);
+                                    if(selected==0) {
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            if(finalCrop.getState()==0){
+                                                land.setImageResource(R.drawable.land_ganhan);
+                                            }else
+                                                land.setImageResource(R.drawable.land0);
                                         }
-                                    } else {
-                                        Toast.makeText(MyFriendActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                        else{
+                                            Glide.with(MyFriendActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
+                                            operating(0);//浇水
+                                        }
+                                    }else if(selected==-1){
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            if(finalCrop.getState()==0){
+                                                land.setImageResource(R.drawable.land_ganhan);
+                                            }else
+                                                land.setImageResource(R.drawable.land0);
+                                        }else{
+                                            Glide.with(MyFriendActivity.this).asGif().load(R.drawable.shifei).into(animation);
+                                            operating(-1);//施肥
+                                        }
+                                    }else{
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Glide.with(MyFriendActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
+                                            operating(-2);//成熟
+                                        }
+                                        else {
+                                        }
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if(finalCrop.getState()==0){
+                                                    land.setImageResource(R.drawable.land_ganhan);
+                                                }else
+                                                    land.setImageResource(R.drawable.land0);
+                                            }
+                                        },200);
                                     }
-                                    if(finalCrop.getState()==0){
-                                        land.setImageResource(R.drawable.land_gan);
-                                    }else
-                                        land.setImageResource(R.drawable.land);
+                                    waterMessagesHandler = new Handler() {
+                                        @Override
+                                        public void handleMessage(@NonNull Message msg) {
+                                            final String messages = (String) msg.obj;
+                                            Log.e("Watering", messages);
+                                            if (!messages.equals("Fail")) {
+                                                if (messages.equals("false")) {
+                                                    Toast.makeText(MyFriendActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
+                                                    animation.setVisibility(View.VISIBLE);
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            getCrop();
+                                                            getUserInfo();
+                                                            if(messages.equals("up")){
+//                                                        upLevel();
+                                                            }
+                                                            animation.setVisibility(View.GONE);
+                                                        }
+                                                    },1000);
+
+                                                }
+                                            } else {
+                                                Toast.makeText(MyFriendActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                            }
+                                            if(finalCrop.getState()==0){
+                                                land.setImageResource(R.drawable.land_ganhan);
+                                            }else
+                                                land.setImageResource(R.drawable.land0);
+                                        }
+                                    };
                                 }
-                            };
+                            }
+                            return false;
                         }
                     });
+
                 }
 
             }
-            lands.addView(relativeLayout);
+            lands.addView(landGroup);
         }
+
     }
 
-    /**
-     * 用户升级,弹窗提示
-     */
-    /*private void upLevel() {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.up_level_dialog, null);
-        Button right = layout.findViewById(R.id.right);
-        alertBuilder.setView(layout);
-        final AlertDialog upDiaLog = alertBuilder.create();
-        right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                upDiaLog.cancel();
-            }
-        });
 
-        upDiaLog.show();
-        WindowManager.LayoutParams attrs = upDiaLog.getWindow().getAttributes();
-        if (upDiaLog.getWindow() != null) {
-            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            upDiaLog.getWindow().setDimAmount(0f);//去除遮罩
+    /**
+     * @Author li
+     * @param x 横坐标
+     * @param y 纵坐标
+     * @return boolean
+     * @Description 判断是否选中该块土地(即点击的区域是否在菱形区域内)
+     * @Date 12:19 2020/3/19
+     **/
+    public boolean isSelectLand(float x,float y){
+        float rx = (x-LAND_WIDTH_2)*LAND_HEIGHT_2;
+        float ry = (LAND_HEIGHT_2-y)*LAND_WIDTH_2;
+        if((Math.abs(rx)+Math.abs(ry))<=(LAND_WIDTH_2*2*LAND_HEIGHT_2*2/4)){
+            return true;
+        }else{
+            return false;
         }
-        attrs.gravity = Gravity.CENTER;
-        final float scale = this.getResources().getDisplayMetrics().density;
-        attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(250*scale+0.5f);
-        upDiaLog.getWindow().setAttributes(attrs);
-    }*/
+    }
 
     private void addListener() {
         learn.setOnClickListener(new MainListener());
@@ -511,79 +493,6 @@ public class MyFriendActivity extends AppCompatActivity {
         harvest.setOnClickListener(new MainListener());
         myFriends.setOnClickListener(new MainListener());
     }
-
-    /**
-     * @Description 扩建土地
-     * @Auther 孙建旺
-     * @Date 下午 2:39 2019/12/10
-     * @Param []
-     * @return void
-     */
-    /*private void ExtensionLand(final int position, final int money){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                FormBody formBody = new FormBody.Builder()
-                        .add("userId",LoginActivity.user.getId()+"")
-                        .add("landNumber","land"+position)
-                        .add("needMoney",money+"").build();
-                Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/extensionLand").build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        UpdataLands.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String callBackMessage = response.body().string();
-                        Message message = Message.obtain();
-                        message.obj = callBackMessage;
-                        UpdataLands.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }*/
-
-    /**
-     * @Description 更新土地状态
-     * @Auther 孙建旺
-     * @Date 下午 2:54 2019/12/10
-     * @Param []
-     * @return void
-     */
-    /*private void UpdataLand(final int position){
-        UpdataLands = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String message = (String)msg.obj;
-                if(message.equals("true")){
-                    LoginActivity.user.setLandStauts(position,0);
-                    int newMoney = LoginActivity.user.getMoney() - 500;
-                    LoginActivity.user.setMoney(newMoney);
-                    money.setText("金币:"+newMoney+"");
-                    ifExtention.dismiss();
-                    lands.removeAllViews();
-                    showLand();
-                }else if(message.equals("false")){
-                    Toast toast = Toast.makeText(MyFriendActivity.this,"没有扩建成功哦！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }else if(message.equals("notEnoughMoney")){
-                    Toast toast = Toast.makeText(MyFriendActivity.this,"你的钱不够了哦！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }else {
-                    Toast toast = Toast.makeText(MyFriendActivity.this,"没有找到你的土地哦！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
-    }*/
 
     private void getViews() {
         learn=findViewById(R.id.learn);
@@ -610,6 +519,9 @@ public class MyFriendActivity extends AppCompatActivity {
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzw);
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzf);
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzs);
+        xzw.setVisibility(View.VISIBLE);
+        xzf.setVisibility(View.GONE);
+        xzs.setVisibility(View.GONE);
         myFriends=findViewById(R.id.friends);
         LinearLayout layout1=findViewById(R.id.bagbox);
         LinearLayout layout2=findViewById(R.id.shopbox);
@@ -876,14 +788,14 @@ public class MyFriendActivity extends AppCompatActivity {
         LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int)(displayWidth*0.24),(int)(displayHeight*0.1));
         params_edit.gravity = Gravity.CENTER;
         searchAccount.setLayoutParams(params_edit);
-        searchAccount.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
-        searchAccount.setHintTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        searchAccount.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+        searchAccount.setHintTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
         searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
         LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.07));
         params_button.gravity = Gravity.CENTER;
         search.setLayoutParams(params_button);
-        search.setTextColor(getResources().getColor(R.color.ShopTextColor,null));
+        search.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
         search.setTextSize((int)(displayHeight*0.02));
         search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
