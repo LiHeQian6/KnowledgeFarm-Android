@@ -35,7 +35,6 @@ public class User {
     private Land land;
     private UserAuthority userAuthority;
     private Set<UserBag> userBags = new HashSet<>();
-//    private Set<User> users = new HashSet<>();
 
     @Id
     @GeneratedValue(generator="identity")
@@ -215,16 +214,6 @@ public class User {
         this.userBags = userBags;
     }
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "user_friend", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
-//    public Set<User> getUsers() {
-//        return users;
-//    }
-//
-//    public void setUsers(Set<User> users) {
-//        this.users = users;
-//    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -248,7 +237,6 @@ public class User {
                 ", land=" + land +
                 ", userAuthority=" + userAuthority +
                 ", userBags=" + userBags +
-//                ", users=" + users +
                 '}';
     }
 

@@ -81,7 +81,7 @@ public class AdminServiceImpl {
      * @return com.atguigu.farm.entity.Admin
      **/
     @Transactional(readOnly = false)
-    public Admin editAccoutById(Integer id, String account){
+    public Admin editAccountById(Integer id, String account){
         Admin admin = this.adminDao.findAdminById(id);
         if(admin != null){
             admin.setAccount(account);
@@ -162,7 +162,7 @@ public class AdminServiceImpl {
      * @Author 张帅华
      * @Description 根据账号、账号状态查询
      * @Date 17:47 2020/4/6 0006
-     * @Param [accout]
+     * @Param [account]
      * @return com.atguigu.farm.entity.Admin
      **/
     public Admin findByAccountAndExist(String account, Integer exist){
@@ -176,7 +176,7 @@ public class AdminServiceImpl {
      * @Author 张帅华
      * @Description 分页查询管理员信息
      * @Date 17:56 2020/4/6 0006
-     * @Param [accout, exist, pageNumber, pageSize]
+     * @Param [account, exist, pageNumber, pageSize]
      * @return org.springframework.data.domain.Page<com.atguigu.farm.entity.Admin>
      **/
     public Page<Admin> findPageAdminByAccount(String account, Integer exist, Integer pageNumber, Integer pageSize){

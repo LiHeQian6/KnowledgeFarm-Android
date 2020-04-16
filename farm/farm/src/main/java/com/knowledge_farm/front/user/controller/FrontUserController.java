@@ -46,14 +46,14 @@ public class FrontUserController {
     private String userDefaultFileName;
 
     @RequestMapping("/findUserPage")
-    public String findUserPage(@RequestParam("accout") String accout,
+    public String findUserPage(@RequestParam("account") String account,
                                          @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                          @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
                                          @RequestParam("exist") Integer exist,
                                          HttpSession session, Model model){
         session.removeAttribute("user");
 
-        Page<User> page =  this.frontUserService.findUserPage(accout, exist, pageNumber, pageSize);
+        Page<User> page =  this.frontUserService.findUserPage(account, exist, pageNumber, pageSize);
         PageUtil<UserVO> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
         List<UserVO> userVOS = new ArrayList<>();
@@ -162,7 +162,7 @@ public class FrontUserController {
     }
 
     @RequestMapping("/updateUserPassword")
-    public String updateUserPassword(@RequestParam("accout") String account, @RequestParam("password") String password){
+    public String updateUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
         password = Md5Encode.getMD5(password.getBytes());
         return this.frontUserService.editPasswordByAccount(account, password);
     }

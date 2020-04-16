@@ -163,7 +163,6 @@ public class FrontCropController {
         Crop findCropById = this.frontCropService.findCropById(crop.getId());
         crop.setExist(findCropById.getExist());
         Integer id = crop.getId();
-        String img[] = new String[4];
         int count = 1;
         try {
             for (MultipartFile multipartFile : files) {
@@ -175,7 +174,7 @@ public class FrontCropController {
                                 file.delete();
                             }
                             String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
-                            img[count - 1] = this.cropPhotoFolderName + "/" + fileName;
+                            crop.setImg1(this.cropPhotoFolderName + "/" + fileName);
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName));
                             break;
                         case 2:
@@ -184,7 +183,7 @@ public class FrontCropController {
                                 file2.delete();
                             }
                             String fileName2 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
-                            img[count - 1] = this.cropPhotoFolderName + "/" + fileName2;
+                            crop.setImg2(this.cropPhotoFolderName + "/" + fileName2);
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName2));
                             break;
                         case 3:
@@ -193,7 +192,7 @@ public class FrontCropController {
                                 file3.delete();
                             }
                             String fileName3 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
-                            img[count - 1] = this.cropPhotoFolderName + "/" + fileName3;
+                            crop.setImg3(this.cropPhotoFolderName + "/" + fileName3);
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName3));
                             break;
                         case 4:
@@ -202,7 +201,7 @@ public class FrontCropController {
                                 file4.delete();
                             }
                             String fileName4 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
-                            img[count - 1] = this.cropPhotoFolderName + "/" + fileName4;
+                            crop.setImg4(this.cropPhotoFolderName + "/" + fileName4);
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName4));
                             break;
                     }

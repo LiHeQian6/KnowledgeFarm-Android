@@ -29,6 +29,11 @@ public class AdminController {
     @Resource
     private AdminServiceImpl adminService;
 
+    @RequestMapping("/gotoIndex")
+    public String gotoIndex(){
+        return "index";
+    }
+
     /**
      * @Author 张帅华
      * @Description 管理员注销登录
@@ -51,7 +56,7 @@ public class AdminController {
      **/
     @RequestMapping("/login")
     @ResponseBody
-    public String login(@RequestParam("accout") String account, @RequestParam("password") String password, HttpSession session){
+    public String login(@RequestParam("account") String account, @RequestParam("password") String password, HttpSession session){
         return this.adminService.login(account, password, session);
     }
 
@@ -63,7 +68,7 @@ public class AdminController {
      * @return java.lang.String
      **/
     @RequestMapping("/findAdminPage")
-    public String list(@RequestParam(value = "accout", required = false) String account,
+    public String list(@RequestParam(value = "account", required = false) String account,
                      @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                      @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
                      @RequestParam(value = "exist") Integer exist,
@@ -83,16 +88,16 @@ public class AdminController {
 
     /**
      * @Author 张帅华
-     * @Description 修改管理员账号状态
+     * @Description 删除单个管理员
      * @Date 21:40 2020/4/8 0008
      * @Param [id, exist]
      * @return java.lang.String
      **/
     @RequestMapping("/deleteOneAdmin")
     @ResponseBody
-    public String editStatusById(@RequestParam("id") Integer id, @RequestParam("exist") Integer exist){
+    public String deleteOneAdmin(@RequestParam("id") Integer id){
         try {
-            if(this.adminService.editStatusById(id, exist) != null){
+            if(this.adminService.editStatusById(id, 0) != null){
                 return "succeed";
             }
             return "notExist";
@@ -103,21 +108,50 @@ public class AdminController {
 
     /**
      * @Author 张帅华
-     * @Description 批量修改管理员账号状态
+     * @Description 删除批量管理员
      * @Date 21:40 2020/4/8 0008
      * @Param [ids, exist]
      * @return java.lang.String
      **/
     @RequestMapping("/deleteMultiAdmin")
     @ResponseBody
-    public String editStatusByIdList(@RequestParam("ids") String ids, @RequestParam("exist") Integer exist){
-        String deleteIds[] = ids.split(",");
+    public String deleteMultiAdmin(@RequestParam("deleteStr") String deleteStr){
+        String deleteIds[] = deleteStr.split(",");
         List<Integer> idList = new ArrayList<>();
         for(String id : deleteIds){
             idList.add(Integer.parseInt(id));
         }
         try {
-            this.adminService.editStatusListByIdlist(idList, exist);
+            this.adminService.editStatusListByIdlist(idList, 0);
+            return "succeed";
+        }catch (Exception e){
+            return "fail";
+        }
+    }
+
+    @RequestMapping("/recoveryOneAdmin")
+    @ResponseBody
+    public String recoveryOneAdmin(@RequestParam("id") Integer id){
+        try {
+            if(this.adminService.editStatusById(id, 1) != null){
+                return "succeed";
+            }
+            return "notExist";
+        }catch(Exception e){
+            return "fail";
+        }
+    }
+
+    @RequestMapping("/recoveryMultiAdmin")
+    @ResponseBody
+    public String recoveryMultiAdmin(@RequestParam("recoveryStr") String recoveryStr){
+        String recoveryId[] = recoveryStr.split(",");
+        List<Integer> idList = new ArrayList<>();
+        for(String id : recoveryId){
+            idList.add(Integer.parseInt(id));
+        }
+        try {
+            this.adminService.editStatusListByIdlist(idList, 1);
             return "succeed";
         }catch (Exception e){
             return "fail";
@@ -151,8 +185,10 @@ public class AdminController {
      **/
     @RequestMapping("/addAdmin")
     @ResponseBody
-    public String add(Admin admin){
-        admin.setPassword(Md5Encode.getMD5(admin.getPassword().getBytes()));
+    public String add(@RequestParam("account") String account, @RequestParam("password") String password){
+        Admin admin = new Admin();
+        admin.setAccount(account);
+        admin.setPassword(Md5Encode.getMD5(password.getBytes()));
         if(this.adminService.findByAccountAndExist(admin.getAccount(), null) == null){
              try {
                  this.adminService.add(admin);
@@ -189,12 +225,12 @@ public class AdminController {
      * @Param [id, account]
      * @return java.lang.String
      **/
-    @RequestMapping("/updateAdminAccout")
+    @RequestMapping("/updateAdminAccount")
     @ResponseBody
-    public String updateAdminAccout(@RequestParam("id") Integer id, @RequestParam("accout") String account){
+    public String updateAdminAccount(@RequestParam("id") Integer id, @RequestParam("account") String account){
         if(this.adminService.findByAccountAndExist(account, null) == null){
             try {
-                if(this.adminService.editAccoutById(id, account) != null){
+                if(this.adminService.editAccountById(id, account) != null){
                     return "succeed";
                 }
                 return "notExist";

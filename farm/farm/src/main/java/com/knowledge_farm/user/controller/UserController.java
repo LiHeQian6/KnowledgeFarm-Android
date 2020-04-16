@@ -111,7 +111,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/loginByAccount")
-    public String loginByAccount(@RequestParam("accout") String account, @RequestParam("password") String password){
+    public String loginByAccount(@RequestParam("account") String account, @RequestParam("password") String password){
         Object obj = this.userService.loginByAccount(account, password);
         if(obj instanceof User){
             UserVO userVO = varyUserToUserVO((User) obj);
@@ -128,13 +128,13 @@ public class UserController {
      * @Param [nickName, grade, email, password]
      * @return java.lang.String
      **/
-    @RequestMapping("/registAccout")
-    public String registAccout(@RequestParam("nickName") String nickName,
+    @RequestMapping("/registAccount")
+    public String registAccount(@RequestParam("nickName") String nickName,
                                @RequestParam("grade") Integer grade,
                                @RequestParam(value = "email", defaultValue = "") String email,
                                @RequestParam("password") String password){
 
-        Object obj = this.userService.registAccout(nickName, grade, email, password);
+        Object obj = this.userService.registAccount(nickName, grade, email, password);
         if(obj instanceof User){
             UserVO userVO = varyUserToUserVO((User) obj);
             userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
@@ -151,7 +151,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/sendTestCodePassword")
-    public String sendTestCodePassword(@RequestParam("accout") String account, @RequestParam("email") String email){
+    public String sendTestCodePassword(@RequestParam("account") String account, @RequestParam("email") String email){
         return this.userService.sendTestCodePassword(account,email);
     }
     
@@ -163,7 +163,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/resetUserPassword")
-    public String resetUserPassword(@RequestParam("accout") String account, @RequestParam("password") String password){
+    public String resetUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
         try {
             User user = this.userService.editPasswordByAccount(account, password);
             if(user != null){
@@ -183,7 +183,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/updateUserNickName")
-    public String updateUserNickName(@RequestParam("accout") String account,
+    public String updateUserNickName(@RequestParam("account") String account,
                                      @RequestParam("nickName") String nickName){
         try {
             User user = this.userService.editNickNameByAccount(account, nickName);
@@ -204,7 +204,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/updateUserGrade")
-    public String updateUserGrade(@RequestParam("accout") String account,
+    public String updateUserGrade(@RequestParam("account") String account,
                                   @RequestParam("grade") Integer grade){
         try {
             User user = this.userService.editGradeByAccount(account, grade);
@@ -225,7 +225,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/updateUserPassword")
-    public String updateUserPassword(@RequestParam("accout") String account,
+    public String updateUserPassword(@RequestParam("account") String account,
                                      @RequestParam("oldPassword") String oldPassword,
                                      @RequestParam("newPassword") String newPassword){
         try {
@@ -285,7 +285,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/isBindingQQ")
-    public String isBindingQQ(@RequestParam("accout") String account){
+    public String isBindingQQ(@RequestParam("account") String account){
         return this.userService.isBindingQQ(account);
     }
 
@@ -297,7 +297,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/bindingQQ")
-    public String bindingQQ(@RequestParam("accout") String account, @RequestParam("openId") String openId){
+    public String bindingQQ(@RequestParam("account") String account, @RequestParam("openId") String openId){
         return this.userService.bindingQQ(account, openId);
     }
 
@@ -309,7 +309,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("unBindingQQ")
-    public String unBindingQQ(@RequestParam("accout") String account){
+    public String unBindingQQ(@RequestParam("account") String account){
         return this.userService.removeUserAuthority(account);
     }
 
@@ -339,7 +339,7 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/bindingEmail")
-    public String bindingEmail(@RequestParam("accout") String account, @RequestParam("email") String email){
+    public String bindingEmail(@RequestParam("account") String account, @RequestParam("email") String email){
         try {
             if(this.userService.editEmail(account, email) != null){
                 return "true";
@@ -358,7 +358,7 @@ public class UserController {
      * @return
      **/
     @RequestMapping("/unBindingEmail")
-    public String unBindingEmail(@RequestParam("accout") String account){
+    public String unBindingEmail(@RequestParam("account") String account){
         try {
             if(this.userService.editEmail(account, "") != null){
                 return "true";

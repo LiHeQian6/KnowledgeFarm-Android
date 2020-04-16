@@ -43,7 +43,7 @@ public class UserFriendController {
      **/
     @RequestMapping("/findUserFriend")
     public PageUtil<UserVO> findUserFriend(@RequestParam("userId") Integer userId,
-                                           @RequestParam(value = "accout", required = false) String account,
+                                           @RequestParam(value = "account", required = false) String account,
                                            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                            @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
         Page<User> page = this.userFriendService.findUserFriendPageByAccount(userId, account, pageNumber, pageSize);
@@ -69,7 +69,7 @@ public class UserFriendController {
      * @return com.atguigu.farm.util.UserVOPage<com.atguigu.farm.entity.UserVO>
      **/
     @RequestMapping("/findAllUser")
-    public PageUtil<UserVO> findAllUser(@RequestParam(value = "accout", required = false) String account,
+    public PageUtil<UserVO> findAllUser(@RequestParam(value = "account", required = false) String account,
                                         @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                         @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize) {
         Page<User> page = this.userService.findAllUserByAccount(account, pageNumber, pageSize);

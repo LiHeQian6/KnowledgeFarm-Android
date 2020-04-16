@@ -7,7 +7,7 @@ package com.knowledge_farm.util;
  * @Date 2020-04-07 19:52
  */
 public class RandomUtil {
-    public static String generateAccout(){
+    public static String generateAccount(){
         String account = "";
         for(int n = 1;n < 9;n++) {
             account += (int)(Math.random()*10);

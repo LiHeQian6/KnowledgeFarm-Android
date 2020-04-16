@@ -20,7 +20,6 @@ public class Crop {
     private String img2;
     private String img3;
     private String img4;
-    private String cropPhotoName;
     private Integer matureTime;
     private Integer value;
     private Integer experience;
@@ -85,15 +84,6 @@ public class Crop {
         this.img4 = img4;
     }
 
-    @Column(name = "crop_photo_name")
-    public String getCropPhotoName() {
-        return cropPhotoName;
-    }
-
-    public void setCropPhotoName(String cropPhotoName) {
-        this.cropPhotoName = cropPhotoName;
-    }
-
     @Column(name = "mature_time")
     public Integer getMatureTime() {
         return matureTime;
@@ -138,7 +128,6 @@ public class Crop {
                 ", img2='" + img2 + '\'' +
                 ", img3='" + img3 + '\'' +
                 ", img4='" + img4 + '\'' +
-                ", cropPhotoName='" + cropPhotoName + '\'' +
                 ", matureTime=" + matureTime +
                 ", value=" + value +
                 ", experience=" + experience +

@@ -87,7 +87,7 @@ public class UserServiceImpl {
         String account = "";
         do{
             account = "";
-            account = RandomUtil.generateAccout();
+            account = RandomUtil.generateAccount();
         }while (this.userDao.findUserByAccount(account) != null || account.charAt(0) == '0' || account.charAt(account.length()-1) == '0');
         //构建User
         User user = new User();
@@ -160,12 +160,12 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     @Transactional(readOnly = false)
-    public Object registAccout(String nickName, Integer grade, String email, String password){
+    public Object registAccount(String nickName, Integer grade, String email, String password){
         //生成账号
         String account = "";
         do{
             account = "";
-            account = RandomUtil.generateAccout();
+            account = RandomUtil.generateAccount();
         }while (this.userDao.findUserByAccount(account) != null || account.charAt(0) == '0' || account.charAt(account.length()-1) == '0');
         //构建User
         User user = new User();
@@ -444,12 +444,12 @@ public class UserServiceImpl {
      * @Author 张帅华
      * @Description 修改用户邮箱
      * @Date 21:47 2020/4/8 0008
-     * @Param [accout, email]
+     * @Param [account, email]
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public User editEmail(String accout, String email){
-        User user = this.userDao.findUserByAccount(accout);
+    public User editEmail(String account, String email){
+        User user = this.userDao.findUserByAccount(account);
         if(user != null){
             user.setEmail(email);
             return this.userDao.save(user);

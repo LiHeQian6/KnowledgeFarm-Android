@@ -83,7 +83,7 @@ public class FrontUserServiceImpl {
         String account = "";
         do{
             account = "";
-            account = RandomUtil.generateAccout();
+            account = RandomUtil.generateAccount();
         }while (this.userDao.findUserByAccount(account) != null || account.charAt(0) == '0' || account.charAt(account.length()-1) == '0');
         //构建User
         User user = new User();
