@@ -56,6 +56,8 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.Study.Util.AppUtil;
+import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
@@ -67,8 +69,9 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -122,11 +125,14 @@ public class MainActivity extends AppCompatActivity {
     private int ExtensionLandMoney = 0;
     private ImageView notify;
     private NotifyPopUpWindow notifyPopUpWindow;
+    private ListView notify_list_view;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setDensityLand.setDensity(getApplication());
+        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
         setContentView(R.layout.activity_main);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
@@ -636,6 +642,7 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzs);
         myFriends=findViewById(R.id.friends);
         notify = findViewById(R.id.notify_img);
+        notify_list_view = findViewById(R.id.notify_list_view);
     }
 
     class MainListener implements View.OnClickListener {
