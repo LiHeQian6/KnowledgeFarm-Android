@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -254,7 +255,9 @@ public class UserController {
                               @RequestParam("id") Integer id,
                               @RequestParam("photo") String photo) throws IOException {
         if(!file.getOriginalFilename().equals("")){
-            if(!photo.equals(this.userPhotoFolderName + "/" + this.userDefaultFileName)){
+            String defaultFileName = this.userPhotoFolderName + "/" + this.userDefaultFileName;
+            photo = photo.substring((this.photoUrl).length());//URLDecoder.decode(photo).
+            if(!photo.equals(defaultFileName)){
                 File file1 = new File(this.photoLocation + "/" + photo);
                 if(file1.exists()){
                     file1.delete();

@@ -1,6 +1,6 @@
 package com.knowledge_farm.front.crop.controller;
 
-import com.knowledge_farm.crop.service.CropServiceImpl;
+import com.knowledge_farm.front.crop.service.FrontCropService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,8 +14,8 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/admin/crop")
-public class CropController {
+public class FrontCropController {
     @Resource
-    private CropServiceImpl cropService;
+    private FrontCropService frontCropService;
 
 }

@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 @Service
 @Transactional(readOnly = true)
 @PropertySource(value = {"classpath:photo.properties"})
-public class UserServiceImpl {
+public class FrontUserServiceImpl {
     @Resource
     private UserDao userDao;
     @Resource
@@ -119,4 +119,32 @@ public class UserServiceImpl {
     public User findUserById(Integer id){
         return this.userDao.findUserById(id);
     }
+
+    public User findUserByAccount(String account){
+        return this.userDao.findUserByAccount(account);
+    }
+
+    @Transactional(readOnly = false)
+    public String save(User user){
+        try {
+            this.userDao.save(user);
+            return "succeed";
+        }catch (Exception e){
+            return "fail";
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public String editPasswordByAccount(String account, String password){
+        User user = this.userDao.findUserByAccount(account);
+        try {
+            user.setPassword(password);
+            return "succeed";
+        }catch (NullPointerException e){
+            return null;
+        }catch (Exception e){
+            return "fail";
+        }
+    }
+
 }

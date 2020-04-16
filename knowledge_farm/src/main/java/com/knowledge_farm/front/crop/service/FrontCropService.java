@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Transactional(readOnly = true)
-public class CropService {
+public class FrontCropService {
     @Resource
     private CropDao cropDao;
 

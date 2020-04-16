@@ -46,7 +46,7 @@ public class MyMvcConfig {
             //磁盘资源映射
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                registry.addResourceHandler("/").addResourceLocations("file:" + photoLocation + File.separator);
+                registry.addResourceHandler("/**").addResourceLocations("file:" + photoLocation + File.separator);
             }
         };
         return adapter;

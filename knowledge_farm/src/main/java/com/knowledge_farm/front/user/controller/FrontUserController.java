@@ -2,17 +2,26 @@ package com.knowledge_farm.front.user.controller;
 
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
-import com.knowledge_farm.front.user.service.UserServiceImpl;
+import com.knowledge_farm.front.user.service.FrontUserServiceImpl;
+import com.knowledge_farm.util.Md5Encode;
 import com.knowledge_farm.util.PageUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,9 +32,18 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin/user")
-public class UserController {
+@PropertySource(value = {"classpath:photo.properties"})
+public class FrontUserController {
     @Resource
-    private UserServiceImpl userService;
+    private FrontUserServiceImpl frontUserService;
+    @Value("${file.photoLocation}")
+    private String photoLocation;
+    @Value("${file.userPhotoFolderName}")
+    private String userPhotoFolderName;
+    @Value("${file.userPhotoLocation}")
+    private String userPhotoLocation;
+    @Value("${file.userDefaultFileName}")
+    private String userDefaultFileName;
 
     @RequestMapping("/findUserPage")
     public String findUserPage(@RequestParam("accout") String accout,
@@ -35,7 +53,7 @@ public class UserController {
                                          HttpSession session, Model model){
         session.removeAttribute("user");
 
-        Page<User> page =  this.userService.findUserPage(accout, exist, pageNumber, pageSize);
+        Page<User> page =  this.frontUserService.findUserPage(accout, exist, pageNumber, pageSize);
         PageUtil<UserVO> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
         List<UserVO> userVOS = new ArrayList<>();
@@ -57,7 +75,7 @@ public class UserController {
 
     @RequestMapping("/deleteOneUser")
     public String deleteOneUser(@RequestParam("userId") Integer userId){
-        return this.userService.deleteOneUser(userId, 0);
+        return this.frontUserService.deleteOneUser(userId, 0);
     }
 
     @RequestMapping("/deleteMultiUser")
@@ -65,7 +83,7 @@ public class UserController {
         String deleteId[] = deleteStr.split(",");
         String result = "";
         for(String id : deleteId){
-            result = this.userService.deleteOneUser(Integer.parseInt(id), 0);
+            result = this.frontUserService.deleteOneUser(Integer.parseInt(id), 0);
             if(!result.equals("succeed")){
                 break;
             }
@@ -75,7 +93,7 @@ public class UserController {
 
     @RequestMapping("/recoveryOneUser")
     public String recoveryOneUser(@RequestParam("userId") Integer userId) {
-        return this.userService.deleteOneUser(userId, 1);
+        return this.frontUserService.deleteOneUser(userId, 1);
     }
 
     @RequestMapping("/recoveryMultiUser")
@@ -83,7 +101,7 @@ public class UserController {
         String recoveryId[] = recoveryStr.split(",");
         String result = "";
         for(String id : recoveryId){
-            result = this.userService.deleteOneUser(Integer.parseInt(id), 1);
+            result = this.frontUserService.deleteOneUser(Integer.parseInt(id), 1);
             if(!result.equals("succeed")){
                 break;
             }
@@ -93,7 +111,7 @@ public class UserController {
 
     @RequestMapping("/deleteThoroughUser")
     public String deleteThoroughUser(@RequestParam("userId") Integer userId) {
-        return this.userService.deleteThoroughUser(userId);
+        return this.frontUserService.deleteThoroughUser(userId);
     }
 
     @RequestMapping("/addUser")
@@ -101,12 +119,12 @@ public class UserController {
                           @RequestParam("password") String password,
                           @RequestParam("email") String email,
                           @RequestParam("grade") Integer grade) {
-        return this.userService.addUser(nickName, password, email, grade);
+        return this.frontUserService.addUser(nickName, password, email, grade);
     }
 
     @RequestMapping("/getUpdateUserInfo")
     public String getUpdateUserInfo(@RequestParam("id") Integer id, Model model) {
-        User user = this.userService.findUserById(id);
+        User user = this.frontUserService.findUserById(id);
         if(user != null){
             UserVO userVO = varyUserToUserVO(user);
             model.addAttribute("user", userVO);
@@ -116,8 +134,37 @@ public class UserController {
     }
 
     @RequestMapping("/updateUser")
-    public String updateUser(){
-        return "";
+    public String updateUser(User editUser, @RequestParam("upload") MultipartFile file){
+        try {
+            if(this.frontUserService.findUserByAccount(editUser.getAccount()) == null){
+                User user = this.frontUserService.findUserById(editUser.getId());
+                varyUserToUser(user, editUser);
+                if(!file.getOriginalFilename().equals("")){
+                    if(!user.getPhoto().equals(this.userPhotoFolderName + "/" + this.userDefaultFileName)){
+                        File file1 = new File(this.photoLocation + "/" + user.getPhoto());
+                        if(file1.exists()){
+                            file1.delete();
+                        }
+                    }
+                    String photoName = user.getId() + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+                    FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
+                    user.setPhoto(this.userPhotoFolderName + "/" + photoName);
+                }
+                this.frontUserService.save(user);
+                return "succeed";
+            }
+            return "already";
+        }catch (NullPointerException | IOException e){
+            return null;
+        }catch (Exception e){
+            return "fail";
+        }
+    }
+
+    @RequestMapping("/updateUserPassword")
+    public String updateUserPassword(@RequestParam("accout") String account, @RequestParam("password") String password){
+        password = Md5Encode.getMD5(password.getBytes());
+        return this.frontUserService.editPasswordByAccount(account, password);
     }
 
     /**
@@ -146,6 +193,24 @@ public class UserController {
         userVO.setOnline(user.getOnline());
         userVO.setExist(user.getExist());
         return userVO;
+    }
+
+    public User varyUserToUser(User user, User editUser){
+        user.setNickName(editUser.getNickName());
+        user.setAccount(editUser.getAccount());
+        user.setEmail(editUser.getEmail());
+        user.setGrade(editUser.getGrade());
+        user.setLevel(editUser.getLevel());
+        user.setExperience(editUser.getExperience());
+        user.setMoney(editUser.getMoney());
+        user.setMathRewardCount(editUser.getMathRewardCount());
+        user.setEnglishRewardCount(editUser.getEnglishRewardCount());
+        user.setChineseRewardCount(editUser.getChineseRewardCount());
+        user.setWater(editUser.getWater());
+        user.setFertilizer(editUser.getFertilizer());
+        user.setOnline(editUser.getOnline());
+        user.setPhoto(editUser.getPhoto());
+        return user;
     }
 
 }
