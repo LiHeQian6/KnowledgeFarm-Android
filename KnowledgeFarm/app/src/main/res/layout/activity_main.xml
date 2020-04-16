@@ -962,6 +962,26 @@
         <LinearLayout android:layout_width="wrap_content"
                       android:layout_alignParentRight="true"
                       android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:id="@+id/notify">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/notify"
+                    android:id="@+id/notify_img"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="通知"/>
+            </LinearLayout>
+
             <LinearLayout android:layout_width="wrap_content"
                           android:orientation="vertical"
                           android:gravity="center"
@@ -976,6 +996,7 @@
                           android:text="商店"
                           android:layout_height="wrap_content"/>
             </LinearLayout>
+
             <LinearLayout android:layout_width="wrap_content"
                          android:orientation="vertical"
                          android:gravity="center"
@@ -990,6 +1011,7 @@
                           android:id="@+id/pett"
                           android:layout_height="wrap_content"/>
             </LinearLayout>
+
             <LinearLayout android:layout_width="wrap_content"
                          android:orientation="vertical"
                          android:gravity="center"

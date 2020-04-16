@@ -3,18 +3,20 @@ package com.li.knowledgefarm.Study;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.li.knowledgefarm.Main.MainActivity;
+
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.Settings.SettingActivity;
+import com.li.knowledgefarm.Study.GetSubjectQuestion.GetChineseQuestion;
+import com.li.knowledgefarm.Study.GetSubjectQuestion.GetEnglishQuestion;
+import com.li.knowledgefarm.Study.GetSubjectQuestion.GetMathQuestion;
+import com.li.knowledgefarm.Study.Subject.ChineseActivity;
+import com.li.knowledgefarm.Study.Subject.EnglishActivity;
+import com.li.knowledgefarm.Study.Subject.MathActivity;
+import com.li.knowledgefarm.Study.Util.StudyUtil;
+
 
 public class SubjectListActivity extends AppCompatActivity {
     /** 返回*/
@@ -25,6 +27,9 @@ public class SubjectListActivity extends AppCompatActivity {
     private ImageView iv_chinese;
     /** 自定义点击事件监听器*/
     private CustomerListener listener;
+    private long lastClickTime = 0L;
+    // 两次点击间隔不能少于1000ms
+    private static final int FAST_CLICK_DELAY_TIME = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,22 +47,29 @@ public class SubjectListActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                return;
+            }
+            lastClickTime = System.currentTimeMillis();
             switch (view.getId()){
                 case R.id.iv_return:
                     finish();
                     break;
                 case R.id.iv_math:
-                    Intent intent1 = new Intent();
-                    intent1.setClass(SubjectListActivity.this,MathActivity.class);
-                    startActivity(intent1);
+                    Intent intent = new Intent();
+                    intent.setClass(SubjectListActivity.this, MathActivity.class);
+                    GetMathQuestion getMathQuestion = new GetMathQuestion(SubjectListActivity.this,intent);
+                    getMathQuestion.getQuestion();
                     break;
                 case R.id.iv_english:
-                    Intent intent2 = new Intent(SubjectListActivity.this,EnglishActivity.class);
-                    startActivity(intent2);
+                    Intent intent1 = new Intent(SubjectListActivity.this, EnglishActivity.class);
+                    GetEnglishQuestion getEnglishQuestion = new GetEnglishQuestion(SubjectListActivity.this,intent1);
+                    getEnglishQuestion.getQuestion();
                     break;
                 case R.id.chinese:
-                    Intent intent3 = new Intent(SubjectListActivity.this,ChineseActivity.class);
-                    startActivity(intent3);
+                    Intent intent2 = new Intent(SubjectListActivity.this, ChineseActivity.class);
+                    GetChineseQuestion getChineseQuestion = new GetChineseQuestion(SubjectListActivity.this,intent2);
+                    getChineseQuestion.getQuestion();
                     break;
             }
         }

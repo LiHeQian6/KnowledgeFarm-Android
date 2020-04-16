@@ -1,6 +1,8 @@
 package com.li.knowledgefarm.entity;
 
-public class Question3Num {
+import java.io.Serializable;
+
+public class Question3Num implements Serializable {
 	private int num1;
 	private String signal1;
 	private int num2;
