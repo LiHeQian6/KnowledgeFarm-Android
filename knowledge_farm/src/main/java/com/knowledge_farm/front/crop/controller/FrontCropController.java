@@ -4,6 +4,7 @@ import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.front.crop.service.FrontCropService;
 import com.knowledge_farm.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -14,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
-import javax.print.DocFlavor;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +29,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/admin/crop")
+@PropertySource(value = {"classpath:photo.properties"})
 public class FrontCropController {
     @Resource
     private FrontCropService frontCropService;

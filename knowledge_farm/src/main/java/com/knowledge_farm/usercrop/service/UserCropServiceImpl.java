@@ -1,10 +1,13 @@
 package com.knowledge_farm.usercrop.service;
 
+import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.Land;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserCrop;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.usercrop.dao.UserCropDao;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +23,14 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
+@PropertySource(value = {"classpath:photo.properties"})
 public class UserCropServiceImpl {
     @Resource
     private UserCropDao userCropDao;
     @Resource
     private UserServiceImpl userService;
+    @Value("${file.photoUrl}")
+    private String photoUrl;
 
     @Transactional(readOnly = false)
     public UserCrop save(UserCrop userCrop){
@@ -69,6 +75,22 @@ public class UserCropServiceImpl {
         userCrops.add(land.getUserCrop16());
         userCrops.add(land.getUserCrop17());
         userCrops.add(land.getUserCrop18());
+
+        int count = 0;
+        for(UserCrop userCrop : userCrops){
+            if(userCrop != null){
+                Crop crop = userCrop.getCrop();
+                if(crop != null){
+                    crop.setImg1(photoUrl + crop.getImg1());
+                    crop.setImg2(photoUrl + crop.getImg2());
+                    crop.setImg3(photoUrl + crop.getImg3());
+                    crop.setImg4(photoUrl + crop.getImg4());
+                    userCrop.setCrop(crop);
+                }
+            }
+            userCrops.set(count, userCrop);
+            count++;
+        }
         return userCrops;
     }
 
