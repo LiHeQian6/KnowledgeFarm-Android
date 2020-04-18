@@ -49,6 +49,7 @@ public class UserFriend {
         this.friendUser = friendUser;
     }
 
+    @Column(insertable = false)
     public Integer getStatus() {
         return status;
     }

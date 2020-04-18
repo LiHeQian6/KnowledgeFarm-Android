@@ -223,7 +223,6 @@
                         <th></th>
                         <th style="text-align:center;">管理员ID</th>
                         <th style="text-align:center;">管理员账号</th>
-                        <th style="text-align:center;">密码</th>
                         <th style="text-align:center;">状态</th>
                         <th style="text-align:center;">操作</th>
                     </tr>
@@ -234,7 +233,6 @@
 	                        <td><input type="checkbox" value="${adminPage.id}" name="checkBox"></td>
 	                        <td>${adminPage.id}</td>
 	                        <td>${adminPage.account}</td>
-	                        <td>******</td>
 	                        <td class="td-status">
 	                        	<span class="layui-btn layui-btn-danger layui-btn-mini">已删除</span>
 	                        </td>

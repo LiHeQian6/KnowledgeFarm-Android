@@ -42,6 +42,9 @@ public class AdminController {
     @RequestMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, HttpSession session){
         Admin admin = this.adminService.findById(id);
+        if(admin != null){
+            admin.setPassword("");
+        }
         session.setAttribute("adminInfo", admin);
         return "admin-edit";
     }
@@ -49,6 +52,9 @@ public class AdminController {
     @RequestMapping("toPassword")
     public String toPassword(@RequestParam("id") Integer id, HttpSession session){
         Admin admin = this.adminService.findById(id);
+        if(admin != null){
+            admin.setPassword("");
+        }
         session.setAttribute("adminInfo", admin);
         return "admin-password";
     }
@@ -95,9 +101,14 @@ public class AdminController {
         //清除修改查询的管理员信息
         session.removeAttribute("adminInfo");
         Page<Admin> page = this.adminService.findPageAdminByAccount(account, exist, pageNumber, pageSize);
+        List<Admin> admins = new ArrayList<>();
+        for(Admin admin : page.getContent()){
+            admin.setPassword("");
+            admins.add(admin);
+        }
         PageUtil<Admin> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-        pageUtil.setList(page.getContent());
+        pageUtil.setList(admins);
         model.addAttribute("adminPage", pageUtil);
         if(exist == 1){
             return "admin-list";
@@ -251,22 +262,9 @@ public class AdminController {
      **/
     @RequestMapping("/updateAdminPassword")
     @ResponseBody
-    public String updateAdminPassword(@RequestParam("id") Integer id,
-                                   @RequestParam("oldPassword") String oldPassword,
-                                   @RequestParam("newPassword") String newPassword){
-        oldPassword = Md5Encode.getMD5(oldPassword.getBytes());
-        newPassword = Md5Encode.getMD5(newPassword.getBytes());
-        try {
-            int result = this.adminService.editPasswordById(id, oldPassword, newPassword);
-            if(result == -1){
-                return "notExist";
-            }else if(result == 0){
-                return "PasswordError";
-            }
-            return "succeed";
-        }catch (Exception e){
-            return "fail";
-        }
+    public String updateAdminPassword(@RequestParam("id") Integer id, @RequestParam("password") String password){
+        password = Md5Encode.getMD5(password.getBytes());
+        return this.adminService.editPasswordById(id, password);
     }
 
 }

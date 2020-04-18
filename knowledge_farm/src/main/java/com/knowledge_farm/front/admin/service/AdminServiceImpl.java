@@ -39,6 +39,7 @@ public class AdminServiceImpl {
             if(this.adminDao.findAdminByAccountAndExist(account, 1) != null){ //该账号可用
                 Admin admin = this.adminDao.findAdminByAccountAndPassword(account, password);
                 if(admin != null){ //登陆成功
+                    admin.setPassword("");
                     session.setAttribute("admin", admin);
                     return "succeed";
                 }
@@ -99,19 +100,17 @@ public class AdminServiceImpl {
      * @return int
      **/
     @Transactional(readOnly = false)
-    public int editPasswordById(Integer id, String oldPassword, String newPassword){
+    public String editPasswordById(Integer id, String password){
         Admin admin = this.adminDao.findAdminById(id);
-        if(admin != null){
-            String realPassword = admin.getPassword();
-            if(oldPassword.equals(realPassword)){
-                admin.setPassword(newPassword);
-                this.adminDao.save(admin);
-                return 1;
-            }else{
-                return 0;
-            }
+        try {
+            admin.setPassword(password);
+            this.adminDao.save(admin);
+            return "succeed";
+        }catch (NullPointerException n){
+            return null;
+        }catch (Exception e){
+            return "fail";
         }
-        return -1;
     }
 
     /**

@@ -87,6 +87,16 @@ public class UserFriendController {
         return pageUtil;
     }
 
+    @RequestMapping("/addUserFriend")
+    public String addUserFriend(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
+        return this.userFriendService.addUserFriend(userId, account);
+    }
+
+    @RequestMapping("/deleteUserFriend")
+    public String deleteUserFriend(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
+        return this.userFriendService.deleteUserFriend(userId, account);
+    }
+
     /**
      * @Author 张帅华
      * @Description User -> UserVO

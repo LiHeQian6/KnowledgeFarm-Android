@@ -223,7 +223,6 @@
                         <th></th>
                         <th style="text-align:center;">用户ID</th>
                         <th style="text-align:center;">账号</th>
-                        <th style="text-align:center;">密码</th>
                         <th style="text-align:center;">名称</th>
                         <th style="text-align:center;">头像</th>
                         <th style="text-align:center;">年级</th>
@@ -248,7 +247,6 @@
 	                        <td><input type="checkbox" value="${page.id}" name="checkBox"></td>
 	                        <td>${page.id}</td>
 	                        <td>${page.account}</td>
-	                        <td>********</td>
 	                        <td>${page.nickName}</td>
 	                        <td>
 	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
