@@ -1,12 +1,14 @@
 package com.li.knowledgefarm.entity;
 
+import java.io.Serializable;
+
 /**
  * @auther 孙建旺
  * @description 语文题实体类
  * @date 2019/12/17 下午 3:35
  */
 
-public class Chinese {
+public class Chinese implements Serializable {
     private String quantify;
     private int id;
     private String word;

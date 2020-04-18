@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 
 public class FriendsCustomerAdapter extends BaseAdapter {
 
@@ -118,16 +119,16 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         convertView.setLayoutParams(params_view);
 
         viewHolder.name.setTextSize((int)(displayHeight*0.013));
-        viewHolder.name.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
+        viewHolder.name.setTextColor(ContextCompat.getColor(context,R.color.ShopTextColor));
 
         LinearLayout.LayoutParams params_level = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params_level.setMargins(0,(int)(displayHeight*0.014),0,(int)(displayHeight*0.014));
         viewHolder.level.setLayoutParams(params_level);
         viewHolder.level.setTextSize((int)(displayHeight*0.013));
-        viewHolder.level.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
+        viewHolder.level.setTextColor(ContextCompat.getColor(context,R.color.ShopTextColor));
 
         viewHolder.account.setTextSize((int)(displayHeight*0.013));
-        viewHolder.account.setTextColor(context.getResources().getColor(R.color.ShopTextColor,null));
+        viewHolder.account.setTextColor(ContextCompat.getColor(context,R.color.ShopTextColor));
 
         LinearLayout.LayoutParams params_go = new LinearLayout.LayoutParams((int)(displayWidth*0.07),(int)(displayHeight*0.09));
         params_go.gravity = Gravity.CENTER_VERTICAL;

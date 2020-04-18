@@ -1,0 +1,27 @@
+server:
+  servlet:
+    context-path: /
+  port: 8080
+
+spring:
+  #数据源
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/farm_db1?useSSL=false&useUnicode=true&characterEncoding=utf8
+    username: root
+    password:
+
+    #若由实体bean映射自动创建表，则initialization-mode设置为never
+  #    initialization-mode: always
+  #    data: classpath*:/db-import.sql
+  #    schema: classpath*:/db-schema.sql
+
+  jpa:
+    database: MySQL
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      use-new-id-generator-mappings: false
+    #若由实体Bean自动创建表，则ddl-auto设置为always，如果由脚本创建表，则设置为none
+    #      ddl-auto: update
+    show-sql: true
+    open-in-view: true

@@ -1,19 +1,73 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--  设置背景色  -->
+
     <item android:id="@android:id/background">
-        <color android:color="#836332"/>
+
+        <shape>
+
+            <corners android:radius="5dip"/>
+
+            <gradient
+
+                android:angle="0"
+
+                android:centerColor="#CCCC99"
+
+                android:centerY="0.75"
+
+                android:endColor="#CCCC99"
+
+                android:startColor="#CCCC99"/>
+
+        </shape>
     </item>
 
-    <!--  设置进度条颜色  -->
-    <item android:id="@android:id/progress">
+    <!--类似于视频缓冲未播放状态时的进度颜色-->
+
+    <item android:id="@android:id/secondaryProgress">
+
         <clip>
+
             <shape>
 
+                <corners android:radius="5dip"/>
+
                 <gradient
-                    android:endColor="#ffd901"
-                    android:startColor="#ffd901" />
+
+                    android:angle="0"
+
+                    android:centerColor="#606360"
+
+                    android:centerY="0.75"
+
+                    android:endColor="#606360"
+
+                    android:startColor="#606360"/>
+
             </shape>
+
         </clip>
+
     </item>
+
+    <item android:id="@android:id/progress">
+
+        <clip>
+
+            <shape>
+
+                <corners android:radius="5dip"/>
+
+                <gradient
+                    android:startColor="#FFFF66"
+                    android:centerColor="#FFFF66"
+                    android:endColor="#FFFF66"
+                    android:angle="0" />
+
+            </shape>
+
+        </clip>
+
+    </item>
+
 </layer-list>
