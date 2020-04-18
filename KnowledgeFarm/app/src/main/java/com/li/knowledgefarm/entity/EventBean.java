@@ -8,7 +8,7 @@ import java.util.List;
  * @date 2019/12/17 下午 2:17
  */
 
-public class EvenBean {
+public class EventBean {
     String account;
     private List<Question3Num> mathList;
 

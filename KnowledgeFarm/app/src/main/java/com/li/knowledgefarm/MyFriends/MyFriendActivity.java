@@ -55,11 +55,16 @@ import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -117,6 +122,7 @@ public class MyFriendActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         dataList = new ArrayList<>();
@@ -127,6 +133,12 @@ public class MyFriendActivity extends AppCompatActivity {
         getViews();
         addListener();
         getCrop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -736,7 +748,7 @@ public class MyFriendActivity extends AppCompatActivity {
                     Type type = new TypeToken<FriendsPage<User>>(){}.getType();
                     friendsPage = gson.fromJson(messages,type);
                     now.setText(friendsPage.getCurrentPageNum()+"/"+friendsPage.getTotalPageNum());
-                    FriendsCustomerAdapter customerAdapter = new FriendsCustomerAdapter(friendsDialog.getContext(),friendsPage.getList(),R.layout.friends_list_item);
+                    FriendsCustomerAdapter customerAdapter = new FriendsCustomerAdapter(friendsDialog.getContext(),friendsPage.getList(),R.layout.friends_list_item,searchSelectedItem);
                     friendsListView.setAdapter(customerAdapter);
                     customerAdapter.notifyDataSetChanged();
                 }else{
@@ -876,6 +888,81 @@ public class MyFriendActivity extends AppCompatActivity {
         }.start();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showDaiLog(final HashMap add){
+        final Dialog dialog = new Dialog(this);
+        View view = View.inflate(this, R.layout.math_return_dialog, null);
+        TextView text=view.findViewById(R.id.waringText);
+        ImageView cancel=view.findViewById(R.id.cancel_return);
+        ImageView sure = view.findViewById(R.id.sure_return);
+        if (((boolean) add.values().toArray()[0])){
+            text.setText("你确定添加ta为好友并发送申请吗？");
+            sure.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println(add.keySet());
+                    //addFriend();
+                }
+            });
+        }else{
+            text.setText("你确定从好友列表删除ta吗？");
+            sure.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+        setDialogSize(view);
+        dialog.setContentView(view);
+        dialog.show();
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+        WindowManager.LayoutParams attrs = dialog.getWindow().getAttributes();
+        if (dialog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setDimAmount(0f);//去除遮罩
+        }
+        attrs.gravity = Gravity.CENTER;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(300*scale+0.5f);
+        attrs.height =(int)(300*scale+0.5f);
+        dialog.getWindow().setAttributes(attrs);
+        Window dialogWindow = dialog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
+    }
+
+    private void setDialogSize(View view){
+        //获取屏幕显示区域尺寸
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+
+        ImageView cancel = view.findViewById(R.id.cancel_return);
+        ImageView sure = view.findViewById(R.id.sure_return);
+        TextView warning = view.findViewById(R.id.waringText);
+        LinearLayout panduan = view.findViewById(R.id.panduan);
+
+        LinearLayout.LayoutParams params_cancel = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
+        params_cancel.setMargins(0,0,(int)(displayWidth*0.08),0);
+        cancel.setLayoutParams(params_cancel);
+
+        LinearLayout.LayoutParams params_sure = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
+        sure.setLayoutParams(params_sure);
+
+        warning.setTextSize((int)(displayWidth*0.012));
+
+        LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_layout.setMargins(0,(int)(displayHeight*0.12),0,0);
+        panduan.setLayoutParams(params_layout);
+    }
+
     /**
      * 浇水、施肥、收获操作
      */
@@ -910,204 +997,6 @@ public class MyFriendActivity extends AppCompatActivity {
             }
         }.start();
     }
-
-    /**
-     * @Description 获取背包信息数据
-     * @Auther 孙建旺
-     * @Date 下午 2:38 2019/12/08
-     * @Param []
-     * @return void
-     */
-    /*private void getBagMessages(){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/bag/initUserBag?userId="+LoginActivity.user.getId()).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj ="Fail";
-                        bagMessagesHandler.sendMessage(message);
-                    }
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj =response.body().string();
-                        bagMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }*/
-
-    /**
-     * 询问扩建
-     * @param position
-     */
-    /*private void showIfExtensionLand(final int position){
-        AlertDialog.Builder showAlert = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.extension_land_dialog,null);
-        TextView needMoney = layout.findViewById(R.id.needMoney);
-        Button cancel = layout.findViewById(R.id.cancelEx);
-        Button trueEx = layout.findViewById(R.id.sureEx);
-        needMoney.setText("你是否要花费"+(200*position-800)+"金币来扩建这块土地？");
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ifExtention.dismiss();
-            }
-        });
-        trueEx.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ExtensionLand(position,(200*position-800));
-                UpdataLand(position);
-            }
-        });
-        showAlert.setView(layout);
-        ifExtention = showAlert.create();
-        ifExtention.show();
-        WindowManager.LayoutParams attrs = ifExtention.getWindow().getAttributes();
-        if (ifExtention.getWindow() != null) {
-            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            ifExtention.getWindow().setDimAmount(0f);//去除遮罩
-        }
-        attrs.gravity = Gravity.CENTER;
-        final float scale = this.getResources().getDisplayMetrics().density;
-        attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(250*scale+0.5f);
-        ifExtention.getWindow().setAttributes(attrs);
-    }*/
-
-    /**
-     * @Description 背包弹出框
-     * @Auther 孙建旺
-     * @Date 下午 2:01 2019/12/08
-     * @Param [position]
-     * @return void
-     */
-    /*private void showBagMessages(){
-        bagDialog = new Dialog(this,R.style.dialog_soft_input);
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.bag_girdview, null);
-        final GridView gridView = layout.findViewById(R.id.bag_grid_view);
-        //设置gridView大小及位置
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayHeight = ds.heightPixels;
-        displayWidth = ds.widthPixels;
-        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.8));
-        params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
-        params_gridview.setMargins((int)(displayWidth*0.005),(int)(displayHeight*0.08),0,0);
-        gridView.setColumnWidth((int)(displayWidth*0.2));
-        gridView.setLayoutParams(params_gridview);
-        gridView.setVerticalSpacing((int)(displayHeight*0.02));
-        //添加layout布局文件
-        bagDialog.setContentView(layout);
-        bagDialog.show();
-        getBagMessages();
-        bagMessagesHandler = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String messages = (String)msg.obj;
-                Log.e("背包",messages);
-                if(!messages.equals("Fail")){
-                    Type type = new TypeToken<List<BagCropNumber>>(){}.getType();
-                    dataList = gson.fromJson(messages,type);
-                    BagCustomerAdapter customerAdapter = new BagCustomerAdapter(bagDialog.getContext(),dataList,R.layout.gird_adapteritem);
-                    gridView.setAdapter(customerAdapter);
-                }else{
-                    Toast toast = Toast.makeText(MyFriendActivity.this,"获取数据失败！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
-        WindowManager.LayoutParams attrs = bagDialog.getWindow().getAttributes();
-        if (bagDialog.getWindow() != null) {
-            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            bagDialog.getWindow().setDimAmount(0f);//去除遮罩
-        }
-        attrs.gravity = Gravity.RIGHT;
-        attrs.width = (int)(displayWidth*0.40);
-        attrs.height = (int)(displayHeight*0.95);
-        bagDialog.getWindow().setAttributes(attrs);
-        Window dialogWindow = bagDialog.getWindow();
-        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-        planting(gridView);
-    }*/
-
-    /**
-     * 种植作物
-     * @param gridView
-     */
-    /*private void planting(final GridView gridView) {
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                if(selectLand!=0){
-                    plant(selectLand,dataList.get(i).getCrop().getId());
-                    plantMessagesHandler=new Handler(){
-                        @Override
-                        public void handleMessage(@NonNull Message msg) {
-                            super.handleMessage(msg);
-                            String messages = (String)msg.obj;
-                            Log.e("种植",messages);
-                            if(messages.equals("Fail")){
-                                Toast.makeText(MyFriendActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
-                            }else if (messages.equals("true")){
-                                Toast.makeText(MyFriendActivity.this,"操作成功！",Toast.LENGTH_SHORT).show();
-                                getUserInfo();
-                            }else
-                                Toast.makeText(MyFriendActivity.this,"操作失败！",Toast.LENGTH_SHORT).show();
-                        }
-                    };
-                }
-            }
-        });
-        bagDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                getCrop();
-                showLand();
-            }
-        });
-    }*/
-
-    /**
-     * 请求种植
-     * @param selectLand
-     * @param id
-     */
-    /*private void plant(final int selectLand, final int id) {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/raiseCrop?userId="+LoginActivity.user.getId()+"&cropId="+id+"&landNumber=land"+selectLand).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj ="Fail";
-                        plantMessagesHandler.sendMessage(message);
-                    }
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj =response.body().string();
-                        plantMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }*/
 
     //退出时的时间
     private long mExitTime;
