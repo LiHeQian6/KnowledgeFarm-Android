@@ -6,10 +6,12 @@ import com.knowledge_farm.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +29,7 @@ import java.util.Date;
  * @Author 张帅华
  * @Date 2020-04-15 23:20
  */
-@RestController
+@Controller
 @RequestMapping("/admin/crop")
 @PropertySource(value = {"classpath:photo.properties"})
 public class FrontCropController {
@@ -40,8 +42,20 @@ public class FrontCropController {
     @Value("${file.cropPhotoFileLocation}")
     private String cropPhotoFileLocation;
 
+    @RequestMapping("/toAdd")
+    public String toAdd(){
+        return "crop-add";
+    }
+
+    @RequestMapping("/toEdit")
+    public String toEdit(@RequestParam("id") Integer id, Model model){
+        Crop crop = this.frontCropService.findCropById(id);
+        model.addAttribute("crop", crop);
+        return "crop-edit";
+    }
+
     @RequestMapping("/findCropPage")
-    public String findCropPage(@RequestParam("name") String name,
+    public String findCropPage(@RequestParam(value = "name", required = false) String name,
                                @RequestParam("exist") Integer exist,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
@@ -49,6 +63,7 @@ public class FrontCropController {
         session.removeAttribute("crop");
         Page<Crop> page = this.frontCropService.findAllCrop(name, exist, pageNumber, pageSize);
         PageUtil<Crop> pageUtil = new PageUtil<>(pageNumber, pageSize);
+        pageUtil.setTotalCount((int) page.getTotalElements());
         pageUtil.setList(page.getContent());
         model.addAttribute("cropPage", pageUtil);
         if(exist == 1){
@@ -58,11 +73,13 @@ public class FrontCropController {
     }
 
     @RequestMapping("/deleteOneCrop")
+    @ResponseBody
     public String deleteOneCrop(@RequestParam("id") Integer id){
         return this.frontCropService.updateExist(id, 0);
     }
 
     @RequestMapping("/deleteMultiCrop")
+    @ResponseBody
     public String deleteMultiCrop(@RequestParam("deleteStr") String deleteStr){
         String deleteId[] = deleteStr.split(",");
         String result = "";
@@ -76,11 +93,13 @@ public class FrontCropController {
     }
 
     @RequestMapping("/recoveryOneCrop")
+    @ResponseBody
     public String recoveryOneCrop(@RequestParam("id") Integer id){
         return this.frontCropService.updateExist(id, 1);
     }
 
     @RequestMapping("/recoveryMultiCrop")
+    @ResponseBody
     public String recoveryMultiCrop(@RequestParam("recoveryStr") String recoveryStr) {
         String recoveryId[] = recoveryStr.split(",");
         String result = "";
@@ -94,11 +113,13 @@ public class FrontCropController {
     }
 
     @RequestMapping("/deleteThoroughCrop")
+    @ResponseBody
     public String deleteThoroughCrop(@RequestParam("id") Integer id){
         return this.frontCropService.deleteCropById(id);
     }
 
     @RequestMapping("/addCrop")
+    @ResponseBody
     public String addCrop(@RequestParam("name") String name,
                           @RequestParam("price") Integer price,
                           @RequestParam("matureTime") Integer matureTime,
@@ -148,17 +169,8 @@ public class FrontCropController {
         }
     }
 
-    @RequestMapping("/getUpdateCropInfo")
-    public String getUpdateCropInfo(@RequestParam("id") Integer id, Model model){
-        Crop crop = this.frontCropService.findCropById(id);
-        if(crop != null){
-            model.addAttribute("crop", crop);
-            return "succeed";
-        }
-        return "fail";
-    }
-
     @RequestMapping("/updateCrop")
+    @ResponseBody
     public String updateCrop(Crop crop, @RequestParam("upload") MultipartFile files[]) {
         Crop findCropById = this.frontCropService.findCropById(crop.getId());
         crop.setExist(findCropById.getExist());

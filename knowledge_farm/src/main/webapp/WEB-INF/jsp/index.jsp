@@ -19,12 +19,116 @@
 </head>
 <body>
 <!-- 顶部开始 -->
-<%@ include file="/layout/header.jsp"%>
+<%--<%@ include file="/layout/header.jsp"%>--%>
+<div class="container">
+    <div class="logo"><a href="${ctx}/admin/gotoIndex">知识农场后台管理系统</a></div>
+    <div class="open-nav"><i class="iconfont">&#xe699;</i></div>
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item">
+            <a href="javascript:;">${admin.account}</a>
+            <dl class="layui-nav-child">
+                <dd><a href="${ctx}/admin/logout">退出</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"><a href="/"></a></li>
+    </ul>
+</div>
 <!-- 顶部结束 -->
 <!-- 中部开始 -->
 <div class="wrapper">
     <!-- 左侧菜单开始 -->
-    <%@ include file="/layout/menuLeft.jsp"%>
+<%--    <%@ include file="/layout/menuLeft.jsp"%>--%>
+    <div class="left-nav">
+        <div id="side-nav">
+            <ul id="nav">
+                <li class="list" current>
+                    <a href="${ctx}/admin/gotoIndex">
+                        <i class="iconfont">&#xe761;</i>
+                        欢迎页面
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                </li>
+                <li class="list">
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe70b;</i>
+                        用户管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initUserManager" class="sub-menu">
+                        <li id="initUserManager1">
+                            <a href="${ctx}/admin/user/findUserPage?exist=1">
+                                <i class="iconfont">&#xe6a7;</i>
+                                用户列表
+                            </a>
+                        </li>
+                        <li id="initUserManager2">
+                            <a href="${ctx}/admin/user/findUserPage?exist=0">
+                                <i class="iconfont">&#xe6a7;</i>
+                                用户删除
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list" >
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
+                        作物管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initCropManager" class="sub-menu">
+                        <li id="initCropManager1">
+                            <a href="${ctx}/admin/crop/findCropPage?exist=1">
+                                <i class="iconfont">&#xe6a7;</i>
+                                作物列表
+                            </a>
+                        </li>
+                        <li id="initCropManager2">
+                            <a href="${ctx}/admin/crop/findCropPage?exist=0">
+                                <i class="iconfont">&#xe6a7;</i>
+                                作物删除
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list" >
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
+                        管理员管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initAdminManager" class="sub-menu">
+                        <li id="initAdminManager1">
+                            <a href="${ctx}/admin/findAdminPage?exist=1">
+                                <i class="iconfont">&#xe6a7;</i>
+                                管理员列表
+                            </a>
+                        </li>
+                        <li id="initAdminManager2">
+                            <a href="${ctx}/admin/findAdminPage?exist=0">
+                                <i class="iconfont">&#xe6a7;</i>
+                                管理员删除
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list">
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
+                        土地管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initUserLandManager" class="sub-menu">
+                        <li id="initUserLandManager1">
+                            <a href="${ctx}/admin/user/findUserPage">
+                                <i class="iconfont">&#xe6a7;</i>
+                                土地列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
     <!-- 左侧菜单结束 -->
     <!-- 右侧主体开始 -->
     <div class="page-content">
@@ -98,7 +202,27 @@
 <!-- 底部开始 -->
 <!-- 底部结束 -->
 <!-- 背景切换开始 -->
-<%@ include file="/layout/background.jsp"%>
+<%--<%@ include file="/layout/background.jsp"%>--%>
+<div class="bg-changer">
+    <div class="swiper-container changer-list">
+        <div class="swiper-wrapper">
+            <<div class="swiper-slide"><img class="item" src="${ctx}/images/a.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/b.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/c.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/d.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/e.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/f.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/g.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/h.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/i.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/j.jpg" alt=""></div>
+            <div class="swiper-slide"><img class="item" src="${ctx}/images/k.jpg" alt=""></div>
+            <div class="swiper-slide"><span class="reset">恢复默认</span></div>
+        </div>
+    </div>
+    <div class="bg-out"></div>
+    <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
+</div>
 <!-- 背景切换结束 -->
 <script>
     //百度统计可去掉

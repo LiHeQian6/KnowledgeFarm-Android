@@ -29,14 +29,28 @@ public class AdminController {
     @Resource
     private AdminServiceImpl adminService;
 
-    @RequestMapping("/")
-    public String toLogin(){
-        return "login";
-    }
-
     @RequestMapping("/gotoIndex")
     public String gotoIndex(){
         return "index";
+    }
+
+    @RequestMapping("/toAdd")
+    public String toAdd(){
+        return "admin-add";
+    }
+
+    @RequestMapping("/toEdit")
+    public String toEdit(@RequestParam("id") Integer id, HttpSession session){
+        Admin admin = this.adminService.findById(id);
+        session.setAttribute("adminInfo", admin);
+        return "admin-edit";
+    }
+
+    @RequestMapping("toPassword")
+    public String toPassword(@RequestParam("id") Integer id, HttpSession session){
+        Admin admin = this.adminService.findById(id);
+        session.setAttribute("adminInfo", admin);
+        return "admin-password";
     }
 
     /**
@@ -207,24 +221,6 @@ public class AdminController {
 
     /**
      * @Author 张帅华
-     * @Description 获取管理员信息 根据id
-     * @Date 21:42 2020/4/8 0008
-     * @Param [id, session]
-     * @return java.lang.String
-     **/
-    @RequestMapping("/getUpdateAdminInfo")
-    @ResponseBody
-    public String toEdit(@RequestParam("id") Integer id, HttpSession session){
-        Admin admin = this.adminService.findById(id);
-        if(admin != null){
-            session.setAttribute("adminInfo", admin);
-            return "succeed";
-        }
-        return "fail";
-    }
-
-    /**
-     * @Author 张帅华
      * @Description 修改管理员账号
      * @Date 21:42 2020/4/8 0008
      * @Param [id, account]
@@ -232,8 +228,8 @@ public class AdminController {
      **/
     @RequestMapping("/updateAdminAccount")
     @ResponseBody
-    public String updateAdminAccount(@RequestParam("id") Integer id, @RequestParam("account") String account){
-        if(this.adminService.findByAccountAndExist(account, null) == null){
+    public String updateAdminAccount(@RequestParam("id") Integer id, @RequestParam("account") String account, @RequestParam("oldAccount") String excludeAccount){
+        if(this.adminService.findByAccountExcludeAccount(account, excludeAccount) == null){
             try {
                 if(this.adminService.editAccountById(id, account) != null){
                     return "succeed";

@@ -20,7 +20,7 @@
     	//修改管理员信息
     	function updateAdmin(){
     		var newAccount = $("#account").val();
-    		$.post("${ctx}/admin/updateAdminAccount",{"id":"${adminInfo.id}","account":newAccount},function(data){
+    		$.post("${ctx}/admin/updateAdminAccount",{"id":"${adminInfo.id}","account":newAccount,"oldAccount":"${adminInfo.account}"},function(data){
     			if(data == "succeed"){
 					x_admin_close();
     			}else if(data == "fail"){

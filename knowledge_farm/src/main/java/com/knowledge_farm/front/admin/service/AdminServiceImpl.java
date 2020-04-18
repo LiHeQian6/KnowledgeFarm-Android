@@ -86,6 +86,7 @@ public class AdminServiceImpl {
         if(admin != null){
             admin.setAccount(account);
             this.adminDao.save(admin);
+            return admin;
         }
         return null;
     }
@@ -105,6 +106,7 @@ public class AdminServiceImpl {
             if(oldPassword.equals(realPassword)){
                 admin.setPassword(newPassword);
                 this.adminDao.save(admin);
+                return 1;
             }else{
                 return 0;
             }
@@ -170,6 +172,10 @@ public class AdminServiceImpl {
             return this.adminDao.findAdminByAccountAndExist(account, exist);
         }
         return this.adminDao.findAdminByAccount(account);
+    }
+
+    public Admin findByAccountExcludeAccount(String account, String excludeAccount){
+        return this.adminDao.findAdminByAccountAndExcludeAccount(account, excludeAccount);
     }
 
     /**

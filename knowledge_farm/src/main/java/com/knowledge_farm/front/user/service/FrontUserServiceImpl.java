@@ -54,7 +54,9 @@ public class FrontUserServiceImpl {
         try {
             UserAuthority userAuthority = user.getUserAuthority();
             user.setExist(exist);
-            userAuthority.setExist(exist);
+            if(userAuthority != null){
+                userAuthority.setExist(exist);
+            }
             this.userDao.save(user);
             return "succeed";
         }catch (NullPointerException e){
@@ -122,6 +124,10 @@ public class FrontUserServiceImpl {
 
     public User findUserByAccount(String account){
         return this.userDao.findUserByAccount(account);
+    }
+
+    public User findUserByAccountAndExcludeAccount(String account, String excludeAccount){
+        return this.userDao.findUserByAccountAndExcludeAccount(account, excludeAccount);
     }
 
     @Transactional(readOnly = false)

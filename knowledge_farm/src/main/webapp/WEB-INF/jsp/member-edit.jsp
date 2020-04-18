@@ -51,6 +51,7 @@
             <!-- 右侧内容框架，更改从这里开始 -->
             <form id="form1" class="layui-form" enctype="multipart/form-data" action="javascript:updateUser()">
             	<input type="hidden" name="id" value="${user.id}"/>
+                <input type="hidden" name="oldAccount" value="${user.account}"/>
             	<input type="hidden" name="photo" value="${user.photo}"/>
                 <div class="layui-form-item">
                    <label for="L_username" class="layui-form-label">
