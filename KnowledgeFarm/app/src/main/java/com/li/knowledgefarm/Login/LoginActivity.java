@@ -34,6 +34,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.li.knowledgefarm.Main.MainActivity;
+import com.li.knowledgefarm.Study.Util.AppUtil;
+import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -143,6 +145,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setDensityLand.setDensity(getApplication());
+        setDensityLand.setOrientation(this, AppUtil.HEIGHT);
+//        AutoSizeConfig.getInstance().setBaseOnWidth(false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 

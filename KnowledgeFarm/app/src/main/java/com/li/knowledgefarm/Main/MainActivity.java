@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.PopupWindowCompat;
+//import me.jessyan.autosize.AutoSizeConfig;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -133,9 +134,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        AutoSizeConfig.getInstance().setBaseOnWidth(false);
         super.onCreate(savedInstanceState);
-        setDensityLand.setDensity(getApplication());
-        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
         setContentView(R.layout.activity_main);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
