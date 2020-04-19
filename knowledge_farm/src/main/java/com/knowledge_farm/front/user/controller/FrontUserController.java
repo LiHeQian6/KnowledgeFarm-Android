@@ -55,27 +55,29 @@ public class FrontUserController {
     @RequestMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, Model model) {
         User user = this.frontUserService.findUserById(id);
-        UserVO userVO = varyUserToUserVO(user);
-        model.addAttribute("user", userVO);
+        if(user != null){
+            UserVO userVO = varyUserToUserVO(user);
+            model.addAttribute("user", userVO);
+        }
         return "member-edit";
     }
 
     @RequestMapping("toPassword")
     public String toPassword(@RequestParam("id") Integer id, Model model){
         User user = this.frontUserService.findUserById(id);
-        UserVO userVO = varyUserToUserVO(user);
-        model.addAttribute("user", userVO);
+        if(user != null){
+            UserVO userVO = varyUserToUserVO(user);
+            model.addAttribute("user", userVO);
+        }
         return "member-password";
     }
 
     @RequestMapping("/findUserPage")
     public String findUserPage(@RequestParam(value = "account", required = false) String account,
-                                         @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                         @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                         @RequestParam("exist") Integer exist,
-                                         HttpSession session, Model model){
-        session.removeAttribute("user");
-
+                               @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                               @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+                               @RequestParam("exist") Integer exist,
+                               Model model){
         Page<User> page =  this.frontUserService.findUserPage(account, exist, pageNumber, pageSize);
         PageUtil<UserVO> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
@@ -105,15 +107,12 @@ public class FrontUserController {
     @RequestMapping("/deleteMultiUser")
     @ResponseBody
     public String deleteMultiUser(@RequestParam("deleteStr") String deleteStr) {
-        String deleteId[] = deleteStr.split(",");
-        String result = "";
-        for(String id : deleteId){
-            result = this.frontUserService.deleteOneUser(Integer.parseInt(id), 0);
-            if(!result.equals("succeed")){
-                break;
-            }
+        String deleteIds[] = deleteStr.split(",");
+        List<Integer> idList = new ArrayList<>();
+        for(String id : deleteIds){
+            idList.add(Integer.parseInt(id));
         }
-        return result;
+        return this.frontUserService.editStatusListByIdList(idList, 0);
     }
 
     @RequestMapping("/recoveryOneUser")
@@ -126,14 +125,11 @@ public class FrontUserController {
     @ResponseBody
     public String recoveryMultiUser(@RequestParam("recoveryStr") String recoveryStr) {
         String recoveryId[] = recoveryStr.split(",");
-        String result = "";
+        List<Integer> idList = new ArrayList<>();
         for(String id : recoveryId){
-            result = this.frontUserService.deleteOneUser(Integer.parseInt(id), 1);
-            if(!result.equals("succeed")){
-                break;
-            }
+            idList.add(Integer.parseInt(id));
         }
-        return result;
+        return this.frontUserService.editStatusListByIdList(idList, 1);
     }
 
     @RequestMapping("/deleteThoroughUser")

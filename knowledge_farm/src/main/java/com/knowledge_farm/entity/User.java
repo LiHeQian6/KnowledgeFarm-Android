@@ -1,5 +1,6 @@
 package com.knowledge_farm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -187,6 +188,7 @@ public class User {
     }
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     public Land getLand() {
         return land;
     }
@@ -196,6 +198,7 @@ public class User {
     }
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
     public UserAuthority getUserAuthority() {
         return userAuthority;
     }
@@ -206,6 +209,7 @@ public class User {
 
     @OneToMany(targetEntity=UserBag.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     public Set<UserBag> getUserBags() {
         return userBags;
     }

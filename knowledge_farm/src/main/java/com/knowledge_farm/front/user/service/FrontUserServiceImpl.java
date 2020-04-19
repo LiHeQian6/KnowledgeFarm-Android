@@ -1,9 +1,6 @@
 package com.knowledge_farm.front.user.service;
 
-import com.knowledge_farm.entity.Land;
-import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserAuthority;
-import com.knowledge_farm.entity.UserCrop;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import java.util.List;
 
 /**
  * @ClassName UserService
@@ -57,7 +55,26 @@ public class FrontUserServiceImpl {
             if(userAuthority != null){
                 userAuthority.setExist(exist);
             }
-            this.userDao.save(user);
+            return "succeed";
+        }catch (NullPointerException e){
+            return null;
+        }catch (Exception e){
+            return "fail";
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public String editStatusListByIdList(List<Integer> idList, Integer exist){
+        List<User> users = this.userDao.findAllById(idList);
+        try {
+            for(User user : users){
+                UserAuthority userAuthority = user.getUserAuthority();
+                user.setExist(exist);
+                if(userAuthority != null){
+                    userAuthority.setExist(exist);
+                }
+            }
+            this.userDao.saveAll(users);
             return "succeed";
         }catch (NullPointerException e){
             return null;
@@ -152,5 +169,7 @@ public class FrontUserServiceImpl {
             return "fail";
         }
     }
+
+
 
 }
