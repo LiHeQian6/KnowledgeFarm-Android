@@ -181,7 +181,7 @@
 						</a>
 						<ul id="initUserLandManager" class="sub-menu">
 							<li id="initUserLandManager1">
-								<a href="${ctx}/admin/user/findUserPage">
+								<a href="${ctx}/admin/land/findPageLand">
 									<i class="iconfont">&#xe6a7;</i>
 									土地列表
 								</a>

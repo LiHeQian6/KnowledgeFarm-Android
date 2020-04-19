@@ -28,4 +28,8 @@ public class CropServiceImpl {
         return this.cropDao.findCropsByExist(exist);
     }
 
+    public List<Crop> findAllCrop(){
+        return this.cropDao.findAll();
+    }
+
 }

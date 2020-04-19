@@ -54,7 +54,7 @@
                 <input type="hidden" name="oldAccount" value="${user.account}"/>
             	<input type="hidden" name="photo" value="${user.photo}"/>
                 <div class="layui-form-item">
-                   <label for="L_username" class="layui-form-label">
+                   <label class="layui-form-label">
                     	<font color="red">*</font>账号
                     </label>
                     <div class="layui-input-inline">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>名称
                     </label>
                     <div class="layui-input-inline">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>邮箱
                     </label>
                     <div class="layui-input-inline">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>年级
                     </label>
                     <div class="layui-input-inline">
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                  <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>等级
                     </label>
                     <div class="layui-input-inline">
@@ -105,7 +105,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>经验
                     </label>
                     <div class="layui-input-inline">
@@ -114,7 +114,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>金币
                     </label>
                     <div class="layui-input-inline">
@@ -123,7 +123,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>数学
                     </label>
                     <div class="layui-input-inline">
@@ -135,7 +135,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>英语
                     </label>
                     <div class="layui-input-inline">
@@ -147,7 +147,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>语文
                     </label>
                     <div class="layui-input-inline">
@@ -159,7 +159,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>浇水
                     </label>
                     <div class="layui-input-inline">
@@ -171,7 +171,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>施肥
                     </label>
                     <div class="layui-input-inline">
@@ -187,10 +187,12 @@
                     <div class="layui-input-block">
                         <c:choose>
                             <c:when test="${user.online == 0}">
-                                <input type="radio" name="online" value="0" title="否">
+                                <input type="radio" name="online" value="1" title="是">
+                                <input type="radio" name="online" value="0" title="否" checked="">
                             </c:when>
                             <c:when test="${user.online == 1}">
                                 <input type="radio" name="online" value="1" title="是" checked="">
+                                <input type="radio" name="online" value="0" title="否">
                             </c:when>
                         </c:choose>
                     </div>

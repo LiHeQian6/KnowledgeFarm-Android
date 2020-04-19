@@ -210,7 +210,6 @@ public class User {
 
     @OneToMany(targetEntity=UserBag.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     public Set<UserBag> getUserBags() {
         return userBags;
     }

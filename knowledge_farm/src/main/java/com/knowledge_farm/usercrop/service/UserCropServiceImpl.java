@@ -48,6 +48,10 @@ public class UserCropServiceImpl {
         return userCrop.getProgress();
     }
 
+    public void deleteUserCropById(Integer id){
+        this.userCropDao.deleteById(id);
+    }
+
     public List<UserCrop> findUserCropListByLand(Land land){
         List<UserCrop> userCrops = new ArrayList<>();
         userCrops.add(land.getUserCrop1());
