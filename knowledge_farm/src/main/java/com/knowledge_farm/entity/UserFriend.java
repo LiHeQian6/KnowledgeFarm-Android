@@ -1,5 +1,6 @@
 package com.knowledge_farm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -31,6 +32,7 @@ public class UserFriend {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     public User getUser() {
         return user;
     }
@@ -41,6 +43,7 @@ public class UserFriend {
 
     @ManyToOne
     @JoinColumn(name = "friend_id")
+    @JsonIgnore
     public User getFriendUser() {
         return friendUser;
     }
@@ -49,6 +52,7 @@ public class UserFriend {
         this.friendUser = friendUser;
     }
 
+    @Column(insertable = false)
     public Integer getStatus() {
         return status;
     }

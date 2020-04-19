@@ -20,6 +20,9 @@ public interface UserDao extends JpaRepository<User, Integer> {
 
     public User findUserByAccountAndExist(String account, Integer exist);
 
+    @Query("select u from User u where u.account = ?1 and u.account <> ?2")
+    public User findUserByAccountAndExcludeAccount(String account, String excludeAccount);
+
     public User findUserByAccountAndPassword(String account, String password);
 
     public User findUserByEmail(String email);

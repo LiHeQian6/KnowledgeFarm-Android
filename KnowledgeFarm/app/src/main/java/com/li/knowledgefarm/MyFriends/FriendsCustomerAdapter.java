@@ -21,9 +21,13 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.User;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.RequiresApi;
@@ -31,6 +35,7 @@ import androidx.core.content.ContextCompat;
 
 public class FriendsCustomerAdapter extends BaseAdapter {
 
+    private int searchSelectedItem;
     private Context context;
     private List<User> dataList;
     private int resource;
@@ -41,6 +46,13 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         this.context = context;
         this.dataList = dataList;
         this.resource = resource;
+    }
+
+    public FriendsCustomerAdapter(Context context, List<User> dataList, int resource, int searchSelectedItem) {
+        this.context = context;
+        this.dataList = dataList;
+        this.resource = resource;
+        this.searchSelectedItem=searchSelectedItem;
     }
 
     @Override
@@ -75,6 +87,8 @@ public class FriendsCustomerAdapter extends BaseAdapter {
             viewHolder.level = convertView.findViewById(R.id.level);
             viewHolder.account = convertView.findViewById(R.id.account);
             viewHolder.go=convertView.findViewById(R.id.go);
+            viewHolder.add=convertView.findViewById(R.id.add);
+            viewHolder.delete=convertView.findViewById(R.id.delete);
             setViewSize(convertView,viewHolder);
             convertView.setTag(viewHolder);
         }else{
@@ -87,6 +101,9 @@ public class FriendsCustomerAdapter extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(dataList.get(position).getPhoto()).apply(requestOptions).into(viewHolder.photo);
         viewHolder.name.setText(dataList.get(position).getNickName());
+        viewHolder.name.setTextSize(14);
+        viewHolder.level.setTextSize(10);
+        viewHolder.account.setTextSize(8);
         viewHolder.account.setText("账号:"+dataList.get(position).getAccout());
         viewHolder.level.setText("lv:"+dataList.get(position).getLevel());
         viewHolder.go.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +119,27 @@ public class FriendsCustomerAdapter extends BaseAdapter {
                 }
             }
         });
+        if (searchSelectedItem==0){
+            viewHolder.delete.setVisibility(View.VISIBLE);
+            viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    HashMap<Object, Object> event = new HashMap<>();
+                    event.put(dataList.get(position).getAccout(),false);
+                    EventBus.getDefault().post(event);
+                }
+            });
+        }else{
+            viewHolder.add.setVisibility(View.VISIBLE);
+            viewHolder.add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    HashMap<Object, Object> event = new HashMap<>();
+                    event.put(dataList.get(position).getAccout(),true);
+                    EventBus.getDefault().post(event);
+                }
+            });
+        }
         notifyDataSetChanged();
         return convertView;
     }
@@ -140,6 +178,8 @@ public class FriendsCustomerAdapter extends BaseAdapter {
     private class ViewHolder{
         public Button go;
         private ImageView photo;
+        private ImageView add;
+        private ImageView delete;
         private TextView name;
         private TextView level;
         private TextView account;

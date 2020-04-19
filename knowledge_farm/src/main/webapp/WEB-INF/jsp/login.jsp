@@ -43,7 +43,7 @@
     <div class="login-box">
         <form class="layui-form layui-form-pane" action="javascript:adminLogin()">
             <h3>管理员登陆</h3>
-            <label class="login-title" for="username">账号</label>
+            <label class="login-title">账号</label>
             <div class="layui-form-item">
                 <label class="layui-form-label login-form"><i class="iconfont">&#xe6b8;</i></label>
                 <div class="layui-input-inline login-inline">
@@ -62,6 +62,26 @@
             </div>
         </form>
     </div>
-	<%@ include file="/layout/background.jsp"%>
+<%--    <%@ include file="/layout/background.jsp"%>--%>
+    <div class="bg-changer">
+        <div class="swiper-container changer-list">
+            <div class="swiper-wrapper">
+                <<div class="swiper-slide"><img class="item" src="${ctx}/images/a.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/b.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/c.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/d.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/e.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/f.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/g.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/h.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/i.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/j.jpg" alt=""></div>
+                <div class="swiper-slide"><img class="item" src="${ctx}/images/k.jpg" alt=""></div>
+                <div class="swiper-slide"><span class="reset">恢复默认</span></div>
+            </div>
+        </div>
+        <div class="bg-out"></div>
+        <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
+    </div>
 </body>
 </html>

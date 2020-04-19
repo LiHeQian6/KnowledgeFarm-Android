@@ -19,6 +19,9 @@ public interface AdminDao extends JpaRepository<Admin, Integer> {
 
     public Admin findAdminByAccountAndExist(String account, Integer exist);
 
+    @Query("select ad from Admin ad where ad.account = ?1 and ad.account <> ?2")
+    public Admin findAdminByAccountAndExcludeAccount(String account, String excludeAccount);
+
     public Admin findAdminByAccountAndPassword(String account, String password);
 
     @Query("select ad from Admin ad where ad.exist = ?1")

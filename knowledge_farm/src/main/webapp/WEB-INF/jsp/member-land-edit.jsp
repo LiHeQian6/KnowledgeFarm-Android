@@ -62,224 +62,61 @@
             <!-- 右侧内容框架，更改从这里开始 -->
             <form class="layui-form" action="javascript:updateUserLand()">
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>land1
                     </label>
                     <div class="layui-input-inline">
-                    	 <select id="land1" name="interest" lay-filter="aihao">
-					        <option value="${user.land1}" selected="">${user.land1}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
+                    	 <select name="interest" lay-filter="aihao">
+                             <c:if test="${empty land.userCrop1}">
+
+                             </c:if>
+                             <option value="0">开垦</option>
+                             <option value="-1">未开垦</option>
 					     </select>
-                        
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land2
-                    </label>
+                    <label class="layui-form-label"></label>
                     <div class="layui-input-inline">
-                        <select id="land2" name="interest" lay-filter="aihao">
-					        <option value="${user.land2}" selected="">${user.land2}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
+                        <input type="text" name="water" required lay-verify="required"
+                               autocomplete="off" class="layui-input" value="">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *浇水的限制次数
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land3
-                    </label>
+                    <label class="layui-form-label"></label>
                     <div class="layui-input-inline">
-                        <select id="land3" name="interest" lay-filter="aihao">
-					        <option value="${user.land3}" selected="">${user.land3}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
+                        <input type="text" name="water" required lay-verify="required"
+                               autocomplete="off" class="layui-input" value="">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *施肥的限制次数
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land4
-                    </label>
+                    <label class="layui-form-label"></label>
                     <div class="layui-input-inline">
-                        <select id="land4" name="interest" lay-filter="aihao">
-					        <option value="${user.land4}" selected="">${user.land4}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
+                        <input type="text" name="water" required lay-verify="required"
+                               autocomplete="off" class="layui-input" value="">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *作物进度（该作物进度最多${}）
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land5
-                    </label>
+                    <label class="layui-form-label"></label>
                     <div class="layui-input-inline">
-                        <select id="land5" name="interest" lay-filter="aihao">
-					        <option value="${user.land5}" selected="">${user.land5}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
+                        <input type="text" name="water" required lay-verify="required"
+                               autocomplete="off" class="layui-input" value="">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *干湿状态（0表示干旱，1表示湿润）
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land6
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land6" name="interest" lay-filter="aihao">
-					        <option value="${user.land6}" selected="">${user.land6}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land7
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land7" name="interest" lay-filter="aihao">
-					        <option value="${user.land7}" selected="">${user.land7}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land8
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land8" name="interest" lay-filter="aihao">
-					        <option value="${user.land8}" selected="">${user.land8}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land9
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land9" name="interest" lay-filter="aihao">
-					        <option value="${user.land9}" selected="">${user.land9}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land10
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land10" name="interest" lay-filter="aihao">
-					        <option value="${user.land10}" selected="">${user.land10}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land11
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land11" name="interest" lay-filter="aihao">
-					        <option value="${user.land11}" selected="">${user.land11}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land12
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land12" name="interest" lay-filter="aihao">
-					        <option value="${user.land12}" selected="">${user.land12}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land13
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land13" name="interest" lay-filter="aihao">
-					        <option value="${user.land13}" selected="">${user.land13}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land14
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land14" name="interest" lay-filter="aihao">
-					        <option value="${user.land14}" selected="">${user.land14}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land15
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land15" name="interest" lay-filter="aihao">
-					        <option value="${user.land15}" selected="">${user.land15}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land16
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land16" name="interest" lay-filter="aihao">
-					        <option value="${user.land16}" selected="">${user.land16}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land17
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land17" name="interest" lay-filter="aihao">
-					        <option value="${user.land17}" selected="">${user.land17}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
-                        <font color="red">*</font>land18
-                    </label>
-                    <div class="layui-input-inline">
-                        <select id="land18" name="interest" lay-filter="aihao">
-					        <option value="${user.land18}" selected="">${user.land18}</option>
-					        <option value="0">开垦</option>
-					        <option value="-1">未开垦</option>
-					     </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_sign" class="layui-form-label">
+                    <label class="layui-form-label">
                     </label>
                     <button class="layui-btn" key="set-mine" lay-filter="save" lay-submit>
                     	 保存          

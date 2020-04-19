@@ -8,10 +8,12 @@ import com.knowledge_farm.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +32,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-15 20:59
  */
-@RestController
+@Controller
 @RequestMapping("/admin/user")
 @PropertySource(value = {"classpath:photo.properties"})
 public class FrontUserController {
@@ -45,14 +47,37 @@ public class FrontUserController {
     @Value("${file.userDefaultFileName}")
     private String userDefaultFileName;
 
-    @RequestMapping("/findUserPage")
-    public String findUserPage(@RequestParam("account") String account,
-                                         @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                         @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                         @RequestParam("exist") Integer exist,
-                                         HttpSession session, Model model){
-        session.removeAttribute("user");
+    @RequestMapping("/toAdd")
+    public String toAdd(){
+        return "member-add";
+    }
 
+    @RequestMapping("/toEdit")
+    public String toEdit(@RequestParam("id") Integer id, Model model) {
+        User user = this.frontUserService.findUserById(id);
+        if(user != null){
+            UserVO userVO = varyUserToUserVO(user);
+            model.addAttribute("user", userVO);
+        }
+        return "member-edit";
+    }
+
+    @RequestMapping("toPassword")
+    public String toPassword(@RequestParam("id") Integer id, Model model){
+        User user = this.frontUserService.findUserById(id);
+        if(user != null){
+            UserVO userVO = varyUserToUserVO(user);
+            model.addAttribute("user", userVO);
+        }
+        return "member-password";
+    }
+
+    @RequestMapping("/findUserPage")
+    public String findUserPage(@RequestParam(value = "account", required = false) String account,
+                               @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                               @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+                               @RequestParam("exist") Integer exist,
+                               Model model){
         Page<User> page =  this.frontUserService.findUserPage(account, exist, pageNumber, pageSize);
         PageUtil<UserVO> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
@@ -74,47 +99,47 @@ public class FrontUserController {
     }
 
     @RequestMapping("/deleteOneUser")
+    @ResponseBody
     public String deleteOneUser(@RequestParam("userId") Integer userId){
         return this.frontUserService.deleteOneUser(userId, 0);
     }
 
     @RequestMapping("/deleteMultiUser")
+    @ResponseBody
     public String deleteMultiUser(@RequestParam("deleteStr") String deleteStr) {
-        String deleteId[] = deleteStr.split(",");
-        String result = "";
-        for(String id : deleteId){
-            result = this.frontUserService.deleteOneUser(Integer.parseInt(id), 0);
-            if(!result.equals("succeed")){
-                break;
-            }
+        String deleteIds[] = deleteStr.split(",");
+        List<Integer> idList = new ArrayList<>();
+        for(String id : deleteIds){
+            idList.add(Integer.parseInt(id));
         }
-        return result;
+        return this.frontUserService.editStatusListByIdList(idList, 0);
     }
 
     @RequestMapping("/recoveryOneUser")
+    @ResponseBody
     public String recoveryOneUser(@RequestParam("userId") Integer userId) {
         return this.frontUserService.deleteOneUser(userId, 1);
     }
 
     @RequestMapping("/recoveryMultiUser")
+    @ResponseBody
     public String recoveryMultiUser(@RequestParam("recoveryStr") String recoveryStr) {
         String recoveryId[] = recoveryStr.split(",");
-        String result = "";
+        List<Integer> idList = new ArrayList<>();
         for(String id : recoveryId){
-            result = this.frontUserService.deleteOneUser(Integer.parseInt(id), 1);
-            if(!result.equals("succeed")){
-                break;
-            }
+            idList.add(Integer.parseInt(id));
         }
-        return result;
+        return this.frontUserService.editStatusListByIdList(idList, 1);
     }
 
     @RequestMapping("/deleteThoroughUser")
+    @ResponseBody
     public String deleteThoroughUser(@RequestParam("userId") Integer userId) {
         return this.frontUserService.deleteThoroughUser(userId);
     }
 
     @RequestMapping("/addUser")
+    @ResponseBody
     public String addUser(@RequestParam("nickName") String nickName,
                           @RequestParam("password") String password,
                           @RequestParam("email") String email,
@@ -122,21 +147,11 @@ public class FrontUserController {
         return this.frontUserService.addUser(nickName, password, email, grade);
     }
 
-    @RequestMapping("/getUpdateUserInfo")
-    public String getUpdateUserInfo(@RequestParam("id") Integer id, Model model) {
-        User user = this.frontUserService.findUserById(id);
-        if(user != null){
-            UserVO userVO = varyUserToUserVO(user);
-            model.addAttribute("user", userVO);
-            return "succeed";
-        }
-        return "fail";
-    }
-
     @RequestMapping("/updateUser")
-    public String updateUser(User editUser, @RequestParam("upload") MultipartFile file){
+    @ResponseBody
+    public String updateUser(User editUser, @RequestParam("oldAccount") String excludeAccount, @RequestParam("upload") MultipartFile file){
         try {
-            if(this.frontUserService.findUserByAccount(editUser.getAccount()) == null){
+            if(this.frontUserService.findUserByAccountAndExcludeAccount(editUser.getAccount(), excludeAccount) == null){
                 User user = this.frontUserService.findUserById(editUser.getId());
                 varyUserToUser(user, editUser);
                 if(!file.getOriginalFilename().equals("")){
@@ -162,6 +177,7 @@ public class FrontUserController {
     }
 
     @RequestMapping("/updateUserPassword")
+    @ResponseBody
     public String updateUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
         password = Md5Encode.getMD5(password.getBytes());
         return this.frontUserService.editPasswordByAccount(account, password);

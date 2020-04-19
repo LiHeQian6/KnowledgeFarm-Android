@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.PopupWindowCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -16,12 +15,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -36,15 +33,12 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -61,11 +55,15 @@ import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.entity.BagCropNumber;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -73,7 +71,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -135,8 +132,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDensityLand.setDensity(getApplication());
-        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
+        setDensityLand.setOrientation(this,AppUtil.WIDTH);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         dataList = new ArrayList<>();
@@ -147,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
         setViewsSize();
         addListener();
         getCrop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -915,7 +919,7 @@ public class MainActivity extends AppCompatActivity {
                     Type type = new TypeToken<FriendsPage<User>>(){}.getType();
                     friendsPage = gson.fromJson(messages,type);
                     now.setText(friendsPage.getCurrentPageNum()+"/"+friendsPage.getTotalPageNum());
-                    FriendsCustomerAdapter customerAdapter = new FriendsCustomerAdapter(friendsDialog.getContext(),friendsPage.getList(),R.layout.friends_list_item);
+                    FriendsCustomerAdapter customerAdapter = new FriendsCustomerAdapter(friendsDialog.getContext(),friendsPage.getList(),R.layout.friends_list_item,searchSelectedItem);
                     friendsListView.setAdapter(customerAdapter);
                     customerAdapter.notifyDataSetChanged();
                 }else{
@@ -1052,6 +1056,54 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }.start();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showDaiLog(final HashMap add){
+        final Dialog dialog = new Dialog(this);
+        View view = View.inflate(this, R.layout.math_return_dialog, null);
+        TextView text=view.findViewById(R.id.waringText);
+        ImageView cancel=view.findViewById(R.id.cancel_return);
+        ImageView sure = view.findViewById(R.id.sure_return);
+        if (((boolean) add.values().toArray()[0])){
+            text.setText("你确定添加ta为好友并发送申请吗？");
+            sure.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println(add.keySet().toArray()[0]);
+                    //addFriend();
+                }
+            });
+        }else{
+            text.setText("你确定从好友列表删除ta吗？");
+            sure.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+        setDialogSize(view);
+        dialog.setContentView(view);
+        dialog.show();
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+        WindowManager.LayoutParams attrs = dialog.getWindow().getAttributes();
+        if (dialog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setDimAmount(0f);//去除遮罩
+        }
+        attrs.gravity = Gravity.CENTER;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(300*scale+0.5f);
+        attrs.height =(int)(300*scale+0.5f);
+        dialog.getWindow().setAttributes(attrs);
+        Window dialogWindow = dialog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     /**

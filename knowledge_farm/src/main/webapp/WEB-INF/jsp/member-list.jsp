@@ -34,7 +34,7 @@
 			layer.confirm('确认要删除吗？',function(index){
 				$.post("${ctx}/admin/user/deleteOneUser",{"userId":id},function(data){
 	    			if(data == "succeed"){
-	    				window.location.href="${ctx}/admin/user/findUserPage?exist=1";
+	    				window.location.href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=1";
 	    			}else if(data == "fail"){
 	    				layer.msg('删除失败');
 	    			}
@@ -55,7 +55,7 @@
             	if(deleteStr != ""){
 	        	    $.post("${ctx}/admin/user/deleteMultiUser",{"deleteStr":deleteStr},function(data){
 		    			if(data == "succeed"){
-		    				window.location.href="${ctx}/admin/user/findUserPage?exist=1";
+		    				window.location.href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=1";
 		    			}else if(data == "fail"){
 		    				layer.msg('删除失败');
 		    			}
@@ -67,17 +67,10 @@
         }
 		
         //添加用户信息
-        function addUser(title,url,w,h){
-            x_admin_show(title,url,w,h);
-        }
-        
-		//根据用户id获取到要修改的用户信息
-		function getUpdateUserInfo(id,path){
-			 $.post("${ctx}/admin/user/getUpdateUserInfo",{"id":id},function(data){
-			 	updateUser('编辑',path,'600','400');
-		     }) 
-	 	}
-   
+        function addUser(title,url,w,h) {
+			x_admin_show(title, url, w, h);
+		}
+
      	//修改用户信息
         function updateUser (title,url,w,h) {
             x_admin_show(title,url,w,h); 
@@ -88,12 +81,116 @@
 </head>
 <body>
     <!-- 顶部开始 -->
-    	<%@ include file="/layout/header.jsp"%>
+<%--    	<%@ include file="/layout/header.jsp"%>--%>
+	<div class="container">
+		<div class="logo"><a href="${ctx}/admin/gotoIndex">知识农场后台管理系统</a></div>
+		<div class="open-nav"><i class="iconfont">&#xe699;</i></div>
+		<ul class="layui-nav right" lay-filter="">
+			<li class="layui-nav-item">
+				<a href="javascript:;">${admin.account}</a>
+				<dl class="layui-nav-child">
+					<dd><a href="${ctx}/admin/logout">退出</a></dd>
+				</dl>
+			</li>
+			<li class="layui-nav-item"><a href="/"></a></li>
+		</ul>
+	</div>
     <!-- 顶部结束 -->
     <!-- 中部开始 -->
     <div class="wrapper">
         <!-- 左侧菜单开始 -->
-        	<%@ include file="/layout/menuLeft.jsp"%>
+<%--        	<%@ include file="/layout/menuLeft.jsp"%>--%>
+		<div class="left-nav">
+			<div id="side-nav">
+				<ul id="nav">
+					<li class="list" current>
+						<a href="${ctx}/admin/gotoIndex">
+							<i class="iconfont">&#xe761;</i>
+							欢迎页面
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+					</li>
+					<li class="list">
+						<a href="javascript:;">
+							<i class="iconfont">&#xe70b;</i>
+							用户管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initUserManager" class="sub-menu">
+							<li id="initUserManager1">
+								<a href="${ctx}/admin/user/findUserPage?exist=1">
+									<i class="iconfont">&#xe6a7;</i>
+									用户列表
+								</a>
+							</li>
+							<li id="initUserManager2">
+								<a href="${ctx}/admin/user/findUserPage?exist=0">
+									<i class="iconfont">&#xe6a7;</i>
+									用户删除
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="list" >
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
+							作物管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initCropManager" class="sub-menu">
+							<li id="initCropManager1">
+								<a href="${ctx}/admin/crop/findCropPage?exist=1">
+									<i class="iconfont">&#xe6a7;</i>
+									作物列表
+								</a>
+							</li>
+							<li id="initCropManager2">
+								<a href="${ctx}/admin/crop/findCropPage?exist=0">
+									<i class="iconfont">&#xe6a7;</i>
+									作物删除
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="list" >
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
+							管理员管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initAdminManager" class="sub-menu">
+							<li id="initAdminManager1">
+								<a href="${ctx}/admin/findAdminPage?exist=1">
+									<i class="iconfont">&#xe6a7;</i>
+									管理员列表
+								</a>
+							</li>
+							<li id="initAdminManager2">
+								<a href="${ctx}/admin/findAdminPage?exist=0">
+									<i class="iconfont">&#xe6a7;</i>
+									管理员删除
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="list">
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
+							土地管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initUserLandManager" class="sub-menu">
+							<li id="initUserLandManager1">
+								<a href="${ctx}/admin/user/findUserPage">
+									<i class="iconfont">&#xe6a7;</i>
+									土地列表
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
         <!-- 左侧菜单结束 -->
         <!-- 右侧主体开始 -->
         <div class="page-content">
@@ -116,17 +213,17 @@
             	<button class="layui-btn layui-btn-danger" onClick="deleteMultiUser()">
             		<i class="layui-icon">&#xe640;</i>批量删除
             	</button>
-            	<button class="layui-btn" onclick="addUser('添加用户','${ctx}/member-add.jsp','600','500')">
+            	<button class="layui-btn" onclick="addUser('添加用户','${ctx}/admin/user/toAdd','600','500')">
             		<i class="layui-icon">&#xe608;</i>添加
             	</button>
-            	<a href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.pageNumber}&&pageSize=${userPage.pageSize}&&exist=1">
+            	<a href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=1">
             		<button class="layui-btn" style="margin-left:11px;">
             			<i class="layui-icon">
             				<img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/save.png"/>
             			</i>刷新
             		</button>
             	</a>
-            	<span class="x-right" style="line-height:40px">共有数据：${userPage.totalRow} 条</span>
+            	<span class="x-right" style="line-height:40px">共有数据：${userPage.totalCount} 条</span>
             </xblock>
             <table class="layui-table">
                 <thead >
@@ -160,7 +257,7 @@
 	                        <td>${userPage.nickName}</td>
 	                        <td>
 	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
-	                        		<img style="width:50px;height:50px;" src="${ctx}/${userPage.photo}"/>
+	                        		<img style="width:50px;height:50px;" src="${ctx}/photo/${userPage.photo}"/>
 	                        	</div>
 	                        </td>
 	                        <td>
@@ -194,10 +291,10 @@
 	                        	<span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
 	                        </td>
 	                        <td class="td-manage" align="center">
-	                            <a style="text-decoration:none" onclick="getUpdateUserInfo(${userPage.id},'${ctx}/member-edit.jsp')" href="javascript:;" title="编辑">
+	                            <a style="text-decoration:none" onclick="updateUser('编辑','${ctx}/admin/user/toEdit?id=${userPage.id}','600','400')" href="javascript:;" title="编辑">
 	                                <i class="layui-icon">&#xe642;</i>
 	                            </a>
-	                            <a style="text-decoration:none"  onclick="getUpdateUserInfo(${userPage.id},'${ctx}/member-password.jsp')" href="javascript:;" title="修改密码">
+	                            <a style="text-decoration:none" onclick="updateUser('修改密码','${ctx}/admin/user/toPassword?id=${userPage.id}','600','400')" href="javascript:;" title="修改密码">
 	                                <i class="layui-icon">&#xe631;</i>
 	                            </a>
 	                            <a title="删除" href="javascript:;" onclick="deleteOneUser(${userPage.id})" style="text-decoration:none">
@@ -211,56 +308,17 @@
             <!-- 右侧内容框架，更改从这里结束 -->
           </div>
           <!-- 分页处理开始 -->
-	          	<!-- 上一页 -->
-	          	<c:choose>
-	        		<c:when test="${userPage.pageNumber-1 > 0}">
-	        			<c:set var="prePage" value="${userPage.pageNumber-1}"></c:set>
-	        		</c:when>
-	        		<c:when test="${userPage.pageNumber-1 <= 0}">
-	        			<c:set var="prePage" value="1"></c:set>
-	        		</c:when>
-	        	</c:choose>
-	        	<!-- 查询结果不为空 -->
-	          	<c:if test="${userPage.totalPage != 0}">
-	          		<!-- 下一页 -->
-	          		<c:choose>
-	          			<c:when test="${userPage.pageNumber+1 <= userPage.totalPage}">
-	          				<c:set var="nextPage" value="${userPage.pageNumber+1}"></c:set>
-	          			</c:when>
-	          			<c:when test="${userPage.pageNumber+1 > userPage.totalPage}">
-	          				<c:set var="nextPage" value="${userPage.totalPage}"></c:set>
-	          			</c:when>
-	          		</c:choose>
-	          		<!-- 末页 -->
-	          		<c:set var="lastPage" value="${userPage.totalPage}"></c:set>
-	          	</c:if>
-	          	<!-- 查询结果为空 -->
-	          	<c:if test="${userPage.totalPage == 0}">
-	          		<!-- 下一页 -->
-	          		<c:set var="nextPage" value="1"></c:set>
-	          		<!-- 末页 -->
-	          		<c:set var="lastPage" value="1"></c:set>
-	          	</c:if>
-			  <div align="center">
-				<a  class="page" style="margin-left:25px;" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=1&&pageSize=${userPage.pageSize}&&exist=1">首页</a>
-				<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${prePage}&&pageSize=${userPage.pageSize}&&exist=1">上一页</a>
-				<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${nextPage}&&pageSize=${userPage.pageSize}&&exist=1">下一页</a>
-				<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${lastPage}&&pageSize=${userPage.pageSize}&&exist=1">末页</a>
-			  </div>
-			  <div align="center" style="margin-top:20px;">
-				<span style="margin-right:10px;">
-					<!-- 查询结果不为空 -->
-					<c:if test="${userPage.totalPage != 0}">
-						${userPage.pageNumber}
-					</c:if>
-					<!-- 查询结果为空 -->
-					<c:if test="${userPage.totalPage == 0}">
-						0
-					</c:if>
-				</span>
-				<span>/</span>
-				<span style="margin-left:10px;">${userPage.totalPage}</span>
-			  </div>
+		  <div align="center">
+			<a  class="page" style="margin-left:25px;" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=1&&pageSize=${userPage.pageSize}&&exist=1">首页</a>
+			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.prePageNum}&&pageSize=${userPage.pageSize}&&exist=1">上一页</a>
+			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.nextPageNum}&&pageSize=${userPage.pageSize}&&exist=1">下一页</a>
+			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.totalPageNum}&&pageSize=${userPage.pageSize}&&exist=1">末页</a>
+		  </div>
+		  <div align="center" style="margin-top:20px;">
+			  <span style="margin-right:10px;">${userPage.currentPageNum}</span>
+			  <span>/</span>
+			  <span style="margin-left:10px;">${userPage.totalPageNum}</span>
+		  </div>
 		  <!-- 分页处理结束 -->
         </div>
         <!-- 右侧主体结束 -->
@@ -269,7 +327,27 @@
     <!-- 底部开始 -->
     <!-- 底部结束 -->
     <!-- 背景切换开始 -->
-    	<%@ include file="/layout/background.jsp"%>
+<%--    	<%@ include file="/layout/background.jsp"%>--%>
+	<div class="bg-changer">
+		<div class="swiper-container changer-list">
+			<div class="swiper-wrapper">
+				<<div class="swiper-slide"><img class="item" src="${ctx}/images/a.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/b.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/c.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/d.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/e.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/f.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/g.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/h.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/i.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/j.jpg" alt=""></div>
+				<div class="swiper-slide"><img class="item" src="${ctx}/images/k.jpg" alt=""></div>
+				<div class="swiper-slide"><span class="reset">恢复默认</span></div>
+			</div>
+		</div>
+		<div class="bg-out"></div>
+		<div id="changer-set"><i class="iconfont">&#xe696;</i></div>
+	</div>
     <!-- 背景切换结束 -->
     <!-- 页面动态效果 -->
     <script>

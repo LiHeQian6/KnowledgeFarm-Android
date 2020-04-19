@@ -21,4 +21,7 @@ public interface UserFriendDao extends JpaRepository<UserFriend,Integer> {
 //    @Query("from User fu where fu.id in (select uf.friendUser.id from UserFriend uf where uf.user.id = ?1) and fu.account = ?2")
     @Query("select uf.friendUser from UserFriend uf where uf.user.id = ?1 and uf.friendUser.account = ?2")
     public Page<User> findUserFriendPageByAccount(Integer userId, String account, Pageable pageable);
+
+    @Query("select uf from UserFriend  uf where uf.user.id = ?1 and uf.friendUser.id = ?2")
+    public UserFriend findUserFriendByUserAndFriendUser(Integer userId, Integer friendUserId);
 }

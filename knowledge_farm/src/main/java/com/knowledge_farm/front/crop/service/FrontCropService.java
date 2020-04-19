@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @ClassName CropService
@@ -33,6 +34,22 @@ public class FrontCropService {
         Crop crop = this.cropDao.findCropById(id);
         try {
             crop.setExist(exist);
+            return "succeed";
+        }catch (NullPointerException e){
+            return null;
+        }catch (Exception e){
+            return "fail";
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public String editStatusListByIdList(List<Integer> idList, Integer exist){
+        List<Crop> crops = this.cropDao.findAllById(idList);
+        try {
+            for(Crop crop : crops){
+                crop.setExist(exist);
+            }
+            this.cropDao.saveAll(crops);
             return "succeed";
         }catch (NullPointerException e){
             return null;

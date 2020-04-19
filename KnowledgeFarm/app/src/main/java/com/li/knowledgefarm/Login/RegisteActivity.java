@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.dialog.SpinnerAdapter;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.entity.EvenBean;
+import com.li.knowledgefarm.entity.EventBean;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -61,9 +61,9 @@ public class RegisteActivity extends AppCompatActivity {
             switch (msg.what){
                 case 4:
                     Toast.makeText(RegisteActivity.this,"注册成功，请登录",Toast.LENGTH_SHORT).show();
-                    EvenBean evenBean = new EvenBean();
-                    evenBean.setAccount(msg.obj.toString());
-                    eventBus.post(evenBean);
+                    EventBean eventBean = new EventBean();
+                    eventBean.setAccount(msg.obj.toString());
+                    eventBus.post(eventBean);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

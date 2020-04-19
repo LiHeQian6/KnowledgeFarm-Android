@@ -19,13 +19,12 @@
     <script type="text/javascript">
     	//修改管理员密码
     	function updateAdmin(){
-    		var oldPassword = $("#oldPassword").val();
     		var newPassword = $("#newPassword").val();
     		var testPassword = $("#testPassword").val();
     		if(newPassword != testPassword){
     			layer.msg('两次输入密码不一致');
     		}else{
-    			$.post("${ctx}/admin/updateAdminPassword",{"id":"${adminInfo.id}","oldPassword":oldPassword,"newPassword":newPassword},function(data){
+    			$.post("${ctx}/admin/updateAdminPassword",{"id":"${adminInfo.id}","password":newPassword},function(data){
 					if(data == "succeed"){
 						x_admin_close();
 					}else if(data == "fail"){
@@ -47,16 +46,7 @@
             <!-- 右侧内容框架，更改从这里开始 -->
             <form class="layui-form" action="javascript:updateAdmin()">
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
-                        	<font color="red">*</font>旧密码
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="password" id="oldPassword" name="pass" required="" lay-verify="pass"
-                        autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         	<font color="red">*</font>新密码
                     </label>
                     <div class="layui-input-inline">
@@ -65,7 +55,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         	<font color="red">*</font>确认密码
                     </label>
                     <div class="layui-input-inline">
@@ -74,7 +64,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_sign" class="layui-form-label">
+                    <label class="layui-form-label">
                     </label>
                     <button class="layui-btn" key="set-mine" lay-filter="save" lay-submit>
                     	 保存          

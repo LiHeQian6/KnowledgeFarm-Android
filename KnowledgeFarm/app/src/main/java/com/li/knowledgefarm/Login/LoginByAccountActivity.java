@@ -2,8 +2,6 @@ package com.li.knowledgefarm.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -22,7 +20,7 @@ import android.os.Bundle;
 
 import com.li.knowledgefarm.Login.Interpolator.JellyInterpolator;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.entity.EvenBean;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.User;
 
 import android.animation.Animator;
@@ -156,8 +154,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
      * @return void 
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void EventBus(EvenBean evenBean){
-        edtCount.setText(evenBean.getAccount());
+    public void EventBus(EventBean eventBean){
+        edtCount.setText(eventBean.getAccount());
         pwd.setText("");
         rememberPwd.setChecked(false);
     }
