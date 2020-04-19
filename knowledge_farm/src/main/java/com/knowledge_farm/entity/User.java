@@ -35,6 +35,7 @@ public class User {
     private Land land;
     private UserAuthority userAuthority;
     private Set<UserBag> userBags = new HashSet<>();
+    private Task task;
 
     @Id
     @GeneratedValue(generator="identity")
@@ -212,6 +213,15 @@ public class User {
 
     public void setUserBags(Set<UserBag> userBags) {
         this.userBags = userBags;
+    }
+
+    @OneToOne(mappedBy = "user")
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     @Override
