@@ -274,7 +274,7 @@ public class FindPassword extends AppCompatActivity {
     private void resetPwdToServer(String s) {
 
         FormBody formBody = new FormBody.Builder()
-                .add("accout", account)
+                .add("account", account)
                 .add("password",stringMD5(newPwd))
                 .build();
         Request request = new Request.Builder().post(formBody).url(s).build();
@@ -307,7 +307,7 @@ public class FindPassword extends AppCompatActivity {
     //访问服务器，获取验证码
     private void getCodeFromServer(final String urlPath) {
         FormBody formBody = new FormBody.Builder()
-                .add("accout", account)
+                .add("account", account)
                 .add("email", email)
                 .build();
         Request request = new Request.Builder().post(formBody).url(urlPath).build();
