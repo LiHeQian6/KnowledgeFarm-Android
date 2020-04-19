@@ -1,41 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:gravity="left"
+    android:gravity="center_vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
         android:id="@+id/photo"
         android:src="@drawable/photo"
         android:layout_weight="1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"/>
+        android:layout_width="30dp"
+        android:layout_height="40dp"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:orientation="vertical"
         android:layout_weight="5"
+        android:layout_gravity="center_vertical"
         android:layout_height="wrap_content">
-        <TextView
-            android:text="景宝宝"
-            android:id="@+id/nickName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="lv:16"
-            android:id="@+id/level"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <HorizontalScrollView
+                android:layout_width="220dp"
+                android:scrollbars="none"
+                android:layout_weight="4"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="景宝宝"
+                    android:id="@+id/nickName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </HorizontalScrollView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="lv:16"
+                android:id="@+id/level"
+                android:paddingRight="20dp"
+                android:layout_weight="1"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:text="账号:12345678"
+            android:textSize="10sp"
             android:id="@+id/account"
             android:layout_height="wrap_content"/>
     </LinearLayout>
+    <ImageView
+        android:id="@+id/add"
+        android:visibility="gone"
+        android:src="@drawable/addfriend"
+        android:layout_marginRight="10dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+    <ImageView
+        android:id="@+id/delete"
+        android:visibility="gone"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/deletefriend"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
     <Button
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:text="访问"
         android:id="@+id/go"
         android:layout_weight="1"
         android:background="@drawable/buttonbackground"
-        android:layout_height="40dp"/>
+        android:layout_height="30dp"/>
 </LinearLayout>

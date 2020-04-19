@@ -40,22 +40,22 @@ public class AdminController {
     }
 
     @RequestMapping("/toEdit")
-    public String toEdit(@RequestParam("id") Integer id, HttpSession session){
+    public String toEdit(@RequestParam("id") Integer id, Model model){
         Admin admin = this.adminService.findById(id);
         if(admin != null){
             admin.setPassword("");
+            model.addAttribute("adminInfo", admin);
         }
-        session.setAttribute("adminInfo", admin);
         return "admin-edit";
     }
 
     @RequestMapping("toPassword")
-    public String toPassword(@RequestParam("id") Integer id, HttpSession session){
+    public String toPassword(@RequestParam("id") Integer id, Model model){
         Admin admin = this.adminService.findById(id);
         if(admin != null){
             admin.setPassword("");
+            model.addAttribute("adminInfo", admin);
         }
-        session.setAttribute("adminInfo", admin);
         return "admin-password";
     }
 
@@ -82,7 +82,14 @@ public class AdminController {
     @RequestMapping("/login")
     @ResponseBody
     public String login(@RequestParam("account") String account, @RequestParam("password") String password, HttpSession session){
-        return this.adminService.login(account, password, session);
+        Object obj = this.adminService.login(account, password);
+        if(obj instanceof Admin){
+            Admin admin = (Admin) obj;
+            admin.setPassword("");
+            session.setAttribute("admin", admin);
+            obj = "succeed";
+        }
+        return (String) obj;
     }
 
     /**
@@ -97,18 +104,14 @@ public class AdminController {
                      @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                      @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
                      @RequestParam(value = "exist") Integer exist,
-                     HttpSession session, Model model){
-        //清除修改查询的管理员信息
-        session.removeAttribute("adminInfo");
+                     Model model){
         Page<Admin> page = this.adminService.findPageAdminByAccount(account, exist, pageNumber, pageSize);
-        List<Admin> admins = new ArrayList<>();
         for(Admin admin : page.getContent()){
             admin.setPassword("");
-            admins.add(admin);
         }
         PageUtil<Admin> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-        pageUtil.setList(admins);
+        pageUtil.setList(page.getContent());
         model.addAttribute("adminPage", pageUtil);
         if(exist == 1){
             return "admin-list";
@@ -126,14 +129,7 @@ public class AdminController {
     @RequestMapping("/deleteOneAdmin")
     @ResponseBody
     public String deleteOneAdmin(@RequestParam("id") Integer id){
-        try {
-            if(this.adminService.editStatusById(id, 0) != null){
-                return "succeed";
-            }
-            return "notExist";
-        }catch(Exception e){
-            return "fail";
-        }
+        return this.adminService.editStatusById(id, 0);
     }
 
     /**
@@ -151,25 +147,13 @@ public class AdminController {
         for(String id : deleteIds){
             idList.add(Integer.parseInt(id));
         }
-        try {
-            this.adminService.editStatusListByIdlist(idList, 0);
-            return "succeed";
-        }catch (Exception e){
-            return "fail";
-        }
+        return this.adminService.editStatusListByIdList(idList, 0);
     }
 
     @RequestMapping("/recoveryOneAdmin")
     @ResponseBody
     public String recoveryOneAdmin(@RequestParam("id") Integer id){
-        try {
-            if(this.adminService.editStatusById(id, 1) != null){
-                return "succeed";
-            }
-            return "notExist";
-        }catch(Exception e){
-            return "fail";
-        }
+        return this.adminService.editStatusById(id, 1);
     }
 
     @RequestMapping("/recoveryMultiAdmin")
@@ -180,12 +164,7 @@ public class AdminController {
         for(String id : recoveryId){
             idList.add(Integer.parseInt(id));
         }
-        try {
-            this.adminService.editStatusListByIdlist(idList, 1);
-            return "succeed";
-        }catch (Exception e){
-            return "fail";
-        }
+        return this.adminService.editStatusListByIdList(idList, 1);
     }
 
     /**
@@ -198,12 +177,7 @@ public class AdminController {
     @RequestMapping("/deleteThoroughAdmin")
     @ResponseBody
     public String deleteById(@RequestParam("id") Integer id){
-        try {
-            this.adminService.deleteById(id);
-            return "succeed";
-        }catch (Exception e){
-            return "fail";
-        }
+        return this.adminService.deleteById(id);
     }
 
     /**
@@ -220,12 +194,7 @@ public class AdminController {
         admin.setAccount(account);
         admin.setPassword(Md5Encode.getMD5(password.getBytes()));
         if(this.adminService.findByAccountAndExist(admin.getAccount(), null) == null){
-             try {
-                 this.adminService.add(admin);
-                 return "succeed";
-             }catch (Exception e){
-                 return "fail";
-             }
+             return this.adminService.add(admin);
         }
         return "already";
     }
@@ -241,14 +210,7 @@ public class AdminController {
     @ResponseBody
     public String updateAdminAccount(@RequestParam("id") Integer id, @RequestParam("account") String account, @RequestParam("oldAccount") String excludeAccount){
         if(this.adminService.findByAccountExcludeAccount(account, excludeAccount) == null){
-            try {
-                if(this.adminService.editAccountById(id, account) != null){
-                    return "succeed";
-                }
-                return "notExist";
-            }catch (Exception e){
-                return "fail";
-            }
+            return this.adminService.editAccountById(id, account);
         }
         return "already";
     }

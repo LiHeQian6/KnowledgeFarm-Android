@@ -43,7 +43,7 @@
             <!-- 右侧内容框架，更改从这里开始 -->
             <form class="layui-form" action="javascript:updateAdmin()">
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         	<font color="red">*</font>账号
                     </label>
                     <div class="layui-input-inline">

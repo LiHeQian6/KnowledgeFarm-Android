@@ -21,7 +21,9 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName CropController
@@ -50,7 +52,9 @@ public class FrontCropController {
     @RequestMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, Model model){
         Crop crop = this.frontCropService.findCropById(id);
-        model.addAttribute("crop", crop);
+        if(crop != null){
+            model.addAttribute("crop", crop);
+        }
         return "crop-edit";
     }
 
@@ -59,8 +63,7 @@ public class FrontCropController {
                                @RequestParam("exist") Integer exist,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                               HttpSession session, Model model){
-        session.removeAttribute("crop");
+                               Model model){
         Page<Crop> page = this.frontCropService.findAllCrop(name, exist, pageNumber, pageSize);
         PageUtil<Crop> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
@@ -81,15 +84,12 @@ public class FrontCropController {
     @RequestMapping("/deleteMultiCrop")
     @ResponseBody
     public String deleteMultiCrop(@RequestParam("deleteStr") String deleteStr){
-        String deleteId[] = deleteStr.split(",");
-        String result = "";
-        for(String id : deleteId){
-            result = this.frontCropService.updateExist(Integer.parseInt(id), 0);
-            if(!result.equals("succeed")){
-                break;
-            }
+        String deleteIds[] = deleteStr.split(",");
+        List<Integer> idList = new ArrayList<>();
+        for(String id : deleteIds){
+            idList.add(Integer.parseInt(id));
         }
-        return result;
+        return this.frontCropService.editStatusListByIdList(idList, 0);
     }
 
     @RequestMapping("/recoveryOneCrop")
@@ -102,14 +102,11 @@ public class FrontCropController {
     @ResponseBody
     public String recoveryMultiCrop(@RequestParam("recoveryStr") String recoveryStr) {
         String recoveryId[] = recoveryStr.split(",");
-        String result = "";
-        for (String id : recoveryId) {
-            result = this.frontCropService.updateExist(Integer.parseInt(id), 1);
-            if (!result.equals("succeed")) {
-                break;
-            }
+        List<Integer> idList = new ArrayList<>();
+        for(String id : recoveryId){
+            idList.add(Integer.parseInt(id));
         }
-        return result;
+        return this.frontCropService.editStatusListByIdList(idList, 1);
     }
 
     @RequestMapping("/deleteThoroughCrop")

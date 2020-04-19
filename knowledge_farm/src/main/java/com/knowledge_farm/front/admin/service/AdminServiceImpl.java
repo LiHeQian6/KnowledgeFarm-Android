@@ -32,16 +32,14 @@ public class AdminServiceImpl {
      * @Param [account, password, session]
      * @return java.lang.String
      **/
-    @Transactional(readOnly = false)
-    public String login(String account, String password, HttpSession session){
+    @Transactional(readOnly = true)
+    public Object login(String account, String password){
         password = Md5Encode.getMD5(password.getBytes());
         if(this.adminDao.findAdminByAccount(account) != null){ //该账号存在
             if(this.adminDao.findAdminByAccountAndExist(account, 1) != null){ //该账号可用
                 Admin admin = this.adminDao.findAdminByAccountAndPassword(account, password);
                 if(admin != null){ //登陆成功
-                    admin.setPassword("");
-                    session.setAttribute("admin", admin);
-                    return "succeed";
+                    return admin;
                 }
                 return "fail";
             }
@@ -58,8 +56,13 @@ public class AdminServiceImpl {
      * @return com.atguigu.farm.entity.Admin
      **/
     @Transactional(readOnly = false)
-    public Admin add(Admin admin){
-        return this.adminDao.save(admin);
+    public String add(Admin admin){
+        try {
+            this.adminDao.save(admin);
+            return "succeed";
+        }catch (Exception e){
+            return "fail";
+        }
     }
 
     /**
@@ -70,8 +73,14 @@ public class AdminServiceImpl {
      * @return void
      **/
     @Transactional(readOnly = false)
-    public void deleteById(Integer id){
-        this.adminDao.deleteById(id);
+    public String deleteById(Integer id){
+        try {
+            this.adminDao.deleteById(id);
+            return "succeed";
+        }catch (Exception e){
+            return "fail";
+        }
+
     }
     
     /**
@@ -82,14 +91,16 @@ public class AdminServiceImpl {
      * @return com.atguigu.farm.entity.Admin
      **/
     @Transactional(readOnly = false)
-    public Admin editAccountById(Integer id, String account){
+    public String editAccountById(Integer id, String account){
         Admin admin = this.adminDao.findAdminById(id);
-        if(admin != null){
+        try {
             admin.setAccount(account);
-            this.adminDao.save(admin);
-            return admin;
+            return "succeed";
+        }catch (NullPointerException e){
+            return null;
+        }catch (Exception e){
+            return "fail";
         }
-        return null;
     }
 
     /**
@@ -104,7 +115,6 @@ public class AdminServiceImpl {
         Admin admin = this.adminDao.findAdminById(id);
         try {
             admin.setPassword(password);
-            this.adminDao.save(admin);
             return "succeed";
         }catch (NullPointerException n){
             return null;
@@ -121,13 +131,16 @@ public class AdminServiceImpl {
      * @return com.atguigu.farm.entity.Admin
      **/
     @Transactional(readOnly = false)
-    public Admin editStatusById(Integer id, Integer exist){
+    public String editStatusById(Integer id, Integer exist){
         Admin admin = this.adminDao.findAdminById(id);
-        if(admin != null) {
+        try {
             admin.setExist(exist);
-            return this.adminDao.save(admin);
+            return "succeed";
+        }catch (NullPointerException e){
+            return null;
+        }catch (Exception e){
+            return "fail";
         }
-        return null;
     }
 
     /**
@@ -138,14 +151,19 @@ public class AdminServiceImpl {
      * @return java.util.List<com.atguigu.farm.entity.Admin>
      **/
     @Transactional(readOnly = false)
-    public List<Admin> editStatusListByIdlist(List<Integer> idList, Integer exist){
+    public String editStatusListByIdList(List<Integer> idList, Integer exist){
         List<Admin> admins = this.adminDao.findAllById(idList);
-        for(Admin admin : admins){
-            if(admin != null){
+        try {
+            for(Admin admin : admins){
                 admin.setExist(exist);
             }
+            this.adminDao.saveAll(admins);
+            return "succeed";
+        }catch (NullPointerException e){
+            return null;
+        }catch (Exception e){
+            return "fail";
         }
-        return this.adminDao.saveAll(admins);
     }
 
     /**

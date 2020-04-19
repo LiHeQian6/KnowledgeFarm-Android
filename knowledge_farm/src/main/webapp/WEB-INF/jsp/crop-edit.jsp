@@ -55,7 +55,7 @@
             	<input type="hidden" name="img3" value="${crop.img3}"/>
             	<input type="hidden" name="img4" value="${crop.img4}"/>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         	<font color="red">*</font>名称
                     </label>
                     <div class="layui-input-inline">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_username" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>价格
                     </label>
                     <div class="layui-input-inline">
@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label  class="layui-form-label">
                         <font color="red">*</font>成熟时间
                     </label>
                     <div class="layui-input-inline">
@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>价值
                     </label>
                     <div class="layui-input-inline">
@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>提供经验
                     </label>
                     <div class="layui-input-inline">
@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>img1
                     </label>
                     <div class="layui-input-inline">
@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>img2
                     </label>
                     <div class="layui-input-inline">
@@ -119,7 +119,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>img3
                     </label>
                     <div class="layui-input-inline">
@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_pass" class="layui-form-label">
+                    <label class="layui-form-label">
                         <font color="red">*</font>img4
                     </label>
                     <div class="layui-input-inline">
@@ -135,7 +135,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_sign" class="layui-form-label">
+                    <label class="layui-form-label">
                     </label>
                     <button class="layui-btn" key="set-mine" lay-filter="save" lay-submit>
                     	 保存          

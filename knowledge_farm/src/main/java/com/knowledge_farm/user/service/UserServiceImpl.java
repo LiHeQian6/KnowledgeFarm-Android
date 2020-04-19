@@ -269,7 +269,6 @@ public class UserServiceImpl {
             user.setUserAuthority(userAuthority);
             userAuthority.setUser(user);
             try {
-                this.userDao.save(user);
                 return "true";
             }catch (Exception e){
                 return "false";
@@ -294,7 +293,6 @@ public class UserServiceImpl {
             if(userAuthority != null){
                 userAuthority.setUser(null);
                 try {
-                    this.userDao.save(user);
                     return "true";
                 }catch (Exception e){
                     return "false";
@@ -350,7 +348,6 @@ public class UserServiceImpl {
                 user.setWater(user.getWater() + water);
                 user.setFertilizer(user.getFertilizer() + fertilizer);
                 try {
-                    this.userDao.save(user);
                     return rewardCount;
                 }catch (Exception e){
                     return -1;
@@ -452,7 +449,6 @@ public class UserServiceImpl {
         User user = this.userDao.findUserByAccount(account);
         if(user != null){
             user.setEmail(email);
-            return this.userDao.save(user);
         }
         return null;
     }
@@ -476,17 +472,21 @@ public class UserServiceImpl {
                 if(crop != null){ //土地已种植作物
                     //修改剩余水的次数
                     if(user.getWater() > 0){
+                        //修改作物进度
+                        int progress = userCrop.getProgress();
+                        int matureTime = crop.getMatureTime();
+                        if(progress < matureTime){
+                            if(progress+5 >= matureTime){
+                                userCrop.setProgress(crop.getMatureTime());
+                            }else{
+                                userCrop.setProgress(progress + 5);
+                            }
+                        }else{
+                            return "false";
+                        }
                         user.setWater(user.getWater() - 1);
                     }else{
                         return "false";
-                    }
-                    //修改作物进度
-                    int progress = userCrop.getProgress();
-                    int matureTime = crop.getMatureTime();
-                    if(progress+5 >= matureTime){
-                        userCrop.setProgress(crop.getMatureTime());
-                    }else{
-                        userCrop.setProgress(progress + 5);
                     }
                     //修改作物干枯湿润状态
                     if(userCrop.getStatus() == 0){
@@ -495,8 +495,6 @@ public class UserServiceImpl {
                     }
                     //保存修改
                     try {
-                        this.userDao.save(user);
-                        this.userCropServiceImpl.save(userCrop);
                         if(flag == 1){
                             this.startJob(scheduler, user.getId(), userCrop.getId());
                         }
@@ -529,21 +527,24 @@ public class UserServiceImpl {
                     if(userCrop.getStatus() != 0){
                         //修改剩余化肥的次数
                         if(user.getFertilizer() > 0){
+                            //修改作物进度
+                            int progress = userCrop.getProgress();
+                            int matureTime = crop.getMatureTime();
+                            if(progress < matureTime) {
+                                if (progress + 10 >= matureTime) {
+                                    userCrop.setProgress(crop.getMatureTime());
+                                } else {
+                                    userCrop.setProgress(progress + 10);
+                                }
+                            }else{
+                                return "false";
+                            }
                             user.setFertilizer(user.getFertilizer() - 1);
                         }else{
                             return "false";
                         }
-                        //修改作物进度
-                        int progress = userCrop.getProgress();
-                        int matureTime = crop.getMatureTime();
-                        if(progress+10 >= matureTime){
-                            userCrop.setProgress(crop.getMatureTime());
-                        }else{
-                            userCrop.setProgress(progress + 10);
-                        }
                         //保存修改
                         try {
-                            this.userDao.save(user);
                             return "true";
                         }catch (Exception e){
                             return "false";
@@ -587,7 +588,6 @@ public class UserServiceImpl {
             }
             try {
                 user.setMoney(userMoney - needMoney);
-                this.userDao.save(user);
                 return "true";
             }catch (Exception e){
                 return "false";
@@ -627,9 +627,7 @@ public class UserServiceImpl {
                 Land land = user.getLand();
                 UserCrop userCrop = findUserCropByLand(land, landNumber);
                 userCrop.setCrop(crop);
-                this.userDao.save(user);
                 startJob(scheduler, userId, userCrop.getId());
-                //this.userBagService.deleteById(id);
                 return "true";
             }
         }catch (Exception e){
@@ -674,7 +672,6 @@ public class UserServiceImpl {
         }
         user.setMoney(userMoney + value);
         try {
-            this.userDao.save(user);
             if(isLevel == 1){
                 return "up";
             }
@@ -700,7 +697,6 @@ public class UserServiceImpl {
             addUserCrop(land, new UserCrop(), landNumber);
             user.setMoney(userMoney - needMoney);
             try {
-                this.userDao.save(user);
                 return "true";
             }catch (Exception e){
                 return "false";

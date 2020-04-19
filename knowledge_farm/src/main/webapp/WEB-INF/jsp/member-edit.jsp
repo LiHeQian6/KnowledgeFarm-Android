@@ -58,7 +58,7 @@
                     	<font color="red">*</font>账号
                     </label>
                     <div class="layui-input-inline">
-                        <input id="account" type="text" id="L_username" name="account" required lay-verify="required"
+                        <input id="account" type="text" name="account" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.account}">
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                     	<font color="red">*</font>名称
                     </label>
                     <div class="layui-input-inline">
-                        <input id="nickName" type="text" id="L_username" name="nickName" required lay-verify="required"
+                        <input id="nickName" type="text" name="nickName" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.nickName}">
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                     	<font color="red">*</font>等级
                     </label>
                     <div class="layui-input-inline">
-                        <input id="level" type="text" id="L_username" name="level" required lay-verify="required"
+                        <input id="level" type="text" name="level" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.level}">
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                     	<font color="red">*</font>经验
                     </label>
                     <div class="layui-input-inline">
-                        <input id="experience" type="text" id="L_username" name="experience" required lay-verify="required"
+                        <input id="experience" type="text" name="experience" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.experience}">
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                     	<font color="red">*</font>金币
                     </label>
                     <div class="layui-input-inline">
-                        <input id="money" type="text" id="L_username" name="money" required lay-verify="required"
+                        <input id="money" type="text" name="money" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.money}">
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                     	<font color="red">*</font>数学
                     </label>
                     <div class="layui-input-inline">
-                        <input id="mathRewardCount" type="text" id="L_username" name="mathRewardCount" required lay-verify="required"
+                        <input id="mathRewardCount" type="text" name="mathRewardCount" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.mathRewardCount}">
                     </div>
                     <div class="layui-form-mid layui-word-aux">
@@ -139,7 +139,7 @@
                     	<font color="red">*</font>英语
                     </label>
                     <div class="layui-input-inline">
-                        <input id="englishRewardCount" type="text" id="L_username" name="englishRewardCount" required lay-verify="required"
+                        <input id="englishRewardCount" type="text" name="englishRewardCount" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.englishRewardCount}">
                     </div>
                     <div class="layui-form-mid layui-word-aux">
@@ -151,7 +151,7 @@
                     	<font color="red">*</font>语文
                     </label>
                     <div class="layui-input-inline">
-                        <input id="chineseRewardCount" type="text" id="L_username" name="chineseRewardCount" required lay-verify="required"
+                        <input id="chineseRewardCount" type="text" name="chineseRewardCount" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.chineseRewardCount}">
                     </div>
                     <div class="layui-form-mid layui-word-aux">
@@ -163,7 +163,7 @@
                     	<font color="red">*</font>浇水
                     </label>
                     <div class="layui-input-inline">
-                        <input id="water" type="text" id="L_username" name="water" required lay-verify="required"
+                        <input id="water" type="text" name="water" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.water}">
                     </div>
                     <div class="layui-form-mid layui-word-aux">
@@ -175,7 +175,7 @@
                     	<font color="red">*</font>施肥
                     </label>
                     <div class="layui-input-inline">
-                        <input id="fertilizer" type="text" id="L_username" name="fertilizer" required lay-verify="required"
+                        <input id="fertilizer" type="text" name="fertilizer" required lay-verify="required"
                         autocomplete="off" class="layui-input" value="${user.fertilizer}">
                     </div>
                     <div class="layui-form-mid layui-word-aux">
@@ -196,7 +196,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_city" class="layui-form-label">
+                    <label class="layui-form-label">
                     	<font color="red">*</font>头像
                     </label>
                     <div class="layui-input-inline">
@@ -204,7 +204,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label for="L_sign" class="layui-form-label">
+                    <label class="layui-form-label">
                     </label>
                     <button class="layui-btn" key="set-mine" lay-filter="save" lay-submit>
                     	 保存          
