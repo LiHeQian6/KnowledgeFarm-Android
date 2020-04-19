@@ -1,5 +1,6 @@
 package com.knowledge_farm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -32,6 +33,7 @@ public class UserAuthority {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     public User getUser() {
         return user;
     }

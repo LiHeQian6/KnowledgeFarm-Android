@@ -43,7 +43,7 @@
     <div class="login-box">
         <form class="layui-form layui-form-pane" action="javascript:adminLogin()">
             <h3>管理员登陆</h3>
-            <label class="login-title" for="username">账号</label>
+            <label class="login-title">账号</label>
             <div class="layui-form-item">
                 <label class="layui-form-label login-form"><i class="iconfont">&#xe6b8;</i></label>
                 <div class="layui-input-inline login-inline">
