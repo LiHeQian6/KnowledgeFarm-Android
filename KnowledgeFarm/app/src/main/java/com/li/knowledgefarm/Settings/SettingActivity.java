@@ -226,6 +226,12 @@ public class SettingActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
     @Subscribe//可以订阅粘性事件
     public void onEventBeanStikyEvent(String result){
         if(result.equals("绑定邮箱成功")){

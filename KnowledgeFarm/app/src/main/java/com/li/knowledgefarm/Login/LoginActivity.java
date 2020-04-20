@@ -147,7 +147,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setDensityLand.setDensity(getApplication());
         setDensityLand.setOrientation(this, AppUtil.HEIGHT);
-//        AutoSizeConfig.getInstance().setBaseOnWidth(false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
