@@ -23,18 +23,18 @@
         </TextView>
 
         <FrameLayout
-            android:layout_width="match_parent"
             android:id="@+id/lands"
-            android:clipChildren="false"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="60dp"
             android:layout_weight="1"
+            android:clipChildren="false"
             android:rotationY="-4"
             android:rotationX="16"
             android:rotation="-10"
             android:scaleX="1.2"
-            android:scaleY="1.2"
-            android:layout_marginTop="60dp"
-            android:layout_marginLeft="60dp"
-            android:layout_height="300dp">
+            android:scaleY="1.2">
 
         </FrameLayout>
         <TextView
@@ -193,18 +193,18 @@
 
 
     <LinearLayout android:layout_width="match_parent"
-                  android:gravity="center_vertical"
+                  android:gravity="bottom"
                     android:layout_alignParentBottom="true"
                     android:layout_height="wrap_content">
         <LinearLayout android:layout_width="wrap_content"
                       android:orientation="vertical"
                       android:gravity="center"
-                      android:layout_marginRight="20dp"
+                      android:layout_marginRight="10dp"
                       android:layout_height="wrap_content">
-            <ImageView android:layout_width="100dp"
+            <ImageView android:layout_width="80dp"
                        android:src="@drawable/xuexizhongxin"
                        android:id="@+id/learn"
-                       android:layout_height="80dp"/>
+                       android:layout_height="70dp"/>
             <TextView android:layout_width="wrap_content"
                       android:text="学习中心"
                       android:layout_height="wrap_content"/>
@@ -212,16 +212,16 @@
         <LinearLayout android:layout_width="wrap_content"
                       android:orientation="vertical"
                       android:gravity="center"
-                      android:layout_marginRight="20dp"
+                      android:layout_marginRight="10dp"
                       android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_width="60dp"
                 android:layout_height="60dp">
-                <ImageView android:layout_width="50dp"
+                <ImageView android:layout_width="60dp"
                     android:src="@drawable/shuihu"
                     android:id="@+id/water"
                     android:layout_centerInParent="true"
-                    android:layout_height="50dp"/>
+                    android:layout_height="60dp"/>
                 <ImageView
                     android:layout_width="60dp"
                     android:src="@drawable/xuanzhong"
@@ -245,16 +245,16 @@
         <LinearLayout android:layout_width="wrap_content"
                       android:orientation="vertical"
                       android:gravity="center"
-                      android:layout_marginRight="20dp"
+                      android:layout_marginRight="10dp"
                       android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_width="60dp"
                 android:layout_height="60dp">
-                <ImageView android:layout_width="50dp"
+                <ImageView android:layout_width="45dp"
                     android:src="@drawable/huafei1"
                     android:id="@+id/fertilizer"
                     android:layout_centerInParent="true"
-                    android:layout_height="50dp"/>
+                    android:layout_height="45dp"/>
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_centerInParent="true"
@@ -280,22 +280,22 @@
                       android:orientation="vertical"
                       android:gravity="center"
                       android:id="@+id/harvestbox"
-                      android:layout_marginRight="20dp"
+                      android:layout_marginRight="10dp"
                       android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_width="60dp"
                 android:layout_height="60dp">
-                <ImageView android:layout_width="50dp"
+                <ImageView android:layout_width="45dp"
                     android:src="@drawable/shouhuo"
                     android:id="@+id/harvest"
                     android:layout_centerInParent="true"
-                    android:layout_height="50dp"/>
+                    android:layout_height="45dp"/>
                 <ImageView
-                    android:layout_width="60dp"
+                    android:layout_width="40dp"
                     android:layout_centerInParent="true"
                     android:id="@+id/xzs"
                     android:src="@drawable/xuanzhong"
-                    android:layout_height="60dp"/>
+                    android:layout_height="40dp"/>
             </RelativeLayout>
             <TextView android:layout_width="wrap_content"
                       android:text="收获"
@@ -305,13 +305,13 @@
                       android:orientation="vertical"
                       android:gravity="center"
                       android:id="@+id/bagbox"
-                      android:layout_marginRight="20dp"
+                      android:layout_marginRight="10dp"
                       android:layout_height="wrap_content">
-            <ImageView android:layout_width="60dp"
+            <ImageView android:layout_width="55dp"
                        android:src="@drawable/beibao1"
                        android:id="@+id/bag"
                        android:padding="5dp"
-                       android:layout_height="60dp"/>
+                       android:layout_height="55dp"/>
             <TextView android:layout_width="wrap_content"
                       android:text="背包"
                       android:layout_height="wrap_content"/>

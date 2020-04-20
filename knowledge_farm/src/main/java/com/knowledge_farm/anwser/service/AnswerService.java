@@ -37,13 +37,46 @@ public class AnswerService {
     public Page<Chinese> findChineseOneDown(Pageable pageable){
         return chineseRepository.findByGrade("OneDown",pageable);
     }
+    //查询二年级上册语文题
+    public Page<Chinese> findChineseTwoUp(Pageable pageable){
+        return chineseRepository.findByGrade("TwoUp",pageable);
+    }
+    //查询二年级下册语文题
+    public Page<Chinese> findChineseTwoDown(Pageable pageable){
+        return chineseRepository.findByGrade("TwoDown",pageable);
+    }
+    //查询三年级上册语文题
+    public Page<Chinese> findChineseThreeUp(Pageable pageable){
+        return chineseRepository.findByGrade("ThreeUp",pageable);
+    }
+    //查询三年级下册语文题
+    public Page<Chinese> findChineseThreeDown(Pageable pageable){
+        return chineseRepository.findByGrade("ThreeDown",pageable);
+    }
+
     //查询一年级上册英语题
-    public Page<English> findCEnglishOneUp(Pageable pageable){
+    public Page<English> findEnglishOneUp(Pageable pageable){
         return englishRepository.findByGrade("OneUp",pageable);
     }
     //查询一年级下册英语题
     public Page<English> findEnglishOneDown(Pageable pageable){
         return englishRepository.findByGrade("OneDown",pageable);
+    }
+    //查询二年级上册英语
+    public Page<English> findEnglishTwoUp(Pageable pageable){
+        return englishRepository.findByGrade("TwoUp",pageable);
+    }
+    //查询二年级下册英语
+    public Page<English> findEnglishTwoDown(Pageable pageable){
+        return englishRepository.findByGrade("TwoDown",pageable);
+    }
+    //查询二年级上册英语
+    public Page<English> findEnglishThreeUp(Pageable pageable){
+        return englishRepository.findByGrade("ThreeUp",pageable);
+    }
+    //查询二年级下册英语
+    public Page<English> findEnglishThreeDown(Pageable pageable){
+        return englishRepository.findByGrade("ThreeDown",pageable);
     }
     //一年级上册数学
     public List<Question3Num> getQuestion3OneUpMath(){

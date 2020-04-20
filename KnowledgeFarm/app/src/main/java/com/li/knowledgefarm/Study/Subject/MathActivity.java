@@ -73,8 +73,8 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDensityLand.setDensity(getApplication());
-        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
+//        setDensityLand.setDensity(getApplication());
+//        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
         setContentView(R.layout.activity_math);
         /** 加载视图*/
         getViews();

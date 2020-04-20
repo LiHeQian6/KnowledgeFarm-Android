@@ -1,13 +1,13 @@
 package com.knowledge_farm.entity;
 
-public class BagItem {
+public class BagCropItem {
 	private int number;
 	private Crop crop;
 
-	public BagItem() {
+	public BagCropItem() {
 		super();
 	}
-	public BagItem(int number, Crop crop) {
+	public BagCropItem(int number, Crop crop) {
 		super();
 		this.number = number;
 		this.crop = crop;

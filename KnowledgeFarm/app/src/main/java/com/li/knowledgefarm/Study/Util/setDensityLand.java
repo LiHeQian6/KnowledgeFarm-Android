@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,9 +78,13 @@ public class setDensityLand {
         float targetDensity;
 
         if (orientation.equals("height")) {
-            targetDensity = (appDisplayMetrics.heightPixels + barHeight) / 360f;
+            targetDensity = (appDisplayMetrics.heightPixels) / 360f;
+            Log.e("width",appDisplayMetrics.heightPixels+"");
+            Log.e("height",appDisplayMetrics.widthPixels+"");
         } else {
             targetDensity = appDisplayMetrics.widthPixels / 667f;
+            Log.e("width",appDisplayMetrics.heightPixels+"");
+            Log.e("height",appDisplayMetrics.widthPixels+"");
         }
 
         float targetScaledDensity = targetDensity * (appScaledDensity / appDensity);
