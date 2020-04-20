@@ -1,5 +1,7 @@
 package com.knowledge_farm.front.land.controller;
 
+import com.knowledge_farm.crop.service.CropServiceImpl;
+import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.Land;
 import com.knowledge_farm.front.land.service.LandService;
 import com.knowledge_farm.util.PageUtil;
@@ -8,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @ClassName LandController
@@ -22,6 +26,8 @@ import javax.annotation.Resource;
 public class LandController {
     @Resource
     private LandService landService;
+    @Resource
+    private CropServiceImpl cropService;
 
     @RequestMapping("/findPageLand")
     public String findPageLand(@RequestParam(value = "account", required = false) String account,
@@ -44,10 +50,24 @@ public class LandController {
     @RequestMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, Model model){
         Land land = this.landService.findLandById(id);
+        List<Crop> crops = this.cropService.findAllCrop();
         if(land != null){
             model.addAttribute("land", land);
+            model.addAttribute("crops", crops);
         }
         return "member-land-edit";
+    }
+
+    @RequestMapping("/editLand")
+    @ResponseBody
+    public String editLand(@RequestParam("userId") Integer userId,
+                           @RequestParam("landNumber") String landNumber,
+                           @RequestParam("waterLimit") Integer waterLimit,
+                           @RequestParam("fertilizerLimit") Integer fertilizerLimit,
+                           @RequestParam("progress") Integer progress,
+                           @RequestParam("status") Integer status,
+                           @RequestParam("flag") Integer flag){
+        return this.landService.editLand(userId, landNumber, waterLimit, fertilizerLimit, progress, status, flag);
     }
 
 }

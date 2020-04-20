@@ -651,6 +651,9 @@ public class UserServiceImpl {
         Crop crop = userCrop.getCrop();
         userCrop.setCrop(null);
         userCrop.setProgress(0);
+        userCrop.setWaterLimit(0);
+        userCrop.setFertilizerLimit(0);
+        userCrop.setStatus(1);
         int value = crop.getValue();
         int experience = crop.getExperience();
         int userMoney = user.getMoney();
@@ -730,6 +733,10 @@ public class UserServiceImpl {
 
     public User findUserByAccount(String account){
         return this.userDao.findUserByAccount(account);
+    }
+
+    public void saveUser(User user){
+        this.userDao.save(user);
     }
 
     /**

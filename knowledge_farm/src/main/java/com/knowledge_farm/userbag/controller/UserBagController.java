@@ -1,6 +1,6 @@
 package com.knowledge_farm.userbag.controller;
 
-import com.knowledge_farm.entity.BagItem;
+import com.knowledge_farm.entity.BagCropItem;
 import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.userbag.service.UserBagServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,16 +35,16 @@ public class UserBagController {
      * @return java.util.List<com.atguigu.farm.entity.BagCropItem>
      **/
     @RequestMapping("/initUserBag")
-    public List<BagItem> initUserBag(@RequestParam("userId") Integer userId){
-        List<BagItem> bagItems = this.userBagService.initUserBag(userId);
-        for(BagItem item : bagItems){
+    public List<BagCropItem> initUserBag(@RequestParam("userId") Integer userId){
+        List<BagCropItem> bagCropItems = this.userBagService.initUserBag(userId);
+        for(BagCropItem item : bagCropItems){
             Crop crop = item.getCrop();
             crop.setImg1(photoUrl + crop.getImg1());
             crop.setImg2(photoUrl + crop.getImg2());
             crop.setImg3(photoUrl + crop.getImg3());
             crop.setImg4(photoUrl + crop.getImg4());
         }
-        return bagItems;
+        return bagCropItems;
     }
 
 }

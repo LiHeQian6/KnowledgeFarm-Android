@@ -275,7 +275,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
     private void loginByAccount(String accountStr, String pwdStr) {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
-                .add("accout", accountStr)
+                .add("account", accountStr)
                 .add("password", stringMD5(pwdStr))
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByAccount").build();

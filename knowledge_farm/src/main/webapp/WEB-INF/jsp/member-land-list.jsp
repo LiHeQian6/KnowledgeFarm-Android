@@ -138,7 +138,7 @@
 						</a>
 						<ul id="initUserLandManager" class="sub-menu">
 							<li id="initUserLandManager1">
-								<a href="${ctx}/admin/user/findUserPage">
+								<a href="${ctx}/admin/land/findPageLand">
 									<i class="iconfont">&#xe6a7;</i>
 									土地列表
 								</a>
@@ -154,7 +154,7 @@
         <div class="page-content">
           <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
-            <form class="layui-form xbs" action="${ctx}/admin/user/findUserPage">
+            <form class="layui-form xbs" action="${ctx}/admin/land/findPageLand">
                 <div class="layui-form-pane" style="text-align: center;">
                   <div class="layui-form-item" style="display: inline-block;">
                     <div class="layui-input-inline">
@@ -167,7 +167,7 @@
                 </div> 
             </form>
             <xblock>
-            	<a href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${landPage.currentPageNum}&&pageSize=${landPage.pageSize}">
+            	<a href="${ctx}/admin/land/findPageLand?account=${param.account}&&pageNumber=${landPage.currentPageNum}&&pageSize=${landPage.pageSize}">
             		<button class="layui-btn">
             			<i class="layui-icon">
             				<img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/save.png"/>
@@ -250,10 +250,10 @@
           </div>
           <!-- 分页处理开始 -->
 		  <div align="center">
-			<a  class="page" style="margin-left:25px;" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=1&&pageSize=${landPage.pageSize}">首页</a>
-			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${landPage.prePageNum}&&pageSize=${landPage.pageSize}">上一页</a>
-			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${landPage.nextPageNum}&&pageSize=${landPage.pageSize}">下一页</a>
-			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${landPage.totalPageNum}&&pageSize=${landPage.pageSize}">末页</a>
+			<a  class="page" style="margin-left:25px;" href="${ctx}/admin/land/findPageLand?account=${param.account}&&pageNumber=1&&pageSize=${landPage.pageSize}">首页</a>
+			<a  class="page" href="${ctx}/admin/land/findPageLand?account=${param.account}&&pageNumber=${landPage.prePageNum}&&pageSize=${landPage.pageSize}">上一页</a>
+			<a  class="page" href="${ctx}/admin/land/findPageLand?account=${param.account}&&pageNumber=${landPage.nextPageNum}&&pageSize=${landPage.pageSize}">下一页</a>
+			<a  class="page" href="${ctx}/admin/land/findPageLand?account=${param.account}&&pageNumber=${landPage.totalPageNum}&&pageSize=${landPage.pageSize}">末页</a>
 		  </div>
 		  <div align="center" style="margin-top:20px;">
 			  <span style="margin-right:10px;">${landPage.currentPageNum}</span>
@@ -319,15 +319,6 @@
               start.max = datas; //结束日选好后，重置开始日的最大日期
             }
           };
-          
-          document.getElementById('LAY_demorange_s').onclick = function(){
-            start.elem = this;
-            laydate(start);
-          }
-          document.getElementById('LAY_demorange_e').onclick = function(){
-            end.elem = this
-            laydate(end);
-          }
           
         });
         

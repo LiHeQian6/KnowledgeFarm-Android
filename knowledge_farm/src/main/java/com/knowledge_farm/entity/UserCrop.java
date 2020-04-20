@@ -42,7 +42,6 @@ public class UserCrop {
     }
 
     @Column(name = "water_limit", insertable = false)
-
     public Integer getWaterLimit() {
         return waterLimit;
     }
