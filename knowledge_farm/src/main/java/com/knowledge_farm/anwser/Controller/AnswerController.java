@@ -87,6 +87,66 @@ public class AnswerController {
         Page<Chinese> page =  answerService.findChineseOneDown(PageRequest.of(pageNumber, pageSize));
         return page;
     }
+    /**
+     * @Description: 语文二年级上册
+     * @Param:
+     * @return:
+     * @Author: 景光赞
+     * @Date: 2020/4/9
+     */
+    @ResponseBody
+    @RequestMapping("/ChineseTwoUp")
+    public Page<Chinese> findChineseTwoUp(){
+        int pageNumber = new Random().nextInt(5);
+        int pageSize = 20;
+        Page<Chinese> page =  answerService.findChineseTwoUp(PageRequest.of(pageNumber, pageSize));
+        return page;
+    }
+    /**
+     * @Description: 语文二年级下册
+     * @Param:
+     * @return:
+     * @Author: 景光赞
+     * @Date: 2020/4/9
+     */
+    @ResponseBody
+    @RequestMapping("/ChineseTwoDown")
+    public Page<Chinese> findChineseTwoDown(){
+        int pageNumber = new Random().nextInt(5);
+        int pageSize = 20;
+        Page<Chinese> page =  answerService.findChineseTwoDown(PageRequest.of(pageNumber, pageSize));
+        return page;
+    }
+    /**
+     * @Description: 语文三年级上册
+     * @Param:
+     * @return:
+     * @Author: 景光赞
+     * @Date: 2020/4/9
+     */
+    @ResponseBody
+    @RequestMapping("/ChineseThreeUp")
+    public Page<Chinese> findChineseThreeUp(){
+        int pageNumber = new Random().nextInt(5);
+        int pageSize = 20;
+        Page<Chinese> page =  answerService.findChineseThreeUp(PageRequest.of(pageNumber, pageSize));
+        return page;
+    }
+    /**
+     * @Description: 语文三年级下册
+     * @Param:
+     * @return:
+     * @Author: 景光赞
+     * @Date: 2020/4/9
+     */
+    @ResponseBody
+    @RequestMapping("/ChineseThreeDown")
+    public Page<Chinese> findChineseThreeDown(){
+        int pageNumber = new Random().nextInt(5);
+        int pageSize = 20;
+        Page<Chinese> page =  answerService.findChineseThreeDown(PageRequest.of(pageNumber, pageSize));
+        return page;
+    }
 
     /**
      * @Description: 英语一年级上册
@@ -100,13 +160,12 @@ public class AnswerController {
     public Page<English> englishOneUp() {
         int pageNumber = new Random().nextInt(2);
         int pageSize;
-
         if(pageNumber == 1) {
             pageSize = 20;
         }else {
-            pageSize = 25;
+            pageSize = 29;
         }
-        Page<English> page =  answerService.findEnglishOneDown(PageRequest.of(pageNumber, pageSize));
+        Page<English> page =  answerService.findEnglishOneUp(PageRequest.of(pageNumber, pageSize));
         return page;
     }
     /**
@@ -128,6 +187,74 @@ public class AnswerController {
             pageSize = 25;
         }
         Page<English> page =  answerService.findEnglishOneDown(PageRequest.of(pageNumber, pageSize));
+        return page;
+    }
+    /**
+     * @Description: 英语二年级上册
+     * @Param:
+     * @return:
+     * @Author: 景光赞
+     * @Date: 2020/4/9
+     */
+    @ResponseBody
+    @RequestMapping("/englishTwoUp")
+    public Page<English> englishTwoUp() {
+        int pageNumber = new Random().nextInt(2);
+        int pageSize;
+        if(pageNumber == 1) {
+            pageSize = 25;
+        }else {
+            pageSize = 28;
+        }
+        Page<English> page =  answerService.findEnglishTwoUp(PageRequest.of(pageNumber, pageSize));
+        return page;
+    }
+    /**
+     * @Description: 英语二年级下册
+     * @Param:
+     * @return:
+     * @Author: 景光赞
+     * @Date: 2020/4/9
+     */
+    @ResponseBody
+    @RequestMapping("/englishTwoDown")
+    public Page<English> englishTwoDown() {
+        int pageNumber = new Random().nextInt(2);
+        int pageSize;
+        if(pageNumber == 1) {
+            pageSize = 25;
+        }else {
+            pageSize = 28;
+        }
+        Page<English> page =  answerService.findEnglishTwoDown(PageRequest.of(pageNumber, pageSize));
+        return page;
+    }
+    /**
+     * @Description: 英语三年级上册
+     * @Param:
+     * @return:
+     * @Author: 景光赞
+     * @Date: 2020/4/9
+     */
+    @ResponseBody
+    @RequestMapping("/englishThreeUp")
+    public Page<English> englishThreeUp() {
+        int pageNumber = new Random().nextInt(2);
+        Page<English> page =  answerService.findEnglishThreeUp(PageRequest.of(pageNumber, 30));
+        return page;
+    }
+    /**
+     * @Description: 英语三年级下册
+     * @Param:
+     * @return:
+     * @Author: 景光赞
+     * @Date: 2020/4/9
+     */
+    @ResponseBody
+    @RequestMapping("/englishThreeDown")
+    public Page<English> englishThreeDown() {
+        int pageNumber = new Random().nextInt(2);
+        Page<English> page =  answerService.findEnglishThreeDown(PageRequest.of(pageNumber, 53));
         return page;
     }
 }
