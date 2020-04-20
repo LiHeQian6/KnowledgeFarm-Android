@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.wifi.aware.DiscoverySession;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -116,6 +117,7 @@ public class MyFriendActivity extends AppCompatActivity {
     private User user;
     private float LAND_WIDTH_2=160;
     private float LAND_HEIGHT_2=80;
+    private Handler friendMessagesHandler;
 
 
     @Override
@@ -304,7 +306,7 @@ public class MyFriendActivity extends AppCompatActivity {
             if(user.getLandStauts(finalI)==-1) {//土地状态为-1表示土地未开垦，当第一次运行到的时候表示该块土地上是扩建牌
             }
             else if (user.getLandStauts(finalI)==0) {
-                land.setImageResource(R.drawable.land0);
+                land.setImageResource(R.drawable.land);
                 //种植
                 land.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -321,7 +323,7 @@ public class MyFriendActivity extends AppCompatActivity {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        land.setImageResource(R.drawable.land0);
+                                        land.setImageResource(R.drawable.land);
                                     }
                                 },200);
                                 return true;
@@ -337,7 +339,7 @@ public class MyFriendActivity extends AppCompatActivity {
                         .error(R.drawable.meigui)
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-                land.setImageResource(R.drawable.land0);
+                land.setImageResource(R.drawable.land);
                 plant.setRotationX(-50);
                 plant.setRotation(-5);
                 UserCropItem crop=null;
@@ -371,7 +373,7 @@ public class MyFriendActivity extends AppCompatActivity {
                     //植物成长值
                     progressNum.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
                     if(crop.getState()==0){
-                        land.setImageResource(R.drawable.land_ganhan);
+                        land.setImageResource(R.drawable.land_gan);
                     }
                     //浇水、施肥、收获
                     final UserCropItem finalCrop = crop;
@@ -380,17 +382,19 @@ public class MyFriendActivity extends AppCompatActivity {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
                             if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
-                                System.out.println("x"+motionEvent.getX()+"   y"+motionEvent.getY());
                                 if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
-                                    land.setImageResource(R.drawable.land_lights);
+                                    if(finalCrop.getState()==0){
+                                        land.setImageResource(R.drawable.land_gan_light);
+                                    }else
+                                        land.setImageResource(R.drawable.land_lights);
                                     if(selected==0) {
                                         selectedPlant=finalI;
                                         if(status==1) {
                                             Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                             if(finalCrop.getState()==0){
-                                                land.setImageResource(R.drawable.land_ganhan);
+                                                land.setImageResource(R.drawable.land_gan);
                                             }else
-                                                land.setImageResource(R.drawable.land0);
+                                                land.setImageResource(R.drawable.land);
                                         }
                                         else{
                                             Glide.with(MyFriendActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
@@ -401,9 +405,9 @@ public class MyFriendActivity extends AppCompatActivity {
                                         if(status==1) {
                                             Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                             if(finalCrop.getState()==0){
-                                                land.setImageResource(R.drawable.land_ganhan);
+                                                land.setImageResource(R.drawable.land_gan);
                                             }else
-                                                land.setImageResource(R.drawable.land0);
+                                                land.setImageResource(R.drawable.land);
                                         }else{
                                             Glide.with(MyFriendActivity.this).asGif().load(R.drawable.shifei).into(animation);
                                             operating(-1);//施肥
@@ -420,9 +424,9 @@ public class MyFriendActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 if(finalCrop.getState()==0){
-                                                    land.setImageResource(R.drawable.land_ganhan);
+                                                    land.setImageResource(R.drawable.land_gan);
                                                 }else
-                                                    land.setImageResource(R.drawable.land0);
+                                                    land.setImageResource(R.drawable.land);
                                             }
                                         },200);
                                     }
@@ -454,9 +458,9 @@ public class MyFriendActivity extends AppCompatActivity {
                                                 Toast.makeText(MyFriendActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                             }
                                             if(finalCrop.getState()==0){
-                                                land.setImageResource(R.drawable.land_ganhan);
+                                                land.setImageResource(R.drawable.land_gan);
                                             }else
-                                                land.setImageResource(R.drawable.land0);
+                                                land.setImageResource(R.drawable.land);
                                         }
                                     };
                                 }
@@ -900,8 +904,8 @@ public class MyFriendActivity extends AppCompatActivity {
             sure.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println(add.keySet());
-                    //addFriend();
+                    int option=0;//0表示加好友
+                    operateFriend((String) add.keySet().toArray()[0],option);
                 }
             });
         }else{
@@ -909,7 +913,8 @@ public class MyFriendActivity extends AppCompatActivity {
             sure.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    int option=1;//1表示删好友
+                    operateFriend((String)add.keySet().toArray()[0],option);
                 }
             });
         }
@@ -961,6 +966,51 @@ public class MyFriendActivity extends AppCompatActivity {
         LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params_layout.setMargins(0,(int)(displayHeight*0.12),0,0);
         panduan.setLayoutParams(params_layout);
+    }
+
+    private void operateFriend(final String num, final int option) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request=null;
+                if(option==0)
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/addUserFriend?userId="+LoginActivity.user.getId()+"&account="+num).build();
+                else if(option==1){
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/deleteUserFriend?userId="+LoginActivity.user.getId()+"&account="+num).build();
+                }
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        friendMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        friendMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        friendMessagesHandler=new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String messages = (String)msg.obj;
+                if(!messages.equals("Fail")){
+                    if(messages.equals("false")){
+                        Toast.makeText(MyFriendActivity.this,option==0?"申请失败！":"删除失败！",Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast toast = Toast.makeText(MyFriendActivity.this,"网络异常！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
     }
 
     /**

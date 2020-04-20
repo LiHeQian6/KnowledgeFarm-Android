@@ -14,10 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
-        android:rotation="-10"
-        android:rotationX="20"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
         android:orientation="vertical">
 
         <TextView
@@ -30,8 +26,12 @@
             android:layout_width="match_parent"
             android:id="@+id/lands"
             android:clipChildren="false"
-            android:rotationX="20"
             android:layout_weight="1"
+            android:rotationY="-4"
+            android:rotationX="16"
+            android:rotation="-10"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
             android:layout_marginTop="60dp"
             android:layout_marginLeft="60dp"
             android:layout_height="300dp">
@@ -314,6 +314,21 @@
                        android:layout_height="60dp"/>
             <TextView android:layout_width="wrap_content"
                       android:text="背包"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:orientation="vertical"
+                      android:gravity="center"
+                      android:id="@+id/taskbox"
+                      android:layout_marginRight="20dp"
+                      android:layout_height="wrap_content">
+            <ImageView android:layout_width="60dp"
+                       android:src="@drawable/daytask"
+                       android:id="@+id/task"
+                       android:padding="5dp"
+                       android:layout_height="60dp"/>
+            <TextView android:layout_width="wrap_content"
+                      android:text="每日任务"
                       android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>

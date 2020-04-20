@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <ImageView
         android:tag="land"
-        android:src="@drawable/grassland"
+        android:src="@drawable/land_grass"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"/>
     <ImageView
