@@ -78,6 +78,7 @@ public class Notification {
         this.extra = extra;
     }
 
+    @Column(name = "create_time")
     public Date getCreateTime() {
         return createTime;
     }
@@ -86,6 +87,7 @@ public class Notification {
         this.createTime = createTime;
     }
 
+    @Column(name = "have_read")
     public boolean isHaveRead() {
         return haveRead;
     }
