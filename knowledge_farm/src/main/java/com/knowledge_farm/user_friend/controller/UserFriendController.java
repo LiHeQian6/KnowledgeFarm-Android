@@ -1,9 +1,7 @@
 package com.knowledge_farm.user_friend.controller;
 
-import com.knowledge_farm.entity.Notification;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
-import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_friend.service.UserFriendServiceImpl;
 import com.knowledge_farm.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,31 +81,6 @@ public class UserFriendController {
 
         pageUtil.setList(userVOS);
         return pageUtil;
-    }
-
-    @RequestMapping("/findReceivedNotificationByType")
-    public PageUtil<Notification> findReceivedNotificationByType(@RequestParam("userId") Integer userId,
-                                                            @RequestParam("typeId") Integer typeId,
-                                                            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                                            @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
-        Page<Notification> page = this.userFriendService.findReceivedNotificationByType(userId, typeId, pageNumber, pageSize);
-        PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
-        pageUtil.setTotalCount((int) page.getTotalElements());
-        for(Notification notification : page.getContent()){
-            User from = notification.getFrom();
-            User to = notification.getTo();
-            from.setPhoto(this.photoUrl + from.getPhoto());
-            if(!to.getPhoto().contains("http://")){
-                to.setPhoto(this.photoUrl + to.getPhoto());
-            }
-        }
-        pageUtil.setList(page.getContent());
-        return pageUtil;
-    }
-
-    @RequestMapping("/addUserFriendNotification")
-    public String addUserFriendNotification(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
-        return this.userFriendService.addUserFriendNotification(userId, account);
     }
 
     @RequestMapping("/addUserFriend")

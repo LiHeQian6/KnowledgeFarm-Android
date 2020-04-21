@@ -61,6 +61,7 @@ public class User {
         this.account = account;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
