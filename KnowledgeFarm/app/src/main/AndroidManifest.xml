@@ -4,6 +4,7 @@
     package="com.li.knowledgefarm">
 
     <application
+        android:name=".Jpush.Myapplication"
         android:allowBackup="true"
         android:fitsSystemWindows="true"
         android:largeHeap="true"
@@ -95,6 +96,26 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
+        <service android:name=".Jpush.MyService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":pushcore">
+            <intent-filter>
+                <action android:name="cn.jiguang.user.service.action" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".Jpush.MyReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+                <category android:name="com.li.knowledgefarm" />
+            </intent-filter>
+        </receiver>
     </application>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
@@ -104,4 +125,5 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
 </manifest>

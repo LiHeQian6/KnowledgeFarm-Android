@@ -10,6 +10,16 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            //选择要添加的对应 cpu 类型的 .so 库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+        }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "bec277fa8d01b31d184489db", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+        ]
     }
     buildTypes {
         release {
@@ -41,4 +51,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'cn.jiguang.sdk:jpush:3.6.0'  // 此处以JPush 3.6.0 版本为例。
+    implementation 'cn.jiguang.sdk:jcore:2.3.4'
 }
