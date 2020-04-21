@@ -7,7 +7,7 @@ import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserCrop;
 import com.knowledge_farm.front.land.dao.LandDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
-import com.knowledge_farm.usercrop.service.UserCropServiceImpl;
+import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import com.knowledge_farm.util.PageUtil;
 import com.knowledge_farm.util.UserCropGrowJob;
 import org.quartz.*;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName LandService
@@ -55,6 +56,10 @@ public class LandService {
 
     public Land findLandById(Integer id){
         return this.landDao.findLandById(id);
+    }
+
+    public List<Crop> findAllCrop(){
+        return this.cropService.findAllCrop();
     }
 
     @Transactional(readOnly = false)

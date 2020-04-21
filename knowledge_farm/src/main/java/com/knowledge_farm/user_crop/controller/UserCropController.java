@@ -1,8 +1,8 @@
-package com.knowledge_farm.usercrop.controller;
+package com.knowledge_farm.user_crop.controller;
 
 import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.UserCrop;
-import com.knowledge_farm.usercrop.service.UserCropServiceImpl;
+import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.RequestMapping;

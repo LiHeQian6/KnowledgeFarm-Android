@@ -118,21 +118,4 @@ public class Crop {
         this.exist = exist;
     }
 
-    @Override
-    public String toString() {
-        return "Crop{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", img1='" + img1 + '\'' +
-                ", img2='" + img2 + '\'' +
-                ", img3='" + img3 + '\'' +
-                ", img4='" + img4 + '\'' +
-                ", matureTime=" + matureTime +
-                ", value=" + value +
-                ", experience=" + experience +
-                ", exist=" + exist +
-                '}';
-    }
-
 }

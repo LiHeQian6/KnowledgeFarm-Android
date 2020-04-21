@@ -1,10 +1,10 @@
-package com.knowledge_farm.userbag.service;
+package com.knowledge_farm.user_bag.service;
 
 import com.knowledge_farm.entity.BagCropItem;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserBag;
 import com.knowledge_farm.user.service.UserServiceImpl;
-import com.knowledge_farm.userbag.dao.UserBagDao;
+import com.knowledge_farm.user_bag.dao.UserBagDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

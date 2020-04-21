@@ -26,8 +26,6 @@ import java.util.List;
 public class LandController {
     @Resource
     private LandService landService;
-    @Resource
-    private CropServiceImpl cropService;
 
     @RequestMapping("/findPageLand")
     public String findPageLand(@RequestParam(value = "account", required = false) String account,
@@ -50,7 +48,7 @@ public class LandController {
     @RequestMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, Model model){
         Land land = this.landService.findLandById(id);
-        List<Crop> crops = this.cropService.findAllCrop();
+        List<Crop> crops = this.landService.findAllCrop();
         if(land != null){
             model.addAttribute("land", land);
             model.addAttribute("crops", crops);

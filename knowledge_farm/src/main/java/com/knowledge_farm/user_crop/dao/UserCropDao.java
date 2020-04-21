@@ -1,4 +1,4 @@
-package com.knowledge_farm.usercrop.dao;
+package com.knowledge_farm.user_crop.dao;
 
 import com.knowledge_farm.entity.UserCrop;
 import org.springframework.data.jpa.repository.JpaRepository;

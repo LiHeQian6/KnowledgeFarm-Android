@@ -1,7 +1,7 @@
-package com.knowledge_farm.userauthority.service;
+package com.knowledge_farm.user_authority.service;
 
 import com.knowledge_farm.entity.UserAuthority;
-import com.knowledge_farm.userauthority.dao.UserAuthorityDao;
+import com.knowledge_farm.user_authority.dao.UserAuthorityDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

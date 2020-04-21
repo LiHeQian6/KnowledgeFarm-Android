@@ -1,8 +1,8 @@
-package com.knowledge_farm.userbag.controller;
+package com.knowledge_farm.user_bag.controller;
 
 import com.knowledge_farm.entity.BagCropItem;
 import com.knowledge_farm.entity.Crop;
-import com.knowledge_farm.userbag.service.UserBagServiceImpl;
+import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.RequestMapping;

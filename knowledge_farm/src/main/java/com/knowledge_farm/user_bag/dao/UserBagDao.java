@@ -1,4 +1,4 @@
-package com.knowledge_farm.userbag.dao;
+package com.knowledge_farm.user_bag.dao;
 
 import com.knowledge_farm.entity.UserBag;
 import org.springframework.data.jpa.repository.JpaRepository;

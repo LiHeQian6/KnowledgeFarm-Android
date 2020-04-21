@@ -1,4 +1,4 @@
-package com.knowledge_farm.userfriend.dao;
+package com.knowledge_farm.user_friend.dao;
 
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserFriend;
