@@ -1,4 +1,4 @@
-package com.knowledge_farm.userauthority.dao;
+package com.knowledge_farm.user_authority.dao;
 
 import com.knowledge_farm.entity.UserAuthority;
 import org.springframework.data.jpa.repository.JpaRepository;

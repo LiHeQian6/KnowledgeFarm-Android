@@ -15,6 +15,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "user")
+//@NamedEntityGraph(name = "Category.Graph", attributeNodes = {@NamedAttributeNode("land"), @NamedAttributeNode("userAuthority"), @NamedAttributeNode("userBags"), @NamedAttributeNode("task")})
 public class User {
     private Integer id;
     private String account;
@@ -37,6 +38,9 @@ public class User {
     private UserAuthority userAuthority;
     private Set<UserBag> userBags = new HashSet<>();
     private Task task;
+    private Set<UserFriend> userFriends = new HashSet<>();
+    private Set<Notification> sendNotifications = new HashSet<>();
+    private Set<Notification> ReceiveNotifications = new HashSet<>();
 
     @Id
     @GeneratedValue(generator="identity")
@@ -208,8 +212,8 @@ public class User {
         this.userAuthority = userAuthority;
     }
 
-    @OneToMany(targetEntity=UserBag.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     public Set<UserBag> getUserBags() {
         return userBags;
     }
@@ -219,6 +223,7 @@ public class User {
     }
 
     @OneToOne(mappedBy = "user")
+    @JsonIgnore
     public Task getTask() {
         return task;
     }
@@ -227,30 +232,34 @@ public class User {
         this.task = task;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", account='" + account + '\'' +
-                ", password='" + password + '\'' +
-                ", nickName='" + nickName + '\'' +
-                ", photo='" + photo + '\'' +
-                ", email='" + email + '\'' +
-                ", level=" + level +
-                ", experience=" + experience +
-                ", grade=" + grade +
-                ", money=" + money +
-                ", mathRewardCount=" + mathRewardCount +
-                ", englishRewardCount=" + englishRewardCount +
-                ", chineseRewardCount=" + chineseRewardCount +
-                ", water=" + water +
-                ", fertilizer=" + fertilizer +
-                ", online=" + online +
-                ", exist=" + exist +
-                ", land=" + land +
-                ", userAuthority=" + userAuthority +
-                ", userBags=" + userBags +
-                '}';
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    public Set<UserFriend> getUserFriends() {
+        return userFriends;
+    }
+
+    public void setUserFriends(Set<UserFriend> userFriends) {
+        this.userFriends = userFriends;
+    }
+
+    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)
+    @JsonIgnore
+    public Set<Notification> getSendNotifications() {
+        return sendNotifications;
+    }
+
+    public void setSendNotifications(Set<Notification> sendNotifications) {
+        this.sendNotifications = sendNotifications;
+    }
+
+    @OneToMany(mappedBy = "to", cascade = CascadeType.ALL)
+    @JsonIgnore
+    public Set<Notification> getReceiveNotifications() {
+        return ReceiveNotifications;
+    }
+
+    public void setReceiveNotifications(Set<Notification> receiveNotifications) {
+        ReceiveNotifications = receiveNotifications;
     }
 
 }

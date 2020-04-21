@@ -136,11 +136,11 @@ public class JpushService {
                 clientConfig);
         try {
             URI uri = new URI(host + clientConfig.get(ClientConfig.PUSH_PATH));
-            PushPayload payload = buildPushPayload(title, content, extrasMap, alias);
+            PushPayload payload = buildCustomPushPayload(title, content, extrasMap, alias);
             client.sendRequest(HttpMethod.POST, payload.toString(), uri, new NettyHttpClient.BaseCallback() {
                 @Override
                 public void onSucceed(ResponseWrapper responseWrapper) {
-                    if (200 == responseWrapper.responseCode) {
+                    if (responseWrapper.responseCode == 200) {
                         LOG.info("极光推送成功");
                     } else {
                         LOG.info("极光推送失败，返回结果: " + responseWrapper.responseContent);

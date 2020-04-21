@@ -77,16 +77,4 @@ public class UserCrop {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "UserCrop{" +
-                "id=" + id +
-                ", crop=" + crop +
-                ", waterLimit=" + waterLimit +
-                ", fertilizerLimit=" + fertilizerLimit +
-                ", progress=" + progress +
-                ", status=" + status +
-                '}';
-    }
-
 }

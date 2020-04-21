@@ -1,9 +1,10 @@
-package com.knowledge_farm.userfriend.controller;
+package com.knowledge_farm.user_friend.controller;
 
+import com.knowledge_farm.entity.Notification;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.user.service.UserServiceImpl;
-import com.knowledge_farm.userfriend.service.UserFriendServiceImpl;
+import com.knowledge_farm.user_friend.service.UserFriendServiceImpl;
 import com.knowledge_farm.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -29,8 +30,6 @@ import java.util.List;
 public class UserFriendController {
     @Resource
     private UserFriendServiceImpl userFriendService;
-    @Resource
-    private UserServiceImpl userService;
     @Value("${file.photoUrl}")
     private String photoUrl;
 
@@ -53,7 +52,7 @@ public class UserFriendController {
         List<UserVO> userVOS = new ArrayList<>();
         for(User user : page.getContent()){
             UserVO userVO = varyUserToUserVO(user);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
+            userVO.setPhoto(this.photoUrl + userVO.getPhoto());
             userVOS.add(userVO);
         }
 
@@ -72,19 +71,44 @@ public class UserFriendController {
     public PageUtil<UserVO> findAllUser(@RequestParam(value = "account", required = false) String account,
                                         @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                         @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize) {
-        Page<User> page = this.userService.findAllUserByAccount(account, pageNumber, pageSize);
+        Page<User> page = this.userFriendService.findAllUserByAccount(account, pageNumber, pageSize);
         PageUtil<UserVO> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
 
         List<UserVO> userVOS = new ArrayList<>();
         for(User user : page.getContent()){
             UserVO userVO = varyUserToUserVO(user);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
+            userVO.setPhoto(this.photoUrl + userVO.getPhoto());
             userVOS.add(userVO);
         }
 
         pageUtil.setList(userVOS);
         return pageUtil;
+    }
+
+    @RequestMapping("/findReceivedNotificationByType")
+    public PageUtil<Notification> findReceivedNotificationByType(@RequestParam("userId") Integer userId,
+                                                            @RequestParam("typeId") Integer typeId,
+                                                            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                                            @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
+        Page<Notification> page = this.userFriendService.findReceivedNotificationByType(userId, typeId, pageNumber, pageSize);
+        PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
+        pageUtil.setTotalCount((int) page.getTotalElements());
+        for(Notification notification : page.getContent()){
+            User from = notification.getFrom();
+            User to = notification.getTo();
+            from.setPhoto(this.photoUrl + from.getPhoto());
+            if(!to.getPhoto().contains("http://")){
+                to.setPhoto(this.photoUrl + to.getPhoto());
+            }
+        }
+        pageUtil.setList(page.getContent());
+        return pageUtil;
+    }
+
+    @RequestMapping("/addUserFriendNotification")
+    public String addUserFriendNotification(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
+        return this.userFriendService.addUserFriendNotification(userId, account);
     }
 
     @RequestMapping("/addUserFriend")

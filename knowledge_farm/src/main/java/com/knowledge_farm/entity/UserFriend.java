@@ -32,7 +32,6 @@ public class UserFriend {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     public User getUser() {
         return user;
     }
@@ -43,7 +42,6 @@ public class UserFriend {
 
     @ManyToOne
     @JoinColumn(name = "friend_id")
-    @JsonIgnore
     public User getFriendUser() {
         return friendUser;
     }
@@ -59,16 +57,6 @@ public class UserFriend {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "UserFriend{" +
-                "id=" + id +
-                ", user=" + user +
-                ", friendUser=" + friendUser +
-                ", status=" + status +
-                '}';
     }
 
 }

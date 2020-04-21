@@ -1,10 +1,10 @@
-package com.knowledge_farm.usercrop.service;
+package com.knowledge_farm.user_crop.service;
 
 import com.knowledge_farm.entity.Land;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserCrop;
 import com.knowledge_farm.user.service.UserServiceImpl;
-import com.knowledge_farm.usercrop.dao.UserCropDao;
+import com.knowledge_farm.user_crop.dao.UserCropDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

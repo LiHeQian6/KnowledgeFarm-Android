@@ -20,7 +20,7 @@ public class JpushController {
 
     @RequestMapping("/send")
     public String send(){
-        this.jpushService.sendPush("test_second", "Can you receive the message?", new HashMap<String, String>(), null);
+        this.jpushService.sendPushWithCallback("test_second", "Can you receive the message?", new HashMap<String, String>(), "alias1");
         return "ok";
     }
 
