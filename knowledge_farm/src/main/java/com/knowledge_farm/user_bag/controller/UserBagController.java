@@ -20,7 +20,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/bag")
-@PropertySource(value = {"classpath:photo.properties"})
 public class UserBagController {
     @Resource
     private UserBagServiceImpl userBagService;

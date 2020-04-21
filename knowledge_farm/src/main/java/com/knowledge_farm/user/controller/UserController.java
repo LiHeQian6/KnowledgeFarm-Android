@@ -1,5 +1,6 @@
 package com.knowledge_farm.user.controller;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.user.service.UserServiceImpl;
@@ -29,7 +30,6 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/user")
-@PropertySource(value = {"classpath:photo.properties"})
 public class UserController {
     @Resource
     private UserServiceImpl userService;
@@ -130,9 +130,9 @@ public class UserController {
      **/
     @RequestMapping("/registAccount")
     public String registAccount(@RequestParam("nickName") String nickName,
-                               @RequestParam("grade") Integer grade,
-                               @RequestParam(value = "email", defaultValue = "") String email,
-                               @RequestParam("password") String password){
+                                @RequestParam("grade") Integer grade,
+                                @RequestParam(value = "email", defaultValue = "") String email,
+                                @RequestParam("password") String password){
 
         Object obj = this.userService.registAccount(nickName, grade, email, password);
         if(obj instanceof User){
@@ -164,15 +164,7 @@ public class UserController {
      **/
     @RequestMapping("/resetUserPassword")
     public String resetUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
-        try {
-            User user = this.userService.editPasswordByAccount(account, password);
-            if(user != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editPasswordByAccount(account, password);
     }
 
     /**
@@ -185,15 +177,7 @@ public class UserController {
     @RequestMapping("/updateUserNickName")
     public String updateUserNickName(@RequestParam("account") String account,
                                      @RequestParam("nickName") String nickName){
-        try {
-            User user = this.userService.editNickNameByAccount(account, nickName);
-            if(user != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editNickNameByAccount(account, nickName);
     }
 
     /**
@@ -206,15 +190,7 @@ public class UserController {
     @RequestMapping("/updateUserGrade")
     public String updateUserGrade(@RequestParam("account") String account,
                                   @RequestParam("grade") Integer grade){
-        try {
-            User user = this.userService.editGradeByAccount(account, grade);
-            if(user != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editGradeByAccount(account, grade);
     }
 
     /**
@@ -228,18 +204,14 @@ public class UserController {
     public String updateUserPassword(@RequestParam("account") String account,
                                      @RequestParam("oldPassword") String oldPassword,
                                      @RequestParam("newPassword") String newPassword){
+        User user = this.userService.findUserByAccount(account);
         try {
-            User user = this.userService.findUserByAccount(account);
-            if(user != null){
-                if(user.getPassword().equals(oldPassword)){
-                    this.userService.editPasswordByAccount(account, newPassword);
-                    return "true";
-                }
-                return "PasswordError";
+            if(user.getPassword().equals(oldPassword)){
+                return this.userService.editPasswordByAccount(account, newPassword);
             }
-            return "notExist";
+            return Result.PASSWORD_ERROR;
         }catch (Exception e){
-            return "false";
+            return Result.FALSE;
         }
     }
 
@@ -266,16 +238,12 @@ public class UserController {
             String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
             FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
             photo = this.userPhotoFolderName + "/" + photoName;
-            try {
-                if(this.userService.editPhotoById(id, photo) != null){
-                    return photo;
-                }
-                return "notExist";
-            }catch (Exception e){
-                return "fail";
+            if(this.userService.editPhotoById(id, photo) == Result.TRUE){
+                return photo;
             }
+            return Result.FALSE;
         }
-        return "nullPicture";
+        return Result.NULL;
     }
     /**
      * @Author 张帅华
@@ -326,9 +294,9 @@ public class UserController {
             if(Email.bindingMail(email)){
                 return Email.getCode();
             }
-            return "fail";
+            return Result.FAIL;
         }
-        return "already";
+        return Result.ALREADY;
     }
 
     /**
@@ -340,14 +308,7 @@ public class UserController {
      **/
     @RequestMapping("/bindingEmail")
     public String bindingEmail(@RequestParam("account") String account, @RequestParam("email") String email){
-        try {
-            if(this.userService.editEmail(account, email) != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editEmail(account, email);
     }
 
     /**
@@ -359,14 +320,7 @@ public class UserController {
      **/
     @RequestMapping("/unBindingEmail")
     public String unBindingEmail(@RequestParam("account") String account){
-        try {
-            if(this.userService.editEmail(account, "") != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editEmail(account, "");
     }
 
     /**

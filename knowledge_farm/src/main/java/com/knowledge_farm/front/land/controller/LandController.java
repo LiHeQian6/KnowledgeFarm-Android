@@ -1,6 +1,5 @@
 package com.knowledge_farm.front.land.controller;
 
-import com.knowledge_farm.crop.service.CropServiceImpl;
 import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.Land;
 import com.knowledge_farm.front.land.service.LandService;

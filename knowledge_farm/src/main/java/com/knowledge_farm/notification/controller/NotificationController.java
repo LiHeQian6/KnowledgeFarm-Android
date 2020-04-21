@@ -23,7 +23,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/notification")
-@PropertySource(value = {"classpath:photo.properties"})
 public class NotificationController {
     @Resource
     private NotificationService notificationService;

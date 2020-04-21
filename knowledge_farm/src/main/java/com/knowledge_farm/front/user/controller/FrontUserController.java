@@ -1,5 +1,6 @@
 package com.knowledge_farm.front.user.controller;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.front.user.service.FrontUserServiceImpl;
@@ -34,7 +35,6 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/admin/user")
-@PropertySource(value = {"classpath:photo.properties"})
 public class FrontUserController {
     @Resource
     private FrontUserServiceImpl frontUserService;
@@ -93,9 +93,8 @@ public class FrontUserController {
             return "member-list";
         }else if(exist == 0){
             return "member-del";
-        }else{
-            return "member-land-list";
         }
+        return "";
     }
 
     @RequestMapping("/deleteOneUser")
@@ -166,13 +165,11 @@ public class FrontUserController {
                     user.setPhoto(this.userPhotoFolderName + "/" + photoName);
                 }
                 this.frontUserService.save(user);
-                return "succeed";
+                return Result.SUCCEED;
             }
-            return "already";
-        }catch (NullPointerException | IOException e){
-            return null;
+            return Result.ALREADY;
         }catch (Exception e){
-            return "fail";
+            return Result.FAIL;
         }
     }
 

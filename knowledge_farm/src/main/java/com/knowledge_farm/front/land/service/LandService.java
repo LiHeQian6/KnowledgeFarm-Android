@@ -1,10 +1,7 @@
 package com.knowledge_farm.front.land.service;
 
 import com.knowledge_farm.crop.service.CropServiceImpl;
-import com.knowledge_farm.entity.Crop;
-import com.knowledge_farm.entity.Land;
-import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserCrop;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.front.land.dao.LandDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
@@ -171,11 +168,9 @@ public class LandService {
                     }
                 }
             }
-            return "succeed";
-        }catch (NullPointerException e){
-            return null;
+            return Result.SUCCEED;
         }catch (Exception e){
-            return "fail";
+            return Result.FAIL;
         }
     }
 

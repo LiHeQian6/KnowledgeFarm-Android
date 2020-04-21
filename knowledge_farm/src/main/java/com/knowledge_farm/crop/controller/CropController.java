@@ -19,7 +19,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/crop")
-@PropertySource(value = {"classpath:photo.properties"})
 public class CropController {
     @Resource
     private CropServiceImpl cropService;

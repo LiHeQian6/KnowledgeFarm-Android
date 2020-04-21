@@ -33,7 +33,6 @@
         function updateUserLand (title,url,w,h) {
             x_admin_show(title,url,w,h); 
         }
-     	     
     </script>
    
 </head>

@@ -1,5 +1,6 @@
 package com.knowledge_farm.user_friend.service;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserFriend;
 import com.knowledge_farm.user.service.UserServiceImpl;
@@ -45,9 +46,9 @@ public class UserFriendServiceImpl {
             userFriend.setUser(user);
             userFriend.setFriendUser(friendUser);
             this.userFriendDao.save(userFriend);
-            return "true";
+            return Result.TRUE;
         }catch (Exception e){
-            return "false";
+            return Result.FALSE;
         }
     }
 
@@ -58,9 +59,9 @@ public class UserFriendServiceImpl {
         try {
             UserFriend userFriend = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
             this.userFriendDao.delete(userFriend);
-            return "true";
+            return Result.TRUE;
         }catch (Exception e){
-            return "false";
+            return Result.FALSE;
         }
     }
 

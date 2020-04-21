@@ -23,7 +23,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/userfriend")
-@PropertySource(value = {"classpath:photo.properties"})
 public class UserFriendController {
     @Resource
     private UserFriendServiceImpl userFriendService;
