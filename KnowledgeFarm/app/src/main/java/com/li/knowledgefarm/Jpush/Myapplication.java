@@ -17,5 +17,6 @@ public class Myapplication extends Application {
         super.onCreate();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+        JPushInterface.setAlias(this,1,"sun");
     }
 }

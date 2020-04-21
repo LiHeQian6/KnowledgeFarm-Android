@@ -13,32 +13,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="系统通知"
-            android:textColor="@color/blackTextColor"
-            android:background="@null"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/blackTextColor"/>
+            android:textSize="17dp"
+            android:id="@+id/system_btn"
+            android:background="@drawable/buttonbackground"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="好友申请"
-            android:textColor="@color/blackTextColor"
-            android:background="@null"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/blackTextColor"/>
+            android:textSize="17dp"
+            android:id="@+id/friend_btn"
+            android:background="@drawable/buttonbackground"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="消息通知"
-            android:textColor="@color/blackTextColor"
-            android:background="@null"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/blackTextColor"/>
+            android:textSize="17dp"
+            android:id="@+id/message_btn"
+            android:background="@drawable/buttonbackground"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="1dp"

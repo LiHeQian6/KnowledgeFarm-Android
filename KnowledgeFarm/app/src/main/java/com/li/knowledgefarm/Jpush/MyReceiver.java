@@ -20,6 +20,7 @@ public class MyReceiver extends JPushMessageReceiver {
         String title = customMessage.title;
         String message = customMessage.message;
         String extra = customMessage.extra;
+        String type = customMessage.contentType;
         Log.e("自定义消息：",title+","+message+","+extra);
     }
 }
