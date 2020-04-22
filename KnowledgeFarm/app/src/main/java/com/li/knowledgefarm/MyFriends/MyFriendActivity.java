@@ -975,7 +975,7 @@ public class MyFriendActivity extends AppCompatActivity {
                 super.run();
                 Request request=null;
                 if(option==0)
-                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/addUserFriend?userId="+LoginActivity.user.getId()+"&account="+num).build();
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/addUserFriendNotification?userId="+LoginActivity.user.getId()+"&account="+num).build();
                 else if(option==1){
                     request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/deleteUserFriend?userId="+LoginActivity.user.getId()+"&account="+num).build();
                 }

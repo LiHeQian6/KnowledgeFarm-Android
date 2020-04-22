@@ -54,6 +54,7 @@ import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
+import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
@@ -129,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
     private float LAND_WIDTH_2=150;
     private float LAND_HEIGHT_2=76;
     private Handler friendMessagesHandler;
+    private ImageView dayTask;
+    private DayTaskPopUpWindow dayTaskPopUpWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +181,13 @@ public class MainActivity extends AppCompatActivity {
         notifyPopUpWindow = new NotifyPopUpWindow(this);
         notifyPopUpWindow.showAtLocation(notify,Gravity.CENTER,0,0);
     }
+
+    private void showDayTaskWindow(){
+        dayTaskPopUpWindow = new DayTaskPopUpWindow(this);
+        dayTaskPopUpWindow.showAtLocation(dayTask,Gravity.CENTER,0,0);
+    }
+
+
 
     /**
      * @Description 设置控件大小
@@ -422,6 +432,7 @@ public class MainActivity extends AppCompatActivity {
                     //展示植物不同阶段
                     final double status = (crop.getProgress()+0.0) / crop.getCrop().getMatureTime();
                     if(status <0.2){
+                        plant.setTranslationY(40);
                         plant.setImageResource(R.drawable.seed);
                     }else if (status<0.3){
                         Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
@@ -613,6 +624,7 @@ public class MainActivity extends AppCompatActivity {
         myFriends.setOnClickListener(new MainListener());
         notify.setOnClickListener(new MainListener());
         photo.setOnClickListener(new MainListener());
+        dayTask.setOnClickListener(new MainListener());
     }
 
     /**
@@ -718,6 +730,7 @@ public class MainActivity extends AppCompatActivity {
         myFriends=findViewById(R.id.friends);
         notify = findViewById(R.id.notify_img);
         notify_list_view = findViewById(R.id.notify_list_view);
+        dayTask=findViewById(R.id.task);
     }
 
     class MainListener implements View.OnClickListener {
@@ -815,6 +828,9 @@ public class MainActivity extends AppCompatActivity {
                     intent.setClass(MainActivity.this, SettingActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0,0);
+                    break;
+                case R.id.task:
+                    showDayTaskWindow();
                     break;
             }
         }
@@ -1136,7 +1152,7 @@ public class MainActivity extends AppCompatActivity {
                 super.run();
                 Request request=null;
                 if(option==0)
-                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/addUserFriend?userId="+LoginActivity.user.getId()+"&account="+num).build();
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/addUserFriendNotification?userId="+LoginActivity.user.getId()+"&account="+num).build();
                 else if(option==1){
                     request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/deleteUserFriend?userId="+LoginActivity.user.getId()+"&account="+num).build();
                 }
