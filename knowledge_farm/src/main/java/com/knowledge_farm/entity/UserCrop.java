@@ -32,7 +32,7 @@ public class UserCrop {
     }
 
     @ManyToOne
-    @JoinColumn(name = "crop_id")
+    @JoinColumn(name = "crop_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public Crop getCrop() {
         return crop;
     }
@@ -41,7 +41,7 @@ public class UserCrop {
         this.crop = crop;
     }
 
-    @Column(name = "water_limit", insertable = false)
+    @Column(name = "water_limit", insertable = false, columnDefinition = "int default 15")
     public Integer getWaterLimit() {
         return waterLimit;
     }
@@ -50,7 +50,7 @@ public class UserCrop {
         this.waterLimit = waterLimit;
     }
 
-    @Column(name = "fertilizer_limit", insertable = false)
+    @Column(name = "fertilizer_limit", insertable = false, columnDefinition = "int default 15")
     public Integer getFertilizerLimit() {
         return fertilizerLimit;
     }
@@ -59,7 +59,7 @@ public class UserCrop {
         this.fertilizerLimit = fertilizerLimit;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 0")
     public Integer getProgress() {
         return progress;
     }
@@ -68,25 +68,13 @@ public class UserCrop {
         this.progress = progress;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "UserCrop{" +
-                "id=" + id +
-                ", crop=" + crop +
-                ", waterLimit=" + waterLimit +
-                ", fertilizerLimit=" + fertilizerLimit +
-                ", progress=" + progress +
-                ", status=" + status +
-                '}';
     }
 
 }

@@ -107,7 +107,7 @@ public class Task {
     }
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnore
     public User getUser() {
         return user;

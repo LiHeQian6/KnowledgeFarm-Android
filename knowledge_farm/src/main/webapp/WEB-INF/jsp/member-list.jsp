@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!doctype html>
 <html lang="en">
@@ -257,7 +258,12 @@
 	                        <td>${userPage.nickName}</td>
 	                        <td>
 	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
-	                        		<img style="width:50px;height:50px;" src="${ctx}/photo/${userPage.photo}"/>
+									<c:if test="${fn:startsWith(userPage.photo, 'http')}">
+										<img style="width:50px;height:50px;" src="${userPage.photo}"/>
+									</c:if>
+									<c:if test="${not fn:startsWith(userPage.photo, 'http')}">
+										<img style="width:50px;height:50px;" src="${ctx}/photo/${userPage.photo}"/>
+									</c:if>
 	                        	</div>
 	                        </td>
 	                        <td>

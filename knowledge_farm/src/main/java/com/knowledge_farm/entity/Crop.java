@@ -109,30 +109,13 @@ public class Crop {
         this.experience = experience;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }
 
     public void setExist(Integer exist) {
         this.exist = exist;
-    }
-
-    @Override
-    public String toString() {
-        return "Crop{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", img1='" + img1 + '\'' +
-                ", img2='" + img2 + '\'' +
-                ", img3='" + img3 + '\'' +
-                ", img4='" + img4 + '\'' +
-                ", matureTime=" + matureTime +
-                ", value=" + value +
-                ", experience=" + experience +
-                ", exist=" + exist +
-                '}';
     }
 
 }

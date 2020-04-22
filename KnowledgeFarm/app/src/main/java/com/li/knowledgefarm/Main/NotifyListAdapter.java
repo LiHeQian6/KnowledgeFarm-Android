@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.Notification;
 
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,11 @@ import java.util.Map;
 
 public class NotifyListAdapter extends BaseAdapter {
 
-    private List<Map<String,String>> list;
+    private List<Notification> list;
     private int id;
     private Context context;
 
-    public NotifyListAdapter(List<Map<String,String>> list, int id, Context context) {
+    public NotifyListAdapter(List<Notification> list, int id, Context context) {
         this.list = list;
         this.id = id;
         this.context = context;
@@ -56,8 +57,8 @@ public class NotifyListAdapter extends BaseAdapter {
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.title.setText(list.get(position).get("title"));
-        viewHolder.content.setText(list.get(position).get("content"));
+        viewHolder.title.setText(list.get(position).getTitle());
+        viewHolder.content.setText(list.get(position).getContent());
         return convertView;
     }
 

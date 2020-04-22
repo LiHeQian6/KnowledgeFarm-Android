@@ -1,5 +1,6 @@
 package com.knowledge_farm.front.user.controller;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.front.user.service.FrontUserServiceImpl;
@@ -34,7 +35,6 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/admin/user")
-@PropertySource(value = {"classpath:photo.properties"})
 public class FrontUserController {
     @Resource
     private FrontUserServiceImpl frontUserService;
@@ -56,8 +56,8 @@ public class FrontUserController {
     public String toEdit(@RequestParam("id") Integer id, Model model) {
         User user = this.frontUserService.findUserById(id);
         if(user != null){
-            UserVO userVO = varyUserToUserVO(user);
-            model.addAttribute("user", userVO);
+            user.setPassword("");
+            model.addAttribute("user", user);
         }
         return "member-edit";
     }
@@ -66,8 +66,8 @@ public class FrontUserController {
     public String toPassword(@RequestParam("id") Integer id, Model model){
         User user = this.frontUserService.findUserById(id);
         if(user != null){
-            UserVO userVO = varyUserToUserVO(user);
-            model.addAttribute("user", userVO);
+            user.setPassword("");
+            model.addAttribute("user", user);
         }
         return "member-password";
     }
@@ -79,23 +79,20 @@ public class FrontUserController {
                                @RequestParam("exist") Integer exist,
                                Model model){
         Page<User> page =  this.frontUserService.findUserPage(account, exist, pageNumber, pageSize);
-        PageUtil<UserVO> pageUtil = new PageUtil(pageNumber, pageSize);
+        PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-        List<UserVO> userVOS = new ArrayList<>();
         for(User user : page.getContent()){
-            UserVO userVO = varyUserToUserVO(user);
-            userVOS.add(userVO);
+            user.setPassword("");
         }
-        pageUtil.setList(userVOS);
+        pageUtil.setList(page.getContent());
         model.addAttribute("userPage", pageUtil);
 
         if(exist == 1){
             return "member-list";
         }else if(exist == 0){
             return "member-del";
-        }else{
-            return "member-land-list";
         }
+        return "";
     }
 
     @RequestMapping("/deleteOneUser")
@@ -166,13 +163,11 @@ public class FrontUserController {
                     user.setPhoto(this.userPhotoFolderName + "/" + photoName);
                 }
                 this.frontUserService.save(user);
-                return "succeed";
+                return Result.SUCCEED;
             }
-            return "already";
-        }catch (NullPointerException | IOException e){
-            return null;
+            return Result.ALREADY;
         }catch (Exception e){
-            return "fail";
+            return Result.FAIL;
         }
     }
 

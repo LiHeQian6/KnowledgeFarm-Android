@@ -13,4 +13,13 @@
         <item name="android:windowEnterAnimation">@anim/notify_pop_in</item>
         <item name="android:windowExitAnimation">@anim/notify_pop_out</item>
     </style>
+
+    <style name="activity_animation" parent="android:Animation">
+        <item name="android:windowAnimationStyle">@style/MyWindowAnimTheme</item>
+    </style>
+
+    <style name="MyWindowAnimTheme">
+        <item name="android:activityOpenEnterAnimation">@anim/notify_pop_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/notify_pop_out</item>
+    </style>
 </resources>

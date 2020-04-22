@@ -7,9 +7,9 @@ spring:
   #数据源
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/farm?useSSL=false&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://39.106.18.238:3306/farm_db1?useSSL=false&useUnicode=true&characterEncoding=utf8
     username: root
-    password:
+    password: 539520zshZSH
 
     #若由实体bean映射自动创建表，则initialization-mode设置为never
   #    initialization-mode: always
@@ -22,6 +22,6 @@ spring:
     hibernate:
       use-new-id-generator-mappings: false
     #若由实体Bean自动创建表，则ddl-auto设置为always，如果由脚本创建表，则设置为none
-    #      ddl-auto: update
+#      ddl-auto: update
     show-sql: true
     open-in-view: true

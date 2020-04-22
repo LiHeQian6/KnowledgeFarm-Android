@@ -32,8 +32,7 @@ public class UserAuthority {
     }
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public User getUser() {
         return user;
     }
@@ -59,24 +58,13 @@ public class UserAuthority {
         this.type = type;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }
 
     public void setExist(Integer exist) {
         this.exist = exist;
-    }
-
-    @Override
-    public String toString() {
-        return "UserAuthority{" +
-                "id=" + id +
-                ", user=" + user +
-                ", openId='" + openId + '\'' +
-                ", type='" + type + '\'' +
-                ", exist=" + exist +
-                '}';
     }
 
 }

@@ -1,8 +1,8 @@
 package com.knowledge_farm.front.land.controller;
 
-import com.knowledge_farm.crop.service.CropServiceImpl;
 import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.Land;
+import com.knowledge_farm.entity.User;
 import com.knowledge_farm.front.land.service.LandService;
 import com.knowledge_farm.util.PageUtil;
 import org.springframework.data.domain.Page;
@@ -26,32 +26,36 @@ import java.util.List;
 public class LandController {
     @Resource
     private LandService landService;
-    @Resource
-    private CropServiceImpl cropService;
 
     @RequestMapping("/findPageLand")
     public String findPageLand(@RequestParam(value = "account", required = false) String account,
-                                       @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                       @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                       Model model){
+                               @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                               @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+                               Model model){
         Object obj = this.landService.findAllLandByAccount(account, pageNumber, pageSize);
         if(obj instanceof Page){
-            Page page = (Page) obj;
+            Page<Land> page = (Page) obj;
             PageUtil<Land> pageUtil = new PageUtil(pageNumber, pageSize);
             pageUtil.setTotalCount((int) ((Page) obj).getTotalElements());
+            for(Land land : page.getContent()){
+                User user = land.getUser();
+                user.setPassword("");
+            }
             pageUtil.setList(page.getContent());
             model.addAttribute("landPage", pageUtil);
             return "member-land-list";
         }
-        model.addAttribute("landPage", (PageUtil) obj);
+        model.addAttribute("landPage", (PageUtil<Land>) obj);
         return "member-land-list";
     }
 
     @RequestMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, Model model){
         Land land = this.landService.findLandById(id);
-        List<Crop> crops = this.cropService.findAllCrop();
+        List<Crop> crops = this.landService.findAllCrop();
         if(land != null){
+            User user = land.getUser();
+            user.setPassword("");
             model.addAttribute("land", land);
             model.addAttribute("crops", crops);
         }
