@@ -32,7 +32,7 @@ public class UserAuthority {
     }
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public User getUser() {
         return user;
     }
@@ -58,7 +58,7 @@ public class UserAuthority {
         this.type = type;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }

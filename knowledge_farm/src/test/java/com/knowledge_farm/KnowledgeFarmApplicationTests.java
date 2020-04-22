@@ -8,6 +8,8 @@ class KnowledgeFarmApplicationTests {
 
     @Test
     void contextLoads() {
+        System.out.println("http://".length());
+        System.out.println("http://".substring(3,5));
     }
 
 }

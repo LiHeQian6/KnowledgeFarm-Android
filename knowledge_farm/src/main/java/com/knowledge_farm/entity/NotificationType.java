@@ -39,6 +39,7 @@ public class NotificationType {
     }
 
     @OneToMany(mappedBy = "notificationType")
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<Notification> getNotifications() {
         return notifications;
