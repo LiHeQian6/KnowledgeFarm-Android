@@ -5,10 +5,7 @@ import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.util.Email;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -52,14 +48,17 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/loginByOpenId")
-    private String loginByOpenId(@RequestParam("openId") String openId){
+    private Object loginByOpenId(@RequestParam("openId") String openId){
         Object obj = this.userService.loginByOpenId(openId);
         if(obj instanceof User){
-            UserVO userVO = varyUserToUserVO((User) obj);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            User user = (User) obj;
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
-        return (String) obj;
+        return obj;
     }
 
     /**
@@ -70,12 +69,14 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/findUserInfoByUserId")
-    public String findUserInfoByUserId(@RequestParam("userId") Integer userId){
+    public Object findUserInfoByUserId(@RequestParam("userId") Integer userId){
         User user = this.userService.findUserById(userId);
         if(user != null){
-            UserVO userVO = varyUserToUserVO(user);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
         return "{}";
     }
@@ -88,19 +89,23 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/addQQUser")
-    public String addQQUser(@RequestParam("openId") String openId,
+    public Object addQQUser(@RequestParam("openId") String openId,
+                            @RequestParam("photo") String photo,
                             @RequestParam("nickName") String nickName,
                             @RequestParam("grade") Integer grade,
                             @RequestParam(value = "email", defaultValue = "") String email,
                             @RequestParam("password") String password){
 
-        Object obj = this.userService.addQQUser(openId, nickName, grade, email, password);
+        Object obj = this.userService.addQQUser(openId, photo, nickName, grade, email, password);
         if(obj instanceof User){
-            UserVO userVO = varyUserToUserVO((User) obj);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            User user = (User) obj;
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
-        return (String) obj;
+        return obj;
     }
 
     /**
@@ -111,14 +116,17 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/loginByAccount")
-    public String loginByAccount(@RequestParam("account") String account, @RequestParam("password") String password){
+    public Object loginByAccount(@RequestParam("account") String account, @RequestParam("password") String password){
         Object obj = this.userService.loginByAccount(account, password);
         if(obj instanceof User){
-            UserVO userVO = varyUserToUserVO((User) obj);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            User user = (User) obj;
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
-        return (String) obj;
+        return obj;
     }
 
     /**
@@ -129,18 +137,20 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/registAccount")
-    public String registAccount(@RequestParam("nickName") String nickName,
+    public Object registAccount(@RequestParam("nickName") String nickName,
                                 @RequestParam("grade") Integer grade,
                                 @RequestParam(value = "email", defaultValue = "") String email,
                                 @RequestParam("password") String password){
-
         Object obj = this.userService.registAccount(nickName, grade, email, password);
         if(obj instanceof User){
-            UserVO userVO = varyUserToUserVO((User) obj);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            User user = (User) obj;
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
-        return (String) obj;
+        return obj;
     }
 
     /**

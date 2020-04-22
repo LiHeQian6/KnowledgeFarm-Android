@@ -1,5 +1,7 @@
 package com.knowledge_farm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -105,7 +107,8 @@ public class Task {
     }
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnore
     public User getUser() {
         return user;
     }

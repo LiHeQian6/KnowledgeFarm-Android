@@ -35,7 +35,7 @@ public class Notification {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user_from_id")
+    @JoinColumn(name = "user_from_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public User getFrom() {
         return from;
     }
@@ -45,7 +45,7 @@ public class Notification {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user_to_id")
+    @JoinColumn(name = "user_to_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public User getTo() {
         return to;
     }
@@ -97,7 +97,7 @@ public class Notification {
     }
 
     @ManyToOne
-    @JoinColumn(name = "notification_type_id")
+    @JoinColumn(name = "notification_type_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public NotificationType getNotificationType() {
         return notificationType;
     }

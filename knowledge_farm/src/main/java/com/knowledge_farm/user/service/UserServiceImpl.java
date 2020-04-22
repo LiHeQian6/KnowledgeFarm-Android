@@ -82,7 +82,7 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     @Transactional(readOnly = false)
-    public Object addQQUser(String openId, String nickName, Integer grade, String email, String password){
+    public Object addQQUser(String openId, String photo, String nickName, Integer grade, String email, String password){
         //生成账号
         String account = "";
         do{
@@ -94,7 +94,7 @@ public class UserServiceImpl {
         user.setAccount(account);
         user.setNickName(nickName);
         user.setPassword(password);
-        user.setPhoto(this.userPhotoFolderName + "/" + this.userDefaultFileName);
+        user.setPhoto(photo);
         user.setEmail(email);
         user.setGrade(grade);
         //构建UserAuthority

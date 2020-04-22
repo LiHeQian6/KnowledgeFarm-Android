@@ -1,6 +1,7 @@
 package com.knowledge_farm.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 
@@ -45,7 +46,7 @@ public class Admin {
         this.password = password;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }

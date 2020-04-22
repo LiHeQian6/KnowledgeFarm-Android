@@ -5,15 +5,12 @@ import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.user_friend.service.UserFriendServiceImpl;
 import com.knowledge_farm.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @ClassName UserFriendController
@@ -37,22 +34,20 @@ public class UserFriendController {
      * @return com.atguigu.farm.util.UserVOPage<com.atguigu.farm.entity.User>
      **/
     @RequestMapping("/findUserFriend")
-    public PageUtil<UserVO> findUserFriend(@RequestParam("userId") Integer userId,
-                                           @RequestParam(value = "account", required = false) String account,
-                                           @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                           @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
+    public PageUtil<User> findUserFriend(@RequestParam("userId") Integer userId,
+                                         @RequestParam(value = "account", required = false) String account,
+                                         @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                         @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
         Page<User> page = this.userFriendService.findUserFriendPageByAccount(userId, account, pageNumber, pageSize);
-        PageUtil<UserVO> pageUtil = new PageUtil(pageNumber, pageSize);
+        PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-
-        List<UserVO> userVOS = new ArrayList<>();
         for(User user : page.getContent()){
-            UserVO userVO = varyUserToUserVO(user);
-            userVO.setPhoto(this.photoUrl + userVO.getPhoto());
-            userVOS.add(userVO);
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
         }
-
-        pageUtil.setList(userVOS);
+        pageUtil.setList(page.getContent());
         return pageUtil;
     }
 
@@ -64,21 +59,19 @@ public class UserFriendController {
      * @return com.atguigu.farm.util.UserVOPage<com.atguigu.farm.entity.UserVO>
      **/
     @RequestMapping("/findAllUser")
-    public PageUtil<UserVO> findAllUser(@RequestParam(value = "account", required = false) String account,
+    public PageUtil<User> findAllUser(@RequestParam(value = "account", required = false) String account,
                                         @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                         @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize) {
         Page<User> page = this.userFriendService.findAllUserByAccount(account, pageNumber, pageSize);
-        PageUtil<UserVO> pageUtil = new PageUtil(pageNumber, pageSize);
+        PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-
-        List<UserVO> userVOS = new ArrayList<>();
         for(User user : page.getContent()){
-            UserVO userVO = varyUserToUserVO(user);
-            userVO.setPhoto(this.photoUrl + userVO.getPhoto());
-            userVOS.add(userVO);
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
         }
-
-        pageUtil.setList(userVOS);
+        pageUtil.setList(page.getContent());
         return pageUtil;
     }
 

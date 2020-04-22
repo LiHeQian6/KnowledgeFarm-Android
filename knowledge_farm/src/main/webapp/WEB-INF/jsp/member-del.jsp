@@ -250,7 +250,12 @@
 	                        <td>${page.nickName}</td>
 	                        <td>
 	                        	<div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
-	                        		<img style="width:50px;height:50px;" src="${ctx}/photo/${page.photo}"/>
+									<c:if test="${fn:startsWith(page.photo, 'http')}">
+										<img style="width:50px;height:50px;" src="${page.photo}"/>
+									</c:if>
+									<c:if test="${not fn:startsWith(page.photo, 'http')}">
+										<img style="width:50px;height:50px;" src="${ctx}/photo/${page.photo}"/>
+									</c:if>
 	                        	</div>
 	                        </td>
 	                        <td>
