@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Table(name = "user_bag")
 public class UserBag {
     private Integer id;
+    private User user;
     private Crop crop;
     private Integer number;
 
@@ -26,6 +27,16 @@ public class UserBag {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @ManyToOne
@@ -44,15 +55,6 @@ public class UserBag {
 
     public void setNumber(Integer number) {
         this.number = number;
-    }
-
-    @Override
-    public String toString() {
-        return "UserBag{" +
-                "id=" + id +
-                ", crop=" + crop +
-                ", number=" + number +
-                '}';
     }
 
 }

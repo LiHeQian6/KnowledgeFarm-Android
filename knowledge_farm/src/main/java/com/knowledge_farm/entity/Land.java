@@ -236,30 +236,4 @@ public class Land {
         this.userCrop18 = userCrop18;
     }
 
-    @Override
-    public String toString() {
-        return "Land{" +
-                "id=" + id +
-                ", user=" + user +
-                ", userCrop1=" + userCrop1 +
-                ", userCrop2=" + userCrop2 +
-                ", userCrop3=" + userCrop3 +
-                ", userCrop4=" + userCrop4 +
-                ", userCrop5=" + userCrop5 +
-                ", userCrop6=" + userCrop6 +
-                ", userCrop7=" + userCrop7 +
-                ", userCrop8=" + userCrop8 +
-                ", userCrop9=" + userCrop9 +
-                ", userCrop10=" + userCrop10 +
-                ", userCrop11=" + userCrop11 +
-                ", userCrop12=" + userCrop12 +
-                ", userCrop13=" + userCrop13 +
-                ", userCrop14=" + userCrop14 +
-                ", userCrop15=" + userCrop15 +
-                ", userCrop16=" + userCrop16 +
-                ", userCrop17=" + userCrop17 +
-                ", userCrop18=" + userCrop18 +
-                '}';
-    }
-
 }

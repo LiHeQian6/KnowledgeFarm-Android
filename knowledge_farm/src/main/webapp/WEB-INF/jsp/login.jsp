@@ -29,8 +29,8 @@
 	    				window.location.href="${ctx}/admin/gotoIndex";
 	    			}else if(data == "fail"){
 	    				layer.msg('账号或密码错误');
-	    			}else if(data == "notExist"){
-	    				layer.msg('管理员账号不存在');
+	    			}else if(data == "notUser"){
+	    				layer.msg('该管理员账号不可用');
 	    			}
 	    		}) 
     		}

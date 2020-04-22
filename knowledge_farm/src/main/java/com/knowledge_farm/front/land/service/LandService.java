@@ -1,13 +1,10 @@
 package com.knowledge_farm.front.land.service;
 
 import com.knowledge_farm.crop.service.CropServiceImpl;
-import com.knowledge_farm.entity.Crop;
-import com.knowledge_farm.entity.Land;
-import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserCrop;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.front.land.dao.LandDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
-import com.knowledge_farm.usercrop.service.UserCropServiceImpl;
+import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import com.knowledge_farm.util.PageUtil;
 import com.knowledge_farm.util.UserCropGrowJob;
 import org.quartz.*;
@@ -17,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName LandService
@@ -55,6 +53,10 @@ public class LandService {
 
     public Land findLandById(Integer id){
         return this.landDao.findLandById(id);
+    }
+
+    public List<Crop> findAllCrop(){
+        return this.cropService.findAllCrop();
     }
 
     @Transactional(readOnly = false)
@@ -166,11 +168,9 @@ public class LandService {
                     }
                 }
             }
-            return "succeed";
-        }catch (NullPointerException e){
-            return null;
+            return Result.SUCCEED;
         }catch (Exception e){
-            return "fail";
+            return Result.FAIL;
         }
     }
 

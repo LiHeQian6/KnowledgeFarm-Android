@@ -25,10 +25,8 @@
     			layer.msg('两次输入密码不一致');
     		}else{
     			$.post("${ctx}/admin/user/updateUserPassword",{"account":"${user.account}","password":password},function(data){
-					if(data == "PasswordError"){
-						layer.msg('旧密码输入错误');
-					}else if(data == "succeed"){
-						x_admin_close();
+					if(data == "succeed"){
+                        x_admin_close();
 					}else if(data == "fail"){
 						layer.msg('修改失败');
 					}

@@ -1,7 +1,6 @@
 package com.knowledge_farm.entity;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 
@@ -53,16 +52,6 @@ public class Admin {
 
     public void setExist(Integer exist) {
         this.exist = exist;
-    }
-
-    @Override
-    public String toString() {
-        return "Admin{" +
-                "id=" + id +
-                ", account='" + account + '\'' +
-                ", password='" + password + '\'' +
-                ", exist=" + exist +
-                '}';
     }
 
 }

@@ -33,7 +33,6 @@ public class UserAuthority {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     public User getUser() {
         return user;
     }
@@ -66,17 +65,6 @@ public class UserAuthority {
 
     public void setExist(Integer exist) {
         this.exist = exist;
-    }
-
-    @Override
-    public String toString() {
-        return "UserAuthority{" +
-                "id=" + id +
-                ", user=" + user +
-                ", openId='" + openId + '\'' +
-                ", type='" + type + '\'' +
-                ", exist=" + exist +
-                '}';
     }
 
 }

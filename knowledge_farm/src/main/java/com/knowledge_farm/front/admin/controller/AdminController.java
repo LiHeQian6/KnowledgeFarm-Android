@@ -1,6 +1,7 @@
 package com.knowledge_farm.front.admin.controller;
 
 import com.knowledge_farm.entity.Admin;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.admin.service.AdminServiceImpl;
 import com.knowledge_farm.util.Md5Encode;
 import com.knowledge_farm.util.PageUtil;
@@ -68,7 +69,7 @@ public class AdminController {
      **/
     @RequestMapping("/logout")
     private String logout(HttpSession session){
-        session.invalidate();
+        session.removeAttribute("admin");
         return "login";
     }
 
@@ -87,7 +88,7 @@ public class AdminController {
             Admin admin = (Admin) obj;
             admin.setPassword("");
             session.setAttribute("admin", admin);
-            obj = "succeed";
+            obj = Result.SUCCEED;
         }
         return (String) obj;
     }
@@ -101,10 +102,10 @@ public class AdminController {
      **/
     @RequestMapping("/findAdminPage")
     public String list(@RequestParam(value = "account", required = false) String account,
-                     @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                     @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                     @RequestParam(value = "exist") Integer exist,
-                     Model model){
+                       @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                       @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+                       @RequestParam(value = "exist") Integer exist,
+                       Model model){
         Page<Admin> page = this.adminService.findPageAdminByAccount(account, exist, pageNumber, pageSize);
         for(Admin admin : page.getContent()){
             admin.setPassword("");
@@ -190,13 +191,13 @@ public class AdminController {
     @RequestMapping("/addAdmin")
     @ResponseBody
     public String add(@RequestParam("account") String account, @RequestParam("password") String password){
-        Admin admin = new Admin();
-        admin.setAccount(account);
-        admin.setPassword(Md5Encode.getMD5(password.getBytes()));
-        if(this.adminService.findByAccountAndExist(admin.getAccount(), null) == null){
-             return this.adminService.add(admin);
+        if(this.adminService.findByAccountAndExist(account, null) == null){
+            Admin admin = new Admin();
+            admin.setAccount(account);
+            admin.setPassword(Md5Encode.getMD5(password.getBytes()));
+            return this.adminService.add(admin);
         }
-        return "already";
+        return Result.ALREADY;
     }
 
     /**
@@ -212,7 +213,7 @@ public class AdminController {
         if(this.adminService.findByAccountExcludeAccount(account, excludeAccount) == null){
             return this.adminService.editAccountById(id, account);
         }
-        return "already";
+        return Result.ALREADY;
     }
 
     /**

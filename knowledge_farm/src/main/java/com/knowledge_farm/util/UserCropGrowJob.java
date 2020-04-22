@@ -2,7 +2,7 @@ package com.knowledge_farm.util;
 
 import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.UserCrop;
-import com.knowledge_farm.usercrop.service.UserCropServiceImpl;
+import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import org.quartz.*;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.scheduling.quartz.QuartzJobBean;
