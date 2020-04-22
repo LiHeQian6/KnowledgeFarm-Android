@@ -1,12 +1,15 @@
 package com.knowledge_farm.task.controller;
 
 import com.knowledge_farm.entity.Task;
+import com.knowledge_farm.entity.User;
 import com.knowledge_farm.task.service.TaskService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @program: knowledge_farm
@@ -28,36 +31,23 @@ public class TaskController {
      * @return :com.knowledge_farm.entity.Task
      */
     @RequestMapping("/getTask")
-    public Task getTasks(@RequestParam("userId") int userId) {
-        return taskService.findTask(userId);
+    public Task getTasks(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        return taskService.findTask(user);
     }
-
     /**
-     * @description: 完成任务，改变任务的值=1
+     * @description:  领取任务奖励
      * @author :景光赞
-     * @date :2020/4/19 16:23
-     * @param :[userId, taskName]
-     * @return :int
-     */
-    @RequestMapping("/finish")
-    public int finishTask(@RequestParam("userId") int userId, @RequestParam("taskName") String taskName) {
-        return taskService.finishTask(userId, taskName);
-    }
-
-    /**
-     * @description: 领取任务奖励，改变任务值=2
-     * @author :景光赞
-     * @date :2020/4/19 16:24
-     * @param :[userId, taskName]
+     * @date :2020/4/22 12:28
+     * @param :[taskName, request]
      * @return :int
      */
     @RequestMapping("/getReward")
-    public int getReward(@RequestParam("userId") int userId, @RequestParam("taskName") String taskName) {
-        return taskService.updateTask(userId, taskName);
+    public int getReward(@RequestParam("taskName") String taskName,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        return taskService.updateTask(user,taskName);
     }
 
-    @RequestMapping("/test")
-    public int getReward2() {
-        return taskService.finishTask(109, "sign_in");
-    }
 }

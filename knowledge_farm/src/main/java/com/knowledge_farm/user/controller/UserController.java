@@ -421,6 +421,11 @@ public class UserController {
         return this.userService.waterCrop(userId, landNumber);
     }
 
+    @RequestMapping("/waterCrop2")
+    public String test(){
+        return this.userService.waterCrop2(userService.findUserById(109), "land1");
+    }
+
     /**
      * @Author 张帅华
      * @Description 施肥

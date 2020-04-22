@@ -1,5 +1,6 @@
 package com.knowledge_farm.user.service;
 
+import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.crop.service.CropServiceImpl;
 import com.knowledge_farm.entity.*;
 import com.knowledge_farm.user.dao.UserDao;
@@ -463,6 +464,60 @@ public class UserServiceImpl {
     @Transactional(readOnly = false)
     public String waterCrop(Integer userId, String landNumber){
         User user = this.userDao.findUserById(userId);
+        int flag = 0;
+        if(user != null){ //用户存在
+            Land land = user.getLand();
+            UserCrop userCrop = findUserCropByLand(land, landNumber);
+            if(userCrop != null){ //土地已开垦
+                Crop crop = userCrop.getCrop();
+                if(crop != null){ //土地已种植作物
+                    //修改剩余水的次数
+                    if(user.getWater() > 0){
+                        //修改作物进度
+                        int progress = userCrop.getProgress();
+                        int matureTime = crop.getMatureTime();
+                        if(progress < matureTime){
+                            if(progress+5 >= matureTime){
+                                userCrop.setProgress(crop.getMatureTime());
+                            }else{
+                                userCrop.setProgress(progress + 5);
+                            }
+                        }else{
+                            return "false";
+                        }
+                        user.setWater(user.getWater() - 1);
+                    }else{
+                        return "false";
+                    }
+                    //修改作物干枯湿润状态
+                    if(userCrop.getStatus() == 0){
+                        userCrop.setStatus(1);
+                        flag = 1;
+                    }
+                    //保存修改
+                    try {
+                        if(flag == 1){
+                            this.startJob(scheduler, user.getId(), userCrop.getId());
+                        }
+                        return "true";
+                    }catch (Exception e){
+                        return "false";
+                    }
+                }
+            }
+        }
+        return "notExist";
+    }
+    /**
+     * @Author 张帅华
+     * @Description 浇水
+     * @Date 22:34 2020/4/8 0008
+     * @Param [userId, landNumber]
+     * @return java.lang.String
+     **/
+    @Task(description = "water")
+    @Transactional(readOnly = false)
+    public String waterCrop2(User user, String landNumber){
         int flag = 0;
         if(user != null){ //用户存在
             Land land = user.getLand();

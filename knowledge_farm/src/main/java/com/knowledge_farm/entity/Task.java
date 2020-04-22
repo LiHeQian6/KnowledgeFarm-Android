@@ -1,5 +1,7 @@
 package com.knowledge_farm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -106,6 +108,7 @@ public class Task {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     public User getUser() {
         return user;
     }
