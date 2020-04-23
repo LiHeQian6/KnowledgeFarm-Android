@@ -52,11 +52,8 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
-import com.li.knowledgefarm.Study.Util.AppUtil;
-import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
-import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
@@ -124,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     private int searchSelectedItem=0;
     private int ExtensionLandMoney = 0;
     private ImageView notify;
-    private NotifyPopUpWindow notifyPopUpWindow;
+    private NotifyActivity notifyActivity;
     private UserMessagePopUp userMessagePopUp;
     private ListView notify_list_view;
     private float LAND_WIDTH_2=150;
@@ -169,17 +166,6 @@ public class MainActivity extends AppCompatActivity {
         lp.alpha = (float) 0.5;
         this.getWindow().setAttributes(lp);
         userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
-    }
-    /**
-     * @Description 展示通知弹窗
-     * @Author 孙建旺
-     * @Date 下午3:37 2020/04/15
-     * @Param []
-     * @return void
-     */
-    private void showNotifyWindow(){
-        notifyPopUpWindow = new NotifyPopUpWindow(this);
-        notifyPopUpWindow.showAtLocation(notify,Gravity.CENTER,0,0);
     }
 
     private void showDayTaskWindow(){
@@ -821,7 +807,10 @@ public class MainActivity extends AppCompatActivity {
                         findPeopleByAccount(searchAccount.getText().toString());
                     break;
                 case R.id.notify_img:
-                    showNotifyWindow();
+                    intent = new Intent();
+                    intent.setClass(MainActivity.this, NotifyActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.notify_pop_in,0);
                     break;
                 case R.id.photo:
                     intent = new Intent();

@@ -16,12 +16,29 @@
             android:textSize="30dp"
             android:text="通知标题"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/notify_content"
-            android:textSize="30dp"
-            android:textColor="@color/blackTextColor"
-            android:text="通知大致内容"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/notify_content"
+                android:layout_weight="1"
+                android:textSize="25dp"
+                android:maxEms="10"
+                android:maxLines="1"
+                android:textColor="@color/blackTextColor"
+                android:text="通知大致内容"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_weight="2"
+                android:id="@+id/notify_time"
+                android:text="2020-20-20  20-20-20"
+                android:textColor="@color/blackTextColor"
+                android:textSize="22dp">
+            </TextView>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

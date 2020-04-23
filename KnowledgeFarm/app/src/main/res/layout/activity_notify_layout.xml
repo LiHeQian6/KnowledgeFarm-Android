@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/editBac">
+    android:background="@color/editBac"
+    android:padding="20dp"
+    tools:context=".Main.NotifyActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="4"
+        android:padding="6dp"
         android:orientation="vertical">
         <Button
             android:layout_width="wrap_content"
@@ -21,6 +26,7 @@
             android:layout_height="wrap_content"
             android:text="好友申请"
             android:textSize="17dp"
+            android:layout_marginTop="6dp"
             android:id="@+id/friend_btn"
             android:background="@drawable/buttonbackground"/>
         <Button
@@ -29,12 +35,14 @@
             android:text="添加好友"
             android:textSize="17dp"
             android:id="@+id/add_btn"
+            android:layout_marginTop="6dp"
             android:background="@drawable/buttonbackground"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="消息通知"
             android:textSize="17dp"
+            android:layout_marginTop="6dp"
             android:id="@+id/message_btn"
             android:background="@drawable/buttonbackground"/>
     </LinearLayout>
@@ -44,14 +52,15 @@
         android:orientation="vertical"
         android:background="@color/blackTextColor"/>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight="8">
+        android:layout_weight="1">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="6">
+            android:layout_weight="6"
+            android:padding="5dp">
             <ListView
                 android:id="@+id/notify_list_view"
                 android:layout_width="match_parent"
