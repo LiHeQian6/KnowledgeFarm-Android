@@ -935,7 +935,7 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(@NonNull Message msg) {
                 String messages = (String)msg.obj;
                 Log.e("好友",messages);
-                if(!messages.equals("Fail") && !messages.equals("html")){
+                if(!messages.equals("Fail") && !messages.contains("html")){
                     Type type = new TypeToken<FriendsPage<User>>(){}.getType();
                     friendsPage = gson.fromJson(messages,type);
                     now.setText(friendsPage.getCurrentPageNum()+"/"+friendsPage.getTotalPageNum());
@@ -978,45 +978,45 @@ public class MainActivity extends AppCompatActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setFriendSize(View view) {
-//        LinearLayout layout_search = view.findViewById(R.id.layout_search);
-//        Button search=view.findViewById(R.id.search);
-//        ImageView pre = view.findViewById(R.id.pre);
-//        ImageView next = view.findViewById(R.id.next);
-//        TextView now = view.findViewById(R.id.now);
-//
-//        LinearLayout.LayoutParams params_search = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.08));
-//        params_search.gravity = Gravity.CENTER_HORIZONTAL;
-//        layout_search.setLayoutParams(params_search);
-//
-//        LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int)(displayWidth*0.24),(int)(displayHeight*0.1));
-//        params_edit.gravity = Gravity.CENTER;
-//        searchAccount.setLayoutParams(params_edit);
-//        searchAccount.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
-//        searchAccount.setHintTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
-//        searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//
-//        LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.07));
-//        params_button.gravity = Gravity.CENTER;
-//        search.setLayoutParams(params_button);
-//        search.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
-//        search.setTextSize((int)(displayHeight*0.02));
-//        search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//
-//        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.06));
-//        params_select.setMargins((int)(displayWidth*0.02),0,0,0);
-//        searchSelected.setLayoutParams(params_select);
-//
-//        LinearLayout.LayoutParams params_listview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.6));
-//        params_listview.gravity = Gravity.CENTER_HORIZONTAL;
-//        params_listview.setMargins(0,(int)(displayHeight*0.018),0,(int)(displayHeight*0.018));
-//        friendsListView.setLayoutParams(params_listview);
-//        friendsListView.setDividerHeight((int)(displayHeight*0.015));
-//
-//        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
-//        pre.setLayoutParams(params_pre);
-//        next.setLayoutParams(params_pre);
-//        now.setLayoutParams(params_pre);
-//        now.setTextSize((int)(displayHeight*0.02));
+        LinearLayout layout_search = view.findViewById(R.id.layout_search);
+        Button search=view.findViewById(R.id.search);
+        ImageView pre = view.findViewById(R.id.pre);
+        ImageView next = view.findViewById(R.id.next);
+        TextView now = view.findViewById(R.id.now);
+
+        LinearLayout.LayoutParams params_search = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.08));
+        params_search.gravity = Gravity.CENTER_HORIZONTAL;
+        layout_search.setLayoutParams(params_search);
+
+        LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int)(displayWidth*0.24),(int)(displayHeight*0.1));
+        params_edit.gravity = Gravity.CENTER;
+        searchAccount.setLayoutParams(params_edit);
+        searchAccount.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+        searchAccount.setHintTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+        searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.07));
+        params_button.gravity = Gravity.CENTER;
+        search.setLayoutParams(params_button);
+        search.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+        search.setTextSize((int)(displayHeight*0.02));
+        search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.06));
+        params_select.setMargins((int)(displayWidth*0.02),0,0,0);
+        searchSelected.setLayoutParams(params_select);
+
+        LinearLayout.LayoutParams params_listview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.6));
+        params_listview.gravity = Gravity.CENTER_HORIZONTAL;
+        params_listview.setMargins(0,(int)(displayHeight*0.018),0,(int)(displayHeight*0.018));
+        friendsListView.setLayoutParams(params_listview);
+        friendsListView.setDividerHeight((int)(displayHeight*0.015));
+
+        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
+        pre.setLayoutParams(params_pre);
+        next.setLayoutParams(params_pre);
+        now.setLayoutParams(params_pre);
+        now.setTextSize((int)(displayHeight*0.02));
     }
 
     /**
@@ -1201,30 +1201,30 @@ public class MainActivity extends AppCompatActivity {
      * @return void
      */
     private void setDialogSize(View view){
-        //获取屏幕显示区域尺寸
-//        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-//        DisplayMetrics ds = new DisplayMetrics();
-//        wm.getDefaultDisplay().getMetrics(ds);
-//        displayHeight = ds.heightPixels;
-//        displayWidth = ds.widthPixels;
-//
-//        ImageView cancel = view.findViewById(R.id.cancel_return);
-//        ImageView sure = view.findViewById(R.id.sure_return);
-//        TextView warning = view.findViewById(R.id.waringText);
-//        LinearLayout panduan = view.findViewById(R.id.panduan);
-//
-//        LinearLayout.LayoutParams params_cancel = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
-//        params_cancel.setMargins(0,0,(int)(displayWidth*0.08),0);
-//        cancel.setLayoutParams(params_cancel);
-//
-//        LinearLayout.LayoutParams params_sure = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
-//        sure.setLayoutParams(params_sure);
-//
-//        warning.setTextSize((int)(displayWidth*0.012));
-//
-//        LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        params_layout.setMargins(0,(int)(displayHeight*0.12),0,0);
-//        panduan.setLayoutParams(params_layout);
+//        获取屏幕显示区域尺寸
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+
+        ImageView cancel = view.findViewById(R.id.cancel_return);
+        ImageView sure = view.findViewById(R.id.sure_return);
+        TextView warning = view.findViewById(R.id.waringText);
+        LinearLayout panduan = view.findViewById(R.id.panduan);
+
+        LinearLayout.LayoutParams params_cancel = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
+        params_cancel.setMargins(0,0,(int)(displayWidth*0.08),0);
+        cancel.setLayoutParams(params_cancel);
+
+        LinearLayout.LayoutParams params_sure = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
+        sure.setLayoutParams(params_sure);
+
+        warning.setTextSize((int)(displayWidth*0.012));
+
+        LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_layout.setMargins(0,(int)(displayHeight*0.12),0,0);
+        panduan.setLayoutParams(params_layout);
     }
 
     /**

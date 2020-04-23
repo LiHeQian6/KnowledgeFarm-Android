@@ -26,6 +26,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="添加好友"
+            android:textSize="17dp"
+            android:id="@+id/add_btn"
+            android:background="@drawable/buttonbackground"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="消息通知"
             android:textSize="17dp"
             android:id="@+id/message_btn"
@@ -34,16 +41,47 @@
     <LinearLayout
         android:layout_width="1dp"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:background="@color/blackTextColor"/>
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_weight="8">
-        <ListView
-            android:id="@+id/notify_list_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:dividerHeight="1dp"
-            android:divider="@color/blackTextColor"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="6">
+            <ListView
+                android:id="@+id/notify_list_view"
+                android:layout_width="match_parent"
+                android:dividerHeight="1dp"
+                android:divider="@color/blackTextColor"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="30dp"
+                android:id="@+id/pre_notify"
+                android:src="@drawable/per"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blackTextColor"
+                android:textSize="25sp"
+                android:text="1"/>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="30dp"
+                android:id="@+id/next_notify"
+                android:src="@drawable/next"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

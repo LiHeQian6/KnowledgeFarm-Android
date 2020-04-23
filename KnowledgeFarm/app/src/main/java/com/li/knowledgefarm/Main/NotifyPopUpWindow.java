@@ -1,5 +1,6 @@
 package com.li.knowledgefarm.Main;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,7 +9,9 @@ import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
@@ -52,13 +55,16 @@ public class NotifyPopUpWindow extends PopupWindow {
     private Button system_notify;
     private Button friend_notify;
     private Button mess_notify;
+    private Button add_notify;
+    private ImageView pre;
+    private ImageView next;
     private Gson gson;
 
     public NotifyPopUpWindow(Context context) {
         super(context);
         this.context = context;
         Init();
-        getNotify("1");
+        getNotify("2",1,6);
     }
 
     /**
@@ -69,8 +75,8 @@ public class NotifyPopUpWindow extends PopupWindow {
      * @return void
      */
     private void Init(){
-        this.setHeight(800);
-        this.setWidth(1400);
+        this.setHeight(ActionBar.LayoutParams.MATCH_PARENT);
+        this.setWidth(ActionBar.LayoutParams.MATCH_PARENT);
         this.setOutsideTouchable(true);
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -97,6 +103,9 @@ public class NotifyPopUpWindow extends PopupWindow {
         system_notify = view.findViewById(R.id.system_btn);
         friend_notify = view.findViewById(R.id.friend_btn);
         mess_notify = view.findViewById(R.id.message_btn);
+        add_notify = view.findViewById(R.id.add_btn);
+        pre = view.findViewById(R.id.pre_notify);
+        next = view.findViewById(R.id.next_notify);
         registListener();
     }
 
@@ -111,6 +120,9 @@ public class NotifyPopUpWindow extends PopupWindow {
         system_notify.setOnClickListener(new CustomerOnclickListener());
         friend_notify.setOnClickListener(new CustomerOnclickListener());
         mess_notify.setOnClickListener(new CustomerOnclickListener());
+        add_notify.setOnClickListener(new CustomerOnclickListener());
+        pre.setOnClickListener(new CustomerOnclickListener());
+        next.setOnClickListener(new CustomerOnclickListener());
     }
 
     /**
@@ -120,17 +132,19 @@ public class NotifyPopUpWindow extends PopupWindow {
      * @Param [type]
      * @return void
      */
-    private void getNotify(final String type){
+    private void getNotify(final String type, final int pageNumber, final int pageSize){
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
-                        .add("userId", LoginActivity.user.getId()+"")
-                        .add("typeId",type).build();
+                        .add("userId", 109+"")
+                        .add("typeId",type)
+                        .add("pageNumber",pageNumber+"")
+                        .add("pageSize",pageSize+"").build();
                 Request request = new Request.Builder()
                         .post(formBody)
-                        .url(context.getResources().getString(R.string.URL)+"/userfriend/findReceivedNotificationByType?userId&typeId&pageNumber&pageSize").build();
+                        .url("http://39.106.18.238:8081"+"/notification/findReceivedNotificationByType").build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -178,10 +192,10 @@ public class NotifyPopUpWindow extends PopupWindow {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.system_btn:
-                    getNotify("1");
+                    getNotify("1",1,6);
                     break;
                 case R.id.friend_btn:
-                    getNotify("2");
+                    getNotify("2",1,6);
                     break;
                 case R.id.message_btn:
                     break;
