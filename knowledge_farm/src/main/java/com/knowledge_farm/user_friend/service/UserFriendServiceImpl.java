@@ -38,31 +38,21 @@ public class UserFriendServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public String addUserFriend(Integer userId, String account){
+    public void addUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
         UserFriend userFriend = new UserFriend();
-        try {
-            userFriend.setUser(user);
-            userFriend.setFriendUser(friendUser);
-            this.userFriendDao.save(userFriend);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
+        userFriend.setUser(user);
+        userFriend.setFriendUser(friendUser);
+        this.userFriendDao.save(userFriend);
     }
 
     @Transactional(readOnly = false)
-    public String deleteUserFriend(Integer userId, String account){
+    public void deleteUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
-        try {
-            UserFriend userFriend = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
-            this.userFriendDao.delete(userFriend);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
+        UserFriend userFriend = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
+        this.userFriendDao.delete(userFriend);
     }
 
 }

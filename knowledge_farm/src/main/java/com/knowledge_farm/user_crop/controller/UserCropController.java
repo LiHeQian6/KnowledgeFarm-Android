@@ -62,7 +62,12 @@ public class UserCropController {
      **/
     @RequestMapping("/getCropProgress")
     public int getCropProgress(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber ){
-        return this.userCropService.getCropProgress(userId, landNumber);
+        try {
+            return this.userCropService.getCropProgress(userId, landNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+            return -1;
+        }
     }
 
 }

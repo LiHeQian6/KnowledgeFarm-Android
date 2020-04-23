@@ -1,6 +1,7 @@
 package com.knowledge_farm.user_crop.service;
 
 import com.knowledge_farm.entity.Land;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserCrop;
 import com.knowledge_farm.user.service.UserServiceImpl;
@@ -39,8 +40,10 @@ public class UserCropServiceImpl {
 
     public List<UserCrop> initUserCrop(Integer userId){
         User user = this.userService.findUserById(userId);
-        Land land = user.getLand();
-        return findUserCropListByLand(land);
+        if(user != null){
+            return findUserCropListByLand(user.getLand());
+        }
+        return new ArrayList<>();
     }
 
     public int getCropProgress(Integer userId, String landNumber){

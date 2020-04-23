@@ -31,48 +31,29 @@ public class FrontCropService {
     }
 
     @Transactional(readOnly = false)
-    public String updateExist(Integer id, Integer exist){
+    public void updateExist(Integer id, Integer exist){
         Crop crop = this.cropDao.findCropById(id);
-        try {
-            crop.setExist(exist);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
-        }
+        crop.setExist(exist);
     }
 
     @Transactional(readOnly = false)
-    public String editStatusListByIdList(List<Integer> idList, Integer exist){
+    public void editStatusListByIdList(List<Integer> idList, Integer exist){
         List<Crop> crops = this.cropDao.findAllById(idList);
-        try {
-            for(Crop crop : crops){
-                crop.setExist(exist);
-            }
-            this.cropDao.saveAll(crops);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
+        for(Crop crop : crops){
+            crop.setExist(exist);
         }
+        this.cropDao.saveAll(crops);
     }
 
     @Transactional(readOnly = false)
-    public String deleteCropById(Integer id){
+    public void deleteCropById(Integer id){
         Crop crop = this.cropDao.findCropById(id);
-        try {
-            this.cropDao.delete(crop);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
-        }
+        this.cropDao.delete(crop);
     }
 
     @Transactional(readOnly = false)
     public Crop save(Crop crop){
-        try {
-            return this.cropDao.save(crop);
-        }catch (Exception e){
-            return null;
-        }
+        return this.cropDao.save(crop);
     }
 
     public Crop findCropById(Integer id){

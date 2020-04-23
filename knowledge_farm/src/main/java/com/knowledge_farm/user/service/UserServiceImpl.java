@@ -122,17 +122,13 @@ public class UserServiceImpl {
         land.setUserCrop4(userCrop4);
         user.setLand(land);
         //添加并返回新插入的User
-        try {
-            this.userDao.save(user);
-            entityManager.clear();
-            User resultUser = this.userDao.findUserById(user.getId());
-            if(resultUser != null){
-                return resultUser;
-            }
-            return "{}";
-        }catch (Exception e){
-            return Result.FAIL;
+        this.userDao.save(user);
+        entityManager.clear();
+        User resultUser = this.userDao.findUserById(user.getId());
+        if(resultUser != null){
+            return resultUser;
         }
+        return "{}";
     }
 
     /**
@@ -190,17 +186,13 @@ public class UserServiceImpl {
         land.setUserCrop3(userCrop3);
         land.setUserCrop4(userCrop4);
         user.setLand(land);
-        try {
-            this.userDao.save(user);
-            entityManager.clear();
-            User resultUser = this.userDao.findUserById(user.getId());
-            if(resultUser != null){
-                return resultUser;
-            }
-            return "{}";
-        }catch (Exception e){
-            return Result.FAIL;
+        this.userDao.save(user);
+        entityManager.clear();
+        User resultUser = this.userDao.findUserById(user.getId());
+        if(resultUser != null){
+            return resultUser;
         }
+        return "{}";
     }
 
     /**
@@ -237,14 +229,10 @@ public class UserServiceImpl {
      **/
     public String isBindingQQ(String account){
         User user = this.userDao.findUserByAccount(account);
-        try {
-            if(user.getUserAuthority() != null){
-                return Result.TRUE;
-            }
-            return Result.FALSE;
-        }catch (Exception e){
-            return Result.NULL;
+        if(user.getUserAuthority() != null){
+            return Result.TRUE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -267,13 +255,9 @@ public class UserServiceImpl {
             userAuthority.setType("QQ");
         }
         User user = this.userDao.findUserByAccount(account);
-        try {
-            user.setUserAuthority(userAuthority);
-            userAuthority.setUser(user);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
+        user.setUserAuthority(userAuthority);
+        userAuthority.setUser(user);
+        return Result.TRUE;
     }
 
     /**
@@ -284,19 +268,12 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public String removeUserAuthority(String account){
+    public void removeUserAuthority(String account){
         User user = this.userDao.findUserByAccount(account);
-        try {
-            if(user != null){
-                UserAuthority userAuthority = user.getUserAuthority();
-                user.setUserAuthority(null);
-                if(userAuthority != null){
-                    userAuthority.setUser(null);
-                }
-            }
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
+        UserAuthority userAuthority = user.getUserAuthority();
+        user.setUserAuthority(null);
+        if(userAuthority != null){
+            userAuthority.setUser(null);
         }
     }
 
@@ -310,46 +287,42 @@ public class UserServiceImpl {
     @Transactional(readOnly = false)
     public int lessRewardCount(Integer userId, Integer water, Integer fertilizer, String subject){
         User user = this.userDao.findUserById(userId);
-        try {
-            int rewardCount = 0;
-            int flag = 0;
-            switch (subject){
-                case "chinese":
-                    rewardCount = user.getChineseRewardCount();
-                    if(rewardCount >= 1){
-                        rewardCount = rewardCount - 1;
-                        user.setChineseRewardCount(rewardCount);
-                        flag = 1;
-                    }
-                    break;
-                case "english":
-                    rewardCount = user.getEnglishRewardCount();
-                    if(rewardCount >= 1){
-                        rewardCount = rewardCount - 1;
-                        user.setEnglishRewardCount(rewardCount);
-                        flag = 1;
-                    }
-                    break;
-                case "math":
-                    rewardCount = user.getMathRewardCount();
-                    if(rewardCount >= 1){
-                        rewardCount = rewardCount - 1;
-                        user.setMathRewardCount(rewardCount);
-                        flag = 1;
-                    }
-                    break;
-                default:
-                    return -1;
-            }
-            if(flag == 1){
-                user.setWater(user.getWater() + water);
-                user.setFertilizer(user.getFertilizer() + fertilizer);
-                return rewardCount;
-            }
-            return -1;
-        }catch (Exception e){
-            return -1;
+        int rewardCount = 0;
+        int flag = 0;
+        switch (subject){
+            case "chinese":
+                rewardCount = user.getChineseRewardCount();
+                if(rewardCount >= 1){
+                    rewardCount = rewardCount - 1;
+                    user.setChineseRewardCount(rewardCount);
+                    flag = 1;
+                }
+                break;
+            case "english":
+                rewardCount = user.getEnglishRewardCount();
+                if(rewardCount >= 1){
+                    rewardCount = rewardCount - 1;
+                    user.setEnglishRewardCount(rewardCount);
+                    flag = 1;
+                }
+                break;
+            case "math":
+                rewardCount = user.getMathRewardCount();
+                if(rewardCount >= 1){
+                    rewardCount = rewardCount - 1;
+                    user.setMathRewardCount(rewardCount);
+                    flag = 1;
+                }
+                break;
+            default:
+                return -1;
         }
+        if(flag == 1){
+            user.setWater(user.getWater() + water);
+            user.setFertilizer(user.getFertilizer() + fertilizer);
+            return rewardCount;
+        }
+        return -1;
     }
 
     /**
@@ -371,14 +344,9 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public String editPasswordByAccount(String account, String password){
+    public void editPasswordByAccount(String account, String password){
         User user = this.userDao.findUserByAccount(account);
-        try {
-            user.setPassword(password);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
+        user.setPassword(password);
     }
 
     /**
@@ -389,14 +357,9 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public String editNickNameByAccount(String account, String nickName){
+    public void editNickNameByAccount(String account, String nickName){
         User user = this.userDao.findUserByAccount(account);
-        try {
-            user.setNickName(nickName);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
+        user.setNickName(nickName);
     }
 
     /**
@@ -407,14 +370,9 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public String editGradeByAccount(String account, Integer grade){
+    public void editGradeByAccount(String account, Integer grade){
         User user = this.userDao.findUserByAccount(account);
-        try {
-            user.setGrade(grade);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
+        user.setGrade(grade);
     }
 
     /**
@@ -425,14 +383,9 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public String editPhotoById(Integer id, String photo){
+    public void editPhotoById(Integer id, String photo){
         User user = this.userDao.findUserById(id);
-        try {
-            user.setPhoto(photo);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
+        user.setPhoto(photo);
     }
 
     /**
@@ -443,14 +396,9 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public String editEmail(String account, String email){
+    public void editEmail(String account, String email){
         User user = this.userDao.findUserByAccount(account);
-        try {
-            user.setEmail(email);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
+        user.setEmail(email);
     }
 
     /**
@@ -461,44 +409,40 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     @Transactional(readOnly = false)
-    public String waterCrop(Integer userId, String landNumber){
+    public String waterCrop(Integer userId, String landNumber) throws SchedulerException {
         User user = this.userDao.findUserById(userId);
         int flag = 0;
-        try {
-            Land land = user.getLand();
-            UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
-            Crop crop = userCrop.getCrop();
-            //修改剩余水的次数
-            if(user.getWater() > 0){
-                //修改作物进度
-                int progress = userCrop.getProgress();
-                int matureTime = crop.getMatureTime();
-                if(progress < matureTime){
-                    if(progress+5 >= matureTime){
-                        userCrop.setProgress(crop.getMatureTime());
-                    }else{
-                        userCrop.setProgress(progress + 5);
-                    }
-                    user.setWater(user.getWater() - 1);
+        Land land = user.getLand();
+        UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+        Crop crop = userCrop.getCrop();
+        //修改剩余水的次数
+        if(user.getWater() > 0){
+            //修改作物进度
+            int progress = userCrop.getProgress();
+            int matureTime = crop.getMatureTime();
+            if(progress < matureTime){
+                if(progress+5 >= matureTime){
+                    userCrop.setProgress(crop.getMatureTime());
                 }else{
-                    return Result.FALSE;
+                    userCrop.setProgress(progress + 5);
                 }
+                user.setWater(user.getWater() - 1);
             }else{
                 return Result.FALSE;
             }
-            //修改作物干枯湿润状态
-            if(userCrop.getStatus() == 0){
-                userCrop.setStatus(1);
-                flag = 1;
-            }
-            //保存修改
-            if(flag == 1){
-                this.startJob(scheduler, user.getId(), userCrop.getId());
-            }
-            return Result.TRUE;
-        }catch (Exception e){
+        }else{
             return Result.FALSE;
         }
+        //修改作物干枯湿润状态
+        if(userCrop.getStatus() == 0){
+            userCrop.setStatus(1);
+            flag = 1;
+        }
+        //保存修改
+        if(flag == 1){
+            this.startJob(scheduler, user.getId(), userCrop.getId());
+        }
+        return Result.TRUE;
     }
     /**
      * @Author 张帅华
@@ -509,50 +453,39 @@ public class UserServiceImpl {
      **/
     @Task(description = "water")
     @Transactional(readOnly = false)
-    public String waterCrop2(User user, String landNumber){
+    public String waterCrop2(User user, String landNumber) throws SchedulerException {
         int flag = 0;
-        if(user != null){ //用户存在
-            Land land = user.getLand();
-            UserCrop userCrop = findUserCropByLand(land, landNumber);
-            if(userCrop != null){ //土地已开垦
-                Crop crop = userCrop.getCrop();
-                if(crop != null){ //土地已种植作物
-                    //修改剩余水的次数
-                    if(user.getWater() > 0){
-                        //修改作物进度
-                        int progress = userCrop.getProgress();
-                        int matureTime = crop.getMatureTime();
-                        if(progress < matureTime){
-                            if(progress+5 >= matureTime){
-                                userCrop.setProgress(crop.getMatureTime());
-                            }else{
-                                userCrop.setProgress(progress + 5);
-                            }
-                        }else{
-                            return "false";
-                        }
-                        user.setWater(user.getWater() - 1);
-                    }else{
-                        return "false";
-                    }
-                    //修改作物干枯湿润状态
-                    if(userCrop.getStatus() == 0){
-                        userCrop.setStatus(1);
-                        flag = 1;
-                    }
-                    //保存修改
-                    try {
-                        if(flag == 1){
-                            this.startJob(scheduler, user.getId(), userCrop.getId());
-                        }
-                        return "true";
-                    }catch (Exception e){
-                        return "false";
-                    }
+        Land land = user.getLand();
+        UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+        Crop crop = userCrop.getCrop();
+        //修改剩余水的次数
+        if(user.getWater() > 0){
+            //修改作物进度
+            int progress = userCrop.getProgress();
+            int matureTime = crop.getMatureTime();
+            if(progress < matureTime){
+                if(progress+5 >= matureTime){
+                    userCrop.setProgress(crop.getMatureTime());
+                }else{
+                    userCrop.setProgress(progress + 5);
                 }
+                user.setWater(user.getWater() - 1);
+            }else{
+                return Result.FALSE;
             }
+        }else{
+            return Result.FALSE;
         }
-        return "notExist";
+        //修改作物干枯湿润状态
+        if(userCrop.getStatus() == 0){
+            userCrop.setStatus(1);
+            flag = 1;
+        }
+        //保存修改
+        if(flag == 1){
+            this.startJob(scheduler, user.getId(), userCrop.getId());
+        }
+        return Result.TRUE;
     }
 
     /**
@@ -565,35 +498,31 @@ public class UserServiceImpl {
     @Transactional(readOnly = false)
     public String fertilizerCrop(Integer userId, String landNumber){
         User user = this.userDao.findUserById(userId);
-        try {
-            Land land = user.getLand();
-            UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
-            Crop crop = userCrop.getCrop();
-            if(userCrop.getStatus() != 0){
-                //修改剩余化肥的次数
-                if(user.getFertilizer() > 0){
-                    //修改作物进度
-                    int progress = userCrop.getProgress();
-                    int matureTime = crop.getMatureTime();
-                    if(progress < matureTime) {
-                        if (progress+10 >= matureTime) {
-                            userCrop.setProgress(crop.getMatureTime());
-                        }else {
-                            userCrop.setProgress(progress + 10);
-                        }
-                        user.setFertilizer(user.getFertilizer() - 1);
-                    }else{
-                        return Result.FALSE;
+        Land land = user.getLand();
+        UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+        Crop crop = userCrop.getCrop();
+        if(userCrop.getStatus() != 0){
+            //修改剩余化肥的次数
+            if(user.getFertilizer() > 0){
+                //修改作物进度
+                int progress = userCrop.getProgress();
+                int matureTime = crop.getMatureTime();
+                if(progress < matureTime) {
+                    if (progress+10 >= matureTime) {
+                        userCrop.setProgress(crop.getMatureTime());
+                    }else {
+                        userCrop.setProgress(progress + 10);
                     }
+                    user.setFertilizer(user.getFertilizer() - 1);
                 }else{
                     return Result.FALSE;
                 }
-                return Result.TRUE;
+            }else{
+                return Result.FALSE;
             }
-            return Result.FALSE;
-        }catch (Exception e){
-            return Result.FALSE;
+            return Result.TRUE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -605,34 +534,30 @@ public class UserServiceImpl {
      **/
     @Transactional(readOnly = false)
     public String buyCrop(Integer userId, Integer cropId, Integer number){
-        try {
-            User user = this.userDao.findUserById(userId);
-            Set<UserBag> userBags = user.getUserBags();
-            Crop crop = this.cropService.findCropById(cropId);
-            Integer userMoney = user.getMoney();
-            Integer needMoney = crop.getPrice() * number;
-            int flag = 0;
-            if(userMoney >= needMoney){
-                for(UserBag userBag : userBags){
-                    if(userBag.getCrop() == crop){
-                        userBag.setNumber(userBag.getNumber() + number);
-                        flag = 1;
-                        break;
-                    }
+        User user = this.userDao.findUserById(userId);
+        Set<UserBag> userBags = user.getUserBags();
+        Crop crop = this.cropService.findCropById(cropId);
+        Integer userMoney = user.getMoney();
+        Integer needMoney = crop.getPrice() * number;
+        int flag = 0;
+        if(userMoney >= needMoney){
+            for(UserBag userBag : userBags){
+                if(userBag.getCrop() == crop){
+                    userBag.setNumber(userBag.getNumber() + number);
+                    flag = 1;
+                    break;
                 }
-                if(flag != 1){
-                    UserBag userBag = new UserBag();
-                    userBag.setCrop(crop);
-                    userBag.setNumber(number);
-                    userBags.add(userBag);
-                }
-                user.setMoney(userMoney - needMoney);
-                return Result.TRUE;
             }
-            return Result.NOT_ENOUGH_MONEY;
-        }catch (Exception e){
-            return Result.FALSE;
+            if(flag != 1){
+                UserBag userBag = new UserBag();
+                userBag.setCrop(crop);
+                userBag.setNumber(number);
+                userBags.add(userBag);
+            }
+            user.setMoney(userMoney - needMoney);
+            return Result.TRUE;
         }
+        return Result.NOT_ENOUGH_MONEY;
     }
 
     /**
@@ -643,36 +568,32 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     @Transactional(readOnly = false)
-    public String raiseCrop(Integer userId, Integer cropId, String landNumber){
-        try {
-            User user = this.userDao.findUserById(userId);
-            Crop crop = this.cropService.findCropById(cropId);
-            Set<UserBag> userBags = user.getUserBags();
-            int flag = 0;
-            int number = 0;
-            for(UserBag userBag : userBags){
-                if(userBag.getCrop() == crop){
-                    flag = 1;
-                    number = userBag.getNumber();
-                    userBag.setNumber(number - 1);
-                    if((number - 1) <= 0){
-                        userBags.remove(userBag);
-                        this.userBagService.deleteById(userBag.getId());
-                    }
-                    break;
+    public String raiseCrop(Integer userId, Integer cropId, String landNumber) throws SchedulerException {
+        User user = this.userDao.findUserById(userId);
+        Crop crop = this.cropService.findCropById(cropId);
+        Set<UserBag> userBags = user.getUserBags();
+        int flag = 0;
+        int number = 0;
+        for(UserBag userBag : userBags){
+            if(userBag.getCrop() == crop){
+                flag = 1;
+                number = userBag.getNumber();
+                userBag.setNumber(number - 1);
+                if((number - 1) <= 0){
+                    userBags.remove(userBag);
+                    this.userBagService.deleteById(userBag.getId());
                 }
+                break;
             }
-            if(flag == 1){
-                Land land = user.getLand();
-                UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
-                userCrop.setCrop(crop);
-                startJob(scheduler, userId, userCrop.getId());
-                return Result.TRUE;
-            }
-            return Result.FALSE;
-        }catch (Exception e){
-            return Result.FALSE;
         }
+        if(flag == 1){
+            Land land = user.getLand();
+            UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+            userCrop.setCrop(crop);
+            startJob(scheduler, userId, userCrop.getId());
+            return Result.TRUE;
+        }
+        return Result.FALSE;
     }
 
     /**
@@ -684,43 +605,39 @@ public class UserServiceImpl {
      **/
     @Transactional(readOnly = false)
     public String harvest(Integer userId, String landNumber){
-        try {
-            User user = this.userDao.findUserById(userId);
-            Land land = user.getLand();
-            UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
-            Crop crop = userCrop.getCrop();
-            userCrop.setCrop(null);
-            userCrop.setProgress(0);
-            userCrop.setWaterLimit(0);
-            userCrop.setFertilizerLimit(0);
-            userCrop.setStatus(1);
-            int value = crop.getValue();
-            int experience = crop.getExperience();
-            int userMoney = user.getMoney();
-            int userLevel = user.getLevel();
-            int userExperience = user.getExperience();
-            int isLevel = 0;
-            if(userLevel < experienceList.length-1){
-                if(userExperience + experience >= experienceList[userLevel]){
-                    user.setLevel(userLevel + 1);
-                    isLevel = 1;
-                }
+        User user = this.userDao.findUserById(userId);
+        Land land = user.getLand();
+        UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+        Crop crop = userCrop.getCrop();
+        userCrop.setCrop(null);
+        userCrop.setProgress(0);
+        userCrop.setWaterLimit(0);
+        userCrop.setFertilizerLimit(0);
+        userCrop.setStatus(1);
+        int value = crop.getValue();
+        int experience = crop.getExperience();
+        int userMoney = user.getMoney();
+        int userLevel = user.getLevel();
+        int userExperience = user.getExperience();
+        int isLevel = 0;
+        if(userLevel < experienceList.length-1){
+            if(userExperience + experience >= experienceList[userLevel]){
+                user.setLevel(userLevel + 1);
+                isLevel = 1;
+            }
+            user.setExperience(userExperience + experience);
+        }else{
+            if(userExperience + experience <= experienceList[userLevel]){
                 user.setExperience(userExperience + experience);
             }else{
-                if(userExperience + experience <= experienceList[userLevel]){
-                    user.setExperience(userExperience + experience);
-                }else{
-                    user.setExperience(experienceList[userLevel]);
-                }
+                user.setExperience(experienceList[userLevel]);
             }
-            user.setMoney(userMoney + value);
-            if(isLevel == 1){
-                return Result.UP;
-            }
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
         }
+        user.setMoney(userMoney + value);
+        if(isLevel == 1){
+            return Result.UP;
+        }
+        return Result.TRUE;
     }
 
     /**
@@ -733,18 +650,14 @@ public class UserServiceImpl {
     @Transactional(readOnly = false)
     public String extensionLand(Integer userId, String landNumber, Integer needMoney){
         User user = this.userDao.findUserById(userId);
-        try {
-            Land land = user.getLand();
-            int userMoney = user.getMoney();
-            if(userMoney >= needMoney){
-                addUserCrop(land, new UserCrop(), landNumber);
-                user.setMoney(userMoney - needMoney);
-                return Result.TRUE;
-            }
-            return Result.NOT_ENOUGH_MONEY;
-        }catch (Exception e){
-            return Result.FALSE;
+        Land land = user.getLand();
+        int userMoney = user.getMoney();
+        if(userMoney >= needMoney){
+            addUserCrop(land, new UserCrop(), landNumber);
+            user.setMoney(userMoney - needMoney);
+            return Result.TRUE;
         }
+        return Result.NOT_ENOUGH_MONEY;
     }
 
     public Page<User> findAllUserByAccount(String account, Integer pageNumber, Integer pageSize){

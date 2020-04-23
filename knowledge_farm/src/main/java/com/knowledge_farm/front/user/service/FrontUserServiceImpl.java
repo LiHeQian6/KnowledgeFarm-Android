@@ -46,51 +46,36 @@ public class FrontUserServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public String deleteOneUser(Integer userId, Integer exist) {
+    public void deleteOneUser(Integer userId, Integer exist) {
         User user = this.userDao.findUserById(userId);
-        try {
+        UserAuthority userAuthority = user.getUserAuthority();
+        user.setExist(exist);
+        if (userAuthority != null) {
+            userAuthority.setExist(exist);
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void editStatusListByIdList(List<Integer> idList, Integer exist) {
+        List<User> users = this.userDao.findAllById(idList);
+        for (User user : users) {
             UserAuthority userAuthority = user.getUserAuthority();
             user.setExist(exist);
             if (userAuthority != null) {
                 userAuthority.setExist(exist);
             }
-            return Result.SUCCEED;
-        } catch (Exception e) {
-            return Result.FAIL;
         }
+        this.userDao.saveAll(users);
     }
 
     @Transactional(readOnly = false)
-    public String editStatusListByIdList(List<Integer> idList, Integer exist) {
-        List<User> users = this.userDao.findAllById(idList);
-        try {
-            for (User user : users) {
-                UserAuthority userAuthority = user.getUserAuthority();
-                user.setExist(exist);
-                if (userAuthority != null) {
-                    userAuthority.setExist(exist);
-                }
-            }
-            this.userDao.saveAll(users);
-            return Result.SUCCEED;
-        } catch (Exception e) {
-            return Result.FAIL;
-        }
-    }
-
-    @Transactional(readOnly = false)
-    public String deleteThoroughUser(Integer userId) {
+    public void deleteThoroughUser(Integer userId) {
         User user = this.userDao.findUserById(userId);
-        try {
-            this.userDao.delete(user);
-            return Result.SUCCEED;
-        } catch (Exception e) {
-            return Result.FAIL;
-        }
+        this.userDao.delete(user);
     }
 
     @Transactional(readOnly = false)
-    public String addUser(String nickName, String password, String email, Integer grade) {
+    public void addUser(String nickName, String password, String email, Integer grade) {
         //生成账号
         String account = "";
         do {
@@ -119,13 +104,8 @@ public class FrontUserServiceImpl {
         land.setUserCrop3(userCrop3);
         land.setUserCrop4(userCrop4);
         user.setLand(land);
-        try {
-            this.userDao.save(user);
-            entityManager.clear();
-            return Result.SUCCEED;
-        } catch (Exception e) {
-            return Result.FAIL;
-        }
+        this.userDao.save(user);
+        entityManager.clear();
     }
 
     public User findUserById(Integer id) {
@@ -141,24 +121,14 @@ public class FrontUserServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public String save(User user) {
-        try {
-            this.userDao.save(user);
-            return "succeed";
-        } catch (Exception e) {
-            return "fail";
-        }
+    public void save(User user) {
+        this.userDao.save(user);
     }
 
     @Transactional(readOnly = false)
-    public String editPasswordByAccount(String account, String password) {
+    public void editPasswordByAccount(String account, String password) {
         User user = this.userDao.findUserByAccount(account);
-        try {
-            user.setPassword(password);
-            return Result.SUCCEED;
-        } catch (Exception e) {
-            return Result.FAIL;
-        }
+        user.setPassword(password);
     }
 
 }

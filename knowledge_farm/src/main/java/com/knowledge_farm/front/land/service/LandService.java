@@ -39,14 +39,13 @@ public class LandService {
     public Object findAllLandByAccount(String account, Integer pageNumber, Integer pageSize){
         if(account != null && !account.equals("")){
             User user = this.userService.findUserByAccount(account);
-            try {
+            if(user != null){
                 return this.landDao.findALLByUser(user.getId(), PageRequest.of(pageNumber - 1, pageSize));
-            }catch (NullPointerException e){
-                PageUtil<Land> pageUtil = new PageUtil(pageNumber, pageSize);
-                pageUtil.setTotalCount(0);
-                pageUtil.setList(new ArrayList());
-                return pageUtil;
             }
+            PageUtil<Land> pageUtil = new PageUtil(pageNumber, pageSize);
+            pageUtil.setTotalCount(0);
+            pageUtil.setList(new ArrayList());
+            return pageUtil;
         }
         return this.landDao.findAll(PageRequest.of(pageNumber - 1, pageSize));
     }
@@ -60,117 +59,107 @@ public class LandService {
     }
 
     @Transactional(readOnly = false)
-    public String editLand(Integer userId, String landNumber, Integer waterLimit, Integer fertilizerLimit, Integer progress, Integer status, Integer flag){
+    public void editLand(Integer userId, String landNumber, Integer waterLimit, Integer fertilizerLimit, Integer progress, Integer status, Integer flag) throws SchedulerException {
         User user = this.userService.findUserById(userId);
         int isOpen = 0;
-        try {
-            Land land = user.getLand();
-            UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
-            if(userCrop == null){
+        Land land = user.getLand();
+        UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
+        if(userCrop == null){
+            switch (flag){
+                case -1:
+                    break;
+                case 0:
+                    addUserCrop(land, new UserCrop(), landNumber);
+                default:
+                    UserCrop userCrop1 = new UserCrop();
+                    Crop crop = this.cropService.findCropById(flag);
+                    userCrop1.setCrop(crop);
+                    if(progress >= crop.getMatureTime()){
+                        progress = crop.getMatureTime();
+                        isOpen = 1;
+                    }
+                    if(status == 0){
+                        isOpen = 1;
+                    }
+                    userCrop1.setWaterLimit(waterLimit);
+                    userCrop1.setFertilizerLimit(fertilizerLimit);
+                    userCrop1.setProgress(progress);
+                    userCrop1.setStatus(status);
+                    addUserCrop(land, userCrop1, landNumber);
+                    if(isOpen == 0){
+                        startJob(scheduler, userId, userCrop1.getId());
+                    }
+                    break;
+            }
+        }else {
+            Crop crop = userCrop.getCrop();
+            if(crop != null){
                 switch (flag){
                     case -1:
+                        deleteJob("job" + userId, "group" + userId);
+                        addUserCrop(land, null, landNumber);
+                        this.userCropService.deleteUserCropById(userCrop.getId());
                         break;
                     case 0:
-                        addUserCrop(land, new UserCrop(), landNumber);
-                        this.userService.saveUser(user);
+                        userCrop.setCrop(null);
+                        userCrop.setProgress(0);
+                        userCrop.setWaterLimit(0);
+                        userCrop.setFertilizerLimit(0);
+                        userCrop.setStatus(1);
+                        deleteJob("job" + userId, "group" + userId);
                         break;
                     default:
-                        UserCrop userCrop1 = new UserCrop();
-                        Crop crop = this.cropService.findCropById(flag);
-                        userCrop1.setCrop(crop);
-                        if(progress >= crop.getMatureTime()){
-                            progress = crop.getMatureTime();
+                        Crop crop1 = this.cropService.findCropById(flag);
+                        if(userCrop.getCrop() != crop1){
+                            userCrop.setCrop(crop1);
+                        }else{
+                            isOpen = 1;
+                        }
+                        if(progress >= crop1.getMatureTime()){
+                            progress = crop1.getMatureTime();
                             isOpen = 1;
                         }
                         if(status == 0){
                             isOpen = 1;
                         }
-                        userCrop1.setWaterLimit(waterLimit);
-                        userCrop1.setFertilizerLimit(fertilizerLimit);
-                        userCrop1.setProgress(progress);
-                        userCrop1.setStatus(status);
-                        addUserCrop(land, userCrop1, landNumber);
-                        this.userService.saveUser(user);
+                        userCrop.setWaterLimit(waterLimit);
+                        userCrop.setFertilizerLimit(fertilizerLimit);
+                        userCrop.setProgress(progress);
+                        userCrop.setStatus(status);
                         if(isOpen == 0){
-                            startJob(scheduler, userId, userCrop1.getId());
+                            deleteJob("job" + userId, "group" + userId);
+                            startJob(scheduler, userId, userCrop.getId());
                         }
                         break;
                 }
-            }else {
-                Crop crop = userCrop.getCrop();
-                if(crop != null){
-                    switch (flag){
-                        case -1:
-                            deleteJob("job" + userId, "group" + userId);
-                            addUserCrop(land, null, landNumber);
-                            this.userService.saveUser(user);
-                            this.userCropService.deleteUserCropById(userCrop.getId());
-                            break;
-                        case 0:
-                            userCrop.setCrop(null);
-                            userCrop.setProgress(0);
-                            userCrop.setWaterLimit(0);
-                            userCrop.setFertilizerLimit(0);
-                            userCrop.setStatus(1);
-                            deleteJob("job" + userId, "group" + userId);
-                            break;
-                        default:
-                            Crop crop1 = this.cropService.findCropById(flag);
-                            if(userCrop.getCrop() != crop1){
-                                userCrop.setCrop(crop1);
-                            }else{
-                                isOpen = 1;
-                            }
-                            if(progress >= crop1.getMatureTime()){
-                                progress = crop1.getMatureTime();
-                                isOpen = 1;
-                            }
-                            if(status == 0){
-                                isOpen = 1;
-                            }
-                            userCrop.setWaterLimit(waterLimit);
-                            userCrop.setFertilizerLimit(fertilizerLimit);
-                            userCrop.setProgress(progress);
-                            userCrop.setStatus(status);
-                            if(isOpen == 0){
-                                deleteJob("job" + userId, "group" + userId);
-                                startJob(scheduler, userId, userCrop.getId());
-                            }
-                            break;
-                    }
-                }else{
-                    switch (flag){
-                        case -1:
-                            addUserCrop(land, null, landNumber);
-                            this.userService.saveUser(user);
-                            this.userCropService.deleteUserCropById(userCrop.getId());
-                            break;
-                        case 0:
-                            break;
-                        default:
-                            Crop crop1 = this.cropService.findCropById(flag);
-                            userCrop.setCrop(crop1);
-                            if(progress >= crop1.getMatureTime()){
-                                progress = crop1.getMatureTime();
-                                isOpen = 1;
-                            }
-                            if(status == 0){
-                                isOpen = 1;
-                            }
-                            userCrop.setWaterLimit(waterLimit);
-                            userCrop.setFertilizerLimit(fertilizerLimit);
-                            userCrop.setProgress(progress);
-                            userCrop.setStatus(status);
-                            if(isOpen == 0){
-                                startJob(scheduler, userId, userCrop.getId());
-                            }
-                            break;
-                    }
+            }else{
+                switch (flag){
+                    case -1:
+                        addUserCrop(land, null, landNumber);
+                        this.userCropService.deleteUserCropById(userCrop.getId());
+                        break;
+                    case 0:
+                        break;
+                    default:
+                        Crop crop1 = this.cropService.findCropById(flag);
+                        userCrop.setCrop(crop1);
+                        if(progress >= crop1.getMatureTime()){
+                            progress = crop1.getMatureTime();
+                            isOpen = 1;
+                        }
+                        if(status == 0){
+                            isOpen = 1;
+                        }
+                        userCrop.setWaterLimit(waterLimit);
+                        userCrop.setFertilizerLimit(fertilizerLimit);
+                        userCrop.setProgress(progress);
+                        userCrop.setStatus(status);
+                        if(isOpen == 0){
+                            startJob(scheduler, userId, userCrop.getId());
+                        }
+                        break;
                 }
             }
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
         }
     }
 

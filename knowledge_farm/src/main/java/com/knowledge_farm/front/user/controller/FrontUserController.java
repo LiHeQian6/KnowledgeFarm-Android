@@ -98,7 +98,12 @@ public class FrontUserController {
     @RequestMapping("/deleteOneUser")
     @ResponseBody
     public String deleteOneUser(@RequestParam("userId") Integer userId){
-        return this.frontUserService.deleteOneUser(userId, 0);
+        try {
+            this.frontUserService.deleteOneUser(userId, 0);
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/deleteMultiUser")
@@ -109,13 +114,23 @@ public class FrontUserController {
         for(String id : deleteIds){
             idList.add(Integer.parseInt(id));
         }
-        return this.frontUserService.editStatusListByIdList(idList, 0);
+        try {
+            this.frontUserService.editStatusListByIdList(idList, 0);
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/recoveryOneUser")
     @ResponseBody
     public String recoveryOneUser(@RequestParam("userId") Integer userId) {
-        return this.frontUserService.deleteOneUser(userId, 1);
+        try {
+            this.frontUserService.deleteOneUser(userId, 1);
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/recoveryMultiUser")
@@ -126,13 +141,23 @@ public class FrontUserController {
         for(String id : recoveryId){
             idList.add(Integer.parseInt(id));
         }
-        return this.frontUserService.editStatusListByIdList(idList, 1);
+        try {
+            this.frontUserService.editStatusListByIdList(idList, 1);
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/deleteThoroughUser")
     @ResponseBody
     public String deleteThoroughUser(@RequestParam("userId") Integer userId) {
-        return this.frontUserService.deleteThoroughUser(userId);
+        try {
+            this.frontUserService.deleteThoroughUser(userId);
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/addUser")
@@ -141,7 +166,12 @@ public class FrontUserController {
                           @RequestParam("password") String password,
                           @RequestParam("email") String email,
                           @RequestParam("grade") Integer grade) {
-        return this.frontUserService.addUser(nickName, password, email, grade);
+        try {
+            this.frontUserService.addUser(nickName, password, email, grade);
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/updateUser")
@@ -175,7 +205,12 @@ public class FrontUserController {
     @ResponseBody
     public String updateUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
         password = Md5Encode.getMD5(password.getBytes());
-        return this.frontUserService.editPasswordByAccount(account, password);
+        try {
+            this.frontUserService.editPasswordByAccount(account, password);
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
+        }
     }
 
     /**

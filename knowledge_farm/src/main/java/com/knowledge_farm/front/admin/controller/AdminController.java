@@ -130,7 +130,13 @@ public class AdminController {
     @RequestMapping("/deleteOneAdmin")
     @ResponseBody
     public String deleteOneAdmin(@RequestParam("id") Integer id){
-        return this.adminService.editStatusById(id, 0);
+        try {
+            this.adminService.editStatusById(id, 0);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     /**
@@ -148,13 +154,25 @@ public class AdminController {
         for(String id : deleteIds){
             idList.add(Integer.parseInt(id));
         }
-        return this.adminService.editStatusListByIdList(idList, 0);
+        try {
+            this.adminService.editStatusListByIdList(idList, 0);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/recoveryOneAdmin")
     @ResponseBody
     public String recoveryOneAdmin(@RequestParam("id") Integer id){
-        return this.adminService.editStatusById(id, 1);
+        try {
+            this.adminService.editStatusById(id, 1);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/recoveryMultiAdmin")
@@ -165,7 +183,13 @@ public class AdminController {
         for(String id : recoveryId){
             idList.add(Integer.parseInt(id));
         }
-        return this.adminService.editStatusListByIdList(idList, 1);
+        try {
+            this.adminService.editStatusListByIdList(idList, 1);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     /**
@@ -178,7 +202,13 @@ public class AdminController {
     @RequestMapping("/deleteThoroughAdmin")
     @ResponseBody
     public String deleteById(@RequestParam("id") Integer id){
-        return this.adminService.deleteById(id);
+        try {
+            this.adminService.deleteById(id);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     /**
@@ -195,7 +225,13 @@ public class AdminController {
             Admin admin = new Admin();
             admin.setAccount(account);
             admin.setPassword(Md5Encode.getMD5(password.getBytes()));
-            return this.adminService.add(admin);
+            try {
+                this.adminService.add(admin);
+                return Result.SUCCEED;
+            }catch (Exception e){
+                e.printStackTrace();
+                return Result.FAIL;
+            }
         }
         return Result.ALREADY;
     }
@@ -211,7 +247,13 @@ public class AdminController {
     @ResponseBody
     public String updateAdminAccount(@RequestParam("id") Integer id, @RequestParam("account") String account, @RequestParam("oldAccount") String excludeAccount){
         if(this.adminService.findByAccountExcludeAccount(account, excludeAccount) == null){
-            return this.adminService.editAccountById(id, account);
+            try {
+                this.adminService.editAccountById(id, account);
+                return Result.SUCCEED;
+            }catch (Exception e){
+                e.printStackTrace();
+                return Result.FAIL;
+            }
         }
         return Result.ALREADY;
     }
@@ -227,7 +269,13 @@ public class AdminController {
     @ResponseBody
     public String updateAdminPassword(@RequestParam("id") Integer id, @RequestParam("password") String password){
         password = Md5Encode.getMD5(password.getBytes());
-        return this.adminService.editPasswordById(id, password);
+        try {
+            this.adminService.editPasswordById(id, password);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
 }

@@ -31,15 +31,18 @@ public class UserBagServiceImpl {
 
     public List<BagCropItem> initUserBag(Integer userId){
         User user = this.userService.findUserById(userId);
-        Set<UserBag> userBags = user.getUserBags();
-        List<BagCropItem> bagCropItems = new ArrayList<>();
-        for(UserBag userBag : userBags){
-            BagCropItem bagCropItem = new BagCropItem();
-            bagCropItem.setCrop(userBag.getCrop());
-            bagCropItem.setNumber(userBag.getNumber());
-            bagCropItems.add(bagCropItem);
+        if(user != null){
+            Set<UserBag> userBags = user.getUserBags();
+            List<BagCropItem> bagCropItems = new ArrayList<>();
+            for(UserBag userBag : userBags){
+                BagCropItem bagCropItem = new BagCropItem();
+                bagCropItem.setCrop(userBag.getCrop());
+                bagCropItem.setNumber(userBag.getNumber());
+                bagCropItems.add(bagCropItem);
+            }
+            return bagCropItems;
         }
-        return bagCropItems;
+        return new ArrayList<>();
     }
 
     @Transactional(readOnly = false)

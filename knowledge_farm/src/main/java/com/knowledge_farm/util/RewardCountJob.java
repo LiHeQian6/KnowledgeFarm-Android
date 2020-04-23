@@ -3,6 +3,7 @@ package com.knowledge_farm.util;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -18,7 +19,11 @@ public class RewardCountJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) {
-        this.userService.updateUserRewardCount();
+        try {
+            this.userService.updateUserRewardCount();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public UserServiceImpl getUserService() {
