@@ -47,7 +47,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public User getUser() {
         return user;
     }
@@ -57,7 +57,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id1")
+    @JoinColumn(name = "user_crop_id1", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop1() {
         return userCrop1;
     }
@@ -67,7 +67,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id2")
+    @JoinColumn(name = "user_crop_id2", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop2() {
         return userCrop2;
     }
@@ -77,7 +77,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id3")
+    @JoinColumn(name = "user_crop_id3", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop3() {
         return userCrop3;
     }
@@ -87,7 +87,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id4")
+    @JoinColumn(name = "user_crop_id4", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop4() {
         return userCrop4;
     }
@@ -97,7 +97,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id5")
+    @JoinColumn(name = "user_crop_id5", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop5() {
         return userCrop5;
     }
@@ -107,7 +107,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id6")
+    @JoinColumn(name = "user_crop_id6", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop6() {
         return userCrop6;
     }
@@ -117,7 +117,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id7")
+    @JoinColumn(name = "user_crop_id7", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop7() {
         return userCrop7;
     }
@@ -127,7 +127,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id8")
+    @JoinColumn(name = "user_crop_id8", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop8() {
         return userCrop8;
     }
@@ -137,7 +137,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id9")
+    @JoinColumn(name = "user_crop_id9", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop9() {
         return userCrop9;
     }
@@ -147,7 +147,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id10")
+    @JoinColumn(name = "user_crop_id10", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop10() {
         return userCrop10;
     }
@@ -157,7 +157,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id11")
+    @JoinColumn(name = "user_crop_id11", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop11() {
         return userCrop11;
     }
@@ -167,7 +167,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id12")
+    @JoinColumn(name = "user_crop_id12", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop12() {
         return userCrop12;
     }
@@ -177,7 +177,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id13")
+    @JoinColumn(name = "user_crop_id13", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop13() {
         return userCrop13;
     }
@@ -187,7 +187,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id14")
+    @JoinColumn(name = "user_crop_id14", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop14() {
         return userCrop14;
     }
@@ -197,7 +197,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id15")
+    @JoinColumn(name = "user_crop_id15", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop15() {
         return userCrop15;
     }
@@ -207,7 +207,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id16")
+    @JoinColumn(name = "user_crop_id16", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop16() {
         return userCrop16;
     }
@@ -217,7 +217,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id17")
+    @JoinColumn(name = "user_crop_id17", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop17() {
         return userCrop17;
     }
@@ -227,7 +227,7 @@ public class Land {
     }
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_crop_id18")
+    @JoinColumn(name = "user_crop_id18", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public UserCrop getUserCrop18() {
         return userCrop18;
     }

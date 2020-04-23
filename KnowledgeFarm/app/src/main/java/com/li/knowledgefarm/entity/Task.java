@@ -1,8 +1,5 @@
-package com.knowledge_farm.entity;
+package com.li.knowledgefarm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
 
 /**
  * @program: knowledge_farm
@@ -10,10 +7,7 @@ import javax.persistence.*;
  * @author: 景光赞
  * @create: 2020-04-19 11:05
  **/
-@Entity
-@Table(name = "task")
 public class Task {
-    private int id;
     private int signIn;
     private int water;
     private int fertilize;
@@ -21,39 +15,8 @@ public class Task {
     private int harvest;
     private int helpWater;
     private int helpFertilize;
-    private User user;
 
     public Task() {
-    }
-
-    public Task(User user) {
-        this.signIn = 0;
-        this.water = 0;
-        this.fertilize = 0;
-        this.crop = 0;
-        this.harvest = 0;
-        this.helpWater = 0;
-        this.helpFertilize = 0;
-        this.user = user;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Column(name = "sign_in")
-    public int getSignIn() {
-        return signIn;
-    }
-
-    public void setSignIn(int signIn) {
-        this.signIn = signIn;
     }
 
     public int getWater() {
@@ -62,6 +25,14 @@ public class Task {
 
     public void setWater(int water) {
         this.water = water;
+    }
+
+    public int getSignIn() {
+        return signIn;
+    }
+
+    public void setSignIn(int signIn) {
+        this.signIn = signIn;
     }
 
     public int getFertilize() {
@@ -88,7 +59,6 @@ public class Task {
         this.harvest = harvest;
     }
 
-    @Column(name = "help_water")
     public int getHelpWater() {
         return helpWater;
     }
@@ -97,7 +67,6 @@ public class Task {
         this.helpWater = helpWater;
     }
 
-    @Column(name = "help_fertilize")
     public int getHelpFertilize() {
         return helpFertilize;
     }
@@ -106,14 +75,4 @@ public class Task {
         this.helpFertilize = helpFertilize;
     }
 
-    @OneToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    @JsonIgnore
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

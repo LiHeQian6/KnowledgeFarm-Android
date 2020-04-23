@@ -1,13 +1,11 @@
 package com.knowledge_farm.user.controller;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.util.Email;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,7 +26,6 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/user")
-@PropertySource(value = {"classpath:photo.properties"})
 public class UserController {
     @Resource
     private UserServiceImpl userService;
@@ -52,14 +48,17 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/loginByOpenId")
-    private String loginByOpenId(@RequestParam("openId") String openId){
+    private Object loginByOpenId(@RequestParam("openId") String openId){
         Object obj = this.userService.loginByOpenId(openId);
         if(obj instanceof User){
-            UserVO userVO = varyUserToUserVO((User) obj);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            User user = (User) obj;
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
-        return (String) obj;
+        return obj;
     }
 
     /**
@@ -70,12 +69,14 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/findUserInfoByUserId")
-    public String findUserInfoByUserId(@RequestParam("userId") Integer userId){
+    public Object findUserInfoByUserId(@RequestParam("userId") Integer userId){
         User user = this.userService.findUserById(userId);
         if(user != null){
-            UserVO userVO = varyUserToUserVO(user);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
         return "{}";
     }
@@ -88,19 +89,23 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/addQQUser")
-    public String addQQUser(@RequestParam("openId") String openId,
+    public Object addQQUser(@RequestParam("openId") String openId,
+                            @RequestParam("photo") String photo,
                             @RequestParam("nickName") String nickName,
                             @RequestParam("grade") Integer grade,
                             @RequestParam(value = "email", defaultValue = "") String email,
                             @RequestParam("password") String password){
 
-        Object obj = this.userService.addQQUser(openId, nickName, grade, email, password);
+        Object obj = this.userService.addQQUser(openId, photo, nickName, grade, email, password);
         if(obj instanceof User){
-            UserVO userVO = varyUserToUserVO((User) obj);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            User user = (User) obj;
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
-        return (String) obj;
+        return obj;
     }
 
     /**
@@ -111,14 +116,17 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/loginByAccount")
-    public String loginByAccount(@RequestParam("account") String account, @RequestParam("password") String password){
+    public Object loginByAccount(@RequestParam("account") String account, @RequestParam("password") String password){
         Object obj = this.userService.loginByAccount(account, password);
         if(obj instanceof User){
-            UserVO userVO = varyUserToUserVO((User) obj);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            User user = (User) obj;
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
-        return (String) obj;
+        return obj;
     }
 
     /**
@@ -129,18 +137,20 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/registAccount")
-    public String registAccount(@RequestParam("nickName") String nickName,
-                               @RequestParam("grade") Integer grade,
-                               @RequestParam(value = "email", defaultValue = "") String email,
-                               @RequestParam("password") String password){
-
+    public Object registAccount(@RequestParam("nickName") String nickName,
+                                @RequestParam("grade") Integer grade,
+                                @RequestParam(value = "email", defaultValue = "") String email,
+                                @RequestParam("password") String password){
         Object obj = this.userService.registAccount(nickName, grade, email, password);
         if(obj instanceof User){
-            UserVO userVO = varyUserToUserVO((User) obj);
-            userVO.setPhoto(URLEncoder.encode(this.photoUrl + userVO.getPhoto()));
-            return new Gson().toJson(userVO);
+            User user = (User) obj;
+            user.setPassword("");
+            if(!(user.getPhoto().substring(0,4)).equals("http")){
+                user.setPhoto(this.photoUrl + user.getPhoto());
+            }
+            return user;
         }
-        return (String) obj;
+        return obj;
     }
 
     /**
@@ -164,15 +174,7 @@ public class UserController {
      **/
     @RequestMapping("/resetUserPassword")
     public String resetUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
-        try {
-            User user = this.userService.editPasswordByAccount(account, password);
-            if(user != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editPasswordByAccount(account, password);
     }
 
     /**
@@ -185,15 +187,7 @@ public class UserController {
     @RequestMapping("/updateUserNickName")
     public String updateUserNickName(@RequestParam("account") String account,
                                      @RequestParam("nickName") String nickName){
-        try {
-            User user = this.userService.editNickNameByAccount(account, nickName);
-            if(user != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editNickNameByAccount(account, nickName);
     }
 
     /**
@@ -206,15 +200,7 @@ public class UserController {
     @RequestMapping("/updateUserGrade")
     public String updateUserGrade(@RequestParam("account") String account,
                                   @RequestParam("grade") Integer grade){
-        try {
-            User user = this.userService.editGradeByAccount(account, grade);
-            if(user != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editGradeByAccount(account, grade);
     }
 
     /**
@@ -228,18 +214,14 @@ public class UserController {
     public String updateUserPassword(@RequestParam("account") String account,
                                      @RequestParam("oldPassword") String oldPassword,
                                      @RequestParam("newPassword") String newPassword){
+        User user = this.userService.findUserByAccount(account);
         try {
-            User user = this.userService.findUserByAccount(account);
-            if(user != null){
-                if(user.getPassword().equals(oldPassword)){
-                    this.userService.editPasswordByAccount(account, newPassword);
-                    return "true";
-                }
-                return "PasswordError";
+            if(user.getPassword().equals(oldPassword)){
+                return this.userService.editPasswordByAccount(account, newPassword);
             }
-            return "notExist";
+            return Result.PASSWORD_ERROR;
         }catch (Exception e){
-            return "false";
+            return Result.FALSE;
         }
     }
 
@@ -266,16 +248,12 @@ public class UserController {
             String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
             FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
             photo = this.userPhotoFolderName + "/" + photoName;
-            try {
-                if(this.userService.editPhotoById(id, photo) != null){
-                    return photo;
-                }
-                return "notExist";
-            }catch (Exception e){
-                return "fail";
+            if(this.userService.editPhotoById(id, photo) == Result.TRUE){
+                return photo;
             }
+            return Result.FALSE;
         }
-        return "nullPicture";
+        return Result.NULL;
     }
     /**
      * @Author 张帅华
@@ -326,9 +304,9 @@ public class UserController {
             if(Email.bindingMail(email)){
                 return Email.getCode();
             }
-            return "fail";
+            return Result.FAIL;
         }
-        return "already";
+        return Result.ALREADY;
     }
 
     /**
@@ -340,14 +318,7 @@ public class UserController {
      **/
     @RequestMapping("/bindingEmail")
     public String bindingEmail(@RequestParam("account") String account, @RequestParam("email") String email){
-        try {
-            if(this.userService.editEmail(account, email) != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editEmail(account, email);
     }
 
     /**
@@ -359,14 +330,7 @@ public class UserController {
      **/
     @RequestMapping("/unBindingEmail")
     public String unBindingEmail(@RequestParam("account") String account){
-        try {
-            if(this.userService.editEmail(account, "") != null){
-                return "true";
-            }
-            return "notExist";
-        }catch (Exception e){
-            return "false";
-        }
+        return this.userService.editEmail(account, "");
     }
 
     /**
@@ -419,6 +383,11 @@ public class UserController {
     @RequestMapping("/waterCrop")
     public String waterCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
         return this.userService.waterCrop(userId, landNumber);
+    }
+
+    @RequestMapping("/waterCrop2")
+    public String test(){
+        return this.userService.waterCrop2(userService.findUserById(109), "land1");
     }
 
     /**

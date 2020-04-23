@@ -23,7 +23,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/notification")
-@PropertySource(value = {"classpath:photo.properties"})
 public class NotificationController {
     @Resource
     private NotificationService notificationService;
@@ -41,8 +40,12 @@ public class NotificationController {
 //        for(Notification notification : page.getContent()){
 //            User from = notification.getFrom();
 //            User to = notification.getTo();
-//            from.setPhoto(this.photoUrl + from.getPhoto());
-//            if(!to.getPhoto().contains("http://")){
+//            to.setPassword("");
+//            from.setPassword("");
+//            if(!(from.getPhoto().substring(0,4)).equals("http")){
+//                from.setPhoto(this.photoUrl + from.getPhoto());
+//            }
+//            if(!(to.getPhoto().substring(0,4)).equals("http")){
 //                to.setPhoto(this.photoUrl + to.getPhoto());
 //            }
 //        }
@@ -61,8 +64,12 @@ public class NotificationController {
 //        for(Notification notification : page.getContent()){
 //            User from = notification.getFrom();
 //            User to = notification.getTo();
-//            from.setPhoto(this.photoUrl + from.getPhoto());
-//            if(!to.getPhoto().contains("http://")){
+//            to.setPassword("");
+//            from.setPassword("");
+//            if(!(from.getPhoto().substring(0,4)).equals("http")){
+//                from.setPhoto(this.photoUrl + from.getPhoto());
+//            }
+//            if(!(to.getPhoto().substring(0,4)).equals("http")){
 //                to.setPhoto(this.photoUrl + to.getPhoto());
 //            }
 //        }
@@ -76,8 +83,12 @@ public class NotificationController {
         for(Notification notification : notifications){
             User from = notification.getFrom();
             User to = notification.getTo();
-            from.setPhoto(this.photoUrl + from.getPhoto());
-            if(!to.getPhoto().contains("http://")){
+            to.setPassword("");
+            from.setPassword("");
+            if(!(from.getPhoto().substring(0,4)).equals("http")){
+                from.setPhoto(this.photoUrl + from.getPhoto());
+            }
+            if(!(to.getPhoto().substring(0,4)).equals("http")){
                 to.setPhoto(this.photoUrl + to.getPhoto());
             }
         }
@@ -90,8 +101,12 @@ public class NotificationController {
         for(Notification notification : notifications){
             User from = notification.getFrom();
             User to = notification.getTo();
-            from.setPhoto(this.photoUrl + from.getPhoto());
-            if(!to.getPhoto().contains("http://")){
+            to.setPassword("");
+            from.setPassword("");
+            if(!(from.getPhoto().substring(0,4)).equals("http")){
+                from.setPhoto(this.photoUrl + from.getPhoto());
+            }
+            if(!(to.getPhoto().substring(0,4)).equals("http")){
                 to.setPhoto(this.photoUrl + to.getPhoto());
             }
         }

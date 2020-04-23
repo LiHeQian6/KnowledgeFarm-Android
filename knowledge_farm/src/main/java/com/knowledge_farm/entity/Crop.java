@@ -109,7 +109,7 @@ public class Crop {
         this.experience = experience;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }

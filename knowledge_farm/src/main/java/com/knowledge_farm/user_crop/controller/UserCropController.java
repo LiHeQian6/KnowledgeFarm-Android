@@ -20,7 +20,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/usercrop")
-@PropertySource(value = {"classpath:photo.properties"})
 public class UserCropController {
     @Resource
     private UserCropServiceImpl userCropService;
@@ -41,7 +40,7 @@ public class UserCropController {
             if(userCrop != null){
                 Crop crop = userCrop.getCrop();
                 if(crop != null){
-                    if(crop.getImg1().contains("http://")){
+                    if((crop.getImg1().substring(0,4)).equals("http")){
                         continue;
                     }
                     crop.setImg1(photoUrl + crop.getImg1());

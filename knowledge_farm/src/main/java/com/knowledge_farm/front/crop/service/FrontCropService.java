@@ -2,6 +2,7 @@ package com.knowledge_farm.front.crop.service;
 
 import com.knowledge_farm.crop.dao.CropDao;
 import com.knowledge_farm.entity.Crop;
+import com.knowledge_farm.entity.Result;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,11 +35,9 @@ public class FrontCropService {
         Crop crop = this.cropDao.findCropById(id);
         try {
             crop.setExist(exist);
-            return "succeed";
-        }catch (NullPointerException e){
-            return null;
+            return Result.SUCCEED;
         }catch (Exception e){
-            return "fail";
+            return Result.FAIL;
         }
     }
 
@@ -50,11 +49,9 @@ public class FrontCropService {
                 crop.setExist(exist);
             }
             this.cropDao.saveAll(crops);
-            return "succeed";
-        }catch (NullPointerException e){
-            return null;
+            return Result.SUCCEED;
         }catch (Exception e){
-            return "fail";
+            return Result.FAIL;
         }
     }
 
@@ -63,11 +60,9 @@ public class FrontCropService {
         Crop crop = this.cropDao.findCropById(id);
         try {
             this.cropDao.delete(crop);
-            return "succeed";
-        } catch (NullPointerException e){
-            return null;
-        } catch (Exception e){
-            return "fail";
+            return Result.SUCCEED;
+        }catch (Exception e){
+            return Result.FAIL;
         }
     }
 

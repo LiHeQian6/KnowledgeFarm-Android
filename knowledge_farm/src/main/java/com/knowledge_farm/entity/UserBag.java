@@ -30,7 +30,7 @@ public class UserBag {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public User getUser() {
         return user;
     }
@@ -40,7 +40,7 @@ public class UserBag {
     }
 
     @ManyToOne
-    @JoinColumn(name = "crop_id")
+    @JoinColumn(name = "crop_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public Crop getCrop() {
         return crop;
     }

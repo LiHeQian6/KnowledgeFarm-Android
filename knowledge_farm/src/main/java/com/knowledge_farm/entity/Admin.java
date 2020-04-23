@@ -46,23 +46,13 @@ public class Admin {
         this.password = password;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }
 
     public void setExist(Integer exist) {
         this.exist = exist;
-    }
-
-    @Override
-    public String toString() {
-        return "Admin{" +
-                "id=" + id +
-                ", account='" + account + '\'' +
-                ", password='" + password + '\'' +
-                ", exist=" + exist +
-                '}';
     }
 
 }

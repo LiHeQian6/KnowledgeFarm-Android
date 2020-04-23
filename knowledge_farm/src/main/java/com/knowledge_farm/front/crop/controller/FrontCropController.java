@@ -1,6 +1,7 @@
 package com.knowledge_farm.front.crop.controller;
 
 import com.knowledge_farm.entity.Crop;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.crop.service.FrontCropService;
 import com.knowledge_farm.util.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +34,6 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/admin/crop")
-@PropertySource(value = {"classpath:photo.properties"})
 public class FrontCropController {
     @Resource
     private FrontCropService frontCropService;
@@ -125,7 +125,7 @@ public class FrontCropController {
                           @RequestParam("upload") MultipartFile files[]){
         for(MultipartFile multipartFile : files) {
             if (multipartFile.getOriginalFilename().equals("")) {
-                return "null";
+                return Result.NULL;
             }
         }
 
@@ -155,14 +155,12 @@ public class FrontCropController {
                 editCrop.setImg3(img[2]);
                 editCrop.setImg4(img[3]);
                 if(this.frontCropService.save(editCrop) != null){
-                    return "succeed";
+                    return Result.SUCCEED;
                 }
             }
-            return "fail";
-        }catch (NullPointerException e){
-            return null;
+            return Result.FAIL;
         }catch (Exception e){
-            return "fail";
+            return Result.FAIL;
         }
     }
 
@@ -218,11 +216,9 @@ public class FrontCropController {
                 count++;
             }
             this.frontCropService.save(crop);
-            return "succeed";
-        }catch (NullPointerException | IOException e){
-            return null;
+            return Result.SUCCEED;
         }catch (Exception e){
-            return "fail";
+            return Result.FAIL;
         }
     }
 

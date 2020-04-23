@@ -3,10 +3,11 @@
     android:layout_width="wrap_content"
     android:clipChildren="false"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <ImageView
         android:tag="land"
-        android:src="@drawable/grassland"
+        android:src="@drawable/land_grass"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"/>
     <ImageView
@@ -14,6 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_marginTop="-30dp"
         android:visibility="gone"
+        android:rotationY="4"
+        android:rotationX="-16"
+        android:rotation="10"
         android:layout_gravity="center"
         android:layout_height="101dp"/>
     <ProgressBar
@@ -24,6 +28,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="-80dp"
         android:visibility="gone"
+        android:rotation="10"
         style="?android:attr/progressBarStyleHorizontal"
         android:progressDrawable="@drawable/progressbar_bg"
         android:layout_height="wrap_content"/>
@@ -32,6 +37,7 @@
         android:text="50/100"
         android:textColor="#003366"
         android:visibility="gone"
+        android:rotation="10"
         android:layout_marginTop="-50dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
@@ -40,6 +46,10 @@
         android:tag="animation"
         android:layout_width="101dp"
         android:visibility="gone"
+        android:rotationY="4"
+        android:rotationX="-16"
+        android:rotation="10"
+        android:layout_marginTop="-50dp"
         android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"/>
 </FrameLayout>

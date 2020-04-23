@@ -22,7 +22,6 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
-@PropertySource(value = {"classpath:photo.properties"})
 public class FrontUserServiceImpl {
     @Resource
     private UserDao userDao;
@@ -33,77 +32,71 @@ public class FrontUserServiceImpl {
     @Value("${file.userDefaultFileName}")
     private String userDefaultFileName;
 
-    public Page<User> findUserPage(String account, Integer exist, Integer pageNumber, Integer pageSize){
-        if(exist != null) {
+    public Page<User> findUserPage(String account, Integer exist, Integer pageNumber, Integer pageSize) {
+        if (exist != null) {
             if (account != null && !account.equals("")) {
                 return this.userDao.findAllUserByAccountAndExist(account, exist, PageRequest.of(pageNumber - 1, pageSize));
             }
             return this.userDao.findAllUserAndExist(exist, PageRequest.of(pageNumber - 1, pageSize));
         }
-        if(account != null && !account.equals("")){
+        if (account != null && !account.equals("")) {
             return this.userDao.findAllUserByAccount(account, PageRequest.of(pageNumber - 1, pageSize));
         }
         return this.userDao.findAll(PageRequest.of(pageNumber - 1, pageSize));
     }
 
     @Transactional(readOnly = false)
-    public String deleteOneUser(Integer userId, Integer exist){
+    public String deleteOneUser(Integer userId, Integer exist) {
         User user = this.userDao.findUserById(userId);
         try {
             UserAuthority userAuthority = user.getUserAuthority();
             user.setExist(exist);
-            if(userAuthority != null){
+            if (userAuthority != null) {
                 userAuthority.setExist(exist);
             }
-            return "succeed";
-        }catch (NullPointerException e){
-            return null;
-        }catch (Exception e){
-            return "fail";
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
         }
     }
 
     @Transactional(readOnly = false)
-    public String editStatusListByIdList(List<Integer> idList, Integer exist){
+    public String editStatusListByIdList(List<Integer> idList, Integer exist) {
         List<User> users = this.userDao.findAllById(idList);
         try {
-            for(User user : users){
+            for (User user : users) {
                 UserAuthority userAuthority = user.getUserAuthority();
                 user.setExist(exist);
-                if(userAuthority != null){
+                if (userAuthority != null) {
                     userAuthority.setExist(exist);
                 }
             }
             this.userDao.saveAll(users);
-            return "succeed";
-        }catch (NullPointerException e){
-            return null;
-        }catch (Exception e){
-            return "fail";
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
         }
     }
 
     @Transactional(readOnly = false)
-    public String deleteThoroughUser(Integer userId){
+    public String deleteThoroughUser(Integer userId) {
         User user = this.userDao.findUserById(userId);
         try {
             this.userDao.delete(user);
-            return "succeed";
-        }catch (NullPointerException e){
-            return null;
-        }catch (Exception e){
-            return "fail";
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
         }
     }
 
     @Transactional(readOnly = false)
-    public String addUser(String nickName, String password, String email, Integer grade){
+    public String addUser(String nickName, String password, String email, Integer grade) {
         //生成账号
         String account = "";
-        do{
+        do {
             account = "";
             account = RandomUtil.generateAccount();
-        }while (this.userDao.findUserByAccount(account) != null || account.charAt(0) == '0' || account.charAt(account.length()-1) == '0');
+        } while (this.userDao.findUserByAccount(account) != null || account.charAt(0) == '0' || account.charAt(account.length() - 1) == '0');
         //构建User
         User user = new User();
         user.setAccount(account);
@@ -129,47 +122,43 @@ public class FrontUserServiceImpl {
         try {
             this.userDao.save(user);
             entityManager.clear();
-            return "succeed";
-        }catch (Exception e){
-            return "fail";
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
         }
     }
 
-    public User findUserById(Integer id){
+    public User findUserById(Integer id) {
         return this.userDao.findUserById(id);
     }
 
-    public User findUserByAccount(String account){
+    public User findUserByAccount(String account) {
         return this.userDao.findUserByAccount(account);
     }
 
-    public User findUserByAccountAndExcludeAccount(String account, String excludeAccount){
+    public User findUserByAccountAndExcludeAccount(String account, String excludeAccount) {
         return this.userDao.findUserByAccountAndExcludeAccount(account, excludeAccount);
     }
 
     @Transactional(readOnly = false)
-    public String save(User user){
+    public String save(User user) {
         try {
             this.userDao.save(user);
             return "succeed";
-        }catch (Exception e){
+        } catch (Exception e) {
             return "fail";
         }
     }
 
     @Transactional(readOnly = false)
-    public String editPasswordByAccount(String account, String password){
+    public String editPasswordByAccount(String account, String password) {
         User user = this.userDao.findUserByAccount(account);
         try {
             user.setPassword(password);
-            return "succeed";
-        }catch (NullPointerException e){
-            return null;
-        }catch (Exception e){
-            return "fail";
+            return Result.SUCCEED;
+        } catch (Exception e) {
+            return Result.FAIL;
         }
     }
-
-
 
 }

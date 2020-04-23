@@ -3,6 +3,7 @@ package com.knowledge_farm.notification.service;
 import com.google.gson.Gson;
 import com.knowledge_farm.entity.Notification;
 import com.knowledge_farm.entity.NotificationType;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.notification.dao.NotificationDao;
 import com.knowledge_farm.notification_type.service.NotificationTypeService;
@@ -74,9 +75,9 @@ public class NotificationService {
             notification.setHaveRead(false);
             notification.setNotificationType(notificationType);
             this.notificationDao.save(notification);
-            return "true";
+            return Result.TRUE;
         }catch (Exception e){
-            return "false";
+            return Result.FALSE;
         }
     }
 
@@ -84,9 +85,9 @@ public class NotificationService {
     public String deleteNotification(Integer notificationId){
         try {
             this.notificationDao.deleteById(notificationId);
-            return "true";
+            return Result.TRUE;
         }catch (Exception e){
-            return "false";
+            return Result.FALSE;
         }
     }
 
@@ -98,9 +99,9 @@ public class NotificationService {
                 notification.setHaveRead(true);
             }
             this.notificationDao.saveAll(notifications);
-            return "true";
+            return Result.TRUE;
         }catch (Exception e){
-            return "false";
+            return Result.FALSE;
         }
     }
 

@@ -95,7 +95,7 @@ public class User {
         this.email = email;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getLevel() {
         return level;
     }
@@ -104,7 +104,7 @@ public class User {
         this.level = level;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 0")
     public Integer getExperience() {
         return experience;
     }
@@ -113,6 +113,7 @@ public class User {
         this.experience = experience;
     }
 
+    @Column(columnDefinition = "int default 1")
     public Integer getGrade() {
         return grade;
     }
@@ -121,7 +122,7 @@ public class User {
         this.grade = grade;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1000")
     public Integer getMoney() {
         return money;
     }
@@ -130,7 +131,7 @@ public class User {
         this.money = money;
     }
 
-    @Column(name = "math_reward_count", insertable = false)
+    @Column(name = "math_reward_count", insertable = false, columnDefinition = "int default 3")
     public Integer getMathRewardCount() {
         return mathRewardCount;
     }
@@ -139,7 +140,7 @@ public class User {
         this.mathRewardCount = mathRewardCount;
     }
 
-    @Column(name = "english_reward_count", insertable = false)
+    @Column(name = "english_reward_count", insertable = false, columnDefinition = "int default 3")
     public Integer getEnglishRewardCount() {
         return englishRewardCount;
     }
@@ -148,7 +149,7 @@ public class User {
         this.englishRewardCount = englishRewardCount;
     }
 
-    @Column(name = "chinese_reward_count", insertable = false)
+    @Column(name = "chinese_reward_count", insertable = false, columnDefinition = "int default 3")
     public Integer getChineseRewardCount() {
         return chineseRewardCount;
     }
@@ -157,7 +158,7 @@ public class User {
         this.chineseRewardCount = chineseRewardCount;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 0")
     public Integer getWater() {
         return water;
     }
@@ -166,7 +167,7 @@ public class User {
         this.water = water;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 0")
     public Integer getFertilizer() {
         return fertilizer;
     }
@@ -175,7 +176,7 @@ public class User {
         this.fertilizer = fertilizer;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getOnline() {
         return online;
     }
@@ -184,7 +185,7 @@ public class User {
         this.online = online;
     }
 
-    @Column(insertable = false)
+    @Column(insertable = false, columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }
@@ -194,6 +195,7 @@ public class User {
     }
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Land getLand() {
         return land;
@@ -204,6 +206,7 @@ public class User {
     }
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public UserAuthority getUserAuthority() {
         return userAuthority;
@@ -214,6 +217,7 @@ public class User {
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<UserBag> getUserBags() {
         return userBags;
@@ -224,6 +228,7 @@ public class User {
     }
 
     @OneToOne(mappedBy = "user")
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Task getTask() {
         return task;
@@ -234,6 +239,7 @@ public class User {
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<UserFriend> getUserFriends() {
         return userFriends;
@@ -244,6 +250,7 @@ public class User {
     }
 
     @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<Notification> getSendNotifications() {
         return sendNotifications;
@@ -254,6 +261,7 @@ public class User {
     }
 
     @OneToMany(mappedBy = "to", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<Notification> getReceiveNotifications() {
         return ReceiveNotifications;
