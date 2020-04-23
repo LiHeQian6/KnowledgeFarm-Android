@@ -60,6 +60,8 @@ class DayTaskAdapter extends BaseAdapter {
         }
         TaskItem taskItem = list.get(position);
         if (taskItem.getStatus()==1){
+            viewHolder.todo.setVisibility(View.VISIBLE);
+            viewHolder.done.setVisibility(View.GONE);
             viewHolder.todo.setText("领取奖励");
             viewHolder.todo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -68,6 +70,8 @@ class DayTaskAdapter extends BaseAdapter {
                 }
             });
         }else if (taskItem.getStatus()==0){
+            viewHolder.todo.setVisibility(View.VISIBLE);
+            viewHolder.done.setVisibility(View.GONE);
             viewHolder.todo.setText("去完成");
             viewHolder.todo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,11 +83,7 @@ class DayTaskAdapter extends BaseAdapter {
             viewHolder.todo.setVisibility(View.GONE);
             viewHolder.done.setVisibility(View.VISIBLE);
         }
-        if (taskItem.getType().equals("water")){
-            viewHolder.icon.setImageResource(R.drawable.shuihu);
-            taskItem.setContent("快去给你的植物浇一次水吧！");
-            taskItem.setReward("奖励：金币x100  经验x100");
-        }else if (taskItem.getType().equals("signIn")){
+        if (taskItem.getType().equals("signIn")){
             viewHolder.icon.setImageResource(R.drawable.daytask);
             taskItem.setContent("每日签到");
             taskItem.setReward("奖励：金币x100  经验x100");
@@ -94,24 +94,28 @@ class DayTaskAdapter extends BaseAdapter {
                 }
             });
             viewHolder.todo.setText("签到");
+        }else if (taskItem.getType().equals("water")){
+            viewHolder.icon.setImageResource(R.drawable.shuihu);
+            taskItem.setContent("快去给你的植物浇一次水吧！");
+            taskItem.setReward("奖励：金币x100  经验x100");
         }else if(taskItem.getType().equals("fertilize")){
             viewHolder.icon.setImageResource(R.drawable.huafei1);
             taskItem.setContent("快去给你的植物施一次肥吧！");
             taskItem.setReward("奖励：金币x100  经验x100");
         }else if(taskItem.getType().equals("crop")){
-            viewHolder.icon.setImageResource(R.drawable.shouhuo);
-            taskItem.setContent("快去给你种植一株植物吧！");
+            viewHolder.icon.setImageResource(R.drawable.seed);
+            taskItem.setContent("快去种植一株植物吧！");
             taskItem.setReward("奖励：金币x100  经验x100");
         }else if(taskItem.getType().equals("harvest")){
             viewHolder.icon.setImageResource(R.drawable.shouhuo);
-            taskItem.setContent("快去给你收获一株植物吧！");
+            taskItem.setContent("快去收获一株植物吧！");
             taskItem.setReward("奖励：金币x100  经验x100");
         }else if(taskItem.getType().equals("helpWater")){
-            viewHolder.icon.setImageResource(R.drawable.shouhuo);
+            viewHolder.icon.setImageResource(R.drawable.shuihu);
             taskItem.setContent("快去帮助好友给一株植物浇水吧！");
             taskItem.setReward("奖励：金币x100  经验x100");
         }else if(taskItem.getType().equals("helpFertilize")){
-            viewHolder.icon.setImageResource(R.drawable.shouhuo);
+            viewHolder.icon.setImageResource(R.drawable.huafei1);
             taskItem.setContent("快去帮助好友给一株植物施肥吧！");
             taskItem.setReward("奖励：金币x100  经验x100");
         }

@@ -338,5 +338,8 @@
         android:src="@drawable/myfriends"
         android:id="@+id/friends"
         android:layout_marginRight="-10dp"
-        android:layout_height="100dp"/>
+        android:layout_height="100dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="-10dp" />
 </RelativeLayout>

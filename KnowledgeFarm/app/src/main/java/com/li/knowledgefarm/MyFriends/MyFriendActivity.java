@@ -52,6 +52,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
@@ -115,10 +116,11 @@ public class MyFriendActivity extends AppCompatActivity {
     private RadioGroup searchSelected;
     private int searchSelectedItem=0;
     private User user;
-    private float LAND_WIDTH_2=160;
-    private float LAND_HEIGHT_2=80;
+    private float LAND_WIDTH_2=150;
+    private float LAND_HEIGHT_2=76;
     private Handler friendMessagesHandler;
-
+    private ImageView dayTask;
+    private DayTaskPopUpWindow dayTaskPopUpWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +143,12 @@ public class MyFriendActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+
+    private void showDayTaskWindow(){
+        dayTaskPopUpWindow = new DayTaskPopUpWindow(this);
+        dayTaskPopUpWindow.showAtLocation(dayTask,Gravity.CENTER,0,0);
     }
 
     @Override
@@ -508,6 +516,7 @@ public class MyFriendActivity extends AppCompatActivity {
         setting.setOnClickListener(new MainListener());
         harvest.setOnClickListener(new MainListener());
         myFriends.setOnClickListener(new MainListener());
+        dayTask.setOnClickListener(new MainListener());
     }
 
     private void getViews() {
@@ -547,6 +556,7 @@ public class MyFriendActivity extends AppCompatActivity {
         layout2.setVisibility(View.GONE);
         layout3.setVisibility(View.GONE);
         layout4.setVisibility(View.GONE);
+        dayTask=findViewById(R.id.task);
     }
     class MainListener implements View.OnClickListener {
 
@@ -637,7 +647,9 @@ public class MyFriendActivity extends AppCompatActivity {
                     else
                         findPeopleByAccount(searchAccount.getText().toString());
                     break;
-
+                case R.id.task:
+                    showDayTaskWindow();
+                    break;
             }
         }
     }

@@ -32,6 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -49,13 +50,11 @@ import okhttp3.Response;
  **/
 public class DayTaskPopUpWindow extends PopupWindow {
     private ListView task;
-    private ListView tasked;
     private Context context;
     private Gson gson;
     private Handler get_day_task;
     private View contentView;
     private ArrayList<TaskItem> tasks = new ArrayList<>();
-    private ArrayList<TaskItem> taskeds = new ArrayList<>();
 
     public DayTaskPopUpWindow(Context context) {
         super(context);
@@ -94,8 +93,6 @@ public class DayTaskPopUpWindow extends PopupWindow {
     private void getViews(View view){
         gson = new Gson();
         task=contentView.findViewById(R.id.task);
-        tasked=contentView.findViewById(R.id.tasked);
-
     }
 
     /**
@@ -146,11 +143,10 @@ public class DayTaskPopUpWindow extends PopupWindow {
                 task1.setHarvest(0);
                 task1.setHelpFertilize(0);
                 task1.setHelpWater(2);
-                task1.setWater(1);
+                task1.setWater(0);
 //                initTask(myTask);
                 initTask(task1);
                 task.setAdapter(new DayTaskAdapter(context,R.layout.daytask_item_layout,tasks));
-                tasked.setAdapter(new DayTaskAdapter(context,R.layout.daytask_item_layout,taskeds));
             }
         };
     }
@@ -170,7 +166,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
             taskItem.setType(name);
             try {
                 Method method = task.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1), null);
-                taskItem.setStatus((Integer) method.invoke(task,null));
+                taskItem.setStatus((Integer) method.invoke(task));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -178,12 +174,9 @@ public class DayTaskPopUpWindow extends PopupWindow {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-            if (taskItem.getStatus()==2){
-                taskeds.add(taskItem);
-            }else{
-                tasks.add(taskItem);
-            }
+            tasks.add(taskItem);
         }
+        Collections.sort(tasks);
     }
 
 }
