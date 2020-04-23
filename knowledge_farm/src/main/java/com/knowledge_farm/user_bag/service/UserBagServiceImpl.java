@@ -5,6 +5,7 @@ import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserBag;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_bag.dao.UserBagDao;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ public class UserBagServiceImpl {
     @Resource
     private UserBagDao userBagDao;
     @Resource
+    @Lazy
     private UserServiceImpl userService;
 
     public List<BagCropItem> initUserBag(Integer userId){

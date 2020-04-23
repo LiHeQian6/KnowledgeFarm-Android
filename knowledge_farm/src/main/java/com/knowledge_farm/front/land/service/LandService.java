@@ -65,7 +65,7 @@ public class LandService {
         int isOpen = 0;
         try {
             Land land = user.getLand();
-            UserCrop userCrop = findUserCropByLand(land, landNumber);
+            UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
             if(userCrop == null){
                 switch (flag){
                     case -1:
@@ -171,57 +171,6 @@ public class LandService {
             return Result.SUCCEED;
         }catch (Exception e){
             return Result.FAIL;
-        }
-    }
-
-    /**
-     * @Author 张帅华
-     * @Description 根据landNumber得到对应土地的种植信息对象
-     * @Date 23:30 2020/4/10 0010
-     * @Param [land, landNumber]
-     * @return com.atguigu.farm.entity.UserCrop
-     **/
-    public UserCrop findUserCropByLand(Land land, String landNumber){
-        Integer realLand = Integer.parseInt(landNumber.substring(4));
-        switch (realLand){
-            case 1:
-                return land.getUserCrop1();
-            case 2:
-                return land.getUserCrop2();
-            case 3:
-                return land.getUserCrop3();
-            case 4:
-                return land.getUserCrop4();
-            case 5:
-                return land.getUserCrop5();
-            case 6:
-                return land.getUserCrop6();
-            case 7:
-                return land.getUserCrop7();
-            case 8:
-                return land.getUserCrop8();
-            case 9:
-                return land.getUserCrop9();
-            case 10:
-                return land.getUserCrop10();
-            case 11:
-                return land.getUserCrop11();
-            case 12:
-                return land.getUserCrop12();
-            case 13:
-                return land.getUserCrop13();
-            case 14:
-                return land.getUserCrop14();
-            case 15:
-                return land.getUserCrop15();
-            case 16:
-                return land.getUserCrop16();
-            case 17:
-                return land.getUserCrop17();
-            case 18:
-                return land.getUserCrop18();
-            default:
-                return null;
         }
     }
 

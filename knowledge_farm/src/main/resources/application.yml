@@ -1,21 +1,62 @@
-server:
-  servlet:
-    context-path: /
-  port: 8080
-
 spring:
   #数据源
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://39.106.18.238:3306/farm_db1?useSSL=false&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://localhost:3306/farm_db1?useSSL=false&useUnicode=true&characterEncoding=utf8
     username: root
-    password: 539520zshZSH
-
     #若由实体bean映射自动创建表，则initialization-mode设置为never
-  #    initialization-mode: always
-  #    data: classpath*:/db-import.sql
-  #    schema: classpath*:/db-schema.sql
-
+    #initialization-mode: always
+    #data: classpath*:/db-import.sql
+    #schema: classpath*:/db-schema.sql
+    #数据源类型
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      #最大活跃数
+      maxActive: 50
+      #初始化数量
+      initialSize: 1
+      #最大连接等待超时时间
+      maxWait: 60000
+      #打开PSCache，并且指定每个连接PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      #通过connectionProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: 'druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000'
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 1 from dual
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      #配置监控统计拦截的filters，去掉后监控界面sql将无法统计,'wall'用于防火墙
+      filters: stat, wall, log4j, config
+      #######监控配置
+      # WebStatFilter配置，说明请参考Druid Wiki，配置_配置WebStatFilter
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
+        session-stat-enable: true
+        session-stat-max-count: 10
+        principal-session-name: session_name
+        principal-cookie-name: cookie_name
+        profile-enable:
+        # StatViewServlet配置，说明请参考Druid Wiki，配置_StatViewServlet配置默认false
+      stat-view-servlet:
+        enabled: true
+        # 配置DruidStatViewServlet
+        url-pattern: /druid/*
+        # 禁用HTML页面上的“Reset All”功能
+        reset-enable: false
+        login-username: admin #监控页面登录的用户名
+        login-password: admin #监控页面登录的密码
+        #IP白名单(没有配置或者为空，则允许所有访问)
+        allow: 127.0.0.1
+        #IP黑名单 (存在共同时，deny优先于allow)
+        deny:
+      #Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联监控配置
+      aop-patterns: com.knowledge_farm.*.service.*
   jpa:
     database: MySQL
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -25,3 +66,6 @@ spring:
 #      ddl-auto: update
     show-sql: true
     open-in-view: true
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true

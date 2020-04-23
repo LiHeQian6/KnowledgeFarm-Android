@@ -57,7 +57,7 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = false)
-    public String addUserFriendNotification(Integer userId, String account){
+    public Notification addUserFriendNotification(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
         String title = "新朋友";
@@ -74,10 +74,10 @@ public class NotificationService {
             notification.setCreateTime(new Date());
             notification.setHaveRead(false);
             notification.setNotificationType(notificationType);
-            this.notificationDao.save(notification);
-            return Result.TRUE;
+//            this.notificationDao.save(notification);
+            return notification;
         }catch (Exception e){
-            return Result.FALSE;
+            return null;
         }
     }
 

@@ -13,6 +13,7 @@ import com.knowledge_farm.util.UserCropGrowJob;
 import com.sun.org.apache.regexp.internal.RE;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,10 +38,12 @@ public class UserServiceImpl {
     @Resource
     private UserAuthorityServiceImpl userAuthorityService;
     @Resource
+    @Lazy
     private UserCropServiceImpl userCropServiceImpl;
     @Resource
     private CropServiceImpl cropService;
     @Resource
+    @Lazy
     private UserBagServiceImpl userBagService;
     @Resource
     private EntityManager entityManager;
@@ -463,7 +466,7 @@ public class UserServiceImpl {
         int flag = 0;
         try {
             Land land = user.getLand();
-            UserCrop userCrop = findUserCropByLand(land, landNumber);
+            UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
             Crop crop = userCrop.getCrop();
             //修改剩余水的次数
             if(user.getWater() > 0){
@@ -564,7 +567,7 @@ public class UserServiceImpl {
         User user = this.userDao.findUserById(userId);
         try {
             Land land = user.getLand();
-            UserCrop userCrop = findUserCropByLand(land, landNumber);
+            UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
             Crop crop = userCrop.getCrop();
             if(userCrop.getStatus() != 0){
                 //修改剩余化肥的次数
@@ -661,7 +664,7 @@ public class UserServiceImpl {
             }
             if(flag == 1){
                 Land land = user.getLand();
-                UserCrop userCrop = findUserCropByLand(land, landNumber);
+                UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
                 userCrop.setCrop(crop);
                 startJob(scheduler, userId, userCrop.getId());
                 return Result.TRUE;
@@ -684,7 +687,7 @@ public class UserServiceImpl {
         try {
             User user = this.userDao.findUserById(userId);
             Land land = user.getLand();
-            UserCrop userCrop = findUserCropByLand(land, landNumber);
+            UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
             Crop crop = userCrop.getCrop();
             userCrop.setCrop(null);
             userCrop.setProgress(0);
@@ -773,57 +776,6 @@ public class UserServiceImpl {
 
     public void saveUser(User user){
         this.userDao.save(user);
-    }
-
-    /**
-     * @Author 张帅华
-     * @Description 根据landNumber得到对应土地的种植信息对象
-     * @Date 23:30 2020/4/10 0010
-     * @Param [land, landNumber]
-     * @return com.atguigu.farm.entity.UserCrop
-     **/
-    public UserCrop findUserCropByLand(Land land, String landNumber){
-        Integer realLand = Integer.parseInt(landNumber.substring(4));
-        switch (realLand){
-            case 1:
-                return land.getUserCrop1();
-            case 2:
-                return land.getUserCrop2();
-            case 3:
-                return land.getUserCrop3();
-            case 4:
-                return land.getUserCrop4();
-            case 5:
-                return land.getUserCrop5();
-            case 6:
-                return land.getUserCrop6();
-            case 7:
-                return land.getUserCrop7();
-            case 8:
-                return land.getUserCrop8();
-            case 9:
-                return land.getUserCrop9();
-            case 10:
-                return land.getUserCrop10();
-            case 11:
-                return land.getUserCrop11();
-            case 12:
-                return land.getUserCrop12();
-            case 13:
-                return land.getUserCrop13();
-            case 14:
-                return land.getUserCrop14();
-            case 15:
-                return land.getUserCrop15();
-            case 16:
-                return land.getUserCrop16();
-            case 17:
-                return land.getUserCrop17();
-            case 18:
-                return land.getUserCrop18();
-            default:
-                return null;
-        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.knowledge_farm.notification.controller;
 
 import com.knowledge_farm.entity.Notification;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.notification.service.NotificationService;
 import com.knowledge_farm.util.PageUtil;
@@ -115,7 +116,11 @@ public class NotificationController {
 
     @RequestMapping("/addUserFriendNotification")
     public String addUserFriendNotification(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
-        return this.notificationService.addUserFriendNotification(userId, account);
+        Notification notification = this.notificationService.addUserFriendNotification(userId, account);
+        if(notification != null){
+            return Result.TRUE;
+        }
+        return Result.FALSE;
     }
 
     @RequestMapping("/deleteNotification")

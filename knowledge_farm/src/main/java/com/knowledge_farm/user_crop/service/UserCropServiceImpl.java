@@ -5,6 +5,7 @@ import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserCrop;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_crop.dao.UserCropDao;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class UserCropServiceImpl {
     @Resource
     private UserCropDao userCropDao;
     @Resource
+    @Lazy
     private UserServiceImpl userService;
 
     @Transactional(readOnly = false)
