@@ -1,6 +1,5 @@
 package com.li.knowledgefarm.daytask;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,18 +8,13 @@ import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
-import com.li.knowledgefarm.Main.NotifyListAdapter;
-import com.li.knowledgefarm.Main.NotifyPopUpWindow;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.entity.Notification;
 import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.TaskItem;
 
@@ -30,9 +24,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import okhttp3.Call;

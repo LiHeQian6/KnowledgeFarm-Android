@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Main.NotifyActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".Login.RegisteActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".Study.Subject.ChineseActivity" android:screenOrientation="landscape"/>
         <activity android:name=".MyFriends.MyFriendActivity" android:screenOrientation="landscape"/>
