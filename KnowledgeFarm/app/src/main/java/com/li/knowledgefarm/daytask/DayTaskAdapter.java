@@ -1,6 +1,9 @@
 package com.li.knowledgefarm.daytask;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,19 +11,35 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.TaskItem;
 
+import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.net.IDN;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 class DayTaskAdapter extends BaseAdapter {
     private List<TaskItem> list;
     private int id;
     private Context context;
+    private Handler get_reward;
 
     public DayTaskAdapter( Context context, int id,List<TaskItem> list) {
         this.list = list;
@@ -58,7 +77,7 @@ class DayTaskAdapter extends BaseAdapter {
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        TaskItem taskItem = list.get(position);
+        final TaskItem taskItem = list.get(position);
         if (taskItem.getStatus()==1){
             viewHolder.todo.setVisibility(View.VISIBLE);
             viewHolder.done.setVisibility(View.GONE);
@@ -66,7 +85,7 @@ class DayTaskAdapter extends BaseAdapter {
             viewHolder.todo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    getReward(taskItem.getType());
                 }
             });
         }else if (taskItem.getStatus()==0){
@@ -76,7 +95,9 @@ class DayTaskAdapter extends BaseAdapter {
             viewHolder.todo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //关闭窗口
+                    EventBean event = new EventBean();
+                    event.setMessage("close");
+                    EventBus.getDefault().post(event);
                 }
             });
         }else if (taskItem.getStatus()==2){
@@ -90,7 +111,7 @@ class DayTaskAdapter extends BaseAdapter {
             viewHolder.todo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //获取奖励
+                    getReward(taskItem.getType());
                 }
             });
             viewHolder.todo.setText("签到");
@@ -131,5 +152,52 @@ class DayTaskAdapter extends BaseAdapter {
         private ImageView icon;
         private Button todo;
     }
+
+    /**
+     * @Author li
+     * @param taskName
+     * @return void
+     * @Description 获取奖励
+     * @Date 20:54 2020/4/23
+     **/
+    private void getReward(final String taskName){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                FormBody formBody = new FormBody.Builder().build();
+                Request request = new Request.Builder()
+                        .post(formBody)
+                        .url(context.getResources().getString(R.string.URL)+"/task/getReward?taskName="+taskName).build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("获取奖励信息", "请求失败");
+                        Toast.makeText(context,"网络异常",Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String notify_message = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = notify_message;
+                        get_reward.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        get_reward = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+//                Task myTask = gson.fromJson(message,Task.class);
+                
+            }
+        };
+    }
+
 }
 

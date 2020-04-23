@@ -11,6 +11,7 @@ import java.util.List;
 public class EventBean {
     String account;
     private List<Question3Num> mathList;
+    private String message;
 
     public String getAccount() {
         return account;
@@ -25,5 +26,13 @@ public class EventBean {
 
     public void setMathList(List<Question3Num> mathList) {
         this.mathList = mathList;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
