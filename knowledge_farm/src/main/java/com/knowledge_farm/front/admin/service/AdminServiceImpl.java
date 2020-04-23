@@ -33,7 +33,6 @@ public class AdminServiceImpl {
      * @Param [account, password, session]
      * @return java.lang.String
      **/
-    @Transactional(readOnly = true)
     public Object login(String account, String password){
         password = Md5Encode.getMD5(password.getBytes());
         if(this.adminDao.findAdminByAccountAndExist(account, 0) == null){
@@ -54,13 +53,8 @@ public class AdminServiceImpl {
      * @return com.atguigu.farm.entity.Admin
      **/
     @Transactional(readOnly = false)
-    public String add(Admin admin){
-        try {
-            this.adminDao.save(admin);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
-        }
+    public void add(Admin admin){
+        this.adminDao.save(admin);
     }
 
     /**
@@ -71,14 +65,8 @@ public class AdminServiceImpl {
      * @return void
      **/
     @Transactional(readOnly = false)
-    public String deleteById(Integer id){
-        try {
-            this.adminDao.deleteById(id);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
-        }
-
+    public void deleteById(Integer id){
+        this.adminDao.deleteById(id);
     }
     
     /**
@@ -89,14 +77,9 @@ public class AdminServiceImpl {
      * @return com.atguigu.farm.entity.Admin
      **/
     @Transactional(readOnly = false)
-    public String editAccountById(Integer id, String account){
+    public void editAccountById(Integer id, String account){
         Admin admin = this.adminDao.findAdminById(id);
-        try {
-            admin.setAccount(account);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
-        }
+        admin.setAccount(account);
     }
 
     /**
@@ -107,14 +90,9 @@ public class AdminServiceImpl {
      * @return int
      **/
     @Transactional(readOnly = false)
-    public String editPasswordById(Integer id, String password){
+    public void editPasswordById(Integer id, String password){
         Admin admin = this.adminDao.findAdminById(id);
-        try {
-            admin.setPassword(password);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
-        }
+        admin.setPassword(password);
     }
 
     /**
@@ -125,14 +103,9 @@ public class AdminServiceImpl {
      * @return com.atguigu.farm.entity.Admin
      **/
     @Transactional(readOnly = false)
-    public String editStatusById(Integer id, Integer exist){
+    public void editStatusById(Integer id, Integer exist){
         Admin admin = this.adminDao.findAdminById(id);
-        try {
-            admin.setExist(exist);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
-        }
+        admin.setExist(exist);
     }
 
     /**
@@ -143,17 +116,12 @@ public class AdminServiceImpl {
      * @return java.util.List<com.atguigu.farm.entity.Admin>
      **/
     @Transactional(readOnly = false)
-    public String editStatusListByIdList(List<Integer> idList, Integer exist){
+    public void editStatusListByIdList(List<Integer> idList, Integer exist){
         List<Admin> admins = this.adminDao.findAllById(idList);
-        try {
-            for(Admin admin : admins){
-                admin.setExist(exist);
-            }
-            this.adminDao.saveAll(admins);
-            return Result.SUCCEED;
-        }catch (Exception e){
-            return Result.FAIL;
+        for(Admin admin : admins){
+            admin.setExist(exist);
         }
+        this.adminDao.saveAll(admins);
     }
 
     /**

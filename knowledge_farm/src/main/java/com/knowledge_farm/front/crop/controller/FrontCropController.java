@@ -78,7 +78,13 @@ public class FrontCropController {
     @RequestMapping("/deleteOneCrop")
     @ResponseBody
     public String deleteOneCrop(@RequestParam("id") Integer id){
-        return this.frontCropService.updateExist(id, 0);
+        try {
+            this.frontCropService.updateExist(id, 0);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/deleteMultiCrop")
@@ -89,13 +95,25 @@ public class FrontCropController {
         for(String id : deleteIds){
             idList.add(Integer.parseInt(id));
         }
-        return this.frontCropService.editStatusListByIdList(idList, 0);
+        try {
+            this.frontCropService.editStatusListByIdList(idList, 0);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/recoveryOneCrop")
     @ResponseBody
     public String recoveryOneCrop(@RequestParam("id") Integer id){
-        return this.frontCropService.updateExist(id, 1);
+        try {
+            this.frontCropService.updateExist(id, 1);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/recoveryMultiCrop")
@@ -106,13 +124,25 @@ public class FrontCropController {
         for(String id : recoveryId){
             idList.add(Integer.parseInt(id));
         }
-        return this.frontCropService.editStatusListByIdList(idList, 1);
+        try {
+            this.frontCropService.editStatusListByIdList(idList, 1);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/deleteThoroughCrop")
     @ResponseBody
     public String deleteThoroughCrop(@RequestParam("id") Integer id){
-        return this.frontCropService.deleteCropById(id);
+        try {
+            this.frontCropService.deleteCropById(id);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
     @RequestMapping("/addCrop")
@@ -154,9 +184,8 @@ public class FrontCropController {
                 editCrop.setImg2(img[1]);
                 editCrop.setImg3(img[2]);
                 editCrop.setImg4(img[3]);
-                if(this.frontCropService.save(editCrop) != null){
-                    return Result.SUCCEED;
-                }
+                this.frontCropService.save(editCrop);
+                return Result.SUCCEED;
             }
             return Result.FAIL;
         }catch (Exception e){

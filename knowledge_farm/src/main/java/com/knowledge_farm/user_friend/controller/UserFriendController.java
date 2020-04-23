@@ -1,5 +1,6 @@
 package com.knowledge_farm.user_friend.controller;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.user_friend.service.UserFriendServiceImpl;
@@ -77,12 +78,24 @@ public class UserFriendController {
 
     @RequestMapping("/addUserFriend")
     public String addUserFriend(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
-        return this.userFriendService.addUserFriend(userId, account);
+        try {
+            this.userFriendService.addUserFriend(userId, account);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     @RequestMapping("/deleteUserFriend")
     public String deleteUserFriend(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
-        return this.userFriendService.deleteUserFriend(userId, account);
+        try {
+            this.userFriendService.deleteUserFriend(userId, account);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**

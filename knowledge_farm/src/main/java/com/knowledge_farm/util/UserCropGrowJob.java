@@ -17,7 +17,6 @@ import java.util.Date;
  * @Author 张帅华
  * @Date 2020-04-09 16:41
  */
-@Transactional(readOnly = false)
 public class UserCropGrowJob extends QuartzJobBean {
     @Resource
     private Scheduler scheduler;
@@ -55,6 +54,7 @@ public class UserCropGrowJob extends QuartzJobBean {
             }
             deleteJob("job" + userId, "group" + userId);
         }catch (Exception e){
+            e.printStackTrace();
             try {
                 deleteJob("job" + userId, "group" + userId);
             } catch (SchedulerException ex) {

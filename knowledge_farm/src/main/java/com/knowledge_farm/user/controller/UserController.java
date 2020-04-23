@@ -95,17 +95,21 @@ public class UserController {
                             @RequestParam("grade") Integer grade,
                             @RequestParam(value = "email", defaultValue = "") String email,
                             @RequestParam("password") String password){
-
-        Object obj = this.userService.addQQUser(openId, photo, nickName, grade, email, password);
-        if(obj instanceof User){
-            User user = (User) obj;
-            user.setPassword("");
-            if(!(user.getPhoto().substring(0,4)).equals("http")){
-                user.setPhoto(this.photoUrl + user.getPhoto());
+        try {
+            Object obj = this.userService.addQQUser(openId, photo, nickName, grade, email, password);
+            if(obj instanceof User){
+                User user = (User) obj;
+                user.setPassword("");
+                if(!(user.getPhoto().substring(0,4)).equals("http")){
+                    user.setPhoto(this.photoUrl + user.getPhoto());
+                }
+                return user;
             }
-            return user;
+            return obj;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
         }
-        return obj;
     }
 
     /**
@@ -141,16 +145,21 @@ public class UserController {
                                 @RequestParam("grade") Integer grade,
                                 @RequestParam(value = "email", defaultValue = "") String email,
                                 @RequestParam("password") String password){
-        Object obj = this.userService.registAccount(nickName, grade, email, password);
-        if(obj instanceof User){
-            User user = (User) obj;
-            user.setPassword("");
-            if(!(user.getPhoto().substring(0,4)).equals("http")){
-                user.setPhoto(this.photoUrl + user.getPhoto());
+        try {
+            Object obj = this.userService.registAccount(nickName, grade, email, password);
+            if(obj instanceof User){
+                User user = (User) obj;
+                user.setPassword("");
+                if(!(user.getPhoto().substring(0,4)).equals("http")){
+                    user.setPhoto(this.photoUrl + user.getPhoto());
+                }
+                return user;
             }
-            return user;
+            return obj;
+        } catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
         }
-        return obj;
     }
 
     /**
@@ -174,7 +183,13 @@ public class UserController {
      **/
     @RequestMapping("/resetUserPassword")
     public String resetUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
-        return this.userService.editPasswordByAccount(account, password);
+        try {
+            this.userService.editPasswordByAccount(account, password);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -187,7 +202,13 @@ public class UserController {
     @RequestMapping("/updateUserNickName")
     public String updateUserNickName(@RequestParam("account") String account,
                                      @RequestParam("nickName") String nickName){
-        return this.userService.editNickNameByAccount(account, nickName);
+        try {
+            this.userService.editNickNameByAccount(account, nickName);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -200,7 +221,13 @@ public class UserController {
     @RequestMapping("/updateUserGrade")
     public String updateUserGrade(@RequestParam("account") String account,
                                   @RequestParam("grade") Integer grade){
-        return this.userService.editGradeByAccount(account, grade);
+        try {
+            this.userService.editGradeByAccount(account, grade);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -217,10 +244,12 @@ public class UserController {
         User user = this.userService.findUserByAccount(account);
         try {
             if(user.getPassword().equals(oldPassword)){
-                return this.userService.editPasswordByAccount(account, newPassword);
+                this.userService.editPasswordByAccount(account, newPassword);
+                return Result.TRUE;
             }
             return Result.PASSWORD_ERROR;
         }catch (Exception e){
+            e.printStackTrace();
             return Result.FALSE;
         }
     }
@@ -248,10 +277,13 @@ public class UserController {
             String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
             FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
             photo = this.userPhotoFolderName + "/" + photoName;
-            if(this.userService.editPhotoById(id, photo) == Result.TRUE){
+            try {
+                this.userService.editPhotoById(id, photo);
                 return photo;
+            }catch (Exception e){
+                e.printStackTrace();
+                return Result.FALSE;
             }
-            return Result.FALSE;
         }
         return Result.NULL;
     }
@@ -264,7 +296,12 @@ public class UserController {
      **/
     @RequestMapping("/isBindingQQ")
     public String isBindingQQ(@RequestParam("account") String account){
-        return this.userService.isBindingQQ(account);
+        try {
+            return this.userService.isBindingQQ(account);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.NULL;
+        }
     }
 
     /**
@@ -276,7 +313,12 @@ public class UserController {
      **/
     @RequestMapping("/bindingQQ")
     public String bindingQQ(@RequestParam("account") String account, @RequestParam("openId") String openId){
-        return this.userService.bindingQQ(account, openId);
+        try {
+            return this.userService.bindingQQ(account, openId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -288,7 +330,13 @@ public class UserController {
      **/
     @RequestMapping("unBindingQQ")
     public String unBindingQQ(@RequestParam("account") String account){
-        return this.userService.removeUserAuthority(account);
+        try {
+            this.userService.removeUserAuthority(account);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -318,7 +366,13 @@ public class UserController {
      **/
     @RequestMapping("/bindingEmail")
     public String bindingEmail(@RequestParam("account") String account, @RequestParam("email") String email){
-        return this.userService.editEmail(account, email);
+        try {
+            this.userService.editEmail(account, email);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -330,7 +384,13 @@ public class UserController {
      **/
     @RequestMapping("/unBindingEmail")
     public String unBindingEmail(@RequestParam("account") String account){
-        return this.userService.editEmail(account, "");
+        try {
+            this.userService.editEmail(account, "");
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -345,7 +405,12 @@ public class UserController {
                                   @RequestParam("water") Integer water,
                                   @RequestParam("fertilizer") Integer fertilizer,
                                   @RequestParam("subject") String subject){
-        return "" + this.userService.lessRewardCount(userId, water, fertilizer, subject);
+        try {
+            return "" + this.userService.lessRewardCount(userId, water, fertilizer, subject);
+        }catch (Exception e){
+            e.printStackTrace();
+            return "-1";
+        }
     }
 
     /**
@@ -382,12 +447,24 @@ public class UserController {
      **/
     @RequestMapping("/waterCrop")
     public String waterCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
-        return this.userService.waterCrop(userId, landNumber);
+        try {
+            return this.userService.waterCrop(userId, landNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+
     }
 
     @RequestMapping("/waterCrop2")
     public String test(){
-        return this.userService.waterCrop2(userService.findUserById(109), "land1");
+        try {
+            return this.userService.waterCrop2(userService.findUserById(109), "land1");
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+
     }
 
     /**
@@ -399,7 +476,12 @@ public class UserController {
      **/
     @RequestMapping("/fertilizerCrop")
     public String fertilizerCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
-        return this.userService.fertilizerCrop(userId, landNumber);
+        try {
+            return this.userService.fertilizerCrop(userId, landNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -411,7 +493,12 @@ public class UserController {
      **/
     @RequestMapping("/buyCrop")
     public String buyCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("number") Integer number){
-        return this.userService.buyCrop(userId, cropId, number);
+        try {
+            return this.userService.buyCrop(userId, cropId, number);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -423,7 +510,12 @@ public class UserController {
      **/
     @RequestMapping("/raiseCrop")
     public String raiseCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("landNumber") String landNumber){
-        return this.userService.raiseCrop(userId, cropId, landNumber);
+        try {
+            return this.userService.raiseCrop(userId, cropId, landNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -435,7 +527,12 @@ public class UserController {
      **/
     @RequestMapping("/harvest")
     public String harvest(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
-        return this.userService.harvest(userId, landNumber);
+        try {
+            return this.userService.harvest(userId, landNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**
@@ -447,7 +544,12 @@ public class UserController {
      **/
     @RequestMapping("/extensionLand")
     public String extensionLand(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber, @RequestParam("needMoney") Integer money){
-        return this.userService.extensionLand(userId, landNumber, money);
+        try {
+            return this.userService.extensionLand(userId, landNumber, money);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
     /**

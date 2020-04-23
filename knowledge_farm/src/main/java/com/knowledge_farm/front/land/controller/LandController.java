@@ -2,6 +2,7 @@ package com.knowledge_farm.front.land.controller;
 
 import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.Land;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.front.land.service.LandService;
 import com.knowledge_farm.util.PageUtil;
@@ -71,7 +72,13 @@ public class LandController {
                            @RequestParam("progress") Integer progress,
                            @RequestParam("status") Integer status,
                            @RequestParam("flag") Integer flag){
-        return this.landService.editLand(userId, landNumber, waterLimit, fertilizerLimit, progress, status, flag);
+        try {
+            this.landService.editLand(userId, landNumber, waterLimit, fertilizerLimit, progress, status, flag);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
 }

@@ -3,13 +3,17 @@ package com.knowledge_farm.aspect;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.knowledge_farm.entity.Notification;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.jpush.service.JpushService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 
 import java.util.Map;
@@ -26,21 +30,24 @@ public class AddFriendAspect {
     @Resource
     private JpushService jpushService;
 
-    @AfterReturning(pointcut = "execution(* com.knowledge_farm.notification.service.NotificationService.addUserFriendNotification(..))", returning="result")
+    @AfterReturning(pointcut = "execution(* com.knowledge_farm.notification.controller.NotificationController.addUserFriendNotification(..))", returning="result")
     public void afterReturning(JoinPoint joinPoint, Object result) {
-        Notification notification = (Notification) result;
-        try {
-            if(result != null){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        Notification notification = (Notification) request.getAttribute("addFriendNotification");
+        if(result == Result.TRUE){
+            try {
                 Type map = new TypeToken<Map<String, String>>(){}.getType();
-                Map extra = new Gson().fromJson(notification.getExtra(), map);
+                Map<String, String> extra = new Gson().fromJson(notification.getExtra(), map);
                 jpushService.sendCustomPush(notification.getTitle(), notification.getContent(), extra, notification.getTo().getAccount());
                 return;
+            }catch (Exception e){
+                e.printStackTrace();
+                System.out.println("消息创建失败");
+                return;
             }
-            System.out.println("消息创建失败");
-        }catch (Exception e){
-            System.out.println("自定义消息发送失败");
         }
-
+        System.out.println("消息创建失败");
     }
 
 }
