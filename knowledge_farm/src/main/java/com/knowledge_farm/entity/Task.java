@@ -106,8 +106,8 @@ public class Task {
         this.helpFertilize = helpFertilize;
     }
 
-    @OneToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @OneToOne(mappedBy = "task")
+    @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public User getUser() {
         return user;
