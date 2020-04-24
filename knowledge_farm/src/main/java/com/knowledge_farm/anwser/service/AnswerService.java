@@ -1,10 +1,14 @@
 package com.knowledge_farm.anwser.service;
 
 import com.knowledge_farm.anwser.entity.Question3Num;
+import com.knowledge_farm.anwser.repository.Chinese23Repository;
 import com.knowledge_farm.anwser.repository.ChineseRepository;
 import com.knowledge_farm.anwser.repository.EnglishRepository;
+import com.knowledge_farm.anwser.repository.Math23Repository;
 import com.knowledge_farm.entity.Chinese;
+import com.knowledge_farm.entity.Chinese23;
 import com.knowledge_farm.entity.English;
+import com.knowledge_farm.entity.Math23;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,10 @@ public class AnswerService {
     private ChineseRepository chineseRepository;
     @Resource
     private EnglishRepository englishRepository;
+    @Resource
+    private Chinese23Repository chinese23Repository;
+    @Resource
+    private Math23Repository math23Repository;
 
     //查询一年级上册语文题
     public Page<Chinese> findChineseOneUp(Pageable pageable){
@@ -38,20 +46,20 @@ public class AnswerService {
         return chineseRepository.findByGrade("OneDown",pageable);
     }
     //查询二年级上册语文题
-    public Page<Chinese> findChineseTwoUp(Pageable pageable){
-        return chineseRepository.findByGrade("TwoUp",pageable);
+    public Page<Chinese23> findChineseTwoUp(Pageable pageable){
+        return chinese23Repository.findByGrade("TwoUp",pageable);
     }
     //查询二年级下册语文题
-    public Page<Chinese> findChineseTwoDown(Pageable pageable){
-        return chineseRepository.findByGrade("TwoDown",pageable);
+    public Page<Chinese23> findChineseTwoDown(Pageable pageable){
+        return chinese23Repository.findByGrade("TwoDown",pageable);
     }
     //查询三年级上册语文题
-    public Page<Chinese> findChineseThreeUp(Pageable pageable){
-        return chineseRepository.findByGrade("ThreeUp",pageable);
+    public Page<Chinese23> findChineseThreeUp(Pageable pageable){
+        return chinese23Repository.findByGrade("ThreeUp",pageable);
     }
     //查询三年级下册语文题
-    public Page<Chinese> findChineseThreeDown(Pageable pageable){
-        return chineseRepository.findByGrade("ThreeDown",pageable);
+    public Page<Chinese23> findChineseThreeDown(Pageable pageable){
+        return chinese23Repository.findByGrade("ThreeDown",pageable);
     }
 
     //查询一年级上册英语题

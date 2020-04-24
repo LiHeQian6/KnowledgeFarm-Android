@@ -3,6 +3,7 @@ package com.knowledge_farm.anwser.Controller;
 import com.knowledge_farm.anwser.entity.Question3Num;
 import com.knowledge_farm.anwser.service.AnswerService;
 import com.knowledge_farm.entity.Chinese;
+import com.knowledge_farm.entity.Chinese23;
 import com.knowledge_farm.entity.English;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -96,10 +97,10 @@ public class AnswerController {
      */
     @ResponseBody
     @RequestMapping("/ChineseTwoUp")
-    public Page<Chinese> findChineseTwoUp(){
+    public Page<Chinese23> findChineseTwoUp(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
-        Page<Chinese> page =  answerService.findChineseTwoUp(PageRequest.of(pageNumber, pageSize));
+        Page<Chinese23> page =  answerService.findChineseTwoUp(PageRequest.of(pageNumber, pageSize));
         return page;
     }
     /**
@@ -111,10 +112,10 @@ public class AnswerController {
      */
     @ResponseBody
     @RequestMapping("/ChineseTwoDown")
-    public Page<Chinese> findChineseTwoDown(){
+    public Page<Chinese23> findChineseTwoDown(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
-        Page<Chinese> page =  answerService.findChineseTwoDown(PageRequest.of(pageNumber, pageSize));
+        Page<Chinese23> page =  answerService.findChineseTwoDown(PageRequest.of(pageNumber, pageSize));
         return page;
     }
     /**
@@ -126,10 +127,10 @@ public class AnswerController {
      */
     @ResponseBody
     @RequestMapping("/ChineseThreeUp")
-    public Page<Chinese> findChineseThreeUp(){
+    public Page<Chinese23> findChineseThreeUp(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
-        Page<Chinese> page =  answerService.findChineseThreeUp(PageRequest.of(pageNumber, pageSize));
+        Page<Chinese23> page =  answerService.findChineseThreeUp(PageRequest.of(pageNumber, pageSize));
         return page;
     }
     /**
@@ -141,10 +142,10 @@ public class AnswerController {
      */
     @ResponseBody
     @RequestMapping("/ChineseThreeDown")
-    public Page<Chinese> findChineseThreeDown(){
+    public Page<Chinese23> findChineseThreeDown(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
-        Page<Chinese> page =  answerService.findChineseThreeDown(PageRequest.of(pageNumber, pageSize));
+        Page<Chinese23> page =  answerService.findChineseThreeDown(PageRequest.of(pageNumber, pageSize));
         return page;
     }
 
