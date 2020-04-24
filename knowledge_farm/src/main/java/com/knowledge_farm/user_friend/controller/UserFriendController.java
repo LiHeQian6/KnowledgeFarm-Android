@@ -42,12 +42,12 @@ public class UserFriendController {
         Page<User> page = this.userFriendService.findUserFriendPageByAccount(userId, account, pageNumber, pageSize);
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-        for(User user : page.getContent()){
-            user.setPassword("");
-            if(!(user.getPhoto().substring(0,4)).equals("http")){
-                user.setPhoto(this.photoUrl + user.getPhoto());
-            }
-        }
+//        for(User user : page.getContent()){
+//            user.setPassword("");
+//            if(!(user.getPhoto().substring(0,4)).equals("http")){
+//                user.setPhoto(this.photoUrl + user.getPhoto());
+//            }
+//        }
         pageUtil.setList(page.getContent());
         return pageUtil;
     }
@@ -66,12 +66,12 @@ public class UserFriendController {
         Page<User> page = this.userFriendService.findAllUserByAccount(account, pageNumber, pageSize);
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-        for(User user : page.getContent()){
-            user.setPassword("");
-            if(!(user.getPhoto().substring(0,4)).equals("http")){
-                user.setPhoto(this.photoUrl + user.getPhoto());
-            }
-        }
+//        for(User user : page.getContent()){
+//            user.setPassword("");
+//            if(!(user.getPhoto().substring(0,4)).equals("http")){
+//                user.setPhoto(this.photoUrl + user.getPhoto());
+//            }
+//        }
         pageUtil.setList(page.getContent());
         return pageUtil;
     }

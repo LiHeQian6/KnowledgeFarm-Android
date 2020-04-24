@@ -67,7 +67,6 @@ public class UserCropServiceImpl {
         userCrops.add(land.getUserCrop6());
         userCrops.add(land.getUserCrop7());
         userCrops.add(land.getUserCrop8());
-        userCrops.add(land.getUserCrop1());
         userCrops.add(land.getUserCrop9());
         userCrops.add(land.getUserCrop10());
         userCrops.add(land.getUserCrop11());

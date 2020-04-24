@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,33 +33,33 @@ public class LandController {
     public String findPageLand(@RequestParam(value = "account", required = false) String account,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                               Model model){
+                               HttpServletRequest request){
         Object obj = this.landService.findAllLandByAccount(account, pageNumber, pageSize);
         if(obj instanceof Page){
             Page<Land> page = (Page) obj;
             PageUtil<Land> pageUtil = new PageUtil(pageNumber, pageSize);
             pageUtil.setTotalCount((int) ((Page) obj).getTotalElements());
-            for(Land land : page.getContent()){
-                User user = land.getUser();
-                user.setPassword("");
-            }
+//            for(Land land : page.getContent()){
+//                User user = land.getUser();
+//                user.setPassword("");
+//            }
             pageUtil.setList(page.getContent());
-            model.addAttribute("landPage", pageUtil);
+            request.setAttribute("landPage", pageUtil);
             return "member-land-list";
         }
-        model.addAttribute("landPage", (PageUtil<Land>) obj);
+        request.setAttribute("landPage", obj);
         return "member-land-list";
     }
 
     @RequestMapping("/toEdit")
-    public String toEdit(@RequestParam("id") Integer id, Model model){
+    public String toEdit(@RequestParam("id") Integer id, HttpServletRequest request){
         Land land = this.landService.findLandById(id);
         List<Crop> crops = this.landService.findAllCrop();
         if(land != null){
-            User user = land.getUser();
-            user.setPassword("");
-            model.addAttribute("land", land);
-            model.addAttribute("crops", crops);
+//            User user = land.getUser();
+//            user.setPassword("");
+            request.setAttribute("land", land);
+            request.setAttribute("crops", crops);
         }
         return "member-land-edit";
     }

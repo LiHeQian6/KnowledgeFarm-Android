@@ -54,6 +54,7 @@ import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
@@ -167,10 +168,36 @@ public class MainActivity extends AppCompatActivity {
 //        this.getWindow().setAttributes(lp);
 //        userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
 //    }
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 展示每日任务弹窗
+     * @Date 21:00 2020/4/23
+     **/
+//    private void showUserMessage(){
+//        userMessagePopUp = new UserMessagePopUp(this,MainActivity.this);
+//        WindowManager.LayoutParams lp = getWindow().getAttributes();
+//        lp.alpha = (float) 0.5;
+//        this.getWindow().setAttributes(lp);
+//        userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
+//    }
 
     private void showDayTaskWindow(){
         dayTaskPopUpWindow = new DayTaskPopUpWindow(this);
         dayTaskPopUpWindow.showAtLocation(dayTask,Gravity.CENTER,0,0);
+    }
+
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 关闭每日任务弹窗
+     * @Date 21:02 2020/4/23
+     **/
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    private void closeDayTaskWindow(EventBean event){
+        dayTaskPopUpWindow.dismiss();
     }
 
 
