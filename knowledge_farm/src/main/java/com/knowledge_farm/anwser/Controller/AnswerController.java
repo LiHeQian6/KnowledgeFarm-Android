@@ -159,13 +159,7 @@ public class AnswerController {
     @RequestMapping("/englishOneUp")
     public Page<English> englishOneUp() {
         int pageNumber = new Random().nextInt(2);
-        int pageSize;
-        if(pageNumber == 1) {
-            pageSize = 20;
-        }else {
-            pageSize = 29;
-        }
-        Page<English> page =  answerService.findEnglishOneUp(PageRequest.of(pageNumber, pageSize));
+        Page<English> page =  answerService.findEnglishOneUp(PageRequest.of(pageNumber, 25));
         return page;
     }
     /**
@@ -179,14 +173,7 @@ public class AnswerController {
     @RequestMapping("/englishOneDown")
     public Page<English> englishOneDown() {
         int pageNumber = new Random().nextInt(2);
-        int pageSize;
-
-        if(pageNumber == 1) {
-            pageSize = 20;
-        }else {
-            pageSize = 25;
-        }
-        Page<English> page =  answerService.findEnglishOneDown(PageRequest.of(pageNumber, pageSize));
+        Page<English> page =  answerService.findEnglishOneDown(PageRequest.of(pageNumber, 23));
         return page;
     }
     /**
@@ -199,14 +186,8 @@ public class AnswerController {
     @ResponseBody
     @RequestMapping("/englishTwoUp")
     public Page<English> englishTwoUp() {
-        int pageNumber = new Random().nextInt(2);
-        int pageSize;
-        if(pageNumber == 1) {
-            pageSize = 25;
-        }else {
-            pageSize = 28;
-        }
-        Page<English> page =  answerService.findEnglishTwoUp(PageRequest.of(pageNumber, pageSize));
+        int pageNumber = new Random().nextInt(3);
+        Page<English> page =  answerService.findEnglishTwoUp(PageRequest.of(pageNumber, 18));
         return page;
     }
     /**
@@ -219,14 +200,8 @@ public class AnswerController {
     @ResponseBody
     @RequestMapping("/englishTwoDown")
     public Page<English> englishTwoDown() {
-        int pageNumber = new Random().nextInt(2);
-        int pageSize;
-        if(pageNumber == 1) {
-            pageSize = 25;
-        }else {
-            pageSize = 28;
-        }
-        Page<English> page =  answerService.findEnglishTwoDown(PageRequest.of(pageNumber, pageSize));
+        int pageNumber = new Random().nextInt(3);
+        Page<English> page =  answerService.findEnglishTwoDown(PageRequest.of(pageNumber, 18));
         return page;
     }
     /**
@@ -239,8 +214,8 @@ public class AnswerController {
     @ResponseBody
     @RequestMapping("/englishThreeUp")
     public Page<English> englishThreeUp() {
-        int pageNumber = new Random().nextInt(2);
-        Page<English> page =  answerService.findEnglishThreeUp(PageRequest.of(pageNumber, 30));
+        int pageNumber = new Random().nextInt(3);
+        Page<English> page =  answerService.findEnglishThreeUp(PageRequest.of(pageNumber, 20));
         return page;
     }
     /**
@@ -253,8 +228,8 @@ public class AnswerController {
     @ResponseBody
     @RequestMapping("/englishThreeDown")
     public Page<English> englishThreeDown() {
-        int pageNumber = new Random().nextInt(2);
-        Page<English> page =  answerService.findEnglishThreeDown(PageRequest.of(pageNumber, 53));
+        int pageNumber = new Random().nextInt(5);
+        Page<English> page =  answerService.findEnglishThreeDown(PageRequest.of(pageNumber, 22));
         return page;
     }
 }
