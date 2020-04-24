@@ -62,10 +62,10 @@ public class GetChineseQuestion extends SubjectInterface {
                     Request request = null;
                     switch (LoginActivity.user.getGrade()) {
                         case 1:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/OneUpChinese").build();
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseOneUp").build();
                             break;
                         case 2:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/OneDownChinese").build();
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseOneDown").build();
                             break;
                     }
                     Call call = okHttpClient.newCall(request);
@@ -106,6 +106,7 @@ public class GetChineseQuestion extends SubjectInterface {
                 if(!data.equals("Fail") && !data.equals("html")) {
                     Type type = new TypeToken<List<Chinese>>() {
                     }.getType();
+                    System.out.println(data);
                     list = gson.fromJson(data, type);
                     if(list != null){
                         intent.putExtra("chinese",(Serializable) list);

@@ -126,7 +126,7 @@ public class UpdateGradeDialog extends DialogFragment {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).add("grade",""+transmit(newGrade)).build();
+                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).add("grade",""+transmit(newGrade)).build();
                 final Request request = new Request.Builder().post(formBody).url(getContext().getResources().getString(R.string.URL)+"/user/updateUserGrade").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {

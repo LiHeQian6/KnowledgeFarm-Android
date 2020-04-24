@@ -118,7 +118,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("password", stringMD5(newPassword)).build();
+                            FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccount()).add("password", stringMD5(newPassword)).build();
                             final Request request = new Request.Builder().post(formBody).url(getApplicationContext().getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {

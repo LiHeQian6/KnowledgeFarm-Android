@@ -133,7 +133,7 @@ public class UpdateNickNameDialog extends DialogFragment {
             new Thread(){
                 @Override
                 public void run() {
-                    FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("nickName",nickName).build();
+                    FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccount()).add("nickName",nickName).build();
                     final Request request = new Request.Builder().post(formBody).url(getContext().getResources().getString(R.string.URL)+"/user/updateUserNickName").build();
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {

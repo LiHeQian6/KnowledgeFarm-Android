@@ -13,8 +13,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.wifi.aware.DiscoverySession;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,13 +30,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -269,7 +265,7 @@ public class MyFriendActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(photo);
         nickName.setText(user.getNickName());
-        account.setText("账号:"+user.getAccout());
+        account.setText("账号:"+user.getAccount());
         level.setText("Lv:"+user.getLevel());
         money.setText("金币:"+user.getMoney());
         waterCount.setText(LoginActivity.user.getWater()+"");
@@ -289,13 +285,14 @@ public class MyFriendActivity extends AppCompatActivity {
         int flag=0;
         float x=0;
         float y=0;
-        for (int i = 1; i <19 ; i++) {
+        for (int i = 0; i <18 ; i++) {
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             View landGroup = inflater.inflate(R.layout.land_group,null);
             landGroup.setLayoutParams(new FrameLayout.LayoutParams(320,160));
-            if ((i-1)%3==0){
-                x=((i-1)/3)*LAND_WIDTH_2+LAND_WIDTH_2*2;
-                y=((i-1)/3)*LAND_HEIGHT_2;
+            int num=i+1;
+            if ((num-1)%3==0){
+                x=((num-1)/3)*LAND_WIDTH_2+LAND_WIDTH_2*2;
+                y=((num-1)/3)*LAND_HEIGHT_2;
                 landGroup.setTranslationX(x);
                 landGroup.setTranslationY(y);
             }else{
@@ -304,16 +301,16 @@ public class MyFriendActivity extends AppCompatActivity {
                 y = y + LAND_HEIGHT_2;
                 landGroup.setTranslationY(y);
             }
-            landGroup.setTag(""+i);
+            landGroup.setTag(""+num);
             final ImageView land = (ImageView) landGroup.findViewWithTag("land");
             ImageView plant=landGroup.findViewWithTag("plant");
             TextView progressNum = (TextView) landGroup.findViewWithTag("progressNum");
             ProgressBar progress = (ProgressBar) landGroup.findViewWithTag("progress");
             final ImageView animation = (ImageView) landGroup.findViewWithTag("animation");
             final int finalI = Integer.parseInt((String) landGroup.getTag());//第几块土地
-            if(user.getLandStauts(finalI)==-1) {//土地状态为-1表示土地未开垦，当第一次运行到的时候表示该块土地上是扩建牌
+            if(cropList.get(i)==null) {//土地状态为-1表示土地未开垦，当第一次运行到的时候表示该块土地上是扩建牌
             }
-            else if (user.getLandStauts(finalI)==0) {
+            else if (cropList.get(i).getCrop()==null) {
                 land.setImageResource(R.drawable.land);
                 //种植
                 land.setOnTouchListener(new View.OnTouchListener() {
@@ -350,14 +347,7 @@ public class MyFriendActivity extends AppCompatActivity {
                 land.setImageResource(R.drawable.land);
                 plant.setRotationX(-50);
                 plant.setRotation(-5);
-                UserCropItem crop=null;
-                //得到植物信息
-                for (int j = 0; j < cropList.size(); j++) {
-                    if(cropList.get(j).getUserCropId()==user.getLandStauts(finalI)){
-                        crop=cropList.get(j);
-                        break;
-                    }
-                }
+                UserCropItem crop=cropList.get(i);
                 if (crop!=null){
                     plant.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.VISIBLE);
@@ -380,7 +370,7 @@ public class MyFriendActivity extends AppCompatActivity {
                     progress.setProgress(crop.getProgress());
                     //植物成长值
                     progressNum.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
-                    if(crop.getState()==0){
+                    if(crop.getStatus()==0){
                         land.setImageResource(R.drawable.land_gan);
                     }
                     //浇水、施肥、收获
@@ -391,7 +381,7 @@ public class MyFriendActivity extends AppCompatActivity {
                         public boolean onTouch(View view, MotionEvent motionEvent) {
                             if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
                                 if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
-                                    if(finalCrop.getState()==0){
+                                    if(finalCrop.getStatus()==0){
                                         land.setImageResource(R.drawable.land_gan_light);
                                     }else
                                         land.setImageResource(R.drawable.land_lights);
@@ -399,7 +389,7 @@ public class MyFriendActivity extends AppCompatActivity {
                                         selectedPlant=finalI;
                                         if(status==1) {
                                             Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                            if(finalCrop.getState()==0){
+                                            if(finalCrop.getStatus()==0){
                                                 land.setImageResource(R.drawable.land_gan);
                                             }else
                                                 land.setImageResource(R.drawable.land);
@@ -412,7 +402,7 @@ public class MyFriendActivity extends AppCompatActivity {
                                         selectedPlant=finalI;
                                         if(status==1) {
                                             Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                            if(finalCrop.getState()==0){
+                                            if(finalCrop.getStatus()==0){
                                                 land.setImageResource(R.drawable.land_gan);
                                             }else
                                                 land.setImageResource(R.drawable.land);
@@ -431,7 +421,7 @@ public class MyFriendActivity extends AppCompatActivity {
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if(finalCrop.getState()==0){
+                                                if(finalCrop.getStatus()==0){
                                                     land.setImageResource(R.drawable.land_gan);
                                                 }else
                                                     land.setImageResource(R.drawable.land);
@@ -465,7 +455,7 @@ public class MyFriendActivity extends AppCompatActivity {
                                             } else {
                                                 Toast.makeText(MyFriendActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                             }
-                                            if(finalCrop.getState()==0){
+                                            if(finalCrop.getStatus()==0){
                                                 land.setImageResource(R.drawable.land_gan);
                                             }else
                                                 land.setImageResource(R.drawable.land);

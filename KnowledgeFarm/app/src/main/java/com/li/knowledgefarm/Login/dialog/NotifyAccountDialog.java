@@ -22,7 +22,7 @@ public class NotifyAccountDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.notifyaccount_dialog,container,false);
 
         TextView account = view.findViewById(R.id.account);
-        account.setText(user.getAccout());
+        account.setText(user.getAccount());
         TextView nickName = view.findViewById(R.id.nName);
         nickName.setText(user.getNickName());
 
