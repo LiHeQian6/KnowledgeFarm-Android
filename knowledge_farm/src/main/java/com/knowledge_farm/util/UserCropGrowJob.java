@@ -7,6 +7,7 @@ import org.quartz.*;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Date;
  * @Author 张帅华
  * @Date 2020-04-09 16:41
  */
+@Transactional(readOnly = false)
 public class UserCropGrowJob extends QuartzJobBean {
     @Resource
     private Scheduler scheduler;
@@ -55,20 +57,21 @@ public class UserCropGrowJob extends QuartzJobBean {
             deleteJob("job" + userId, "group" + userId);
         }catch (Exception e){
             e.printStackTrace();
-            try {
-                deleteJob("job" + userId, "group" + userId);
-            } catch (SchedulerException ex) {
-                ex.printStackTrace();
-            }
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
     }
 
-    public void deleteJob(String name, String group) throws SchedulerException {
-        JobKey jobKey = new JobKey(name, group);
-        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-        if (jobDetail == null)
-            return;
-        scheduler.deleteJob(jobKey);
+    public void deleteJob(String name, String group){
+        try {
+            JobKey jobKey = new JobKey(name, group);
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            if (jobDetail == null)
+                return;
+            scheduler.deleteJob(jobKey);
+        }catch (SchedulerException e){
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
     }
 
 }

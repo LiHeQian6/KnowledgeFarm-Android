@@ -26,7 +26,7 @@ public class UserAuthorityServiceImpl {
      * @Param [openId, exist]
      * @return com.atguigu.farm.entity.UserAuthority
      **/
-    public UserAuthority findUserAuthoritiesByOpenIdAndExist(String openId, Integer exist){
+    public UserAuthority findUserAuthorityByOpenIdAndExist(String openId, Integer exist){
         if(exist != null){
             return this.userAuthorityDao.findUserAuthoritiesByOpenIdAndExist(openId, exist);
         }

@@ -36,20 +36,20 @@ public class UserCropController {
     @RequestMapping("/initUserCrop")
     public List<UserCrop> initUserCrop(@RequestParam("userId") Integer userId){
         List<UserCrop> userCrops = this.userCropService.initUserCrop(userId);
-        for(UserCrop userCrop : userCrops){
-            if(userCrop != null){
-                Crop crop = userCrop.getCrop();
-                if(crop != null){
-                    if((crop.getImg1().substring(0,4)).equals("http")){
-                        continue;
-                    }
-                    crop.setImg1(photoUrl + crop.getImg1());
-                    crop.setImg2(photoUrl + crop.getImg2());
-                    crop.setImg3(photoUrl + crop.getImg3());
-                    crop.setImg4(photoUrl + crop.getImg4());
-                }
-            }
-        }
+//        for(UserCrop userCrop : userCrops){
+//            if(userCrop != null){
+//                Crop crop = userCrop.getCrop();
+//                if(crop != null){
+//                    if((crop.getImg1().substring(0,4)).equals("http")){
+//                        continue;
+//                    }
+//                    crop.setImg1(photoUrl + crop.getImg1());
+//                    crop.setImg2(photoUrl + crop.getImg2());
+//                    crop.setImg3(photoUrl + crop.getImg3());
+//                    crop.setImg4(photoUrl + crop.getImg4());
+//                }
+//            }
+//        }
         return userCrops;
     }
 

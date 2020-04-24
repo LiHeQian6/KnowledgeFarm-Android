@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -53,21 +54,21 @@ public class FrontUserController {
     }
 
     @RequestMapping("/toEdit")
-    public String toEdit(@RequestParam("id") Integer id, Model model) {
+    public String toEdit(@RequestParam("id") Integer id, HttpServletRequest request) {
         User user = this.frontUserService.findUserById(id);
         if(user != null){
-            user.setPassword("");
-            model.addAttribute("user", user);
+//            user.setPassword("");
+            request.setAttribute("user", user);
         }
         return "member-edit";
     }
 
     @RequestMapping("toPassword")
-    public String toPassword(@RequestParam("id") Integer id, Model model){
+    public String toPassword(@RequestParam("id") Integer id, HttpServletRequest request){
         User user = this.frontUserService.findUserById(id);
         if(user != null){
-            user.setPassword("");
-            model.addAttribute("user", user);
+//            user.setPassword("");
+            request.setAttribute("user", user);
         }
         return "member-password";
     }
@@ -77,15 +78,15 @@ public class FrontUserController {
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
                                @RequestParam("exist") Integer exist,
-                               Model model){
+                               HttpServletRequest request){
         Page<User> page =  this.frontUserService.findUserPage(account, exist, pageNumber, pageSize);
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-        for(User user : page.getContent()){
-            user.setPassword("");
-        }
+//        for(User user : page.getContent()){
+//            user.setPassword("");
+//        }
         pageUtil.setList(page.getContent());
-        model.addAttribute("userPage", pageUtil);
+        request.setAttribute("userPage", pageUtil);
 
         if(exist == 1){
             return "member-list";
@@ -204,7 +205,6 @@ public class FrontUserController {
     @RequestMapping("/updateUserPassword")
     @ResponseBody
     public String updateUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
-        password = Md5Encode.getMD5(password.getBytes());
         try {
             this.frontUserService.editPasswordByAccount(account, password);
             return Result.SUCCEED;
