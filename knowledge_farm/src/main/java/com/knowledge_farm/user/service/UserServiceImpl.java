@@ -64,8 +64,8 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     public Object loginByOpenId(String openId){
-        if(this.userAuthorityService.findUserAuthoritiesByOpenIdAndExist(openId, null) != null){
-            UserAuthority userAuthority = this.userAuthorityService.findUserAuthoritiesByOpenIdAndExist(openId, 1);
+        if(this.userAuthorityService.findUserAuthorityByOpenIdAndExist(openId, null) != null){
+            UserAuthority userAuthority = this.userAuthorityService.findUserAuthorityByOpenIdAndExist(openId, 1);
             if(userAuthority != null){
                 User user = userAuthority.getUser();
                 if(user != null){
@@ -244,7 +244,7 @@ public class UserServiceImpl {
      **/
     @Transactional(readOnly = false)
     public String bindingQQ(String account, String openId){
-        UserAuthority userAuthority = this.userAuthorityService.findUserAuthoritiesByOpenIdAndExist(openId, null);
+        UserAuthority userAuthority = this.userAuthorityService.findUserAuthorityByOpenIdAndExist(openId, null);
         if(userAuthority != null){
             if(userAuthority.getUser() != null){
                 return Result.ALREADY;

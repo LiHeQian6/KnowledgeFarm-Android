@@ -38,18 +38,18 @@ public class NotificationController {
         Page<Notification> page = this.notificationService.findReceivedByNotificationType(userId, typeId, pageNumber, pageSize);
         PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-        for(Notification notification : page.getContent()){
-            User from = notification.getFrom();
-            User to = notification.getTo();
-            to.setPassword("");
-            from.setPassword("");
-            if(!(from.getPhoto().substring(0,4)).equals("http")){
-                from.setPhoto(this.photoUrl + from.getPhoto());
-            }
-            if(!(to.getPhoto().substring(0,4)).equals("http")){
-                to.setPhoto(this.photoUrl + to.getPhoto());
-            }
-        }
+//        for(Notification notification : page.getContent()){
+//            User from = notification.getFrom();
+//            User to = notification.getTo();
+//            to.setPassword("");
+//            from.setPassword("");
+//            if(!(from.getPhoto().substring(0,4)).equals("http")){
+//                from.setPhoto(this.photoUrl + from.getPhoto());
+//            }
+//            if(!(to.getPhoto().substring(0,4)).equals("http")){
+//                to.setPhoto(this.photoUrl + to.getPhoto());
+//            }
+//        }
         pageUtil.setList(page.getContent());
         return pageUtil;
     }
@@ -62,18 +62,18 @@ public class NotificationController {
         Page<Notification> page = this.notificationService.findSendByNotificationType(userId, typeId, pageNumber, pageSize);
         PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-        for(Notification notification : page.getContent()){
-            User from = notification.getFrom();
-            User to = notification.getTo();
-            to.setPassword("");
-            from.setPassword("");
-            if(!(from.getPhoto().substring(0,4)).equals("http")){
-                from.setPhoto(this.photoUrl + from.getPhoto());
-            }
-            if(!(to.getPhoto().substring(0,4)).equals("http")){
-                to.setPhoto(this.photoUrl + to.getPhoto());
-            }
-        }
+//        for(Notification notification : page.getContent()){
+//            User from = notification.getFrom();
+//            User to = notification.getTo();
+//            to.setPassword("");
+//            from.setPassword("");
+//            if(!(from.getPhoto().substring(0,4)).equals("http")){
+//                from.setPhoto(this.photoUrl + from.getPhoto());
+//            }
+//            if(!(to.getPhoto().substring(0,4)).equals("http")){
+//                to.setPhoto(this.photoUrl + to.getPhoto());
+//            }
+//        }
         pageUtil.setList(page.getContent());
         return pageUtil;
     }

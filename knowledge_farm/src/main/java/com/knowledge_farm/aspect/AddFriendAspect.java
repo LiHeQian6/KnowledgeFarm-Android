@@ -8,6 +8,7 @@ import com.knowledge_farm.jpush.service.JpushService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -30,7 +31,12 @@ public class AddFriendAspect {
     @Resource
     private JpushService jpushService;
 
-    @AfterReturning(pointcut = "execution(* com.knowledge_farm.notification.controller.NotificationController.addUserFriendNotification(..))", returning="result")
+    @Pointcut(value = "execution(* com.knowledge_farm.notification.controller.NotificationController.addUserFriendNotification(..))")
+    private void pointcutLog() {
+
+    }
+
+    @AfterReturning(pointcut = "pointcutLog()", returning="result")
     public void afterReturning(JoinPoint joinPoint, Object result) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();

@@ -35,12 +35,12 @@ public class CropController {
     @RequestMapping("/initCrop")
     public List<Crop> initCrop(){
         List<Crop> crops = this.cropService.findAllCropByExist(1);
-        for(Crop crop : crops){
-            crop.setImg1(photoUrl + crop.getImg1());
-            crop.setImg2(photoUrl + crop.getImg2());
-            crop.setImg3(photoUrl + crop.getImg3());
-            crop.setImg4(photoUrl + crop.getImg4());
-        }
+//        for(Crop crop : crops){
+//            crop.setImg1(photoUrl + crop.getImg1());
+//            crop.setImg2(photoUrl + crop.getImg2());
+//            crop.setImg3(photoUrl + crop.getImg3());
+//            crop.setImg4(photoUrl + crop.getImg4());
+//        }
         return crops;
     }
 

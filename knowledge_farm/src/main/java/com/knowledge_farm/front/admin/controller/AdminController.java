@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,21 +42,21 @@ public class AdminController {
     }
 
     @RequestMapping("/toEdit")
-    public String toEdit(@RequestParam("id") Integer id, Model model){
+    public String toEdit(@RequestParam("id") Integer id, HttpServletRequest request){
         Admin admin = this.adminService.findById(id);
         if(admin != null){
-            admin.setPassword("");
-            model.addAttribute("adminInfo", admin);
+//            admin.setPassword("");
+            request.setAttribute("adminInfo", admin);
         }
         return "admin-edit";
     }
 
     @RequestMapping("toPassword")
-    public String toPassword(@RequestParam("id") Integer id, Model model){
+    public String toPassword(@RequestParam("id") Integer id, HttpServletRequest request){
         Admin admin = this.adminService.findById(id);
         if(admin != null){
-            admin.setPassword("");
-            model.addAttribute("adminInfo", admin);
+//            admin.setPassword("");
+            request.setAttribute("adminInfo", admin);
         }
         return "admin-password";
     }
@@ -86,7 +87,7 @@ public class AdminController {
         Object obj = this.adminService.login(account, password);
         if(obj instanceof Admin){
             Admin admin = (Admin) obj;
-            admin.setPassword("");
+//            admin.setPassword("");
             session.setAttribute("admin", admin);
             obj = Result.SUCCEED;
         }
@@ -105,15 +106,15 @@ public class AdminController {
                        @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                        @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
                        @RequestParam(value = "exist") Integer exist,
-                       Model model){
+                       HttpServletRequest request){
         Page<Admin> page = this.adminService.findPageAdminByAccount(account, exist, pageNumber, pageSize);
-        for(Admin admin : page.getContent()){
-            admin.setPassword("");
-        }
+//        for(Admin admin : page.getContent()){
+//            admin.setPassword("");
+//        }
         PageUtil<Admin> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
         pageUtil.setList(page.getContent());
-        model.addAttribute("adminPage", pageUtil);
+        request.setAttribute("adminPage", pageUtil);
         if(exist == 1){
             return "admin-list";
         }
@@ -268,7 +269,6 @@ public class AdminController {
     @RequestMapping("/updateAdminPassword")
     @ResponseBody
     public String updateAdminPassword(@RequestParam("id") Integer id, @RequestParam("password") String password){
-        password = Md5Encode.getMD5(password.getBytes());
         try {
             this.adminService.editPasswordById(id, password);
             return Result.SUCCEED;

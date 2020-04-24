@@ -36,13 +36,13 @@ public class UserBagController {
     @RequestMapping("/initUserBag")
     public List<BagCropItem> initUserBag(@RequestParam("userId") Integer userId){
         List<BagCropItem> bagCropItems = this.userBagService.initUserBag(userId);
-        for(BagCropItem item : bagCropItems){
-            Crop crop = item.getCrop();
-            crop.setImg1(photoUrl + crop.getImg1());
-            crop.setImg2(photoUrl + crop.getImg2());
-            crop.setImg3(photoUrl + crop.getImg3());
-            crop.setImg4(photoUrl + crop.getImg4());
-        }
+//        for(BagCropItem item : bagCropItems){
+//            Crop crop = item.getCrop();
+//            crop.setImg1(photoUrl + crop.getImg1());
+//            crop.setImg2(photoUrl + crop.getImg2());
+//            crop.setImg3(photoUrl + crop.getImg3());
+//            crop.setImg4(photoUrl + crop.getImg4());
+//        }
         return bagCropItems;
     }
 
