@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,11 +46,9 @@ import okhttp3.Response;
 public class NotifyActivity extends AppCompatActivity {
 
     private ListView listView;
-    private FriendsPage<Notification> system_list;
-    private FriendsPage<Notification> friend_notify_list;
-    private FriendsPage<Notification> mess_notify_list;
+    private FriendsPage<Notification> notify_list;
     private Handler get_system_notify;
-    private String type;
+    private String current_type = "1";
     private Button system_notify;
     private Button friend_notify;
     private Button mess_notify;
@@ -59,6 +58,7 @@ public class NotifyActivity extends AppCompatActivity {
     private ImageView pre;
     private ImageView next;
     private Gson gson;
+    private TextView none_notify;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class NotifyActivity extends AppCompatActivity {
         getViews();
         registListener();
         setStatusBar();
-//        getNotify("1",1,6);
+        getNotify("2",1,6);
     }
 
     @Override
@@ -80,8 +80,10 @@ public class NotifyActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NotifyPopUpWindow popUpWindow = new NotifyPopUpWindow(getApplicationContext());
-                popUpWindow.showAtLocation(view, Gravity.CENTER,0,0);
+                if(current_type.equals("1")) {
+                    NotifyPopUpWindow popUpWindow = new NotifyPopUpWindow(getApplicationContext(), notify_list.getList().get(position));
+                    popUpWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                }
             }
         });
     }
@@ -107,6 +109,7 @@ public class NotifyActivity extends AppCompatActivity {
         next = findViewById(R.id.next_notify);
         next_notify = findViewById(R.id.next_notify);
         pre_nofify = findViewById(R.id.pre_notify);
+        none_notify = findViewById(R.id.none_notify);
     }
 
     /**
@@ -170,19 +173,27 @@ public class NotifyActivity extends AppCompatActivity {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
+                Log.e("message",message);
                 Type list_type = new TypeToken<FriendsPage<Notification>>() {
                 }.getType();
                 if(!message.equals("") && !message.contains("html")) {
+                    notify_list = gson.fromJson(message, list_type);
+                    if(notify_list.getList().size() == 0){
+                        listView.setVisibility(View.GONE);
+                        none_notify.setVisibility(View.VISIBLE);
+                        return;
+                    }else {
+                        listView.setVisibility(View.VISIBLE);
+                        none_notify.setVisibility(View.GONE);
+                    }
                     switch (type) {
                         case "1":
-                            system_list = gson.fromJson(message, list_type);
-                            SystemNotifyAdapter listAdapter = new SystemNotifyAdapter(system_list,R.layout.notify_item_layout,getApplicationContext());
+                            SystemNotifyAdapter listAdapter = new SystemNotifyAdapter(notify_list,R.layout.notify_item_layout,getApplicationContext());
                             listView.setAdapter(listAdapter);
                             OnclickItem();
                             break;
                         case "2":
-                            friend_notify_list = gson.fromJson(message,list_type);
-                            FriendNotifyAdapter listAdapter1 = new FriendNotifyAdapter(friend_notify_list,R.layout.friend_notify_item,getApplicationContext());
+                            FriendNotifyAdapter listAdapter1 = new FriendNotifyAdapter(notify_list,R.layout.friend_notify_item,getApplicationContext());
                             listView.setAdapter(listAdapter1);
                             break;
                     }
@@ -196,15 +207,17 @@ public class NotifyActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.system_btn:
+                    current_type = "1";
                     getNotify("1",1,6);
                     break;
                 case R.id.friend_btn:
+                    current_type = "2";
                     getNotify("2",1,6);
                     break;
                 case R.id.message_btn:
+                    current_type = "3";
                     break;
                 case R.id.next_notify:
-
                     break;
                 case R.id.pre_notify:
 

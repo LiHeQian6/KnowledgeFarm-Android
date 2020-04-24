@@ -5,7 +5,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@color/colorPrimary">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,18 +21,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingLeft="15dp"
             android:layout_weight="3">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/request_nickname"
                 android:text="小完能"
+                android:textColor="@color/ShopTextColor"
                 android:textSize="20dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:id="@+id/request_id"
                 android:text="Id:123456"
+                android:textColor="@color/ShopTextColor"
                 android:textSize="20dp"/>
         </LinearLayout>
         <LinearLayout
@@ -39,17 +44,39 @@
             android:layout_height="wrap_content"
             android:layout_weight="6"
             android:gravity="center">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/refuse"
-                android:src="@drawable/no"/>
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/refuse"
+                    android:src="@drawable/no"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="拒绝"
+                    android:textColor="@color/ShopTextColor"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginLeft="15dp"
-                android:id="@+id/accept"
-                android:src="@drawable/yes"/>
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/accept"
+                    android:src="@drawable/yes"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="同意"
+                    android:textColor="@color/ShopTextColor"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

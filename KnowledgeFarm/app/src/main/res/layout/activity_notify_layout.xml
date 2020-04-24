@@ -66,7 +66,18 @@
                 android:layout_width="match_parent"
                 android:dividerHeight="1dp"
                 android:divider="@color/blackTextColor"
+                android:visibility="visible"
                 android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:id="@+id/none_notify"
+                android:text="暂时没有系统通知"
+                android:visibility="gone"
+                android:textColor="@color/blackTextColor"
+                android:textSize="25dp"/>
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

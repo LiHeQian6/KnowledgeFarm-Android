@@ -160,13 +160,13 @@ public class MainActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void showUserMessage(){
-        userMessagePopUp = new UserMessagePopUp(this,MainActivity.this);
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.alpha = (float) 0.5;
-        this.getWindow().setAttributes(lp);
-        userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
-    }
+//    private void showUserMessage(){
+//        userMessagePopUp = new UserMessagePopUp(this,MainActivity.this);
+//        WindowManager.LayoutParams lp = getWindow().getAttributes();
+//        lp.alpha = (float) 0.5;
+//        this.getWindow().setAttributes(lp);
+//        userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
+//    }
 
     private void showDayTaskWindow(){
         dayTaskPopUpWindow = new DayTaskPopUpWindow(this);

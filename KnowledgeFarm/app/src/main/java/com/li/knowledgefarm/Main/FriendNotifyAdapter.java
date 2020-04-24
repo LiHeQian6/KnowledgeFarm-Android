@@ -1,6 +1,7 @@
 package com.li.knowledgefarm.Main;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -42,7 +43,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         FriendViewHolder friendViewHolder = null;
         if(convertView == null){
             convertView = View.inflate(context,id,null);
@@ -54,18 +55,25 @@ public class FriendNotifyAdapter extends BaseAdapter {
             friendViewHolder.no = convertView.findViewById(R.id.accept);
             friendViewHolder.yes.setOnClickListener(new CustomerOnclickListner());
             friendViewHolder.no.setOnClickListener(new CustomerOnclickListner());
-            friendViewHolder.photo.setOnClickListener(new CustomerOnclickListner());
             convertView.setTag(friendViewHolder);
         }else{
             friendViewHolder = (FriendViewHolder)convertView.getTag();
         }
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.loading)
-                .circleCrop()
+                .placeholder(R.drawable.photo)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(list.getList().get(position).getFrom().getPhoto()).apply(requestOptions).into(friendViewHolder.photo);
-        friendViewHolder.id.setText(list.getList().get(position).getFrom().getId());
-        friendViewHolder.nickName.setText(list.getList().get(position).getFrom().getNickName());
+        final ImageView view = friendViewHolder.photo;
+        friendViewHolder.photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserMessagePopUp userMessagePopUp = new UserMessagePopUp(context,list.getList().get(position).getFrom());
+                userMessagePopUp.showAtLocation(view, Gravity.CENTER,0,0);
+            }
+        });
+        friendViewHolder.id.setText("ID："+list.getList().get(position).getFrom().getId()+"");
+        friendViewHolder.nickName.setText(list.getList().get(position).getFrom().getNickName()+" 申请添加你为他的好友");
+        notifyDataSetChanged();
         return convertView;
     }
 
@@ -79,6 +87,9 @@ public class FriendNotifyAdapter extends BaseAdapter {
                     break;
                 case R.id.refuse:
 
+                    break;
+                case R.id.photo:
+//                    UserMessagePopUp userMessagePopUp = new UserMessagePopUp(context,list.getList().get());
                     break;
             }
         }

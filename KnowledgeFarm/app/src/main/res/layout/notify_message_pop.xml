@@ -19,6 +19,7 @@
             android:layout_height="match_parent"
             android:text="标题"
             android:layout_weight="5"
+            android:id="@+id/not_title"
             android:gravity="center"
             android:textColor="@color/blackTextColor"
             android:textSize="30dp"/>
@@ -33,6 +34,7 @@
                 android:text="时间"
                 android:layout_gravity="center"
                 android:textSize="20dp"
+                android:id="@+id/not_time"
                 android:textColor="@color/blackTextColor"/>
         </LinearLayout>
         <ScrollView
@@ -44,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="内容"
+                android:id="@+id/not_content"
                 android:textColor="@color/blackTextColor"
                 android:textSize="25dp"/>
         </ScrollView>
@@ -56,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:id="@+id/delete_notify"
                 android:text="删除"/>
         </LinearLayout>
     </LinearLayout>
