@@ -171,7 +171,7 @@ class DayTaskAdapter extends BaseAdapter {
                 FormBody formBody = new FormBody.Builder().build();
                 Request request = new Request.Builder()
                         .post(formBody)
-                        .url(context.getResources().getString(R.string.URL)+"/task/getReward?taskName="+taskName).build();
+                        .url(context.getResources().getString(R.string.URL)+"/task/getReward2?taskName="+taskName+"&userId="+LoginActivity.user.getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -196,10 +196,16 @@ class DayTaskAdapter extends BaseAdapter {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
-                if (message.equals("true")){
+                if (message.equals("2")){
                     Toast.makeText(context,"领取成功！",Toast.LENGTH_SHORT).show();
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getType().equals(taskName)){
+                            list.get(i).setStatus(2);
+                        }
+                    }
+                    notifyDataSetChanged();
                 }else
-                    Toast.makeText(context,"领取成功！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,"领取失败！",Toast.LENGTH_SHORT).show();
             }
         };
     }

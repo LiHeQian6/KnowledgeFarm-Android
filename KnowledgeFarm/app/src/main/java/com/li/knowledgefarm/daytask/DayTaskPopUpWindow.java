@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.li.knowledgefarm.Login.LoginActivity;
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.TaskItem;
@@ -103,7 +104,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
                         .add("userId", LoginActivity.user.getId()+"").build();
                 Request request = new Request.Builder()
                         .post(formBody)
-                        .url(context.getResources().getString(R.string.URL)+"/task/getTask").build();
+                        .url(context.getResources().getString(R.string.URL)+"/task/getTask2?userId="+LoginActivity.user.getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -150,7 +151,8 @@ public class DayTaskPopUpWindow extends PopupWindow {
             taskItem.setType(name);
             try {
                 Method method = task.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1), null);
-                taskItem.setStatus((Integer) method.invoke(task));
+                int status = (int) method.invoke(task);
+                taskItem.setStatus(status);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {

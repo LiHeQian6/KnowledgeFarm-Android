@@ -196,7 +196,7 @@ public class RegisteActivity extends AppCompatActivity {
                 .add("grade",grade)
                 .add("password",stringMD5(password))
                 .build();
-        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/registAccout").build();
+        Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/registAccount").build();
         //Call
         Call call = new OkHttpClient().newCall(request);
         //异步请求
@@ -216,7 +216,7 @@ public class RegisteActivity extends AppCompatActivity {
                 }else {
                     message.what = 4;
                     try {
-                        message.obj = new JSONObject(result).getString("accout");
+                        message.obj = new JSONObject(result).getString("account");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
