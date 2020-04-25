@@ -3,6 +3,7 @@ package com.knowledge_farm.task.controller;
 import com.knowledge_farm.entity.Task;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.task.service.TaskService;
+import com.knowledge_farm.user.service.UserServiceImpl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpSession;
 public class TaskController {
     @Resource
     private TaskService taskService;
+    @Resource
+    private UserServiceImpl userService;
 
     /**
      * @description: 查询所有任务
@@ -49,5 +52,31 @@ public class TaskController {
         User user = (User) session.getAttribute("user");
         return taskService.updateTask(user,taskName);
     }
+
+    /**
+     * @description: 查询所有任务
+     * @author :景光赞
+     * @date :2020/4/19 16:23
+     * @param :[userId]
+     * @return :com.knowledge_farm.entity.Task
+     */
+    @RequestMapping("/getTask2")
+    public Task getTasks2(@RequestParam("userId") int userId) {
+
+        return taskService.findTask(userService.findUserById(userId));
+    }
+    /**
+     * @description:  领取任务奖励
+     * @author :景光赞
+     * @date :2020/4/22 12:28
+     * @param :[taskName, request]
+     * @return :int
+     */
+    @RequestMapping("/getReward2")
+    public int getReward2(@RequestParam("taskName") String taskName,
+                          @RequestParam("userId")int userId){
+        return taskService.updateTask(userService.findUserById(userId),taskName);
+    }
+
 
 }

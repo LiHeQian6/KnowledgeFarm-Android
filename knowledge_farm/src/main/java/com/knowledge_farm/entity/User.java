@@ -227,7 +227,7 @@ public class User {
         this.userBags = userBags;
     }
 
-    @OneToOne(cascade={CascadeType.REMOVE,CascadeType.PERSIST,CascadeType.MERGE})
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "task_id",foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnore
     public Task getTask() {
