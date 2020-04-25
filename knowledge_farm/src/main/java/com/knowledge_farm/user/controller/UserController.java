@@ -5,6 +5,8 @@ import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.util.Email;
+import com.knowledge_farm.util.UserCropGrowJob;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -29,6 +33,8 @@ import java.util.Date;
 public class UserController {
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private Scheduler scheduler;
     @Value("${file.photoUrl}")
     private String photoUrl;
     @Value("${file.photoLocation}")
@@ -481,20 +487,18 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/waterCrop")
-    public String waterCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
+    public String waterCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber, HttpServletRequest request){
         try {
-            return this.userService.waterCrop(userId, landNumber);
-        }catch (Exception e){
-            e.printStackTrace();
-            return Result.FALSE;
-        }
-
-    }
-
-    @RequestMapping("/waterCrop2")
-    public String test(){
-        try {
-            return this.userService.waterCrop2(userService.findUserById(109), "land1");
+            int result = this.userService.waterCrop(userId, landNumber);
+            switch (result){
+                case -1:
+                    return Result.FALSE;
+                case 0:
+                    return Result.TRUE;
+                default:
+                    request.setAttribute("StartUserCropGrowJob", new Integer[]{userId, result, Integer.parseInt(landNumber.substring(4))});
+                    return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
             return Result.FALSE;
@@ -544,9 +548,14 @@ public class UserController {
      * @return java.lang.String
      **/
     @RequestMapping("/raiseCrop")
-    public String raiseCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("landNumber") String landNumber){
+    public String raiseCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("landNumber") String landNumber, HttpServletRequest request){
         try {
-            return this.userService.raiseCrop(userId, cropId, landNumber);
+            int result = this.userService.raiseCrop(userId, cropId, landNumber);
+            if(result != -1){
+                request.setAttribute("StartUserCropGrowJob", new Integer[]{userId, result, Integer.parseInt(landNumber.substring(4))});
+                return Result.TRUE;
+            }
+            return Result.FALSE;
         }catch (Exception e){
             e.printStackTrace();
             return Result.FALSE;
@@ -585,34 +594,6 @@ public class UserController {
             e.printStackTrace();
             return Result.FALSE;
         }
-    }
-
-    /**
-     * @Author 张帅华
-     * @Description User -> UserVO
-     * @Date 23:29 2020/4/10 0010
-     * @Param [user]
-     * @return com.atguigu.farm.entity.UserVO
-     **/
-    public UserVO varyUserToUserVO(User user){
-        UserVO userVO = new UserVO();
-        userVO.setId(user.getId());
-        userVO.setAccount(user.getAccount());
-        userVO.setNickName(user.getNickName());
-        userVO.setPhoto(user.getPhoto());
-        userVO.setEmail(user.getEmail());
-        userVO.setLevel(user.getLevel());
-        userVO.setExperience(user.getExperience());
-        userVO.setGrade(user.getGrade());
-        userVO.setMoney(user.getMoney());
-        userVO.setMathRewardCount(user.getMathRewardCount());
-        userVO.setEnglishRewardCount(user.getEnglishRewardCount());
-        userVO.setChineseRewardCount(user.getChineseRewardCount());
-        userVO.setWater(user.getWater());
-        userVO.setFertilizer(user.getFertilizer());
-        userVO.setOnline(user.getOnline());
-        userVO.setExist(user.getExist());
-        return userVO;
     }
 
 }

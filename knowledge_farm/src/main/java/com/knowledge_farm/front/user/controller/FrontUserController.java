@@ -213,34 +213,6 @@ public class FrontUserController {
         }
     }
 
-    /**
-     * @Author 张帅华
-     * @Description User -> UserVO
-     * @Date 23:29 2020/4/10 0010
-     * @Param [user]
-     * @return com.atguigu.farm.entity.UserVO
-     **/
-    public UserVO varyUserToUserVO(User user){
-        UserVO userVO = new UserVO();
-        userVO.setId(user.getId());
-        userVO.setAccount(user.getAccount());
-        userVO.setNickName(user.getNickName());
-        userVO.setPhoto(user.getPhoto());
-        userVO.setEmail(user.getEmail());
-        userVO.setLevel(user.getLevel());
-        userVO.setExperience(user.getExperience());
-        userVO.setGrade(user.getGrade());
-        userVO.setMoney(user.getMoney());
-        userVO.setMathRewardCount(user.getMathRewardCount());
-        userVO.setEnglishRewardCount(user.getEnglishRewardCount());
-        userVO.setChineseRewardCount(user.getChineseRewardCount());
-        userVO.setWater(user.getWater());
-        userVO.setFertilizer(user.getFertilizer());
-        userVO.setOnline(user.getOnline());
-        userVO.setExist(user.getExist());
-        return userVO;
-    }
-
     public User varyUserToUser(User user, User editUser){
         user.setNickName(editUser.getNickName());
         user.setAccount(editUser.getAccount());

@@ -10,11 +10,9 @@ import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import com.knowledge_farm.util.Email;
 import com.knowledge_farm.util.RandomUtil;
 import com.knowledge_farm.util.UserCropGrowJob;
-import com.sun.org.apache.regexp.internal.RE;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import java.util.Calendar;
 import java.util.Set;
 
 /**
@@ -39,7 +38,7 @@ public class UserServiceImpl {
     private UserAuthorityServiceImpl userAuthorityService;
     @Resource
     @Lazy
-    private UserCropServiceImpl userCropServiceImpl;
+    private UserCropServiceImpl userCropService;
     @Resource
     private CropServiceImpl cropService;
     @Resource
@@ -411,11 +410,10 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     @Transactional(readOnly = false)
-    public String waterCrop(Integer userId, String landNumber) throws SchedulerException {
+    public int waterCrop(Integer userId, String landNumber) {
         User user = this.userDao.findUserById(userId);
-        int flag = 0;
         Land land = user.getLand();
-        UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+        UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
         Crop crop = userCrop.getCrop();
         //修改剩余水的次数
         if(user.getWater() > 0){
@@ -430,64 +428,17 @@ public class UserServiceImpl {
                 }
                 user.setWater(user.getWater() - 1);
             }else{
-                return Result.FALSE;
+                return -1;
             }
         }else{
-            return Result.FALSE;
+            return -1;
         }
         //修改作物干枯湿润状态
         if(userCrop.getStatus() == 0){
             userCrop.setStatus(1);
-            flag = 1;
+            return userCrop.getId();
         }
-        //保存修改
-        if(flag == 1){
-            this.startJob(scheduler, user.getId(), userCrop.getId());
-        }
-        return Result.TRUE;
-    }
-    /**
-     * @Author 张帅华
-     * @Description 浇水
-     * @Date 22:34 2020/4/8 0008
-     * @Param [userId, landNumber]
-     * @return java.lang.String
-     **/
-    @Task(description = "water")
-    @Transactional(readOnly = false)
-    public String waterCrop2(User user, String landNumber) throws SchedulerException {
-        int flag = 0;
-        Land land = user.getLand();
-        UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
-        Crop crop = userCrop.getCrop();
-        //修改剩余水的次数
-        if(user.getWater() > 0){
-            //修改作物进度
-            int progress = userCrop.getProgress();
-            int matureTime = crop.getMatureTime();
-            if(progress < matureTime){
-                if(progress+5 >= matureTime){
-                    userCrop.setProgress(crop.getMatureTime());
-                }else{
-                    userCrop.setProgress(progress + 5);
-                }
-                user.setWater(user.getWater() - 1);
-            }else{
-                return Result.FALSE;
-            }
-        }else{
-            return Result.FALSE;
-        }
-        //修改作物干枯湿润状态
-        if(userCrop.getStatus() == 0){
-            userCrop.setStatus(1);
-            flag = 1;
-        }
-        //保存修改
-        if(flag == 1){
-            this.startJob(scheduler, user.getId(), userCrop.getId());
-        }
-        return Result.TRUE;
+        return 0;
     }
 
     /**
@@ -501,7 +452,7 @@ public class UserServiceImpl {
     public String fertilizerCrop(Integer userId, String landNumber){
         User user = this.userDao.findUserById(userId);
         Land land = user.getLand();
-        UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+        UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
         Crop crop = userCrop.getCrop();
         if(userCrop.getStatus() != 0){
             //修改剩余化肥的次数
@@ -570,7 +521,7 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     @Transactional(readOnly = false)
-    public String raiseCrop(Integer userId, Integer cropId, String landNumber) throws SchedulerException {
+    public int raiseCrop(Integer userId, Integer cropId, String landNumber) throws SchedulerException {
         User user = this.userDao.findUserById(userId);
         Crop crop = this.cropService.findCropById(cropId);
         Set<UserBag> userBags = user.getUserBags();
@@ -590,12 +541,11 @@ public class UserServiceImpl {
         }
         if(flag == 1){
             Land land = user.getLand();
-            UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+            UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
             userCrop.setCrop(crop);
-            startJob(scheduler, userId, userCrop.getId());
-            return Result.TRUE;
+            return userCrop.getId();
         }
-        return Result.FALSE;
+        return -1;
     }
 
     /**
@@ -609,12 +559,12 @@ public class UserServiceImpl {
     public String harvest(Integer userId, String landNumber){
         User user = this.userDao.findUserById(userId);
         Land land = user.getLand();
-        UserCrop userCrop = this.userCropServiceImpl.findUserCropByLand(land, landNumber);
+        UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
         Crop crop = userCrop.getCrop();
         userCrop.setCrop(null);
         userCrop.setProgress(0);
-        userCrop.setWaterLimit(0);
-        userCrop.setFertilizerLimit(0);
+        userCrop.setWaterLimit(15);
+        userCrop.setFertilizerLimit(15);
         userCrop.setStatus(1);
         int value = crop.getValue();
         int experience = crop.getExperience();
@@ -655,7 +605,7 @@ public class UserServiceImpl {
         Land land = user.getLand();
         int userMoney = user.getMoney();
         if(userMoney >= needMoney){
-            addUserCrop(land, new UserCrop(), landNumber);
+            this.userCropService.addUserCrop(land, new UserCrop(), landNumber);
             user.setMoney(userMoney - needMoney);
             return Result.TRUE;
         }
@@ -689,81 +639,9 @@ public class UserServiceImpl {
         return this.userDao.findUserByAccount(account);
     }
 
+    @Transactional(readOnly = false)
     public void saveUser(User user){
         this.userDao.save(user);
-    }
-
-    /**
-     * @Author 张帅华
-     * @Description 给指定landNumber的土地添加作物
-     * @Date 23:30 2020/4/10 0010
-     * @Param [land, userCrop, landNumber]
-     * @return void
-     **/
-    public void addUserCrop(Land land, UserCrop userCrop, String landNumber){
-        Integer realLand = Integer.parseInt(landNumber.substring(4));
-        switch (realLand){
-            case 1:
-                land.setUserCrop1(userCrop);
-            case 2:
-                land.setUserCrop2(userCrop);
-            case 3:
-                land.setUserCrop3(userCrop);
-            case 4:
-                land.setUserCrop4(userCrop);
-            case 5:
-                land.setUserCrop5(userCrop);
-            case 6:
-                land.setUserCrop6(userCrop);
-            case 7:
-                land.setUserCrop7(userCrop);
-            case 8:
-                land.setUserCrop8(userCrop);
-            case 9:
-                land.setUserCrop9(userCrop);
-            case 10:
-                land.setUserCrop10(userCrop);
-            case 11:
-                land.setUserCrop11(userCrop);
-            case 12:
-                land.setUserCrop12(userCrop);
-            case 13:
-                land.setUserCrop13(userCrop);
-            case 14:
-                land.setUserCrop14(userCrop);
-            case 15:
-                land.setUserCrop15(userCrop);
-            case 16:
-                land.setUserCrop16(userCrop);
-            case 17:
-                land.setUserCrop17(userCrop);
-            case 18:
-                land.setUserCrop18(userCrop);
-        }
-    }
-
-    /**
-     * @Author 张帅华
-     * @Description 开启自动生长、干旱湿润状态变换Job
-     * @Date 23:31 2020/4/10 0010
-     * @Param [scheduler, id]
-     * @return void
-     **/
-    public void startJob(Scheduler scheduler, Integer userId, Integer userCropId) throws SchedulerException {
-        // 通过JobBuilder构建JobDetail实例，JobDetail规定只能是实现Job接口的实例
-        // JobDetail 是具体Job实例
-        String name = "job" + userId;
-        String group = "group" + userId;
-        JobDetail jobDetail = JobBuilder.newJob(UserCropGrowJob.class).withIdentity(name, group).build();
-        JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        jobDataMap.put("userId", userId);
-        jobDataMap.put("userCropId", userCropId);
-        // 基于表达式构建触发器
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0/1 * * ? ");
-        // CronTrigger表达式触发器 继承于Trigger
-        // TriggerBuilder 用于构建触发器实例
-        CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(name, group).withSchedule(cronScheduleBuilder).build();
-        scheduler.scheduleJob(jobDetail, cronTrigger);
     }
 
 }

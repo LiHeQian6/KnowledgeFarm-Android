@@ -1,5 +1,7 @@
 package com.knowledge_farm.entity;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 /**
  * @ClassName Constant
  * @Description
@@ -21,4 +23,5 @@ public class Result {
     public static String NOT_EXIST_ACCOUNT = "notExistAccount";
     public static String NOT_ENOUGH_MONEY = "notEnoughMoney";
     public static String UP = "up";
+    public static String START = "start";
 }

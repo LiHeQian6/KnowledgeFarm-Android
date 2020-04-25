@@ -25,7 +25,6 @@ public class RewardCountJob extends QuartzJobBean {
             this.userService.updateUserRewardCount();
         }catch (Exception e){
             e.printStackTrace();
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
     }
 
