@@ -11,10 +11,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -103,7 +100,7 @@ public class NotificationController {
             @ApiImplicitParam(name = "userId", value = "发起加好友的用户id", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "account", value = "被加好友的用户账号", dataType = "String", paramType = "form", required = true)
     })
-    @PostMapping("/addUserFriendNotification")
+    @GetMapping("/addUserFriendNotification")
     public String addUserFriendNotification(@RequestParam("userId") Integer userId,
                                             @RequestParam("account") String account,
                                             HttpServletRequest request){
@@ -120,7 +117,7 @@ public class NotificationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "消息记录的id", dataType = "int", paramType = "form", required = true)
     })
-    @PostMapping("/deleteNotification")
+    @GetMapping("/deleteNotification")
     public String deleteNotification(@RequestParam("id") Integer notificationId){
         try {
             this.notificationService.deleteNotification(notificationId);
@@ -135,7 +132,7 @@ public class NotificationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ids", value = "消息记录的id字符串(若有多个id，用逗号分隔开)", dataType = "string", paramType = "form", required = true)
     })
-    @PostMapping("/editNotificationReadStatus")
+    @GetMapping("/editNotificationReadStatus")
     public String editNotificationReadStatus(@RequestParam("ids") String notificationIds){
         String ids[] = notificationIds.split(",");
         List<Integer> idList = new ArrayList<>();

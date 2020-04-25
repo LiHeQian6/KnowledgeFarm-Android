@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName UserFriendServiceImpl
@@ -34,8 +36,11 @@ public class UserFriendServiceImpl {
         return this.userFriendDao.findUserFriendPage(userId, PageRequest.of(pageNumber - 1, pageSize));
     }
 
-    public Page<User> findAllUserByAccount(String account, Integer pageNumber, Integer pageSize){
-        return this.userService.findAllUserByAccount(account, pageNumber, pageSize);
+    public Page<User> findAllUserByAccount(Integer userId, String account, Integer pageNumber, Integer pageSize){
+        if(account != null && !account.equals("")){
+            return this.userFriendDao.findAllUserByAccountAndExcludeMeFriendUser(userId, account, PageRequest.of(pageNumber - 1, pageSize));
+        }
+        return this.userFriendDao.findAllUserAndExcludeMeFriendUser(userId, PageRequest.of(pageNumber - 1, pageSize));
     }
 
     @Transactional(readOnly = false)
@@ -45,15 +50,21 @@ public class UserFriendServiceImpl {
         UserFriend userFriend = new UserFriend();
         userFriend.setUser(user);
         userFriend.setFriendUser(friendUser);
-        this.userFriendDao.save(userFriend);
+        UserFriend userFriend1 = new UserFriend();
+        userFriend1.setUser(friendUser);
+        userFriend1.setFriendUser(user);
+        List<UserFriend> userFriends = new ArrayList<>();
+        userFriends.add(userFriend);
+        userFriends.add(userFriend1);
+        this.userFriendDao.saveAll(userFriends);
     }
 
     @Transactional(readOnly = false)
     public void deleteUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
-        UserFriend userFriend = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
-        this.userFriendDao.delete(userFriend);
+        List<UserFriend> userFriends = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
+        this.userFriendDao.deleteAll(userFriends);
     }
 
     @Transactional(readOnly = false)

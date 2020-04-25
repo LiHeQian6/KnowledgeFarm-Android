@@ -40,7 +40,7 @@ public class CropController {
      **/
     @ApiOperation(value = "加载商店所有作物")
     @ApiImplicitParam
-    @PostMapping("/initCrop")
+    @GetMapping("/initCrop")
     public List<Crop> initCrop(){
         List<Crop> crops = this.cropService.findAllCropByExist(1);
 //        for(Crop crop : crops){

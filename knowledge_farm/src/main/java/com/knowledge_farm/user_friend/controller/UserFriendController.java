@@ -61,10 +61,11 @@ public class UserFriendController {
      * @return com.atguigu.farm.util.UserVOPage<com.atguigu.farm.entity.UserVO>
      **/
     @RequestMapping("/findAllUser")
-    public PageUtil<User> findAllUser(@RequestParam(value = "account", required = false) String account,
-                                        @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                        @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize) {
-        Page<User> page = this.userFriendService.findAllUserByAccount(account, pageNumber, pageSize);
+    public PageUtil<User> findAllUser(@RequestParam("userId") Integer userId,
+                                      @RequestParam(value = "account", required = false) String account,
+                                      @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                      @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize) {
+        Page<User> page = this.userFriendService.findAllUserByAccount(userId, account, pageNumber, pageSize);
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
 //        for(User user : page.getContent()){
