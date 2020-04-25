@@ -72,9 +72,13 @@ public class LandController {
                            @RequestParam("fertilizerLimit") Integer fertilizerLimit,
                            @RequestParam("progress") Integer progress,
                            @RequestParam("status") Integer status,
-                           @RequestParam("flag") Integer flag){
+                           @RequestParam("flag") Integer flag,
+                           HttpServletRequest request){
         try {
-            this.landService.editLand(userId, landNumber, waterLimit, fertilizerLimit, progress, status, flag);
+            int result = this.landService.editLand(userId, landNumber, waterLimit, fertilizerLimit, progress, status, flag);
+            if(result != 0){
+                request.setAttribute("StartUserCropGrowJob", new Integer[]{userId, result, Integer.parseInt(landNumber.substring(4))});
+            }
             return Result.SUCCEED;
         }catch (Exception e){
             e.printStackTrace();

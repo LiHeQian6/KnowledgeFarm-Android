@@ -5,8 +5,13 @@ import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.notification.service.NotificationService;
 import com.knowledge_farm.util.PageUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +27,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-21 16:46
  */
+@Api(description = "通知接口")
 @RestController
 @RequestMapping("/notification")
 public class NotificationController {
@@ -30,7 +36,14 @@ public class NotificationController {
     @Value("${file.photoUrl}")
     private String photoUrl;
 
-    @RequestMapping("/findReceivedNotificationByType")
+    @ApiOperation(value = "根据通知类型查询接收到的消息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "typeId", value = "通知类型", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", required = false),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", required = false)
+    })
+    @PostMapping("/findReceivedNotificationByType")
     public PageUtil<Notification> findReceivedNotificationByType(@RequestParam("userId") Integer userId,
                                                                  @RequestParam("typeId") Integer typeId,
                                                                  @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
@@ -54,7 +67,14 @@ public class NotificationController {
         return pageUtil;
     }
 
-    @RequestMapping("/findSendNotificationByType")
+    @ApiOperation(value = "根据通知类型查询已发送的消息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "typeId", value = "通知类型", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", required = false),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", required = false)
+    })
+    @PostMapping("/findSendNotificationByType")
     public PageUtil<Notification> findSendNotificationByType(@RequestParam("userId") Integer userId,
                                                              @RequestParam("typeId") Integer typeId,
                                                              @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
@@ -76,6 +96,59 @@ public class NotificationController {
 //        }
         pageUtil.setList(page.getContent());
         return pageUtil;
+    }
+
+    @ApiOperation(value = "添加加好友的消息记录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "发起加好友的用户id", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "account", value = "被加好友的用户账号", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/addUserFriendNotification")
+    public String addUserFriendNotification(@RequestParam("userId") Integer userId,
+                                            @RequestParam("account") String account,
+                                            HttpServletRequest request){
+        try {
+            Notification notification = this.notificationService.addUserFriendNotification(userId, account);
+            request.setAttribute("addFriendNotification", notification);
+            return Result.TRUE;
+        }catch (Exception e){
+            return Result.FALSE;
+        }
+    }
+
+    @ApiOperation(value = "删除消息记录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "消息记录的id", dataType = "int", paramType = "form", required = true)
+    })
+    @PostMapping("/deleteNotification")
+    public String deleteNotification(@RequestParam("id") Integer notificationId){
+        try {
+            this.notificationService.deleteNotification(notificationId);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+    }
+
+    @ApiOperation(value = "修改记录变为已读状态")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "消息记录的id字符串(若有多个id，用逗号分隔开)", dataType = "string", paramType = "form", required = true)
+    })
+    @PostMapping("/editNotificationReadStatus")
+    public String editNotificationReadStatus(@RequestParam("ids") String notificationIds){
+        String ids[] = notificationIds.split(",");
+        List<Integer> idList = new ArrayList<>();
+        for(String id : ids){
+            idList.add(Integer.parseInt(id));
+        }
+        try {
+            this.notificationService.editNotificationReadStatus(idList);
+            return Result.TRUE;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
     }
 
 //    @RequestMapping("/findReceivedNotificationByType")
@@ -113,44 +186,5 @@ public class NotificationController {
 //        }
 //        return notifications;
 //    }
-
-    @RequestMapping("/addUserFriendNotification")
-    public String addUserFriendNotification(@RequestParam("userId") Integer userId, @RequestParam("account") String account, HttpServletRequest request){
-        try {
-            Notification notification = this.notificationService.addUserFriendNotification(userId, account);
-            request.setAttribute("addFriendNotification", notification);
-            return Result.TRUE;
-        }catch (Exception e){
-            return Result.FALSE;
-        }
-
-    }
-
-    @RequestMapping("/deleteNotification")
-    public String deleteNotification(@RequestParam("id") Integer notificationId){
-        try {
-            this.notificationService.deleteNotification(notificationId);
-            return Result.TRUE;
-        }catch (Exception e){
-            e.printStackTrace();
-            return Result.FALSE;
-        }
-    }
-
-    @RequestMapping("/editNotificationReadStatus")
-    public String editNotificationReadStatus(@RequestParam("ids") String notificationIds){
-        String ids[] = notificationIds.split(",");
-        List<Integer> idList = new ArrayList<>();
-        for(String id : ids){
-            idList.add(Integer.parseInt(id));
-        }
-        try {
-            this.notificationService.editNotificationReadStatus(idList);
-            return Result.TRUE;
-        }catch (Exception e){
-            e.printStackTrace();
-            return Result.FALSE;
-        }
-    }
 
 }

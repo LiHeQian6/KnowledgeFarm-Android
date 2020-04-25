@@ -2,8 +2,13 @@ package com.knowledge_farm.crop.controller;
 
 import com.knowledge_farm.crop.service.CropServiceImpl;
 import com.knowledge_farm.entity.Crop;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +22,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-10 13:22
  */
+@Api(description = "作物接口")
 @RestController
 @RequestMapping("/crop")
 public class CropController {
@@ -32,7 +38,9 @@ public class CropController {
      * @Param []
      * @return java.util.List<com.atguigu.farm.entity.Crop>
      **/
-    @RequestMapping("/initCrop")
+    @ApiOperation(value = "加载商店所有作物")
+    @ApiImplicitParam
+    @PostMapping("/initCrop")
     public List<Crop> initCrop(){
         List<Crop> crops = this.cropService.findAllCropByExist(1);
 //        for(Crop crop : crops){

@@ -55,4 +55,9 @@ public class UserFriendServiceImpl {
         this.userFriendDao.delete(userFriend);
     }
 
+    @Transactional(readOnly = false)
+    public void waterForFriend(Integer userId, Integer friendId){
+
+    }
+
 }

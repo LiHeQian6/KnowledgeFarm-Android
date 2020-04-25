@@ -9,6 +9,8 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -30,6 +32,7 @@ import java.util.Map;
 public class AddFriendAspect {
     @Resource
     private JpushService jpushService;
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Pointcut(value = "execution(* com.knowledge_farm.notification.controller.NotificationController.addUserFriendNotification(..))")
     private void pointcutLog() {
@@ -49,11 +52,10 @@ public class AddFriendAspect {
                 return;
             }catch (Exception e){
                 e.printStackTrace();
-                System.out.println("消息创建失败");
                 return;
             }
         }
-        System.out.println("消息创建失败");
+        logger.info("消息创建失败");
     }
 
 }
