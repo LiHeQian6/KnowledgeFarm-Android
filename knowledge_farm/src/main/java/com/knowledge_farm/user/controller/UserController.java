@@ -503,7 +503,6 @@ public class UserController {
             e.printStackTrace();
             return Result.FALSE;
         }
-
     }
 
     /**

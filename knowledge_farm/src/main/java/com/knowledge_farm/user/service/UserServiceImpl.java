@@ -521,7 +521,7 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     @Transactional(readOnly = false)
-    public int raiseCrop(Integer userId, Integer cropId, String landNumber) throws SchedulerException {
+    public int raiseCrop(Integer userId, Integer cropId, String landNumber){
         User user = this.userDao.findUserById(userId);
         Crop crop = this.cropService.findCropById(cropId);
         Set<UserBag> userBags = user.getUserBags();

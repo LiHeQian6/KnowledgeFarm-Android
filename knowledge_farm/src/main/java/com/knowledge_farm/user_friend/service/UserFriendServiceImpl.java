@@ -1,9 +1,8 @@
 package com.knowledge_farm.user_friend.service;
 
-import com.knowledge_farm.entity.Result;
-import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserFriend;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.user.service.UserServiceImpl;
+import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import com.knowledge_farm.user_friend.dao.UserFriendDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +24,8 @@ public class UserFriendServiceImpl {
     private UserFriendDao userFriendDao;
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private UserCropServiceImpl userCropService;
 
     public Page<User> findUserFriendPageByAccount(Integer userId, String account, Integer pageNumber, Integer pageSize){
         if(account != null && !account.equals("")){
@@ -56,8 +57,69 @@ public class UserFriendServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public void waterForFriend(Integer userId, Integer friendId){
+    public int waterForFriend(Integer userId, Integer friendId, String landNumber){
+        User user = this.userService.findUserById(userId);
+        User friendUser = this.userService.findUserById(friendId);
+        Land land = friendUser.getLand();
+        UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
+        Crop crop = userCrop.getCrop();
+        //修改剩余水的次数
+        if(user.getWater() > 0){
+            //修改作物进度
+            int progress = userCrop.getProgress();
+            int matureTime = crop.getMatureTime();
+            if(progress < matureTime){
+                if(progress+5 >= matureTime){
+                    userCrop.setProgress(crop.getMatureTime());
+                }else{
+                    userCrop.setProgress(progress + 5);
+                }
+                user.setWater(user.getWater() - 1);
+            }else{
+                return -1;
+            }
+        }else{
+            return -1;
+        }
+        user.setMoney(user.getMoney() + 10);
+        //修改作物干枯湿润状态
+        if(userCrop.getStatus() == 0){
+            userCrop.setStatus(1);
+            return userCrop.getId();
+        }
+        return 0;
+    }
 
+    @Transactional(readOnly = false)
+    public String fertilizerForFriend(Integer userId, Integer friendId, String landNumber){
+        User user = this.userService.findUserById(userId);
+        User friendUser = this.userService.findUserById(friendId);
+        Land land = friendUser.getLand();
+        UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
+        Crop crop = userCrop.getCrop();
+        if(userCrop.getStatus() != 0){
+            //修改剩余化肥的次数
+            if(user.getFertilizer() > 0){
+                //修改作物进度
+                int progress = userCrop.getProgress();
+                int matureTime = crop.getMatureTime();
+                if(progress < matureTime) {
+                    if (progress+10 >= matureTime) {
+                        userCrop.setProgress(crop.getMatureTime());
+                    }else {
+                        userCrop.setProgress(progress + 10);
+                    }
+                    user.setFertilizer(user.getFertilizer() - 1);
+                    user.setMoney(user.getMoney() + 20);
+                    return Result.TRUE;
+                }else{
+                    return Result.FALSE;
+                }
+            }else{
+                return Result.FALSE;
+            }
+        }
+        return Result.FALSE;
     }
 
 }

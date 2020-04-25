@@ -42,6 +42,10 @@ public class StartUserCropGrowJobAspect {
     private void editLand() {
     }
 
+    @Pointcut(value = "execution(* com.knowledge_farm.user_friend.controller.UserFriendController.waterForFriend(..))")
+    private void waterForFriend() {
+    }
+
     @AfterReturning(pointcut = "raiseCrop()", returning="result")
     public void raiseCrop(JoinPoint joinPoint, Object result) throws SchedulerException {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -56,19 +60,14 @@ public class StartUserCropGrowJobAspect {
 
     @AfterReturning(pointcut = "waterCrop()", returning="result")
     public void water(JoinPoint joinPoint, Object result) throws SchedulerException {
-        try {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-            Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
-            if(start != null){
-                startJob(scheduler, start[0], start[1], start[2]);
-                return;
-            }
-            logger.info("浇水失败");
-        }catch (Exception e){
-            e.printStackTrace();
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
+        if(start != null){
+            startJob(scheduler, start[0], start[1], start[2]);
+            return;
         }
+        logger.info("浇水失败");
     }
 
     @AfterReturning(pointcut = "editLand()", returning="result")
@@ -81,6 +80,18 @@ public class StartUserCropGrowJobAspect {
             return;
         }
         logger.info("种植作物失败");
+    }
+
+    @AfterReturning(pointcut = "waterForFriend()", returning="result")
+    public void waterForFriend(JoinPoint joinPoint, Object result) throws SchedulerException {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
+        if(start != null){
+            startJob(scheduler, start[0], start[1], start[2]);
+            return;
+        }
+        logger.info("给好友浇水失败");
     }
 
     /**

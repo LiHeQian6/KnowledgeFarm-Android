@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ClassName UserFriendController
@@ -97,5 +98,41 @@ public class UserFriendController {
             return Result.FALSE;
         }
     }
+
+    @RequestMapping("/waterForFriend")
+    public String waterForFriend(@RequestParam("userId") Integer userId,
+                                 @RequestParam("friendId") Integer friendId,
+                                 @RequestParam("landNumber") String landNumber,
+                                 HttpServletRequest request){
+        try {
+            int result = this.userFriendService.waterForFriend(userId, friendId, landNumber);
+            switch (result){
+                case -1:
+                    return Result.FALSE;
+                case 0:
+                    return Result.TRUE;
+                default:
+                    request.setAttribute("StartUserCropGrowJob", new Integer[]{friendId, result, Integer.parseInt(landNumber.substring(4))});
+                    return Result.TRUE;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+    }
+
+    @RequestMapping("fertilizerForFriend")
+    public String fertilizerForFriend(@RequestParam("userId") Integer userId,
+                                      @RequestParam("friendId") Integer friendId,
+                                      @RequestParam("landNumber") String landNumber){
+        try {
+            return this.userFriendService.fertilizerForFriend(userId, friendId, landNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+    }
+
+
 
 }
