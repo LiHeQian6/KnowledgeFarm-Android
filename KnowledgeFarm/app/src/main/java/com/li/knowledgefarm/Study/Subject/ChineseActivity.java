@@ -38,6 +38,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.Chinese;
 
 import org.jetbrains.annotations.NotNull;
@@ -92,7 +93,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
         setViewSize();
         /** 注册点击事件监听器*/
         registListener();
-        StudyUtil.setStatusBar(this);
+        FullScreen.NavigationBarStatusBar(ChineseActivity.this,true);
         datalist = (List<Chinese>)getIntent().getSerializableExtra("chinese");
         showQuestion(position);
     }

@@ -48,6 +48,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.FriendsPage;
@@ -121,6 +122,7 @@ public class MyFriendActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FullScreen.NavigationBarStatusBar(MyFriendActivity.this,true);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
         okHttpClient = new OkHttpClient();
@@ -129,7 +131,6 @@ public class MyFriendActivity extends AppCompatActivity {
         user= (User) getIntent().getSerializableExtra("friend");
         ImageView dog = findViewById(R.id.dog);
         Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
-        setStatusBar();
         getViews();
         addListener();
         getCrop();
@@ -1074,12 +1075,4 @@ public class MyFriendActivity extends AppCompatActivity {
         }
     }
 
-
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
-    }
 }

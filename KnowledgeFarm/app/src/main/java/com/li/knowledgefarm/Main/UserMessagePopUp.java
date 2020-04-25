@@ -49,7 +49,7 @@ public class UserMessagePopUp extends PopupWindow {
         this.setHeight(600);
         this.setWidth(1000);
         this.setOutsideTouchable(true);
-        this.setFocusable(true);
+        this.setFocusable(false);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
         View contentView = LayoutInflater.from(context).inflate(R.layout.user_message_popup,

@@ -1,7 +1,8 @@
 <resources>
 
     <style name="customApp" parent="AppTheme">
-        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="pop_animation" parent="android:Animation">

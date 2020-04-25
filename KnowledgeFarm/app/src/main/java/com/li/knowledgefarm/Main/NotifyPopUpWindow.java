@@ -21,13 +21,15 @@ public class NotifyPopUpWindow extends PopupWindow {
     private TextView not_content;
     private TextView not_time;
 
+
+
     public NotifyPopUpWindow(final Context context,Notification notification) {
         super(context);
         this.notification = notification;
         this.setHeight(800);
         this.setWidth(1200);
         this.setOutsideTouchable(true);
-        this.setFocusable(true);
+        this.setFocusable(false);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
         final View contentView = LayoutInflater.from(context).inflate(R.layout.notify_message_pop,

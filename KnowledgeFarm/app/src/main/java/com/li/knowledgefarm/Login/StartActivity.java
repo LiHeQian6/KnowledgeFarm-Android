@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 
 import static com.li.knowledgefarm.Login.LoginActivity.mTencent;
 import static com.li.knowledgefarm.Login.LoginActivity.user;
@@ -47,7 +48,7 @@ public class StartActivity extends AppCompatActivity {
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(StartActivity.this,true);
         getViews();
         registListener();
         Intent getInfo = getIntent();
@@ -133,21 +134,6 @@ public class StartActivity extends AppCompatActivity {
         }
         transaction.show(notifyAccountDialog);
         transaction.commitAllowingStateLoss();
-    }
-
-    /**
-     * @Description 设置状态栏
-     * @Auther 孙建旺
-     * @Date 下午 4:19 2019/12/09
-     * @Param []
-     * @return void
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
     }
 
     //退出时的时间

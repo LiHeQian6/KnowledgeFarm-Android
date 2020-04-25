@@ -16,6 +16,7 @@ import com.li.knowledgefarm.Study.Subject.ChineseActivity;
 import com.li.knowledgefarm.Study.Subject.EnglishActivity;
 import com.li.knowledgefarm.Study.Subject.MathActivity;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
+import com.li.knowledgefarm.Util.FullScreen;
 
 
 public class SubjectListActivity extends AppCompatActivity {
@@ -40,7 +41,7 @@ public class SubjectListActivity extends AppCompatActivity {
         getViews();
         /** 注册点击事件监听器*/
         registListener();
-        StudyUtil.setStatusBar(this);
+        FullScreen.NavigationBarStatusBar(SubjectListActivity.this,true);
     }
 
     class CustomerListener implements View.OnClickListener{

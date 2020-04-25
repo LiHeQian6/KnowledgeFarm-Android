@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.User;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -90,7 +91,7 @@ public class QQFirstActivity extends AppCompatActivity {
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(QQFirstActivity.this,true);
         Intent intent = getIntent();
         openId = intent.getStringExtra("opId");
         Nickname = intent.getStringExtra("nick");
@@ -190,21 +191,6 @@ public class QQFirstActivity extends AppCompatActivity {
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
             grade = "1";
-        }
-    }
-
-    /**
-     * @Description 设置通知栏状态
-     * @Auther 孙建旺
-     * @Date 下午 2:29 2019/12/10
-     * @Param []
-     * @return void
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
     }
 

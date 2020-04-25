@@ -37,6 +37,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -108,22 +110,6 @@ public class FindPassword extends AppCompatActivity {
         }
     };
 
-
-    /**
-     * @Description 设置状态栏
-     * @Auther 孙建旺
-     * @Date 下午 2:28 2019/12/09
-     * @Param []
-     * @return void
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +119,7 @@ public class FindPassword extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(FindPassword.this,true);
         getViews();
         registListener();
         setSizeForView();

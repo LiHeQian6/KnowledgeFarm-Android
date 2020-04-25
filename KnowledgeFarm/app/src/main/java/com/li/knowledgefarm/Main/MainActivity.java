@@ -38,6 +38,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -50,10 +51,12 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.MyFriends.FriendsCustomerAdapter;
+import com.li.knowledgefarm.MyFriends.FriendsDialog;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.DoTaskBean;
@@ -97,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar experience;
     private TextView experienceValue;
     private FrameLayout lands;
-    private ListView friendsListView;
     private Dialog bagDialog;
     private Dialog ifExtention;
     private OkHttpClient okHttpClient;
@@ -105,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
     private Gson gson;
     private List<BagCropNumber> dataList;
     private List<UserCropItem> cropList;
-    private FriendsPage<User> friendsPage;
     private Handler UpdataLands;
     private Handler cropMessagesHandler;
     private int selectLand = 0;//选中第几块土地
@@ -118,10 +119,6 @@ public class MainActivity extends AppCompatActivity {
     private int selectedPlant = 0;//选中的植物是第几块土地
     private int displayWidth;
     private int displayHeight;
-    private Handler friendsMessagesHandler;
-    private EditText searchAccount;
-    private RadioGroup searchSelected;
-    private int searchSelectedItem = 0;
     private int ExtensionLandMoney = 0;
     private ImageView notify;
     private NotifyActivity notifyActivity;
@@ -136,13 +133,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FullScreen.NavigationBarStatusBar(MainActivity.this,true);
         setContentView(R.layout.activity_main);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         dataList = new ArrayList<>();
         ImageView dog = findViewById(R.id.dog);
         Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
-        setStatusBar();
         getViews();
         addListener();
         getCrop();
@@ -297,222 +294,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 根据账号在所有人中查询
-     *
-     * @param account
-     */
-    private void findPeopleByAccount(final String account) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/findAllUser?accout=" + account).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        friendsMessagesHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj = response.body().string();
-                        friendsMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }
-
-    /**
-     * 根据账号查询好友
-     */
-    private void findFriendInfo(final String account) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/findUserFriend?userId=" + LoginActivity.user.getId() + "&accout=" + account).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        friendsMessagesHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj = response.body().string();
-                        friendsMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }
-
-    /**
      * 展示朋友信息
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFriends() {
         myFriends.setVisibility(View.GONE);
-        final Dialog friendsDialog = new Dialog(this);
+        FriendsDialog friendsDialog = new FriendsDialog(this);
         //获取屏幕显示区域尺寸
-        WindowManager.LayoutParams attrs = friendsDialog.getWindow().getAttributes();
-        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams attrs = getWindow().getAttributes();
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics ds = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.friends_dialog, null);
-        friendsListView = layout.findViewById(R.id.friends_lv);
-        searchAccount = layout.findViewById(R.id.search_account);
-        searchSelected = layout.findViewById(R.id.searchSelected);
-        //设置控件大小
-        setFriendSize(layout);
-        searchSelected.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i) {
-                    case R.id.my:
-                        if (friendsPage != null) {
-                            friendsPage.setPrePageNum(1);
-                            friendsPage.setNextPageNum(1);
-                            searchSelectedItem = 0;
-                            getFriendsInfo(1);
-                        } else {
-                            Toast.makeText(MainActivity.this, "获取好友列表失败", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case R.id.all:
-                        if (friendsPage != null) {
-                            friendsPage.setPrePageNum(1);
-                            friendsPage.setNextPageNum(1);
-                            searchSelectedItem = 1;
-                            getAllInfo(1);
-                        } else {
-                            Toast.makeText(MainActivity.this, "获取好友列表失败", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                }
-
-            }
-        });
-        Button search = layout.findViewById(R.id.search);
-        ImageView per = layout.findViewById(R.id.pre);
-        ImageView next = layout.findViewById(R.id.next);
-        final TextView now = layout.findViewById(R.id.now);
-        per.setOnClickListener(new MainListener());
-        next.setOnClickListener(new MainListener());
-        search.setOnClickListener(new MainListener());
-        friendsMessagesHandler = new Handler() {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                String messages = (String) msg.obj;
-                Log.e("好友", messages);
-                if (!messages.equals("Fail") && !messages.contains("html")) {
-                    Type type = new TypeToken<FriendsPage<User>>() {
-                    }.getType();
-                    friendsPage = gson.fromJson(messages, type);
-                    now.setText(friendsPage.getCurrentPageNum() + "/" + friendsPage.getTotalPageNum());
-                    FriendsCustomerAdapter customerAdapter = new FriendsCustomerAdapter(friendsDialog.getContext(), friendsPage.getList(), R.layout.friends_list_item, searchSelectedItem);
-                    friendsListView.setAdapter(customerAdapter);
-                    customerAdapter.notifyDataSetChanged();
-                } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "获取数据失败！", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
-        getFriendsInfo(1);
-        friendsDialog.setContentView(layout);
-        friendsDialog.show();
-        if (friendsDialog.getWindow() != null) {
-            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            friendsDialog.getWindow().setDimAmount(0f);//去除遮罩
-        }
         attrs.gravity = Gravity.RIGHT;
-        attrs.width = (int) (displayWidth * 0.40);
-        attrs.height = (int) (displayHeight * 0.95);
-        friendsDialog.getWindow().setAttributes(attrs);
-        Window dialogWindow = friendsDialog.getWindow();
-        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-        friendsDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        attrs.width = (int)(displayWidth*0.40);
+        attrs.height = (int)(displayHeight*0.95);
+        friendsDialog.setHeight((int)(displayHeight*0.95));
+        friendsDialog.setWidth((int)(displayWidth*0.40));
+        friendsDialog.showAtLocation(myFriends,Gravity.RIGHT,0,0);
+        friendsDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
-            public void onCancel(DialogInterface dialogInterface) {
+            public void onDismiss() {
                 myFriends.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    /**
-     * 获得好友分页
-     *
-     * @param pageNumber
-     */
-    private void getFriendsInfo(final int pageNumber) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/findUserFriend?userId=" + LoginActivity.user.getId() + "&pageNumber=" + pageNumber).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        friendsMessagesHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj = response.body().string();
-                        friendsMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-
-    }
-
-    /**
-     * 获得所有人分页
-     *
-     * @param pageNumber
-     */
-    private void getAllInfo(final int pageNumber) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/findAllUser?pageNumber=" + pageNumber).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        friendsMessagesHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj = response.body().string();
-                        friendsMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
     }
 
     /**
@@ -550,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        setDialogSize(view);
+//        setDialogSize(view);
         dialog.setContentView(view);
         dialog.show();
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -1385,37 +1191,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     lastClickTime = System.currentTimeMillis();
                     showFriends();
-                    break;
-                case R.id.pre:
-                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
-                        return;
-                    }
-                    lastClickTime = System.currentTimeMillis();
-                    if (searchSelectedItem == 0)
-                        getFriendsInfo(friendsPage.getPrePageNum());
-                    else
-                        getAllInfo(friendsPage.getPrePageNum());
-                    break;
-                case R.id.next:
-                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
-                        return;
-                    }
-                    lastClickTime = System.currentTimeMillis();
-                    if (searchSelectedItem == 0)
-                        getFriendsInfo(friendsPage.getNextPageNum());
-                    else
-                        getAllInfo(friendsPage.getNextPageNum());
-                    break;
-                case R.id.search:
-                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
-                        return;
-                    }
-                    lastClickTime = System.currentTimeMillis();
-                    Log.e("searchSelectedItem", searchSelectedItem + "");
-                    if (searchSelectedItem == 0)
-                        findFriendInfo(searchAccount.getText().toString());
-                    else
-                        findPeopleByAccount(searchAccount.getText().toString());
+                    myFriends.setVisibility(View.GONE);
                     break;
                 case R.id.notify_img:
                     intent = new Intent();
@@ -1470,56 +1246,6 @@ public class MainActivity extends AppCompatActivity {
         panduan.setLayoutParams(params_layout);
     }
 
-    /**
-     * @return void
-     * @Description 设置好友弹出框屏幕适配
-     * @Auther 孙建旺
-     * @Date 上午 9:00 2019/12/18
-     * @Param []
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setFriendSize(View view) {
-        LinearLayout layout_search = view.findViewById(R.id.layout_search);
-        Button search = view.findViewById(R.id.search);
-        ImageView pre = view.findViewById(R.id.pre);
-        ImageView next = view.findViewById(R.id.next);
-        TextView now = view.findViewById(R.id.now);
-
-        LinearLayout.LayoutParams params_search = new LinearLayout.LayoutParams((int) (displayWidth * 0.3), (int) (displayHeight * 0.08));
-        params_search.gravity = Gravity.CENTER_HORIZONTAL;
-        layout_search.setLayoutParams(params_search);
-
-        LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int) (displayWidth * 0.24), (int) (displayHeight * 0.1));
-        params_edit.gravity = Gravity.CENTER;
-        searchAccount.setLayoutParams(params_edit);
-        searchAccount.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.ShopTextColor));
-        searchAccount.setHintTextColor(ContextCompat.getColor(getApplicationContext(), R.color.ShopTextColor));
-        searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int) (displayWidth * 0.06), (int) (displayHeight * 0.07));
-        params_button.gravity = Gravity.CENTER;
-        search.setLayoutParams(params_button);
-        search.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.ShopTextColor));
-        search.setTextSize((int) (displayHeight * 0.02));
-        search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int) (displayWidth * 0.3), (int) (displayHeight * 0.06));
-        params_select.setMargins((int) (displayWidth * 0.02), 0, 0, 0);
-        searchSelected.setLayoutParams(params_select);
-
-        LinearLayout.LayoutParams params_listview = new LinearLayout.LayoutParams((int) (displayWidth * 0.3), (int) (displayHeight * 0.6));
-        params_listview.gravity = Gravity.CENTER_HORIZONTAL;
-        params_listview.setMargins(0, (int) (displayHeight * 0.018), 0, (int) (displayHeight * 0.018));
-        friendsListView.setLayoutParams(params_listview);
-        friendsListView.setDividerHeight((int) (displayHeight * 0.015));
-
-        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int) (displayWidth * 0.1), (int) (displayHeight * 0.06));
-        pre.setLayoutParams(params_pre);
-        next.setLayoutParams(params_pre);
-        now.setLayoutParams(params_pre);
-        now.setTextSize((int) (displayHeight * 0.02));
-    }
-
     //退出时的时间
     private long mExitTime;
 
@@ -1545,11 +1271,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
-    }
 }

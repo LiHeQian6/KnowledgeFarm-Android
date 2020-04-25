@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.dialog.SpinnerAdapter;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.EventBean;
 
 import org.greenrobot.eventbus.EventBus;
@@ -82,10 +83,9 @@ public class RegisteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registe);
-
         getViews();
         setViewSize();
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(RegisteActivity.this,true);
     }
 
     /**
@@ -292,18 +292,4 @@ public class RegisteActivity extends AppCompatActivity {
         return new String(resultCharArray);
     }
 
-    /**
-     * @Description 设置状态栏
-     * @Auther 孙建旺
-     * @Date 上午 11:23 2019/12/17
-     * @Param []
-     * @return void
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
-    }
 }

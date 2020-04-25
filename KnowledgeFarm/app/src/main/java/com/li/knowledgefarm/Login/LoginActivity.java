@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -152,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
 
         user = null;
         autoLogin();
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(LoginActivity.this,true);
         getViews();
         registListener();
     }
@@ -505,22 +506,6 @@ public class LoginActivity extends AppCompatActivity {
             if (resultCode == Constants.REQUEST_QQ_SHARE || resultCode == Constants.REQUEST_QZONE_SHARE || resultCode == Constants.REQUEST_OLD_SHARE) {
                 mTencent.handleResultData(data, loginListener);
             }
-        }
-    }
-
-
-    /**
-     * @Description 设置状态栏
-     * @Auther 孙建旺
-     * @Date 下午 2:28 2019/12/09
-     * @Param []
-     * @return void
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
         }
     }
 

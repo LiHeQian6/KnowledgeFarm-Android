@@ -35,6 +35,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Login.StartActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +83,7 @@ public class ShopActivity extends AppCompatActivity {
 
         getViews();
         getShopingsItems();
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(ShopActivity.this,true);
         setViewSize();
 
 
@@ -393,20 +394,6 @@ public class ShopActivity extends AppCompatActivity {
                 });
             }
         }.start();
-    }
-    /**
-     * @Description 设置状态栏状态
-     * @Auther 孙建旺
-     * @Date 上午 9:57 2019/12/07
-     * @Param []
-     * @return void
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
     }
 
 }

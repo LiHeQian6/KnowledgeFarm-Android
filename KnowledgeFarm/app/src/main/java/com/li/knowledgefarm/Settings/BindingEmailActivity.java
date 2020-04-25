@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -149,8 +150,8 @@ public class BindingEmailActivity extends AppCompatActivity {
 
         okHttpClient = new OkHttpClient();
 
-        /** 关闭状态栏*/
-        setStatusBar();
+        //去掉顶部状态栏和底部导航栏
+        FullScreen.NavigationBarStatusBar(BindingEmailActivity.this,true);
     }
 
     /**
