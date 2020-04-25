@@ -70,10 +70,10 @@ public class GetMathQuestion extends SubjectInterface {
                     Request request = null;
                     switch (LoginActivity.user.getGrade()) {
                         case 1:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/OneUpMath").build();
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/mathOneUp").build();
                             break;
                         case 2:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/OneDownMath").build();
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/mathOneDown").build();
                     }
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {

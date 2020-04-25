@@ -69,10 +69,10 @@ public class GetEnglishQuestion extends SubjectInterface {
                     Request request = null;
                     switch (LoginActivity.user.getGrade()) {
                         case 1:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/OneUpEnglish").build();
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishOneUp").build();
                             break;
                         case 2:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/OneDownEnglish").build();
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishOneDown").build();
                             break;
                     }
                     Call call = okHttpClient.newCall(request);

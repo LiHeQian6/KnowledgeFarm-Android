@@ -54,7 +54,7 @@ import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
-import com.li.knowledgefarm.entity.EventBean;
+import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().register(this);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         dataList = new ArrayList<>();
@@ -143,74 +142,21 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
         setStatusBar();
         getViews();
-        setViewsSize();
         addListener();
         getCrop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    /**
-     * @Description 展示用户信息与设置
-     * @Author 孙建旺
-     * @Date 下午3:34 2020/04/20
-     * @Param []
-     * @return void
-     */
-//    private void showUserMessage(){
-//        userMessagePopUp = new UserMessagePopUp(this,MainActivity.this);
-//        WindowManager.LayoutParams lp = getWindow().getAttributes();
-//        lp.alpha = (float) 0.5;
-//        this.getWindow().setAttributes(lp);
-//        userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
-//    }
-    /**
-     * @Author li
-     * @param
-     * @return void
-     * @Description 展示每日任务弹窗
-     * @Date 21:00 2020/4/23
-     **/
-//    private void showUserMessage(){
-//        userMessagePopUp = new UserMessagePopUp(this,MainActivity.this);
-//        WindowManager.LayoutParams lp = getWindow().getAttributes();
-//        lp.alpha = (float) 0.5;
-//        this.getWindow().setAttributes(lp);
-//        userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
-//    }
-
-    private void showDayTaskWindow(){
-        dayTaskPopUpWindow = new DayTaskPopUpWindow(this);
-        dayTaskPopUpWindow.showAtLocation(dayTask,Gravity.CENTER,0,0);
-    }
-
-    /**
-     * @Author li
-     * @param
-     * @return void
-     * @Description 关闭每日任务弹窗
-     * @Date 21:02 2020/4/23
-     **/
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    private void closeDayTaskWindow(EventBean event){
-        dayTaskPopUpWindow.dismiss();
-    }
-
-
-
-    /**
-     * @Description 设置控件大小
-     * @Auther 孙建旺
-     * @Date 上午 9:18 2019/12/16
-     * @Param []
-     * @return void
-     */
-    private void setViewsSize() {
-
     }
 
     @Override
@@ -276,47 +222,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 获取种植的作物信息
+     * @Description 展示用户信息与设置
+     * @Author 孙建旺
+     * @Date 下午3:34 2020/04/20
+     * @Param []
+     * @return void
      */
-    private void getCrop() {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/usercrop/initUserCrop?userId="+LoginActivity.user.getId()).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        cropMessagesHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj = response.body().string();
-                        cropMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-        cropMessagesHandler=new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                String messages = (String)msg.obj;
-                Log.e("cropList",messages);
-                if(!messages.equals("Fail")){
-                    Type type = new TypeToken<List<UserCropItem>>(){}.getType();
-                    cropList = gson.fromJson(messages,type);
-                    showLand();
-                }else{
-                    Toast toast = Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
+    private void showUserMessage(){
+        userMessagePopUp = new UserMessagePopUp(this,MainActivity.this);
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = (float) 0.5;
+        this.getWindow().setAttributes(lp);
+        userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
     }
 
     /**
@@ -331,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(this).load(LoginActivity.user.getPhoto()).apply(requestOptions).into(photo);
         nickName.setText(LoginActivity.user.getNickName());
-        account.setText("账号:"+LoginActivity.user.getAccout());
+        account.setText("账号:"+LoginActivity.user.getAccount());
         level.setText("Lv:"+LoginActivity.user.getLevel());
         money.setText("金币:"+LoginActivity.user.getMoney());
         waterCount.setText(LoginActivity.user.getWater()+"");
@@ -344,255 +261,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * 初始化土地
-     */
-    private void showLand(){
-        lands.removeAllViews();
-        int flag=0;
-        float x=0;
-        float y=0;
-        for (int i = 1; i <19 ; i++) {
-            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-            final View landGroup = inflater.inflate(R.layout.land_group,null);
-            landGroup.setLayoutParams(new FrameLayout.LayoutParams(320,160));
-            if ((i-1)%3==0){
-                x=((i-1)/3)*LAND_WIDTH_2+LAND_WIDTH_2*2;
-                y=((i-1)/3)*LAND_HEIGHT_2;
-                landGroup.setTranslationX(x);
-                landGroup.setTranslationY(y);
-            }else{
-                x = x - LAND_WIDTH_2;
-                landGroup.setTranslationX(x);
-                y = y + LAND_HEIGHT_2;
-                landGroup.setTranslationY(y);
-            }
-            landGroup.setTag(""+i);
-            final ImageView land = landGroup.findViewWithTag("land");
-            ImageView plant=landGroup.findViewWithTag("plant");
-            TextView progressNum = landGroup.findViewWithTag("progressNum");
-            ProgressBar progress = landGroup.findViewWithTag("progress");
-            final ImageView animation = landGroup.findViewWithTag("animation");
-            final int finalI = Integer.parseInt((String) landGroup.getTag());//第几块土地
-            if(LoginActivity.user.getLandStauts(finalI)==-1) {//土地状态为-1表示土地未开垦，当第一次运行到的时候表示该块土地上是扩建牌
-                if (flag==0){
-                    plant.setVisibility(View.VISIBLE);
-                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(160, 160);
-                    params.gravity=Gravity.CENTER;
-                    params.topMargin=-60;
-                    plant.setLayoutParams(params);
-                    plant.setImageResource(R.drawable.kuojian);
-                    //扩建
-                    plant.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-                            if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
-                                System.out.println("x"+motionEvent.getX()+"   y"+motionEvent.getY());
-                                if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
-                                    System.out.println(landGroup.getTag());
-                                    showIfExtensionLand(finalI);
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }
-                    });
-                    flag++;
-                }
-//                land.setImageResource(R.drawable.land_green);
-            }
-            else if (LoginActivity.user.getLandStauts(finalI)==0) {
-                land.setImageResource(R.drawable.land);
-                //种植
-                land.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
-                            if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
-                                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                                    return true;
-                                }
-                                lastClickTime = System.currentTimeMillis();
-                                land.setImageResource(R.drawable.land_lights);
-                                selectLand=finalI;
-                                showBagMessages();
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-                });
-            }
-            else {
-                RequestOptions requestOptions = new RequestOptions()
-                        .placeholder(R.drawable.loading)
-                        .error(R.drawable.meigui)
-                        .fallback(R.drawable.meigui)
-                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-                land.setImageResource(R.drawable.land);
-                UserCropItem crop=null;
-                //得到植物信息
-                for (int j = 0; j < cropList.size(); j++) {
-                    if(cropList.get(j).getUserCropId()==LoginActivity.user.getLandStauts(finalI)){
-                        crop=cropList.get(j);
-                        break;
-                    }
-                }
-                if (crop!=null){
-                    plant.setVisibility(View.VISIBLE);
-                    progress.setVisibility(View.VISIBLE);
-                    progressNum.setVisibility(View.VISIBLE);
-                    //展示植物不同阶段
-                    final double status = (crop.getProgress()+0.0) / crop.getCrop().getMatureTime();
-                    if(status <0.2){
-                        plant.setTranslationY(40);
-                        plant.setImageResource(R.drawable.seed);
-                    }else if (status<0.3){
-                        Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
-                    }else if (status<0.6){
-                        Glide.with(this).load(crop.getCrop().getImg2()).apply(requestOptions).into(plant);
-                    }else if (status<1){
-                        Glide.with(this).load(crop.getCrop().getImg3()).apply(requestOptions).into(plant);
-                    }else if (status==1){
-                        Glide.with(this).load(crop.getCrop().getImg4()).apply(requestOptions).into(plant);
-                    }
-                    //植物成长进度条
-                    progress.setMax(crop.getCrop().getMatureTime());
-                    progress.setProgress(crop.getProgress());
-
-                    //植物成长值
-                    progressNum.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
-
-                    if(crop.getState()==0){
-                        land.setImageResource(R.drawable.land_gan);
-                    }
-                    //浇水、施肥、收获
-                    final UserCropItem finalCrop = crop;
-                    land.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-                            if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
-                                if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
-                                    if(finalCrop.getState()==0){
-                                        land.setImageResource(R.drawable.land_gan_light);
-                                    }else
-                                        land.setImageResource(R.drawable.land_lights);
-                                    if(selected==0) {
-                                        selectedPlant=finalI;
-                                        if(status==1) {
-                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                            if(finalCrop.getState()==0){
-                                                land.setImageResource(R.drawable.land_gan);
-                                            }else
-                                                land.setImageResource(R.drawable.land);
-                                        }
-                                        else{
-                                            Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
-                                            operating(0);//浇水
-                                        }
-                                    }else if(selected==-1){
-                                        selectedPlant=finalI;
-                                        if(status==1) {
-                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
-                                            if(finalCrop.getState()==0){
-                                                land.setImageResource(R.drawable.land_gan);
-                                            }else
-                                                land.setImageResource(R.drawable.land);
-                                        }else{
-                                            Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
-                                            operating(-1);//施肥
-                                        }
-                                    }else{
-                                        selectedPlant=finalI;
-                                        if(status==1) {
-                                            Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
-                                            operating(-2);//成熟
-                                        }
-                                        else {
-                                            Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
-                                            if(finalCrop.getState()==0){
-                                                land.setImageResource(R.drawable.land_gan);
-                                            }else
-                                                land.setImageResource(R.drawable.land);
-                                        }
-                                    }
-                                    waterMessagesHandler = new Handler() {
-                                        @Override
-                                        public void handleMessage(@NonNull Message msg) {
-                                            final String messages = (String) msg.obj;
-                                            Log.e("Watering", messages);
-                                            if (!messages.equals("Fail")) {
-                                                if (messages.equals("false")) {
-                                                    animation.setVisibility(View.VISIBLE);
-                                                    Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
-                                                    new Handler().postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            animation.setVisibility(View.GONE);
-                                                        }
-                                                    },1000);
-                                                } else {
-                                                    //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
-                                                    animation.setVisibility(View.VISIBLE);
-                                                    new Handler().postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            getCrop();
-                                                            getUserInfo();
-                                                            if(messages.equals("up")){
-                                                                upLevel();
-                                                            }
-                                                            animation.setVisibility(View.GONE);
-                                                        }
-                                                    },1000);
-
-                                                }
-                                            } else {
-                                                animation.setVisibility(View.VISIBLE);
-                                                Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
-                                                new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        animation.setVisibility(View.GONE);
-                                                    }
-                                                },1000);
-                                            }
-                                            if(finalCrop.getState()==0){
-                                                land.setImageResource(R.drawable.land_gan);
-                                            }else
-                                                land.setImageResource(R.drawable.land);
-                                        }
-                                    };
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }
-                    });
-                }
-
-            }
-            lands.addView(landGroup);
-        }
-
-    }
-    /**
-     * @Author li
-     * @param x 横坐标
-     * @param y 纵坐标
-     * @return boolean
-     * @Description 判断是否选中该块土地(即点击的区域是否在菱形区域内)
-     * @Date 12:19 2020/3/19
-     **/
-    public boolean isSelectLand(float x,float y){
-        float rx = (x-LAND_WIDTH_2)*LAND_HEIGHT_2;
-        float ry = (LAND_HEIGHT_2-y)*LAND_WIDTH_2;
-        if((Math.abs(rx)+Math.abs(ry))<=(LAND_WIDTH_2*2*LAND_HEIGHT_2*2/4)){
-            return true;
-        }else{
-            return false;
-        }
-    }
     /**
      * 用户升级,弹窗提示
      */
@@ -623,233 +291,6 @@ public class MainActivity extends AppCompatActivity {
         upDiaLog.getWindow().setAttributes(attrs);
         Window dialogWindow = upDiaLog.getWindow();
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-    }
-
-    private void addListener() {
-        learn.setOnClickListener(new MainListener());
-        water.setOnClickListener(new MainListener());
-        fertilizer.setOnClickListener(new MainListener());
-        bag.setOnClickListener(new MainListener());
-        shop.setOnClickListener(new MainListener());
-        pet.setOnClickListener(new MainListener());
-        setting.setOnClickListener(new MainListener());
-        harvest.setOnClickListener(new MainListener());
-        myFriends.setOnClickListener(new MainListener());
-        notify.setOnClickListener(new MainListener());
-        photo.setOnClickListener(new MainListener());
-        dayTask.setOnClickListener(new MainListener());
-    }
-
-    /**
-     * @Description 扩建土地
-     * @Auther 孙建旺
-     * @Date 下午 2:39 2019/12/10
-     * @Param []
-     * @return void
-     */
-    private void ExtensionLand(final int position, final int money){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                FormBody formBody = new FormBody.Builder()
-                        .add("userId",LoginActivity.user.getId()+"")
-                        .add("landNumber","land"+position)
-                        .add("needMoney",money+"").build();
-                Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/extensionLand").build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        UpdataLands.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String callBackMessage = response.body().string();
-                        Message message = Message.obtain();
-                        message.obj = callBackMessage;
-                        UpdataLands.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }
-
-    /**
-     * @Description 更新土地状态
-     * @Auther 孙建旺
-     * @Date 下午 2:54 2019/12/10
-     * @Param []
-     * @return void
-     */
-    private void UpdateLand(final int position){
-        UpdataLands = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String message = (String)msg.obj;
-                if(message.equals("true")){
-                    LoginActivity.user.setLandStauts(position,0);
-                    int newMoney = LoginActivity.user.getMoney() - ExtensionLandMoney;
-                    LoginActivity.user.setMoney(newMoney);
-                    money.setText("金币:"+newMoney+"");
-                    ifExtention.dismiss();
-                    showLand();
-                }else if(message.equals("false")){
-                    Toast toast = Toast.makeText(MainActivity.this,"没有扩建成功哦！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }else if(message.equals("notEnoughMoney")){
-                    Toast toast = Toast.makeText(MainActivity.this,"你的钱不够了哦！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }else {
-                    Toast toast = Toast.makeText(MainActivity.this,"没有找到你的土地哦！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
-    }
-
-    private void getViews() {
-        learn=findViewById(R.id.learn);
-        water=findViewById(R.id.water);
-        waterCount=findViewById(R.id.waterCount);
-        fertilizer=findViewById(R.id.fertilizer);
-        fertilizerCount=findViewById(R.id.fertilizerCount);
-        bag=findViewById(R.id.bag);
-        shop=findViewById(R.id.shop);
-        pet=findViewById(R.id.pet);
-        TextView tv=findViewById(R.id.pett);
-        tv.setVisibility(View.GONE);
-        pet.setVisibility(View.GONE);
-        setting=findViewById(R.id.setting);
-        photo=findViewById(R.id.photo);
-        nickName=findViewById(R.id.nickName);
-        level=findViewById(R.id.level);
-        money=findViewById(R.id.money);
-        account=findViewById(R.id.account);
-        lands=findViewById(R.id.lands);
-        experience=findViewById(R.id.experience);
-        experienceValue=findViewById(R.id.experienceValue);
-        xzw=findViewById(R.id.xzw);
-        xzf=findViewById(R.id.xzf);
-        xzs=findViewById(R.id.xzs);
-        harvest=findViewById(R.id.harvest);
-        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzw);
-        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzf);
-        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzs);
-        myFriends=findViewById(R.id.friends);
-        notify = findViewById(R.id.notify_img);
-        notify_list_view = findViewById(R.id.notify_list_view);
-        dayTask=findViewById(R.id.task);
-    }
-
-    class MainListener implements View.OnClickListener {
-
-        @RequiresApi(api = Build.VERSION_CODES.M)
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.learn:
-                    Intent intent = new Intent();
-                    intent.setClass(MainActivity.this, SubjectListActivity.class);
-                    startActivity(intent);
-                    break;
-                case R.id.water:
-                    selected=0;
-                    xzw.setVisibility(View.VISIBLE);
-                    xzf.setVisibility(View.GONE);
-                    xzs.setVisibility(View.GONE);
-                    break;
-                case R.id.fertilizer:
-                    selected=-1;
-                    xzw.setVisibility(View.GONE);
-                    xzf.setVisibility(View.VISIBLE);
-                    xzs.setVisibility(View.GONE);
-                    break;
-                case R.id.harvest:
-                    selected=-2;
-                    xzw.setVisibility(View.GONE);
-                    xzf.setVisibility(View.GONE);
-                    xzs.setVisibility(View.VISIBLE);
-                     break;
-                case R.id.bag:
-                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                        return;
-                    }
-                    lastClickTime = System.currentTimeMillis();
-                    showBagMessages();
-                    break;
-                case R.id.shop:
-                    intent = new Intent();
-                    intent.setClass(MainActivity.this, ShopActivity.class);
-                    startActivity(intent);
-                    break;
-                case R.id.pet:
-                    break;
-                case R.id.setting:
-                    intent = new Intent();
-                    intent.setClass(MainActivity.this, SettingActivity.class);
-                    startActivity(intent);
-                    break;
-                case R.id.friends:
-                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                        return;
-                    }
-                    lastClickTime = System.currentTimeMillis();
-                    showFriends();
-                    myFriends.setVisibility(View.GONE);
-                    break;
-                case R.id.pre:
-                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                        return;
-                    }
-                    lastClickTime = System.currentTimeMillis();
-                    if (searchSelectedItem==0)
-                        getFriendsInfo(friendsPage.getPrePageNum());
-                    else
-                        getAllInfo(friendsPage.getPrePageNum());
-                    break;
-                case R.id.next:
-                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                        return;
-                    }
-                    lastClickTime = System.currentTimeMillis();
-                    if (searchSelectedItem==0)
-                        getFriendsInfo(friendsPage.getNextPageNum());
-                    else
-                        getAllInfo(friendsPage.getNextPageNum());
-                    break;
-                case R.id.search:
-                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                        return;
-                    }
-                    lastClickTime = System.currentTimeMillis();
-                    Log.e("searchSelectedItem",searchSelectedItem+"");
-                    if (searchSelectedItem==0)
-                        findFriendInfo(searchAccount.getText().toString());
-                    else
-                        findPeopleByAccount(searchAccount.getText().toString());
-                    break;
-                case R.id.notify_img:
-                    intent = new Intent();
-                    intent.setClass(MainActivity.this, NotifyActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.notify_pop_in,0);
-                    break;
-                case R.id.photo:
-                    intent = new Intent();
-                    intent.setClass(MainActivity.this, SettingActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(0,0);
-                    break;
-                case R.id.task:
-                    showDayTaskWindow();
-                    break;
-            }
-        }
     }
 
     /**
@@ -914,6 +355,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFriends() {
+        myFriends.setVisibility(View.GONE);
         final Dialog friendsDialog = new Dialog(this);
         //获取屏幕显示区域尺寸
         WindowManager.LayoutParams attrs = friendsDialog .getWindow().getAttributes();
@@ -1004,56 +446,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @Description 设置好友弹出框屏幕适配
-     * @Auther 孙建旺
-     * @Date 上午 9:00 2019/12/18
-     * @Param []
-     * @return void
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setFriendSize(View view) {
-        LinearLayout layout_search = view.findViewById(R.id.layout_search);
-        Button search=view.findViewById(R.id.search);
-        ImageView pre = view.findViewById(R.id.pre);
-        ImageView next = view.findViewById(R.id.next);
-        TextView now = view.findViewById(R.id.now);
-
-        LinearLayout.LayoutParams params_search = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.08));
-        params_search.gravity = Gravity.CENTER_HORIZONTAL;
-        layout_search.setLayoutParams(params_search);
-
-        LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int)(displayWidth*0.24),(int)(displayHeight*0.1));
-        params_edit.gravity = Gravity.CENTER;
-        searchAccount.setLayoutParams(params_edit);
-        searchAccount.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
-        searchAccount.setHintTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
-        searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.07));
-        params_button.gravity = Gravity.CENTER;
-        search.setLayoutParams(params_button);
-        search.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
-        search.setTextSize((int)(displayHeight*0.02));
-        search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.06));
-        params_select.setMargins((int)(displayWidth*0.02),0,0,0);
-        searchSelected.setLayoutParams(params_select);
-
-        LinearLayout.LayoutParams params_listview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.6));
-        params_listview.gravity = Gravity.CENTER_HORIZONTAL;
-        params_listview.setMargins(0,(int)(displayHeight*0.018),0,(int)(displayHeight*0.018));
-        friendsListView.setLayoutParams(params_listview);
-        friendsListView.setDividerHeight((int)(displayHeight*0.015));
-
-        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
-        pre.setLayoutParams(params_pre);
-        next.setLayoutParams(params_pre);
-        now.setLayoutParams(params_pre);
-        now.setTextSize((int)(displayHeight*0.02));
-    }
-
-    /**
      * 获得好友分页
      * @param pageNumber
      */
@@ -1112,6 +504,13 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * @Author li
+     * @param add
+     * @return void
+     * @Description 展示添加删除好友弹窗
+     * @Date 18:04 2020/4/24
+     **/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showDaiLog(final HashMap add){
         final Dialog dialog = new Dialog(this);
@@ -1126,6 +525,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     int option=0;//0表示加好友
                     operateFriend((String) add.keySet().toArray()[0],option);
+                    dialog.dismiss();
                 }
             });
         }else{
@@ -1135,6 +535,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     int option=1;//1表示删好友
                     operateFriend((String)add.keySet().toArray()[0],option);
+                    dialog.dismiss();
                 }
             });
         }
@@ -1161,6 +562,14 @@ public class MainActivity extends AppCompatActivity {
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
+    /**
+     * @Author li
+     * @param num
+     * @param option
+     * @return void
+     * @Description 用户对好友的操作
+     * @Date 18:04 2020/4/24
+     **/
     private void operateFriend(final String num, final int option) {
         new Thread(){
             @Override
@@ -1206,107 +615,324 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+
+
     /**
-     * 浇水、施肥、收获操作
-     */
-    private void operating(final int operating) {
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    Request request=null;
-                    if(operating==0)
-                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/waterCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
-                    else if(operating==-1){
-                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/fertilizerCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
-                    }else{
-                        request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/harvest?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
-                    }
-                    Call call = okHttpClient.newCall(request);
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Message message = Message.obtain();
-                            message.obj ="Fail";
-                            waterMessagesHandler.sendMessage(message);
-                        }
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            Message message = Message.obtain();
-                            message.obj =response.body().string();
-                            waterMessagesHandler.sendMessage(message);
-                        }
-                    });
-                }
-            }.start();
+     * @Author li
+     * @param
+     * @return void
+     * @Description 展示每日任务弹窗
+     * @Date 21:00 2020/4/23
+     **/
+    private void showDayTaskWindow(){
+        dayTaskPopUpWindow = new DayTaskPopUpWindow(this);
+        dayTaskPopUpWindow.showAtLocation(dayTask,Gravity.CENTER,0,0);
     }
 
     /**
-     * @Description 获取背包信息数据
-     * @Auther 孙建旺
-     * @Date 下午 2:38 2019/12/08
-     * @Param []
+     * @Author li
+     * @param
      * @return void
+     * @Description 关闭每日任务弹窗
+     * @Date 21:02 2020/4/23
+     **/
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void closeDayTaskWindow(DoTaskBean doTaskBean){
+        dayTaskPopUpWindow.dismiss();
+        if (doTaskBean.isToFriend()) {
+            showFriends();
+        }
+    }
+
+
+
+    /**
+     * 获取种植的作物信息
      */
-    private void getBagMessages(){
+    private void getCrop() {
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/bag/initUserBag?userId="+LoginActivity.user.getId()).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/usercrop/initUserCrop?userId="+LoginActivity.user.getId()).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Message message = Message.obtain();
-                        message.obj ="Fail";
-                        bagMessagesHandler.sendMessage(message);
+                        message.obj = "Fail";
+                        cropMessagesHandler.sendMessage(message);
                     }
+
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         Message message = Message.obtain();
-                        message.obj =response.body().string();
-                        bagMessagesHandler.sendMessage(message);
+                        message.obj = response.body().string();
+                        cropMessagesHandler.sendMessage(message);
                     }
                 });
             }
         }.start();
+        cropMessagesHandler=new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                String messages = (String)msg.obj;
+                Log.e("cropList",messages);
+                if(!messages.equals("Fail")){
+                    Type type = new TypeToken<List<UserCropItem>>(){}.getType();
+                    cropList = gson.fromJson(messages,type);
+                    showLand();
+                }else{
+                    Toast toast = Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
     }
-
     /**
-     * @Description 设置弹窗控件大小
-     * @Auther 孙建旺
-     * @Date 下午 4:13 2019/12/18
-     * @Param [view]
-     * @return void
+     * 初始化土地
      */
-    private void setDialogSize(View view){
-//        获取屏幕显示区域尺寸
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayHeight = ds.heightPixels;
-        displayWidth = ds.widthPixels;
+    private void showLand(){
+        lands.removeAllViews();
+        int flag=0;
+        float x=0;
+        float y=0;
+        for (int i = 0; i <18 ; i++) {
+            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            final View landGroup = inflater.inflate(R.layout.land_group,null);
+            landGroup.setLayoutParams(new FrameLayout.LayoutParams(320,160));
+            int num=i+1;
+            if ((num-1)%3==0){
+                x=((num-1)/3)*LAND_WIDTH_2+LAND_WIDTH_2*2;
+                y=((num-1)/3)*LAND_HEIGHT_2;
+                landGroup.setTranslationX(x);
+                landGroup.setTranslationY(y);
+            }else{
+                x = x - LAND_WIDTH_2;
+                landGroup.setTranslationX(x);
+                y = y + LAND_HEIGHT_2;
+                landGroup.setTranslationY(y);
+            }
+            landGroup.setTag(""+num);
+            final ImageView land = landGroup.findViewWithTag("land");
+            ImageView plant=landGroup.findViewWithTag("plant");
+            TextView progressNum = landGroup.findViewWithTag("progressNum");
+            ProgressBar progress = landGroup.findViewWithTag("progress");
+            final ImageView animation = landGroup.findViewWithTag("animation");
+            final int finalI = Integer.parseInt((String) landGroup.getTag());//第几块土地
+            if(cropList.get(i)==null) {//cropItem为null表示土地未开垦，crop为null代表未种植，不为null为种植的对应植物，当第一次运行到的时候表示该块土地上是扩建牌
+                if (flag==0){
+                    plant.setVisibility(View.VISIBLE);
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(160, 160);
+                    params.gravity=Gravity.CENTER;
+                    params.topMargin=-60;
+                    plant.setLayoutParams(params);
+                    plant.setImageResource(R.drawable.kuojian);
+                    //扩建
+                    plant.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
+                                System.out.println("x"+motionEvent.getX()+"   y"+motionEvent.getY());
+                                if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
+                                    System.out.println(landGroup.getTag());
+                                    showIfExtensionLand(finalI);
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                    });
+                    flag++;
+                }
+//                land.setImageResource(R.drawable.land_green);
+            }
+            else if (cropList.get(i).getCrop()==null) {
+                land.setImageResource(R.drawable.land);
+                //种植
+                land.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
+                            if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
+                                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                                    return true;
+                                }
+                                lastClickTime = System.currentTimeMillis();
+                                land.setImageResource(R.drawable.land_lights);
+                                selectLand=finalI;
+                                showBagMessages();
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                });
+            }
+            else {
+                RequestOptions requestOptions = new RequestOptions()
+                        .placeholder(R.drawable.loading)
+                        .error(R.drawable.meigui)
+                        .fallback(R.drawable.meigui)
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                land.setImageResource(R.drawable.land);
+                UserCropItem crop=cropList.get(i);
+                if (crop!=null){
+                    plant.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.VISIBLE);
+                    progressNum.setVisibility(View.VISIBLE);
+                    //展示植物不同阶段
+                    final double status = (crop.getProgress()+0.0) / crop.getCrop().getMatureTime();
+                    if(status <0.2){
+                        plant.setTranslationY(40);
+                        plant.setImageResource(R.drawable.seed);
+                    }else if (status<0.3){
+                        Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
+                    }else if (status<0.6){
+                        Glide.with(this).load(crop.getCrop().getImg2()).apply(requestOptions).into(plant);
+                    }else if (status<1){
+                        Glide.with(this).load(crop.getCrop().getImg3()).apply(requestOptions).into(plant);
+                    }else if (status==1){
+                        Glide.with(this).load(crop.getCrop().getImg4()).apply(requestOptions).into(plant);
+                    }
+                    //植物成长进度条
+                    progress.setMax(crop.getCrop().getMatureTime());
+                    progress.setProgress(crop.getProgress());
 
-        ImageView cancel = view.findViewById(R.id.cancel_return);
-        ImageView sure = view.findViewById(R.id.sure_return);
-        TextView warning = view.findViewById(R.id.waringText);
-        LinearLayout panduan = view.findViewById(R.id.panduan);
+                    //植物成长值
+                    progressNum.setText(crop.getProgress()+"/"+crop.getCrop().getMatureTime());
 
-        LinearLayout.LayoutParams params_cancel = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
-        params_cancel.setMargins(0,0,(int)(displayWidth*0.08),0);
-        cancel.setLayoutParams(params_cancel);
+                    if(crop.getStatus()==0){
+                        land.setImageResource(R.drawable.land_gan);
+                    }
+                    //浇水、施肥、收获
+                    final UserCropItem finalCrop = crop;
+                    land.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if (motionEvent.getAction()== MotionEvent.ACTION_DOWN) {
+                                if (isSelectLand(motionEvent.getX(),motionEvent.getY())) {
+                                    if(finalCrop.getStatus()==0){
+                                        land.setImageResource(R.drawable.land_gan_light);
+                                    }else
+                                        land.setImageResource(R.drawable.land_lights);
+                                    if(selected==0) {
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            if(finalCrop.getStatus()==0){
+                                                land.setImageResource(R.drawable.land_gan);
+                                            }else
+                                                land.setImageResource(R.drawable.land);
+                                        }
+                                        else{
+                                            Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
+                                            operating(0);//浇水
+                                        }
+                                    }else if(selected==-1){
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            if(finalCrop.getStatus()==0){
+                                                land.setImageResource(R.drawable.land_gan);
+                                            }else
+                                                land.setImageResource(R.drawable.land);
+                                        }else{
+                                            Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
+                                            operating(-1);//施肥
+                                        }
+                                    }else{
+                                        selectedPlant=finalI;
+                                        if(status==1) {
+                                            Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
+                                            operating(-2);//成熟
+                                        }
+                                        else {
+                                            Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
+                                            if(finalCrop.getStatus()==0){
+                                                land.setImageResource(R.drawable.land_gan);
+                                            }else
+                                                land.setImageResource(R.drawable.land);
+                                        }
+                                    }
+                                    waterMessagesHandler = new Handler() {
+                                        @Override
+                                        public void handleMessage(@NonNull Message msg) {
+                                            final String messages = (String) msg.obj;
+                                            Log.e("Watering", messages);
+                                            if (!messages.equals("Fail")) {
+                                                if (messages.equals("false")) {
+                                                    animation.setVisibility(View.VISIBLE);
+                                                    Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            animation.setVisibility(View.GONE);
+                                                        }
+                                                    },1000);
+                                                } else {
+                                                    //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
+                                                    animation.setVisibility(View.VISIBLE);
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            getCrop();
+                                                            getUserInfo();
+                                                            if(messages.equals("up")){
+                                                                upLevel();
+                                                            }
+                                                            animation.setVisibility(View.GONE);
+                                                        }
+                                                    },1000);
 
-        LinearLayout.LayoutParams params_sure = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
-        sure.setLayoutParams(params_sure);
+                                                }
+                                            } else {
+                                                animation.setVisibility(View.VISIBLE);
+                                                Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        animation.setVisibility(View.GONE);
+                                                    }
+                                                },1000);
+                                            }
+                                            if(finalCrop.getStatus()==0){
+                                                land.setImageResource(R.drawable.land_gan);
+                                            }else
+                                                land.setImageResource(R.drawable.land);
+                                        }
+                                    };
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                    });
+                }
 
-        warning.setTextSize((int)(displayWidth*0.012));
+            }
+            lands.addView(landGroup);
+        }
 
-        LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params_layout.setMargins(0,(int)(displayHeight*0.12),0,0);
-        panduan.setLayoutParams(params_layout);
     }
-
+    /**
+     * @Author li
+     * @param x 横坐标
+     * @param y 纵坐标
+     * @return boolean
+     * @Description 判断是否选中该块土地(即点击的区域是否在菱形区域内)
+     * @Date 12:19 2020/3/19
+     **/
+    public boolean isSelectLand(float x,float y){
+        float rx = (x-LAND_WIDTH_2)*LAND_HEIGHT_2;
+        float ry = (LAND_HEIGHT_2-y)*LAND_WIDTH_2;
+        if((Math.abs(rx)+Math.abs(ry))<=(LAND_WIDTH_2*2*LAND_HEIGHT_2*2/4)){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * 询问扩建
      * @param position
@@ -1349,6 +975,184 @@ public class MainActivity extends AppCompatActivity {
         Window dialogWindow = ifExtention.getWindow();
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
+    /**
+     * @Description 扩建土地
+     * @Auther 孙建旺
+     * @Date 下午 2:39 2019/12/10
+     * @Param []
+     * @return void
+     */
+    private void ExtensionLand(final int position, final int money){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                FormBody formBody = new FormBody.Builder()
+                        .add("userId",LoginActivity.user.getId()+"")
+                        .add("landNumber","land"+position)
+                        .add("needMoney",money+"").build();
+                Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/extensionLand").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        UpdataLands.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String callBackMessage = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = callBackMessage;
+                        UpdataLands.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+    /**
+     * @Description 更新土地状态
+     * @Auther 孙建旺
+     * @Date 下午 2:54 2019/12/10
+     * @Param []
+     * @return void
+     */
+    private void UpdateLand(final int position){
+        UpdataLands = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+                if(message.equals("true")){
+//                    LoginActivity.user.setLandStauts(position,0);
+                    int newMoney = LoginActivity.user.getMoney() - ExtensionLandMoney;
+                    LoginActivity.user.setMoney(newMoney);
+                    money.setText("金币:"+newMoney+"");
+                    ifExtention.dismiss();
+//                    showLand();
+                    getCrop();
+                }else if(message.equals("false")){
+                    Toast toast = Toast.makeText(MainActivity.this,"没有扩建成功哦！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }else if(message.equals("notEnoughMoney")){
+                    Toast toast = Toast.makeText(MainActivity.this,"你的钱不够了哦！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }else {
+                    Toast toast = Toast.makeText(MainActivity.this,"没有找到你的土地哦！",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
+    }
+
+
+
+    /**
+     * 种植作物
+     * @param gridView
+     */
+    private void planting(final GridView gridView) {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                if(selectLand!=0){
+                    plant(selectLand,dataList.get(i).getCrop().getId());
+                    plantMessagesHandler=new Handler(){
+                        @Override
+                        public void handleMessage(@NonNull Message msg) {
+                            super.handleMessage(msg);
+                            String messages = (String)msg.obj;
+                            Log.e("种植",messages);
+                            if(messages.equals("Fail")){
+                                Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
+                            }else if (messages.equals("true")){
+                                Toast.makeText(MainActivity.this,"操作成功！",Toast.LENGTH_SHORT).show();
+                                getUserInfo();
+                            }else
+                                Toast.makeText(MainActivity.this,"操作失败！",Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                }
+            }
+        });
+        bagDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                getCrop();
+//                showLand();
+            }
+        });
+    }
+
+    /**
+     * 请求种植
+     * @param selectLand
+     * @param id
+     */
+    private void plant(final int selectLand, final int id) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/raiseCrop?userId="+LoginActivity.user.getId()+"&cropId="+id+"&landNumber=land"+selectLand).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        plantMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        plantMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    /**
+     * 浇水、施肥、收获操作
+     */
+    private void operating(final int operating) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request=null;
+                if(operating==0)
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/waterCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
+                else if(operating==-1){
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/fertilizerCrop?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
+                }else{
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/harvest?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
+                }
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj ="Fail";
+                        waterMessagesHandler.sendMessage(message);
+                    }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.obj =response.body().string();
+                        waterMessagesHandler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
+
+
 
     /**
      * @Description 背包弹出框
@@ -1408,72 +1212,292 @@ public class MainActivity extends AppCompatActivity {
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
         planting(gridView);
     }
-
     /**
-     * 种植作物
-     * @param gridView
+     * @Description 获取背包信息数据
+     * @Auther 孙建旺
+     * @Date 下午 2:38 2019/12/08
+     * @Param []
+     * @return void
      */
-    private void planting(final GridView gridView) {
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                if(selectLand!=0){
-                    plant(selectLand,dataList.get(i).getCrop().getId());
-                    plantMessagesHandler=new Handler(){
-                        @Override
-                        public void handleMessage(@NonNull Message msg) {
-                            super.handleMessage(msg);
-                            String messages = (String)msg.obj;
-                            Log.e("种植",messages);
-                            if(messages.equals("Fail")){
-                                Toast.makeText(MainActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
-                            }else if (messages.equals("true")){
-                                Toast.makeText(MainActivity.this,"操作成功！",Toast.LENGTH_SHORT).show();
-                                getUserInfo();
-                            }else
-                                Toast.makeText(MainActivity.this,"操作失败！",Toast.LENGTH_SHORT).show();
-                        }
-                    };
-                }
-            }
-        });
-        bagDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                getCrop();
-                showLand();
-            }
-        });
-    }
-
-    /**
-     * 请求种植
-     * @param selectLand
-     * @param id
-     */
-    private void plant(final int selectLand, final int id) {
+    private void getBagMessages(){
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/raiseCrop?userId="+LoginActivity.user.getId()+"&cropId="+id+"&landNumber=land"+selectLand).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/bag/initUserBag?userId="+LoginActivity.user.getId()).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Message message = Message.obtain();
                         message.obj ="Fail";
-                        plantMessagesHandler.sendMessage(message);
+                        bagMessagesHandler.sendMessage(message);
                     }
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         Message message = Message.obtain();
                         message.obj =response.body().string();
-                        plantMessagesHandler.sendMessage(message);
+                        bagMessagesHandler.sendMessage(message);
                     }
                 });
             }
         }.start();
+    }
+
+
+
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 添加监听器
+     * @Date 17:50 2020/4/24
+     **/
+    private void addListener() {
+        learn.setOnClickListener(new MainListener());
+        water.setOnClickListener(new MainListener());
+        fertilizer.setOnClickListener(new MainListener());
+        bag.setOnClickListener(new MainListener());
+        shop.setOnClickListener(new MainListener());
+        pet.setOnClickListener(new MainListener());
+        setting.setOnClickListener(new MainListener());
+        harvest.setOnClickListener(new MainListener());
+        myFriends.setOnClickListener(new MainListener());
+        notify.setOnClickListener(new MainListener());
+        photo.setOnClickListener(new MainListener());
+        dayTask.setOnClickListener(new MainListener());
+    }
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 获取控件
+     * @Date 17:55 2020/4/24
+     **/
+    private void getViews() {
+        learn=findViewById(R.id.learn);
+        water=findViewById(R.id.water);
+        waterCount=findViewById(R.id.waterCount);
+        fertilizer=findViewById(R.id.fertilizer);
+        fertilizerCount=findViewById(R.id.fertilizerCount);
+        bag=findViewById(R.id.bag);
+        shop=findViewById(R.id.shop);
+        pet=findViewById(R.id.pet);
+        TextView tv=findViewById(R.id.pett);
+        tv.setVisibility(View.GONE);
+        pet.setVisibility(View.GONE);
+        setting=findViewById(R.id.setting);
+        photo=findViewById(R.id.photo);
+        nickName=findViewById(R.id.nickName);
+        level=findViewById(R.id.level);
+        money=findViewById(R.id.money);
+        account=findViewById(R.id.account);
+        lands=findViewById(R.id.lands);
+        experience=findViewById(R.id.experience);
+        experienceValue=findViewById(R.id.experienceValue);
+        xzw=findViewById(R.id.xzw);
+        xzf=findViewById(R.id.xzf);
+        xzs=findViewById(R.id.xzs);
+        harvest=findViewById(R.id.harvest);
+        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzw);
+        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzf);
+        Glide.with(this).asGif().load(R.drawable.xuanzhong4).into(xzs);
+        myFriends=findViewById(R.id.friends);
+        notify = findViewById(R.id.notify_img);
+        notify_list_view = findViewById(R.id.notify_list_view);
+        dayTask=findViewById(R.id.task);
+    }
+    /**
+     * @Author li
+     * @return null
+     * @Description 监听器类
+     * @Date 17:56 2020/4/24
+     **/
+    class MainListener implements View.OnClickListener {
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.learn:
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, SubjectListActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.water:
+                    selected=0;
+                    xzw.setVisibility(View.VISIBLE);
+                    xzf.setVisibility(View.GONE);
+                    xzs.setVisibility(View.GONE);
+                    break;
+                case R.id.fertilizer:
+                    selected=-1;
+                    xzw.setVisibility(View.GONE);
+                    xzf.setVisibility(View.VISIBLE);
+                    xzs.setVisibility(View.GONE);
+                    break;
+                case R.id.harvest:
+                    selected=-2;
+                    xzw.setVisibility(View.GONE);
+                    xzf.setVisibility(View.GONE);
+                    xzs.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.bag:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    showBagMessages();
+                    break;
+                case R.id.shop:
+                    intent = new Intent();
+                    intent.setClass(MainActivity.this, ShopActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.pet:
+                    break;
+                case R.id.setting:
+                    intent = new Intent();
+                    intent.setClass(MainActivity.this, SettingActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.friends:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    showFriends();
+                    break;
+                case R.id.pre:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    if (searchSelectedItem==0)
+                        getFriendsInfo(friendsPage.getPrePageNum());
+                    else
+                        getAllInfo(friendsPage.getPrePageNum());
+                    break;
+                case R.id.next:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    if (searchSelectedItem==0)
+                        getFriendsInfo(friendsPage.getNextPageNum());
+                    else
+                        getAllInfo(friendsPage.getNextPageNum());
+                    break;
+                case R.id.search:
+                    if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                        return;
+                    }
+                    lastClickTime = System.currentTimeMillis();
+                    Log.e("searchSelectedItem",searchSelectedItem+"");
+                    if (searchSelectedItem==0)
+                        findFriendInfo(searchAccount.getText().toString());
+                    else
+                        findPeopleByAccount(searchAccount.getText().toString());
+                    break;
+                case R.id.notify_img:
+                    intent = new Intent();
+                    intent.setClass(MainActivity.this, NotifyActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.notify_pop_in,0);
+                    break;
+                case R.id.photo:
+                    intent = new Intent();
+                    intent.setClass(MainActivity.this, SettingActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0,0);
+                    break;
+                case R.id.task:
+                    showDayTaskWindow();
+                    break;
+            }
+        }
+    }
+    /**
+     * @Description 设置弹窗控件大小
+     * @Auther 孙建旺
+     * @Date 下午 4:13 2019/12/18
+     * @Param [view]
+     * @return void
+     */
+    private void setDialogSize(View view){
+//        获取屏幕显示区域尺寸
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+
+        ImageView cancel = view.findViewById(R.id.cancel_return);
+        ImageView sure = view.findViewById(R.id.sure_return);
+        TextView warning = view.findViewById(R.id.waringText);
+        LinearLayout panduan = view.findViewById(R.id.panduan);
+
+        LinearLayout.LayoutParams params_cancel = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
+        params_cancel.setMargins(0,0,(int)(displayWidth*0.08),0);
+        cancel.setLayoutParams(params_cancel);
+
+        LinearLayout.LayoutParams params_sure = new LinearLayout.LayoutParams((int)(displayWidth*0.065),(int)(displayWidth*0.065));
+        sure.setLayoutParams(params_sure);
+
+        warning.setTextSize((int)(displayWidth*0.012));
+
+        LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params_layout.setMargins(0,(int)(displayHeight*0.12),0,0);
+        panduan.setLayoutParams(params_layout);
+    }
+    /**
+     * @Description 设置好友弹出框屏幕适配
+     * @Auther 孙建旺
+     * @Date 上午 9:00 2019/12/18
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setFriendSize(View view) {
+        LinearLayout layout_search = view.findViewById(R.id.layout_search);
+        Button search=view.findViewById(R.id.search);
+        ImageView pre = view.findViewById(R.id.pre);
+        ImageView next = view.findViewById(R.id.next);
+        TextView now = view.findViewById(R.id.now);
+
+        LinearLayout.LayoutParams params_search = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.08));
+        params_search.gravity = Gravity.CENTER_HORIZONTAL;
+        layout_search.setLayoutParams(params_search);
+
+        LinearLayout.LayoutParams params_edit = new LinearLayout.LayoutParams((int)(displayWidth*0.24),(int)(displayHeight*0.1));
+        params_edit.gravity = Gravity.CENTER;
+        searchAccount.setLayoutParams(params_edit);
+        searchAccount.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+        searchAccount.setHintTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+        searchAccount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params_button = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.07));
+        params_button.gravity = Gravity.CENTER;
+        search.setLayoutParams(params_button);
+        search.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+        search.setTextSize((int)(displayHeight*0.02));
+        search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.06));
+        params_select.setMargins((int)(displayWidth*0.02),0,0,0);
+        searchSelected.setLayoutParams(params_select);
+
+        LinearLayout.LayoutParams params_listview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.6));
+        params_listview.gravity = Gravity.CENTER_HORIZONTAL;
+        params_listview.setMargins(0,(int)(displayHeight*0.018),0,(int)(displayHeight*0.018));
+        friendsListView.setLayoutParams(params_listview);
+        friendsListView.setDividerHeight((int)(displayHeight*0.015));
+
+        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
+        pre.setLayoutParams(params_pre);
+        next.setLayoutParams(params_pre);
+        now.setLayoutParams(params_pre);
+        now.setTextSize((int)(displayHeight*0.02));
     }
 
     //退出时的时间
@@ -1499,7 +1523,6 @@ public class MainActivity extends AppCompatActivity {
             System.exit(0);
         }
     }
-
 
     protected void setStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -128,17 +128,8 @@ public class DayTaskPopUpWindow extends PopupWindow {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
-//                Task myTask = gson.fromJson(message,Task.class);
-                Task task1 = new Task();
-                task1.setSignIn(0);
-                task1.setCrop(0);
-                task1.setFertilize(0);
-                task1.setHarvest(0);
-                task1.setHelpFertilize(0);
-                task1.setHelpWater(2);
-                task1.setWater(0);
-//                initTask(myTask);
-                initTask(task1);
+                Task myTask = gson.fromJson(message,Task.class);
+                initTask(myTask);
                 task.setAdapter(new DayTaskAdapter(context,R.layout.daytask_item_layout,tasks));
             }
         };

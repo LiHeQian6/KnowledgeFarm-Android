@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.TaskItem;
@@ -95,8 +96,10 @@ class DayTaskAdapter extends BaseAdapter {
             viewHolder.todo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    EventBean event = new EventBean();
-                    event.setMessage("close");
+                    DoTaskBean event = new DoTaskBean();
+                    if (taskItem.getType().substring(0,4).equals("help")) {
+                        event.setToFriend(true);
+                    }
                     EventBus.getDefault().post(event);
                 }
             });
@@ -193,8 +196,10 @@ class DayTaskAdapter extends BaseAdapter {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
-//                Task myTask = gson.fromJson(message,Task.class);
-                
+                if (message.equals("true")){
+                    Toast.makeText(context,"领取成功！",Toast.LENGTH_SHORT).show();
+                }else
+                    Toast.makeText(context,"领取成功！",Toast.LENGTH_SHORT).show();
             }
         };
     }

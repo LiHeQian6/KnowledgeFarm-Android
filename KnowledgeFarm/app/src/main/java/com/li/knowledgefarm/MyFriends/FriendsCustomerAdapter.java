@@ -21,7 +21,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.User;
 
 import org.greenrobot.eventbus.EventBus;
@@ -104,12 +103,12 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         viewHolder.name.setTextSize(14);
         viewHolder.level.setTextSize(10);
         viewHolder.account.setTextSize(8);
-        viewHolder.account.setText("账号:"+dataList.get(position).getAccout());
+        viewHolder.account.setText("账号:"+dataList.get(position).getAccount());
         viewHolder.level.setText("lv:"+dataList.get(position).getLevel());
         viewHolder.go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!dataList.get(position).getAccout().equals(LoginActivity.user.getAccout())) {
+                if(!dataList.get(position).getAccount().equals(LoginActivity.user.getAccount())) {
                     Intent go = new Intent(context, MyFriendActivity.class);
                     go.putExtra("friend", (Serializable) dataList.get(position));
                     context.startActivity(go);
@@ -125,7 +124,7 @@ public class FriendsCustomerAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     HashMap<Object, Object> event = new HashMap<>();
-                    event.put(dataList.get(position).getAccout(),false);
+                    event.put(dataList.get(position).getAccount(),false);
                     EventBus.getDefault().post(event);
                 }
             });
@@ -135,7 +134,7 @@ public class FriendsCustomerAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     HashMap<Object, Object> event = new HashMap<>();
-                    event.put(dataList.get(position).getAccout(),true);
+                    event.put(dataList.get(position).getAccount(),true);
                     EventBus.getDefault().post(event);
                 }
             });

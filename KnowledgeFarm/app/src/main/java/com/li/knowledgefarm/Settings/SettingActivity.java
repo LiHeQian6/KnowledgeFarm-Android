@@ -123,10 +123,10 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
-                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"已绑定QQ");
+                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccount()+"已绑定QQ");
                             break;
                         case "false":
-                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定QQ");
+                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccount()+"还未绑定QQ");
                             break;
                     }
                     break;
@@ -135,7 +135,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
-                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"已绑定QQ");
+                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccount()+"已绑定QQ");
                             /** 存入SharedPreferences*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -159,7 +159,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.VISIBLE);
                             btnUnBindingQQ.setVisibility(View.GONE);
-                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定QQ");
+                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccount()+"还未绑定QQ");
                             mTencent.logout(getApplicationContext());
                             /** 删除SharedPreferences内Token信息*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
@@ -179,7 +179,7 @@ public class SettingActivity extends AppCompatActivity {
                             LoginActivity.user.setEmail("");
                             btnBindingEmail.setVisibility(View.VISIBLE);
                             btnUnBindingEmail.setVisibility(View.GONE);
-                            tv_email.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定邮箱");
+                            tv_email.setText("您的账号"+LoginActivity.user.getAccount()+"还未绑定邮箱");
                             Toast.makeText(getApplicationContext(),"解绑邮箱成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
@@ -400,7 +400,7 @@ public class SettingActivity extends AppCompatActivity {
                 }
                 RequestBody requestBody = RequestBody.create(photo,mimeType);
                 RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("accout",LoginActivity.user.getAccout())
+                        .addFormDataPart("accout",LoginActivity.user.getAccount())
                         .addFormDataPart("photo", URLEncoder.encode(LoginActivity.user.getPhoto()))
                         .addFormDataPart("photoName",LoginActivity.user.getPhotoName())
                         .addFormDataPart("file",photo.getName(),requestBody)
@@ -430,7 +430,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).build();
+                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/isBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -456,9 +456,9 @@ public class SettingActivity extends AppCompatActivity {
         if(!LoginActivity.user.getEmail().equals("")){
             btnBindingEmail.setVisibility(View.GONE);
             btnUnBindingEmail.setVisibility(View.VISIBLE);
-            tv_email.setText("您的账号"+LoginActivity.user.getAccout()+"已绑定邮箱：" + LoginActivity.user.getEmail());
+            tv_email.setText("您的账号"+LoginActivity.user.getAccount()+"已绑定邮箱：" + LoginActivity.user.getEmail());
         }else{
-            tv_email.setText("您的账号"+LoginActivity.user.getAccout()+"还未绑定邮箱");
+            tv_email.setText("您的账号"+LoginActivity.user.getAccount()+"还未绑定邮箱");
         }
     }
 
@@ -543,7 +543,7 @@ public class SettingActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).add("openId",openId).build();
+                            FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).add("openId",openId).build();
                             final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -633,7 +633,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).build();
+                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -682,7 +682,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccout()).build();
+                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {

@@ -1,19 +1,17 @@
 package com.li.knowledgefarm.entity;
 
-import com.li.knowledgefarm.entity.Crop;
-
 public class UserCropItem {
 	private int userCropId;
 	private Crop crop;
 	private int progress;
-	private int state;
+	private int status;
 
-	public int getState() {
-		return state;
+	public int getStatus() {
+		return status;
 	}
 
-	public void setState(int state) {
-		this.state = state;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public int getUserCropId() {

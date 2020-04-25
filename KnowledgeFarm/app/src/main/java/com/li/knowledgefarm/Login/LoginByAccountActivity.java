@@ -113,7 +113,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     user = (User) msg.obj;
                     SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("account",user.getAccout());
+                    editor.putString("account",user.getAccount());
 
                     if(tagPwd){
                         editor.putString("password",pwd.getText().toString());
@@ -173,7 +173,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         titleImage = findViewById(R.id.titleImage);
         rememberPwd = findViewById(R.id.rememberPwd);
         returnImg = findViewById(R.id.loginByAccountReturn);
-        edtCount = findViewById(R.id.accout);
+        edtCount = findViewById(R.id.account);
         pwd = findViewById(R.id.pwd);
         eventBus = EventBus.getDefault();
         if(!eventBus.isRegistered(this)){
@@ -275,7 +275,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
     private void loginByAccount(String accountStr, String pwdStr) {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
-                .add("accout", accountStr)
+                .add("account", accountStr)
                 .add("password", stringMD5(pwdStr))
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByAccount").build();
@@ -343,7 +343,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         LinearLayout.LayoutParams param_layout_input = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)(displayHeight*0.25));
         layout_input.setLayoutParams(param_layout_input);
 
-        EditText account = findViewById(R.id.accout);
+        EditText account = findViewById(R.id.account);
         EditText pwd = findViewById(R.id.pwd);
         account.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.012));
         pwd.setTextSize(TypedValue.COMPLEX_UNIT_SP,(int)(displayWidth*0.012));

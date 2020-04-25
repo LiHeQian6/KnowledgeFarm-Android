@@ -4,10 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.os.AsyncTask;
@@ -199,7 +197,7 @@ public class BindingEmailActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccout()).add("email", edtEmail.getText().toString().trim()).build();
+                FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccount()).add("email", edtEmail.getText().toString().trim()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
