@@ -40,6 +40,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.English;
 
 import org.jetbrains.annotations.NotNull;
@@ -90,7 +91,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         setViewSize();
         /** 注册点击事件监听器*/
         registListener();
-        StudyUtil.setStatusBar(this);
+        FullScreen.NavigationBarStatusBar(EnglishActivity.this,true);
         datalist = (List<English>) getIntent().getSerializableExtra("english");
         showQuestion(position);
     }

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -95,8 +96,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
         tv_save = findViewById(R.id.tv_save);
         okHttpClient = new OkHttpClient();
 
-        /** 关闭状态栏*/
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(UpdatePasswordActivity.this,true);
     }
 
     /**
@@ -148,17 +148,6 @@ public class UpdatePasswordActivity extends AppCompatActivity {
         message.what = what;
         message.obj = obj;
         handler.sendMessage(message);
-    }
-
-    /**
-     * 关闭状态栏
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
     }
 
     //MD5加密

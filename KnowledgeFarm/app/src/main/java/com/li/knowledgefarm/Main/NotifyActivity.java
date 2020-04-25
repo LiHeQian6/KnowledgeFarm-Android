@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
@@ -66,7 +67,7 @@ public class NotifyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notify_layout);
         getViews();
         registListener();
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(NotifyActivity.this,true);
         getNotify("2",1,6);
     }
 

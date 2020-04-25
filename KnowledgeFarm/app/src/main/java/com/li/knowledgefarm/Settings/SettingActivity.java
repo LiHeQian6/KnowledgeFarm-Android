@@ -41,6 +41,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
@@ -325,7 +326,7 @@ public class SettingActivity extends AppCompatActivity {
         Glide.with(getApplicationContext()).load(LoginActivity.user.getPhoto()).apply(options).into(iv_photo);
 
         /** 关闭状态栏*/
-        setStatusBar();
+        FullScreen.NavigationBarStatusBar(SettingActivity.this,true);
     }
 
     /**
@@ -728,17 +729,6 @@ public class SettingActivity extends AppCompatActivity {
         message.what = what;
         message.obj = obj;
         handler.sendMessage(message);
-    }
-
-    /**
-     * 关闭状态栏
-     */
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
     }
 
     /**
