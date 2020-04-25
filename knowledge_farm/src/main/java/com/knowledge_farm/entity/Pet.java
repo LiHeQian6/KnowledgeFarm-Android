@@ -1,7 +1,6 @@
 package com.knowledge_farm.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @program: knowledge_farm
@@ -30,6 +29,8 @@ public class Pet {
         this.growPeriod = 0;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
