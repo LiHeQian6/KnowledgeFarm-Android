@@ -227,8 +227,8 @@ public class User {
         this.userBags = userBags;
     }
 
-    @OneToOne(mappedBy = "user")
-    @org.hibernate.annotations.ForeignKey(name = "none")
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "task_id",foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnore
     public Task getTask() {
         return task;

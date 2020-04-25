@@ -63,7 +63,7 @@ spring:
     hibernate:
       use-new-id-generator-mappings: false
     #若由实体Bean自动创建表，则ddl-auto设置为always，如果由脚本创建表，则设置为none
-#      ddl-auto: update
+      ddl-auto: update
     show-sql: true
     open-in-view: true
     properties:
