@@ -111,6 +111,24 @@ public class UserController {
             return Result.FAIL;
         }
     }
+    @RequestMapping("/addQQUser2")
+    public Object addQQUser2(){
+        try {
+            Object obj = this.userService.addQQUser("1", "12345", "1", 1, "1", "1");
+//            if(obj instanceof User){
+//                User user = (User) obj;
+//                user.setPassword("");
+//                if(!(user.getPhoto().substring(0,4)).equals("http")){
+//                    user.setPhoto(this.photoUrl + user.getPhoto());
+//                }
+//                return user;
+//            }
+            return obj;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
 
     /**
      * @Author 张帅华
@@ -147,6 +165,24 @@ public class UserController {
                                 @RequestParam("password") String password){
         try {
             Object obj = this.userService.registAccount(nickName, grade, email, password);
+//            if(obj instanceof User){
+//                User user = (User) obj;
+//                user.setPassword("");
+//                if(!(user.getPhoto().substring(0,4)).equals("http")){
+//                    user.setPhoto(this.photoUrl + user.getPhoto());
+//                }
+//                return user;
+//            }
+            return obj;
+        } catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
+    @RequestMapping("/registAccount2")
+    public Object registAccount2(){
+        try {
+            Object obj = this.userService.registAccount("2", 2, "2", "2");
 //            if(obj instanceof User){
 //                User user = (User) obj;
 //                user.setPassword("");

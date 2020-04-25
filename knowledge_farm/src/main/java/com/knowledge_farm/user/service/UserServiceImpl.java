@@ -101,6 +101,7 @@ public class UserServiceImpl {
         user.setPhoto(photo);
         user.setEmail(email);
         user.setGrade(grade);
+        user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建UserAuthority
         UserAuthority userAuthority = new UserAuthority();
         userAuthority.setOpenId(openId);
@@ -172,6 +173,7 @@ public class UserServiceImpl {
         user.setPhoto(this.userPhotoFolderName + "/" + this.userDefaultFileName);
         user.setEmail(email);
         user.setGrade(grade);
+        user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建Land
         Land land = new Land();
         //构建UserCrop
