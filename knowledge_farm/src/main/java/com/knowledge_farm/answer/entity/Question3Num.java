@@ -1,4 +1,4 @@
-package com.knowledge_farm.anwser.entity;
+package com.knowledge_farm.answer.entity;
 
 public class Question3Num {
 	private int num1;

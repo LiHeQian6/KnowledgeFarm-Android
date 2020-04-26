@@ -3,8 +3,13 @@ package com.knowledge_farm.user_bag.controller;
 import com.knowledge_farm.entity.BagCropItem;
 import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +23,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-10 13:48
  */
+@Api(description = "前台背包接口")
 @RestController
 @RequestMapping("/bag")
 public class UserBagController {
@@ -33,7 +39,11 @@ public class UserBagController {
      * @Param [userId]
      * @return java.util.List<com.atguigu.farm.entity.BagCropItem>
      **/
-    @RequestMapping("/initUserBag")
+    @ApiOperation(value = "查询用户背包中所有作物", notes = "返回值：List（BagCropItem）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true)
+    })
+    @GetMapping("/initUserBag")
     public List<BagCropItem> initUserBag(@RequestParam("userId") Integer userId){
         List<BagCropItem> bagCropItems = this.userBagService.initUserBag(userId);
 //        for(BagCropItem item : bagCropItems){

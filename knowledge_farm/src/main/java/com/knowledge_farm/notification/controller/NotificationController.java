@@ -24,7 +24,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-21 16:46
  */
-@Api(description = "通知接口")
+@Api(description = "前台通知接口")
 @RestController
 @RequestMapping("/notification")
 public class NotificationController {
@@ -33,12 +33,12 @@ public class NotificationController {
     @Value("${file.photoUrl}")
     private String photoUrl;
 
-    @ApiOperation(value = "根据通知类型查询接收到的消息")
+    @ApiOperation(value = "根据通知类型查询接收到的消息", notes = "返回值：Page（Notification）")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "typeId", value = "通知类型", dataType = "int", paramType = "form", required = true),
-            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", required = false),
-            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", required = false)
+            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", defaultValue = "1"),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", defaultValue = "4")
     })
     @PostMapping("/findReceivedNotificationByType")
     public PageUtil<Notification> findReceivedNotificationByType(@RequestParam("userId") Integer userId,
@@ -64,12 +64,12 @@ public class NotificationController {
         return pageUtil;
     }
 
-    @ApiOperation(value = "根据通知类型查询已发送的消息")
+    @ApiOperation(value = "根据通知类型查询已发送的消息", notes = "返回值：Page（Notification）")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "typeId", value = "通知类型", dataType = "int", paramType = "form", required = true),
-            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", required = false),
-            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", required = false)
+            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", defaultValue = "1"),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", defaultValue = "4")
     })
     @PostMapping("/findSendNotificationByType")
     public PageUtil<Notification> findSendNotificationByType(@RequestParam("userId") Integer userId,
@@ -95,10 +95,10 @@ public class NotificationController {
         return pageUtil;
     }
 
-    @ApiOperation(value = "添加加好友的消息记录")
+    @ApiOperation(value = "添加加好友的消息记录", notes = "返回值：(String)true：成功 || (String)false；失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "发起加好友的用户id", dataType = "int", paramType = "form", required = true),
-            @ApiImplicitParam(name = "account", value = "被加好友的用户账号", dataType = "String", paramType = "form", required = true)
+            @ApiImplicitParam(name = "userId", value = "发起加好友的用户id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "account", value = "被加好友的用户账号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/addUserFriendNotification")
     public String addUserFriendNotification(@RequestParam("userId") Integer userId,
@@ -113,9 +113,9 @@ public class NotificationController {
         }
     }
 
-    @ApiOperation(value = "删除消息记录")
+    @ApiOperation(value = "删除消息记录", notes = "返回值：(String)true：成功 || (String)false；失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "消息记录的id", dataType = "int", paramType = "form", required = true)
+            @ApiImplicitParam(name = "id", value = "消息记录的id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/deleteNotification")
     public String deleteNotification(@RequestParam("id") Integer notificationId){
@@ -128,9 +128,9 @@ public class NotificationController {
         }
     }
 
-    @ApiOperation(value = "修改记录变为已读状态")
+    @ApiOperation(value = "修改消息变为已读状态", notes = "返回值：(String)true：成功 || (String)false；失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "ids", value = "消息记录的id字符串(若有多个id，用逗号分隔开)", dataType = "string", paramType = "form", required = true)
+            @ApiImplicitParam(name = "ids", value = "消息记录的id字符串(若有多个id，用逗号分隔开)", dataType = "string", paramType = "query", required = true)
     })
     @GetMapping("/editNotificationReadStatus")
     public String editNotificationReadStatus(@RequestParam("ids") String notificationIds){

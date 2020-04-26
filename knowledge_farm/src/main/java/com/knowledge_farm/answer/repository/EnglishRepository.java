@@ -1,4 +1,4 @@
-package com.knowledge_farm.anwser.repository;
+package com.knowledge_farm.answer.repository;
 
 import com.knowledge_farm.entity.English;
 import org.springframework.data.domain.Page;
