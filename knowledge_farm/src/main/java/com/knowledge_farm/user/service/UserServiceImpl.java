@@ -505,6 +505,7 @@ public class UserServiceImpl {
                 UserBag userBag = new UserBag();
                 userBag.setCrop(crop);
                 userBag.setNumber(number);
+                userBag.setUser(user);
                 userBags.add(userBag);
             }
             user.setMoney(userMoney - needMoney);
@@ -533,7 +534,9 @@ public class UserServiceImpl {
                 number = userBag.getNumber();
                 userBag.setNumber(number - 1);
                 if((number - 1) <= 0){
+                    System.out.println("sss" + number);
                     userBags.remove(userBag);
+                    userBag.setUser(null);
                     this.userBagService.deleteById(userBag.getId());
                 }
                 break;

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @ClassName UserFriendServiceImpl
@@ -47,24 +48,27 @@ public class UserFriendServiceImpl {
     public void addUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
+
         UserFriend userFriend = new UserFriend();
         userFriend.setUser(user);
         userFriend.setFriendUser(friendUser);
+
         UserFriend userFriend1 = new UserFriend();
         userFriend1.setUser(friendUser);
         userFriend1.setFriendUser(user);
-        List<UserFriend> userFriends = new ArrayList<>();
-        userFriends.add(userFriend);
-        userFriends.add(userFriend1);
-        this.userFriendDao.saveAll(userFriends);
+
+        List<UserFriend> friends = new ArrayList<>();
+        friends.add(userFriend);
+        friends.add(userFriend1);
+        this.userFriendDao.saveAll(friends);
     }
 
     @Transactional(readOnly = false)
     public void deleteUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
-        List<UserFriend> userFriends = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
-        this.userFriendDao.deleteAll(userFriends);
+        List<UserFriend> userFriends2 = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
+        this.userFriendDao.deleteAll(userFriends2);
     }
 
     @Transactional(readOnly = false)
