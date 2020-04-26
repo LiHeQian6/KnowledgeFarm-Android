@@ -74,7 +74,7 @@ public class NotificationService {
         notification.setCreateTime(new Date());
         notification.setHaveRead(false);
         notification.setNotificationType(notificationType);
-//        this.notificationDao.save(notification);
+        this.notificationDao.save(notification);
         return notification;
     }
 

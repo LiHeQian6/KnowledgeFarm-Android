@@ -2,7 +2,7 @@ spring:
   #数据源
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/farm_db1?useSSL=false&useUnicode=true&characterEncoding=utf8
+#    url: jdbc:mysql://localhost:3306/farm_db1?useSSL=false&useUnicode=true&characterEncoding=utf8
     username: root
     #若由实体bean映射自动创建表，则initialization-mode设置为never
     #initialization-mode: always

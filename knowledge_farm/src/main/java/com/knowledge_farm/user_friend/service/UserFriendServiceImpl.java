@@ -1,5 +1,6 @@
 package com.knowledge_farm.user_friend.service;
 
+import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.*;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @ClassName UserFriendServiceImpl
@@ -47,26 +49,30 @@ public class UserFriendServiceImpl {
     public void addUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
+
         UserFriend userFriend = new UserFriend();
         userFriend.setUser(user);
         userFriend.setFriendUser(friendUser);
+
         UserFriend userFriend1 = new UserFriend();
         userFriend1.setUser(friendUser);
         userFriend1.setFriendUser(user);
-        List<UserFriend> userFriends = new ArrayList<>();
-        userFriends.add(userFriend);
-        userFriends.add(userFriend1);
-        this.userFriendDao.saveAll(userFriends);
+
+        List<UserFriend> friends = new ArrayList<>();
+        friends.add(userFriend);
+        friends.add(userFriend1);
+        this.userFriendDao.saveAll(friends);
     }
 
     @Transactional(readOnly = false)
     public void deleteUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
-        List<UserFriend> userFriends = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
-        this.userFriendDao.deleteAll(userFriends);
+        List<UserFriend> userFriends2 = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
+        this.userFriendDao.deleteAll(userFriends2);
     }
 
+    @Task(description = "help_water")
     @Transactional(readOnly = false)
     public int waterForFriend(Integer userId, Integer friendId, String landNumber){
         User user = this.userService.findUserById(userId);
@@ -101,6 +107,7 @@ public class UserFriendServiceImpl {
         return 0;
     }
 
+    @Task(description = "help_fertilize")
     @Transactional(readOnly = false)
     public String fertilizerForFriend(Integer userId, Integer friendId, String landNumber){
         User user = this.userService.findUserById(userId);

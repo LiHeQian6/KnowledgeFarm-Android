@@ -49,7 +49,7 @@
         <div class="page-content">
           <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
-            <form id="form1" class="layui-form" enctype="multipart/form-data" action="javascript:updateUser()">
+            <form id="form1" class="layui-form" enctype="multipart/form-data" action="javascript:updateUser()" method="post">
             	<input type="hidden" name="id" value="${user.id}"/>
                 <input type="hidden" name="oldAccount" value="${user.account}"/>
             	<input type="hidden" name="photo" value="${user.photo}"/>

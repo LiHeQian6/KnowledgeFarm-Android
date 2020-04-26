@@ -3,6 +3,7 @@ package com.knowledge_farm.aspect;
 import com.knowledge_farm.entity.Task;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.task.service.TaskService;
+import com.knowledge_farm.user.service.UserServiceImpl;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,6 +22,8 @@ public class TaskAspect {
     public  void taskAspect() {}
     @Resource
     private TaskService taskService;
+    @Resource
+    private UserServiceImpl userService;
 
     /**
      * @Author 景光赞
@@ -40,9 +43,8 @@ public class TaskAspect {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        User user = (User) args[0];
+        User user = userService.findUserById((Integer) args[0]);
         Task task = user.getTask();
-        System.out.println("1");
         if (description.equals("water")&&task.getWater()==0){
             taskService.finishTask(user,"water");
         }else if(description.equals("fertilize")&&task.getFertilize()==0){
@@ -56,7 +58,6 @@ public class TaskAspect {
         }else if(description.equals("help_fertilize")&&task.getHelpFertilize()==0){
             taskService.finishTask(user,"help_fertilize");
         }
-        System.out.println("2");
         System.out.println("*****Encode End*****");
         return result;
     }
