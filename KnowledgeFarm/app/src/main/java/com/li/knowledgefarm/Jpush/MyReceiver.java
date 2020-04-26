@@ -3,6 +3,10 @@ package com.li.knowledgefarm.Jpush;
 import android.content.Context;
 import android.util.Log;
 
+import com.li.knowledgefarm.entity.EventBean;
+
+import org.greenrobot.eventbus.EventBus;
+
 import cn.jpush.android.api.CustomMessage;
 import cn.jpush.android.service.JPushMessageReceiver;
 
@@ -22,5 +26,8 @@ public class MyReceiver extends JPushMessageReceiver {
         String extra = customMessage.extra;
         String type = customMessage.contentType;
         Log.e("自定义消息：",title+","+message+","+extra);
+        EventBean eventBean = new EventBean();
+        eventBean.setMessage(title);
+        EventBus.getDefault().post(eventBean);
     }
 }

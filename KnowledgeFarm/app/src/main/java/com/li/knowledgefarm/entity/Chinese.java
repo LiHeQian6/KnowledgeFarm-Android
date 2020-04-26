@@ -9,22 +9,23 @@ import java.io.Serializable;
  */
 
 public class Chinese implements Serializable {
-    private String quantify;
     private int id;
+    private String quantify;
     private String word;
     private String ifDone;
-    public void setQuantify(String quantify) {
-        this.quantify = quantify;
-    }
-    public String getQuantify() {
-        return quantify;
-    }
-
+    private String grade;
     public void setId(int id) {
         this.id = id;
     }
     public int getId() {
         return id;
+    }
+
+    public void setQuantify(String quantify) {
+        this.quantify = quantify;
+    }
+    public String getQuantify() {
+        return quantify;
     }
 
     public void setWord(String word) {
@@ -33,10 +34,18 @@ public class Chinese implements Serializable {
     public String getWord() {
         return word;
     }
+
+    public void setIfDone(String ifDone) {
+        this.ifDone = ifDone;
+    }
     public String getIfDone() {
         return ifDone;
     }
-    public void setIfDone(String ifDone) {
-        this.ifDone = ifDone;
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+    public String getGrade() {
+        return grade;
     }
 }

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -31,8 +32,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -40,7 +39,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,8 +48,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.MyFriends.FriendsCustomerAdapter;
-import com.li.knowledgefarm.MyFriends.FriendsDialog;
+import com.li.knowledgefarm.MyFriends.FriendsPopUpWindow;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
@@ -60,6 +57,7 @@ import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.DoTaskBean;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
@@ -100,12 +98,11 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar experience;
     private TextView experienceValue;
     private FrameLayout lands;
-    private Dialog bagDialog;
+    private BagPopUpWindow bagPopUpWindow;
     private Dialog ifExtention;
     private OkHttpClient okHttpClient;
     private Handler bagMessagesHandler;
     private Gson gson;
-    private List<BagCropNumber> dataList;
     private List<UserCropItem> cropList;
     private Handler UpdataLands;
     private Handler cropMessagesHandler;
@@ -129,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
     private Handler friendMessagesHandler;
     private ImageView dayTask;
     private DayTaskPopUpWindow dayTaskPopUpWindow;
+    private ImageView notify_red;
+    private ImageView daytask_red;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,12 +136,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
-        dataList = new ArrayList<>();
         ImageView dog = findViewById(R.id.dog);
         Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
         getViews();
         addListener();
         getCrop();
+        JPushInterface.setAlias(this,1, LoginActivity.user.getAccount());
     }
 
     @Override
@@ -197,10 +196,6 @@ public class MainActivity extends AppCompatActivity {
                             Message msg = new Message();
                             msg.obj = "true";
                             operatingHandleMessage.sendMessage(msg);
-                            if (bagDialog != null) {
-                                bagDialog.cancel();
-                                selectLand = 0;
-                            }
                         }
 
                     }
@@ -213,6 +208,10 @@ public class MainActivity extends AppCompatActivity {
                 String messages = (String) msg.obj;
                 Log.e("operating", messages);
                 if (!messages.equals("Fail")) {
+                    if (bagPopUpWindow != null) {
+                        bagPopUpWindow.dismiss();
+                        selectLand = 0;
+                    }
                     showUserInfo();
                 } else {
                     Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
@@ -299,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFriends() {
         myFriends.setVisibility(View.GONE);
-        FriendsDialog friendsDialog = new FriendsDialog(this);
+        FriendsPopUpWindow friendsPopUpWindow = new FriendsPopUpWindow(this);
         //获取屏幕显示区域尺寸
         WindowManager.LayoutParams attrs = getWindow().getAttributes();
         WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
@@ -310,10 +309,10 @@ public class MainActivity extends AppCompatActivity {
         attrs.gravity = Gravity.RIGHT;
         attrs.width = (int)(displayWidth*0.40);
         attrs.height = (int)(displayHeight*0.95);
-        friendsDialog.setHeight((int)(displayHeight*0.95));
-        friendsDialog.setWidth((int)(displayWidth*0.40));
-        friendsDialog.showAtLocation(myFriends,Gravity.RIGHT,0,0);
-        friendsDialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        friendsPopUpWindow.setHeight((int)(displayHeight*0.95));
+        friendsPopUpWindow.setWidth((int)(displayWidth*0.40));
+        friendsPopUpWindow.showAtLocation(myFriends,Gravity.RIGHT,0,0);
+        friendsPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
                 myFriends.setVisibility(View.VISIBLE);
@@ -394,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
                 super.run();
                 Request request = null;
                 if (option == 0)
-                    request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/addUserFriendNotification?userId=" + LoginActivity.user.getId() + "&account=" + num).build();
+                    request = new Request.Builder().url(getResources().getString(R.string.URL) + "/notification/addUserFriendNotification?userId=" + LoginActivity.user.getId() + "&account=" + num).build();
                 else if (option == 1) {
                     request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/deleteUserFriend?userId=" + LoginActivity.user.getId() + "&account=" + num).build();
                 }
@@ -424,6 +423,8 @@ public class MainActivity extends AppCompatActivity {
                 if (!messages.equals("Fail")) {
                     if (messages.equals("false")) {
                         Toast.makeText(MainActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(MainActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast toast = Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT);
@@ -872,12 +873,13 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param gridView
      */
-    private void planting(final GridView gridView) {
+    public void planting(final GridView gridView) {
+        bagPopUpWindow.getDataList();
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 if (selectLand != 0) {
-                    plant(selectLand, dataList.get(i).getCrop().getId());
+                    plant(selectLand, bagPopUpWindow.getDataList().get(i).getCrop().getId());
                     plantMessagesHandler = new Handler() {
                         @Override
                         public void handleMessage(@NonNull Message msg) {
@@ -896,13 +898,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        bagDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        bagPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
-            public void onCancel(DialogInterface dialogInterface) {
+            public void onDismiss() {
                 getCrop();
 //                showLand();
             }
         });
+//        {
+//            @Override
+//            public void onCancel(DialogInterface dialogInterface) {
+//
+//            }
+//        });
     }
 
     /**
@@ -982,91 +990,21 @@ public class MainActivity extends AppCompatActivity {
      * @Param [position]
      */
     private void showBagMessages() {
-        bagDialog = new Dialog(this, R.style.dialog_soft_input);
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.bag_girdview, null);
-        final GridView gridView = layout.findViewById(R.id.bag_grid_view);
-        //设置gridView大小及位置
-        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        bagPopUpWindow = new BagPopUpWindow(this);
+        WindowManager.LayoutParams attrs = getWindow().getAttributes();
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics ds = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
-        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int) (displayWidth * 0.3), (int) (displayHeight * 0.8));
-        params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
-        params_gridview.setMargins((int) (displayWidth * 0.005), (int) (displayHeight * 0.08), 0, 0);
-        gridView.setColumnWidth((int) (displayWidth * 0.2));
-        gridView.setLayoutParams(params_gridview);
-        gridView.setVerticalSpacing((int) (displayHeight * 0.02));
-        //添加layout布局文件
-        bagDialog.setContentView(layout);
-        bagDialog.show();
-        getBagMessages();
-        bagMessagesHandler = new Handler() {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String messages = (String) msg.obj;
-                Log.e("背包", messages);
-                if (!messages.equals("Fail")) {
-                    Type type = new TypeToken<List<BagCropNumber>>() {
-                    }.getType();
-                    dataList = gson.fromJson(messages, type);
-                    BagCustomerAdapter customerAdapter = new BagCustomerAdapter(bagDialog.getContext(), dataList, R.layout.gird_adapteritem);
-                    gridView.setAdapter(customerAdapter);
-                } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "获取数据失败！", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
-        WindowManager.LayoutParams attrs = bagDialog.getWindow().getAttributes();
-        if (bagDialog.getWindow() != null) {
-            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            bagDialog.getWindow().setDimAmount(0f);//去除遮罩
-        }
         attrs.gravity = Gravity.RIGHT;
         attrs.width = (int) (displayWidth * 0.40);
         attrs.height = (int) (displayHeight * 0.95);
-        bagDialog.getWindow().setAttributes(attrs);
-        Window dialogWindow = bagDialog.getWindow();
-        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-        planting(gridView);
+        bagPopUpWindow.setWidth(attrs.width);
+        bagPopUpWindow.setHeight(attrs.height);
+        bagPopUpWindow.showAtLocation(bag,Gravity.RIGHT,0,0);
+        planting(bagPopUpWindow.getGridView());
     }
-
-    /**
-     * @return void
-     * @Description 获取背包信息数据
-     * @Auther 孙建旺
-     * @Date 下午 2:38 2019/12/08
-     * @Param []
-     */
-    private void getBagMessages() {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL) + "/bag/initUserBag?userId=" + LoginActivity.user.getId()).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        bagMessagesHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj = response.body().string();
-                        bagMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }
-
 
     /**
      * @param
@@ -1129,7 +1067,20 @@ public class MainActivity extends AppCompatActivity {
         notify = findViewById(R.id.notify_img);
         notify_list_view = findViewById(R.id.notify_list_view);
         dayTask = findViewById(R.id.task);
+        notify_red =findViewById(R.id.notify_red);
+        daytask_red =findViewById(R.id.daytask_red);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setRedPoint(EventBean eventBean){
+        if (eventBean.getMessage().equals("notification")){
+            notify_red.setVisibility(View.VISIBLE);
+        }
+        if (eventBean.getMessage().equals("task")){
+            daytask_red.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     /**
      * @Author li
@@ -1198,6 +1149,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.setClass(MainActivity.this, NotifyActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.notify_pop_in, 0);
+                    notify_red.setVisibility(View.GONE);
                     break;
                 case R.id.photo:
                     intent = new Intent();
@@ -1207,6 +1159,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.task:
                     showDayTaskWindow();
+                    daytask_red.setVisibility(View.GONE);
                     break;
             }
         }
