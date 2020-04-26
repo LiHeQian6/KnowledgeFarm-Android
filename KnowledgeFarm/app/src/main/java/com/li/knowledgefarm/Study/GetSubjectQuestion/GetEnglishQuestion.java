@@ -15,6 +15,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
 import com.li.knowledgefarm.entity.English;
 import com.li.knowledgefarm.entity.Question3Num;
+import com.li.knowledgefarm.entity.QuestionPage;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ import okhttp3.Response;
 public class GetEnglishQuestion extends SubjectInterface {
     private OkHttpClient okHttpClient = new OkHttpClient();
     private Gson gson = new Gson();
-    private List<English> list = null;
+    private QuestionPage<English> list = null;
     private Handler getMath;
     private final Activity context;
     private Intent intent;
@@ -111,7 +112,7 @@ public class GetEnglishQuestion extends SubjectInterface {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
                 if(!data.equals("Fail") && !data.equals("html")) {
-                    Type type = new TypeToken<List<English>>() {
+                    Type type = new TypeToken<QuestionPage<English>>() {
                     }.getType();
                     list = gson.fromJson(data, type);
                     if(list != null){

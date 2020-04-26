@@ -15,6 +15,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
 import com.li.knowledgefarm.entity.Chinese;
 import com.li.knowledgefarm.entity.English;
+import com.li.knowledgefarm.entity.QuestionPage;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ import okhttp3.Response;
 public class GetChineseQuestion extends SubjectInterface {
     private OkHttpClient okHttpClient = new OkHttpClient();
     private Gson gson = new Gson();
-    private List<Chinese> list = null;
+    private QuestionPage<Chinese> list = null;
     private Handler getMath;
     private final Activity context;
     private final Intent intent;
@@ -104,7 +105,7 @@ public class GetChineseQuestion extends SubjectInterface {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
                 if(!data.equals("Fail") && !data.equals("html")) {
-                    Type type = new TypeToken<List<Chinese>>() {
+                    Type type = new TypeToken<QuestionPage<Chinese>>() {
                     }.getType();
                     System.out.println(data);
                     list = gson.fromJson(data, type);

@@ -47,7 +47,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class FriendsDialog extends PopupWindow {
+public class FriendsPopUpWindow extends PopupWindow {
 
     private int displayWidth;
     private int displayHeight;
@@ -67,7 +67,7 @@ public class FriendsDialog extends PopupWindow {
     private long lastClickTime = 0;
     private long FAST_CLICK_DELAY_TIME = 500;
 
-    public FriendsDialog(Context context) {
+    public FriendsPopUpWindow(Context context) {
         super(context);
         this.context = context;
         this.setOutsideTouchable(true);
