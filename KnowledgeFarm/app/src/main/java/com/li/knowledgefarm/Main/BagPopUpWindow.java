@@ -70,10 +70,6 @@ public class BagPopUpWindow extends PopupWindow {
         update();
     }
 
-    public List<BagCropNumber> getDataList() {
-        return dataList;
-    }
-
     private void getViews(View contentView) {
         gridView = contentView.findViewById(R.id.bag_grid_view);
         okHttpClient = new OkHttpClient();
@@ -83,7 +79,17 @@ public class BagPopUpWindow extends PopupWindow {
     public GridView getGridView() {
         return gridView;
     }
+    public List<BagCropNumber> getDataList() {
+        return dataList;
+    }
 
+    /**
+     * @Description 获取背包数据
+     * @Author 孙建旺
+     * @Date 下午4:00 2020/04/26
+     * @Param [view]
+     * @return void
+     */
     private void Init(View view){
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics ds = new DisplayMetrics();

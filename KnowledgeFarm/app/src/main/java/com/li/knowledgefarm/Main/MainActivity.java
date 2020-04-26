@@ -982,43 +982,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showBagMessages() {
         bagPopUpWindow = new BagPopUpWindow(this);
-//        LayoutInflater inflater = getLayoutInflater();
-//        View layout = inflater.inflate(R.layout.bag_girdview, null);
-//        final GridView gridView = layout.findViewById(R.id.bag_grid_view);
-//        //设置gridView大小及位置
-//        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-//        DisplayMetrics ds = new DisplayMetrics();
-//        wm.getDefaultDisplay().getMetrics(ds);
-//        displayHeight = ds.heightPixels;
-//        displayWidth = ds.widthPixels;
-//        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int) (displayWidth * 0.3), (int) (displayHeight * 0.8));
-//        params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
-//        params_gridview.setMargins((int) (displayWidth * 0.005), (int) (displayHeight * 0.08), 0, 0);
-//        gridView.setColumnWidth((int) (displayWidth * 0.2));
-//        gridView.setLayoutParams(params_gridview);
-//        gridView.setVerticalSpacing((int) (displayHeight * 0.02));
-//        //添加layout布局文件
-//        bagDialog.setContentView(layout);
-//        bagDialog.show();
-//        getBagMessages();
-//        bagMessagesHandler = new Handler() {
-//            @Override
-//            public void handleMessage(@NonNull Message msg) {
-//                super.handleMessage(msg);
-//                String messages = (String) msg.obj;
-//                Log.e("背包", messages);
-//                if (!messages.equals("Fail")) {
-//                    Type type = new TypeToken<List<BagCropNumber>>() {
-//                    }.getType();
-//                    dataList = gson.fromJson(messages, type);
-//                    BagCustomerAdapter customerAdapter = new BagCustomerAdapter(bagDialog.getContext(), dataList, R.layout.gird_adapteritem);
-//                    gridView.setAdapter(customerAdapter);
-//                } else {
-//                    Toast toast = Toast.makeText(MainActivity.this, "获取数据失败！", Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//            }
-//        };
         WindowManager.LayoutParams attrs = getWindow().getAttributes();
         WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics ds = new DisplayMetrics();
@@ -1032,44 +995,7 @@ public class MainActivity extends AppCompatActivity {
         bagPopUpWindow.setHeight(attrs.height);
         bagPopUpWindow.showAtLocation(bag,Gravity.RIGHT,0,0);
         planting(bagPopUpWindow.getGridView());
-//        bagDialog.getWindow().setAttributes(attrs);
-//        Window dialogWindow = bagDialog.getWindow();
-//        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
-
-    /**
-     * @return void
-     * @Description 获取背包信息数据
-     * @Auther 孙建旺
-     * @Date 下午 2:38 2019/12/08
-     * @Param []
-     */
-    private void getBagMessages() {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL) + "/bag/initUserBag?userId=" + LoginActivity.user.getId()).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        bagMessagesHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.obj = response.body().string();
-                        bagMessagesHandler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }
-
 
     /**
      * @param
