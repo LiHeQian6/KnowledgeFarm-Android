@@ -100,18 +100,16 @@ public class DayTaskPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                FormBody formBody = new FormBody.Builder()
-                        .add("userId", LoginActivity.user.getId()+"").build();
                 Request request = new Request.Builder()
-                        .post(formBody)
                         .url(context.getResources().getString(R.string.URL)+"/task/getTask2?userId="+LoginActivity.user.getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("每日任务信息", "请求失败");
-                        Toast.makeText(context,"网络异常",Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        get_day_task.sendMessage(message);
                     }
 
                     @Override
@@ -129,9 +127,14 @@ public class DayTaskPopUpWindow extends PopupWindow {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
-                Task myTask = gson.fromJson(message,Task.class);
-                initTask(myTask);
-                task.setAdapter(new DayTaskAdapter(context,R.layout.daytask_item_layout,tasks));
+                Log.e("每日任务信息",message);
+                if (!message.equals("Fail")){
+                    Task myTask = gson.fromJson(message,Task.class);
+                    initTask(myTask);
+                    task.setAdapter(new DayTaskAdapter(context,R.layout.daytask_item_layout,tasks));
+                }else {
+                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                }
             }
         };
     }

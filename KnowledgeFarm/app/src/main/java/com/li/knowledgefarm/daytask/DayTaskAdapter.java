@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.IDN;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -168,17 +169,17 @@ class DayTaskAdapter extends BaseAdapter {
             @Override
             public void run() {
                 super.run();
-                FormBody formBody = new FormBody.Builder().build();
+                String name = HumpToUnderline(taskName);
                 Request request = new Request.Builder()
-                        .post(formBody)
-                        .url(context.getResources().getString(R.string.URL)+"/task/getReward2?taskName="+taskName+"&userId="+LoginActivity.user.getId()).build();
+                        .url(context.getResources().getString(R.string.URL)+"/task/getReward2?taskName="+ name +"&userId="+LoginActivity.user.getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("获取奖励信息", "请求失败");
-                        Toast.makeText(context,"网络异常",Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        get_reward.sendMessage(message);
                     }
 
                     @Override
@@ -196,18 +197,37 @@ class DayTaskAdapter extends BaseAdapter {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
-                if (message.equals("2")){
-                    Toast.makeText(context,"领取成功！",Toast.LENGTH_SHORT).show();
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).getType().equals(taskName)){
-                            list.get(i).setStatus(2);
+                if (!message.equals("Fail")){
+                    if (message.equals("2")){
+                        Toast.makeText(context,"领取成功！",Toast.LENGTH_SHORT).show();
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getType().equals(taskName)){
+                                list.get(i).setStatus(2);
+                                Collections.sort(list);
+                            }
                         }
-                    }
-                    notifyDataSetChanged();
-                }else
-                    Toast.makeText(context,"领取失败！",Toast.LENGTH_SHORT).show();
+                        notifyDataSetChanged();
+                    }else
+                        Toast.makeText(context,"领取失败！",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                }
             }
         };
+    }
+
+    public String HumpToUnderline(String para){
+        StringBuilder sb=new StringBuilder(para);
+        int temp=0;//定位
+        if (!para.contains("_")) {
+            for(int i=0;i<para.length();i++){
+                if(Character.isUpperCase(para.charAt(i))){
+                    sb.insert(i+temp, "_");
+                    temp+=1;
+                }
+            }
+        }
+        return sb.toString().toLowerCase();
     }
 
 }

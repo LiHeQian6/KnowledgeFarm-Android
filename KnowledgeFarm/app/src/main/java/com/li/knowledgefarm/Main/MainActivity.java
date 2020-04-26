@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -55,6 +57,8 @@ import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.DoTaskBean;
+import com.li.knowledgefarm.entity.EventBean;
+import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
 
@@ -122,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
     private Handler friendMessagesHandler;
     private ImageView dayTask;
     private DayTaskPopUpWindow dayTaskPopUpWindow;
+    private ImageView notify_red;
+    private ImageView daytask_red;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         getViews();
         addListener();
         getCrop();
+        JPushInterface.setAlias(this,1, LoginActivity.user.getAccount());
     }
 
     @Override
@@ -386,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
                 super.run();
                 Request request = null;
                 if (option == 0)
-                    request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/addUserFriendNotification?userId=" + LoginActivity.user.getId() + "&account=" + num).build();
+                    request = new Request.Builder().url(getResources().getString(R.string.URL) + "/notification/addUserFriendNotification?userId=" + LoginActivity.user.getId() + "&account=" + num).build();
                 else if (option == 1) {
                     request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/deleteUserFriend?userId=" + LoginActivity.user.getId() + "&account=" + num).build();
                 }
@@ -416,6 +423,8 @@ public class MainActivity extends AppCompatActivity {
                 if (!messages.equals("Fail")) {
                     if (messages.equals("false")) {
                         Toast.makeText(MainActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(MainActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast toast = Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT);
@@ -1058,7 +1067,20 @@ public class MainActivity extends AppCompatActivity {
         notify = findViewById(R.id.notify_img);
         notify_list_view = findViewById(R.id.notify_list_view);
         dayTask = findViewById(R.id.task);
+        notify_red =findViewById(R.id.notify_red);
+        daytask_red =findViewById(R.id.daytask_red);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setRedPoint(EventBean eventBean){
+        if (eventBean.getMessage().equals("notification")){
+            notify_red.setVisibility(View.VISIBLE);
+        }
+        if (eventBean.getMessage().equals("task")){
+            daytask_red.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     /**
      * @Author li
@@ -1127,6 +1149,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.setClass(MainActivity.this, NotifyActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.notify_pop_in, 0);
+                    notify_red.setVisibility(View.GONE);
                     break;
                 case R.id.photo:
                     intent = new Intent();
@@ -1136,6 +1159,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.task:
                     showDayTaskWindow();
+                    daytask_red.setVisibility(View.GONE);
                     break;
             }
         }

@@ -152,7 +152,7 @@ public class NotifyActivity extends AppCompatActivity {
                         .add("pageSize",pageSize+"").build();
                 Request request = new Request.Builder()
                         .post(formBody)
-                        .url("http://39.106.18.238:8081"+"/notification/findReceivedNotificationByType").build();
+                        .url(getResources().getString(R.string.URL)+"/notification/findReceivedNotificationByType").build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override

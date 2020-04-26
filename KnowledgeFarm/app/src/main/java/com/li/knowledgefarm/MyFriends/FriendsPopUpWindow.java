@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -67,7 +69,9 @@ public class FriendsPopUpWindow extends PopupWindow {
     private long lastClickTime = 0;
     private long FAST_CLICK_DELAY_TIME = 500;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public FriendsPopUpWindow(Context context) {
+    public FriendsDialog(Context context) {
         super(context);
         this.context = context;
         this.setOutsideTouchable(true);
@@ -96,6 +100,7 @@ public class FriendsPopUpWindow extends PopupWindow {
     }
 
     //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void Init(View view){
 //        WindowManager.LayoutParams attrs = context.getWindow().getAttributes();
         WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
@@ -135,6 +140,7 @@ public class FriendsPopUpWindow extends PopupWindow {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void setFriendSize(View view) {
         LinearLayout layout_search = view.findViewById(R.id.layout_search);
         Button search=view.findViewById(R.id.search);
@@ -204,7 +210,7 @@ public class FriendsPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/userfriend/findAllUser?pageNumber="+pageNumber).build();
+                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/userfriend/findAllUser?userId="+LoginActivity.user.getId()+"&pageNumber="+pageNumber).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -279,7 +285,7 @@ public class FriendsPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/userfriend/findUserFriend?userId=" + LoginActivity.user.getId() + "&accout=" + account).build();
+                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/userfriend/findUserFriend?userId=" + LoginActivity.user.getId() + "&account=" + account).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -310,7 +316,7 @@ public class FriendsPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/userfriend/findAllUser?accout=" + account).build();
+                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/userfriend/findAllUser?userId=" + LoginActivity.user.getId() +"&account=" + account).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
