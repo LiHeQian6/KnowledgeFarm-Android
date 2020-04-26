@@ -3,15 +3,12 @@ package com.knowledge_farm.front.land.controller;
 import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.Land;
 import com.knowledge_farm.entity.Result;
-import com.knowledge_farm.entity.User;
 import com.knowledge_farm.front.land.service.LandService;
 import com.knowledge_farm.util.PageUtil;
+import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,13 +20,14 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-19 08:43
  */
+@Api(description = "后台土地接口")
 @Controller
 @RequestMapping("/admin/land")
 public class LandController {
     @Resource
     private LandService landService;
 
-    @RequestMapping("/findPageLand")
+    @GetMapping("/findPageLand")
     public String findPageLand(@RequestParam(value = "account", required = false) String account,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
@@ -51,7 +49,7 @@ public class LandController {
         return "member-land-list";
     }
 
-    @RequestMapping("/toEdit")
+    @GetMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, HttpServletRequest request){
         Land land = this.landService.findLandById(id);
         List<Crop> crops = this.landService.findAllCrop();
@@ -64,7 +62,7 @@ public class LandController {
         return "member-land-edit";
     }
 
-    @RequestMapping("/editLand")
+    @PostMapping("/editLand")
     @ResponseBody
     public String editLand(@RequestParam("userId") Integer userId,
                            @RequestParam("landNumber") String landNumber,

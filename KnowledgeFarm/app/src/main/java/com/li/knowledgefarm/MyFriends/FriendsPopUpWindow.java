@@ -49,7 +49,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class FriendsDialog extends PopupWindow {
+public class FriendsPopUpWindow extends PopupWindow {
 
     private int displayWidth;
     private int displayHeight;
@@ -70,6 +70,7 @@ public class FriendsDialog extends PopupWindow {
     private long FAST_CLICK_DELAY_TIME = 500;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public FriendsPopUpWindow(Context context) {
     public FriendsDialog(Context context) {
         super(context);
         this.context = context;

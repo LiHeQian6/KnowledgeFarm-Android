@@ -4,16 +4,14 @@ import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.crop.service.FrontCropService;
 import com.knowledge_farm.util.PageUtil;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -32,6 +30,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-15 23:20
  */
+@Api(description = "后台作物接口")
 @Controller
 @RequestMapping("/admin/crop")
 public class FrontCropController {
@@ -44,12 +43,12 @@ public class FrontCropController {
     @Value("${file.cropPhotoFileLocation}")
     private String cropPhotoFileLocation;
 
-    @RequestMapping("/toAdd")
+    @GetMapping("/toAdd")
     public String toAdd(){
         return "crop-add";
     }
 
-    @RequestMapping("/toEdit")
+    @GetMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, Model model){
         Crop crop = this.frontCropService.findCropById(id);
         if(crop != null){
@@ -58,7 +57,7 @@ public class FrontCropController {
         return "crop-edit";
     }
 
-    @RequestMapping("/findCropPage")
+    @GetMapping("/findCropPage")
     public String findCropPage(@RequestParam(value = "name", required = false) String name,
                                @RequestParam("exist") Integer exist,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
@@ -75,7 +74,7 @@ public class FrontCropController {
         return "crop-del";
     }
 
-    @RequestMapping("/deleteOneCrop")
+    @PostMapping("/deleteOneCrop")
     @ResponseBody
     public String deleteOneCrop(@RequestParam("id") Integer id){
         try {
@@ -87,7 +86,7 @@ public class FrontCropController {
         }
     }
 
-    @RequestMapping("/deleteMultiCrop")
+    @PostMapping("/deleteMultiCrop")
     @ResponseBody
     public String deleteMultiCrop(@RequestParam("deleteStr") String deleteStr){
         String deleteIds[] = deleteStr.split(",");
@@ -104,7 +103,7 @@ public class FrontCropController {
         }
     }
 
-    @RequestMapping("/recoveryOneCrop")
+    @PostMapping("/recoveryOneCrop")
     @ResponseBody
     public String recoveryOneCrop(@RequestParam("id") Integer id){
         try {
@@ -116,7 +115,7 @@ public class FrontCropController {
         }
     }
 
-    @RequestMapping("/recoveryMultiCrop")
+    @PostMapping("/recoveryMultiCrop")
     @ResponseBody
     public String recoveryMultiCrop(@RequestParam("recoveryStr") String recoveryStr) {
         String recoveryId[] = recoveryStr.split(",");
@@ -133,7 +132,7 @@ public class FrontCropController {
         }
     }
 
-    @RequestMapping("/deleteThoroughCrop")
+    @PostMapping("/deleteThoroughCrop")
     @ResponseBody
     public String deleteThoroughCrop(@RequestParam("id") Integer id){
         try {
@@ -145,7 +144,7 @@ public class FrontCropController {
         }
     }
 
-    @RequestMapping("/addCrop")
+    @PostMapping("/addCrop")
     @ResponseBody
     public String addCrop(@RequestParam("name") String name,
                           @RequestParam("price") Integer price,
@@ -167,33 +166,30 @@ public class FrontCropController {
             crop.setValue(value);
             crop.setExperience(experience);
             Crop saveCrop = this.frontCropService.save(crop);
-            if(saveCrop != null){
-                Integer id = saveCrop.getId();
-                entityManager.clear();
-                String img[] = new String[4];
-                int count = 1;
-                for(MultipartFile multipartFile : files){
-                    String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
-                    img[count-1] = this.cropPhotoFolderName + "/" + fileName;
-                    FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName));
-                    count++;
-                }
-
-                Crop editCrop = this.frontCropService.findCropById(id);
-                editCrop.setImg1(img[0]);
-                editCrop.setImg2(img[1]);
-                editCrop.setImg3(img[2]);
-                editCrop.setImg4(img[3]);
-                this.frontCropService.save(editCrop);
-                return Result.SUCCEED;
+            Integer id = saveCrop.getId();
+            entityManager.clear();
+            String img[] = new String[4];
+            int count = 1;
+            for(MultipartFile multipartFile : files){
+                String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                img[count-1] = this.cropPhotoFolderName + "/" + fileName;
+                FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName));
+                count++;
             }
-            return Result.FAIL;
+
+            Crop editCrop = this.frontCropService.findCropById(id);
+            editCrop.setImg1(img[0]);
+            editCrop.setImg2(img[1]);
+            editCrop.setImg3(img[2]);
+            editCrop.setImg4(img[3]);
+            this.frontCropService.save(editCrop);
+            return Result.SUCCEED;
         }catch (Exception e){
             return Result.FAIL;
         }
     }
 
-    @RequestMapping("/updateCrop")
+    @PostMapping("/updateCrop")
     @ResponseBody
     public String updateCrop(Crop crop, @RequestParam("upload") MultipartFile files[]) {
         Crop findCropById = this.frontCropService.findCropById(crop.getId());

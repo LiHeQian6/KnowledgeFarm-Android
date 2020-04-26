@@ -40,6 +40,7 @@ import com.li.knowledgefarm.Study.Interface.StudyInterface;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.Chinese;
+import com.li.knowledgefarm.entity.QuestionPage;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +66,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     private Handler getMath;
     private Handler getWAF;
     private Gson gson;
-    private List<Chinese> datalist;
+    private QuestionPage<Chinese> datalist;
     private int position=0;
     private int TrueAnswerNumber = 0;
     private Dialog ifReturn;
@@ -94,7 +95,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
         /** 注册点击事件监听器*/
         registListener();
         FullScreen.NavigationBarStatusBar(ChineseActivity.this,true);
-        datalist = (List<Chinese>)getIntent().getSerializableExtra("chinese");
+        datalist = (QuestionPage<Chinese>)getIntent().getSerializableExtra("chinese");
         showQuestion(position);
     }
 
@@ -316,12 +317,12 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     public void showQuestion(int pos){
         String quan1 = null;
         String quan2 = null;
-        if(position == datalist.size()-1){
+        if(position == datalist.getContent().size()-1){
             btnNextQuestion.setText("我答完啦");
         }else{
             btnNextQuestion.setText("下一题");
         }
-        if(!datalist.get(pos).getIfDone().equals("true")) {
+        if(!datalist.getContent().get(pos).getIfDone().equals("true")) {
             isFalse.setText("");
             trueAnswer.setText("(  )");
             answerA.setVisibility(View.VISIBLE);
@@ -331,39 +332,39 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
             isTrue.setVisibility(View.INVISIBLE);
             isTrue2.setVisibility(View.INVISIBLE);
             isTrue3.setVisibility(View.INVISIBLE);
-            question.setText(datalist.get(pos).getWord());
+            question.setText(datalist.getContent().get(pos).getWord());
             int randomNum = new Random().nextInt(3);
             if(randomNum == 0) {
-                answer1.setText(datalist.get(pos).getQuantify());
+                answer1.setText(datalist.getContent().get(pos).getQuantify());
                 do{
-                    quan1 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
-                    quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
-                }while (quan1.equals(datalist.get(pos).getQuantify())
-                        || quan2.equals(datalist.get(pos).getQuantify())
+                    quan1 = datalist.getContent().get(new Random().nextInt(datalist.getContent().size())).getQuantify();
+                    quan2 = datalist.getContent().get(new Random().nextInt(datalist.getContent().size())).getQuantify();
+                }while (quan1.equals(datalist.getContent().get(pos).getQuantify())
+                        || quan2.equals(datalist.getContent().get(pos).getQuantify())
                         || quan2.equals(quan1)
                         && quan1 != null
                         && quan2 != null);
                 answer2.setText(quan1);
                 answer3.setText(quan2);
             }else if(randomNum == 1){
-                answer2.setText(datalist.get(pos).getQuantify());
+                answer2.setText(datalist.getContent().get(pos).getQuantify());
                 do{
-                    quan1 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
-                    quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
-                }while (quan1.equals(datalist.get(pos).getQuantify())
-                        || quan2.equals(datalist.get(pos).getQuantify())
+                    quan1 = datalist.getContent().get(new Random().nextInt(datalist.getContent().size())).getQuantify();
+                    quan2 = datalist.getContent().get(new Random().nextInt(datalist.getContent().size())).getQuantify();
+                }while (quan1.equals(datalist.getContent().get(pos).getQuantify())
+                        || quan2.equals(datalist.getContent().get(pos).getQuantify())
                         || quan2.equals(quan1)
                         && quan1 != null
                         && quan2 != null);
                 answer1.setText(quan1);
                 answer3.setText(quan2);
             }else{
-                answer3.setText(datalist.get(pos).getQuantify());
+                answer3.setText(datalist.getContent().get(pos).getQuantify());
                 do{
-                    quan1 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
-                    quan2 = datalist.get(new Random().nextInt(datalist.size())).getQuantify();
-                }while (quan1.equals(datalist.get(pos).getQuantify())
-                        || quan2.equals(datalist.get(pos).getQuantify())
+                    quan1 = datalist.getContent().get(new Random().nextInt(datalist.getContent().size())).getQuantify();
+                    quan2 = datalist.getContent().get(new Random().nextInt(datalist.getContent().size())).getQuantify();
+                }while (quan1.equals(datalist.getContent().get(pos).getQuantify())
+                        || quan2.equals(datalist.getContent().get(pos).getQuantify())
                         || quan2.equals(quan1)
                         && quan1 != null
                         && quan2 != null);
@@ -376,8 +377,8 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
             answerB.setVisibility(View.INVISIBLE);
             answerC.setVisibility(View.INVISIBLE);
             trueAnswer.setVisibility(View.VISIBLE);
-            question.setText(datalist.get(pos).getWord());
-            trueAnswer.setText(datalist.get(pos).getQuantify());
+            question.setText(datalist.getContent().get(pos).getWord());
+            trueAnswer.setText(datalist.getContent().get(pos).getQuantify());
         }
     }
 
@@ -388,7 +389,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getChineseRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.getContent().size() && LoginActivity.user.getChineseRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
@@ -401,7 +402,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                     break;
                 case R.id.ClassifierOne:
                     String t1 = answer1.getText().toString().trim();
-                    if(t1.equals(datalist.get(position).getQuantify())){
+                    if(t1.equals(datalist.getContent().get(position).getQuantify())){
                         TrueAnswerNumber++;
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue.setVisibility(View.VISIBLE);
@@ -410,12 +411,12 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                         isFalse.setText("答对啦！获得了奖励哦！");
                         StudyUtil.PlayTrueSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
-                        if((position+1)<=datalist.size()-1) {
+                        if((position+1)<=datalist.getContent().size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    datalist.get(position).setIfDone("true");
+                                    datalist.getContent().get(position).setIfDone("true");
                                     position = ++position;
                                     showQuestion(position);
                                 }
@@ -433,8 +434,8 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                     break;
                 case R.id.ClassifierTwo:
                     String t2 = answer2.getText().toString().trim();
-                    if(t2.equals(datalist.get(position).getQuantify())){
-                        datalist.get(position).setIfDone("true");
+                    if(t2.equals(datalist.getContent().get(position).getQuantify())){
+                        datalist.getContent().get(position).setIfDone("true");
                         TrueAnswerNumber++;
                         isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue2.setVisibility(View.VISIBLE);
@@ -443,12 +444,12 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                         isFalse.setText("答对啦！获得了奖励哦！");
                         StudyUtil.PlayTrueSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
-                        if((position+1)<=datalist.size()-1) {
+                        if((position+1)<=datalist.getContent().size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    datalist.get(position).setIfDone("true");
+                                    datalist.getContent().get(position).setIfDone("true");
                                     position = ++position;
                                     showQuestion(position);
                                 }
@@ -466,8 +467,8 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                     break;
                 case R.id.ClassifierThree:
                     String t3 = answer3.getText().toString().trim();
-                    if(t3.equals(datalist.get(position).getQuantify())){
-                        datalist.get(position).setIfDone("true");
+                    if(t3.equals(datalist.getContent().get(position).getQuantify())){
+                        datalist.getContent().get(position).setIfDone("true");
                         TrueAnswerNumber++;
                         isTrue3.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue3.setVisibility(View.VISIBLE);
@@ -476,12 +477,12 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                         isFalse.setText("答对啦！获得了奖励哦！");
                         StudyUtil.PlayTrueSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
-                        if((position+1)<=datalist.size()-1) {
+                        if((position+1)<=datalist.getContent().size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    datalist.get(position).setIfDone("true");
+                                    datalist.getContent().get(position).setIfDone("true");
                                     position = ++position;
                                     showQuestion(position);
                                 }
@@ -498,11 +499,11 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                     }
                     break;
                 case R.id.btnNextChinese:
-                    if((position+1)<=datalist.size()-1) {
+                    if((position+1)<=datalist.getContent().size()-1) {
                         position = ++position;
                         showQuestion(position);
                     }else{
-                        if(TrueAnswerNumber < datalist.size()){
+                        if(TrueAnswerNumber < datalist.getContent().size()){
                             Toast.makeText(ChineseActivity.this,"你还没有答完哦",Toast.LENGTH_SHORT).show();;
                         }else {
                             getWandFCallBack();
@@ -523,7 +524,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
         iv_return = findViewById(R.id.iv_return);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
-        datalist = new ArrayList<>();
+        datalist = new QuestionPage<Chinese>();
         btnPreQuestion = findViewById(R.id.btnPreChinese);
         btnNextQuestion = findViewById(R.id.btnNextChinese);
         question = findViewById(R.id.chineseQuestion);
@@ -568,7 +569,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     }
 
     public void exit() {
-        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.getContent().size() && LoginActivity.user.getMathRewardCount()>0)
             showIfReturn();
         else
             finish();

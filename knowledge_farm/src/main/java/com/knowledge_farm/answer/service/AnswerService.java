@@ -1,14 +1,13 @@
-package com.knowledge_farm.anwser.service;
+package com.knowledge_farm.answer.service;
 
-import com.knowledge_farm.anwser.entity.Question3Num;
-import com.knowledge_farm.anwser.repository.Chinese23Repository;
-import com.knowledge_farm.anwser.repository.ChineseRepository;
-import com.knowledge_farm.anwser.repository.EnglishRepository;
-import com.knowledge_farm.anwser.repository.Math23Repository;
+import com.knowledge_farm.answer.entity.Question3Num;
+import com.knowledge_farm.answer.repository.Chinese23Repository;
+import com.knowledge_farm.answer.repository.ChineseRepository;
+import com.knowledge_farm.answer.repository.EnglishRepository;
+import com.knowledge_farm.answer.repository.Math23Repository;
 import com.knowledge_farm.entity.Chinese;
 import com.knowledge_farm.entity.Chinese23;
 import com.knowledge_farm.entity.English;
-import com.knowledge_farm.entity.Math23;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

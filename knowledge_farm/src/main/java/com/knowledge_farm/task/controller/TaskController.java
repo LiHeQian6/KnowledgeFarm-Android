@@ -4,6 +4,8 @@ import com.knowledge_farm.entity.Task;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.task.service.TaskService;
 import com.knowledge_farm.user.service.UserServiceImpl;
+import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpSession;
  * @author: 景光赞
  * @create: 2020-04-19 14:48
  **/
+@Api(description = "前台每日任务接口")
 @RestController
 @RequestMapping("/task")
 public class TaskController {
@@ -33,7 +36,7 @@ public class TaskController {
      * @param :[userId]
      * @return :com.knowledge_farm.entity.Task
      */
-    @RequestMapping("/getTask")
+    @GetMapping("/getTask")
     public Task getTasks(HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -46,7 +49,7 @@ public class TaskController {
      * @param :[taskName, request]
      * @return :int
      */
-    @RequestMapping("/getReward")
+    @GetMapping("/getReward")
     public int getReward(@RequestParam("taskName") String taskName,HttpServletRequest request){
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -60,7 +63,7 @@ public class TaskController {
      * @param :[userId]
      * @return :com.knowledge_farm.entity.Task
      */
-    @RequestMapping("/getTask2")
+    @GetMapping("/getTask2")
     public Task getTasks2(@RequestParam("userId") int userId) {
 
         return taskService.findTask(userService.findUserById(userId));
@@ -72,7 +75,7 @@ public class TaskController {
      * @param :[taskName, request]
      * @return :int
      */
-    @RequestMapping("/getReward2")
+    @GetMapping("/getReward2")
     public int getReward2(@RequestParam("taskName") String taskName,
                           @RequestParam("userId")int userId){
         return taskService.updateTask(userService.findUserById(userId),taskName);

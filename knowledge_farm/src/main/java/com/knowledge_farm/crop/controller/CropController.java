@@ -22,7 +22,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-10 13:22
  */
-@Api(description = "作物接口")
+@Api(description = "前台作物接口")
 @RestController
 @RequestMapping("/crop")
 public class CropController {
@@ -38,9 +38,9 @@ public class CropController {
      * @Param []
      * @return java.util.List<com.atguigu.farm.entity.Crop>
      **/
-    @ApiOperation(value = "加载商店所有作物")
+    @ApiOperation(value = "加载商店所有作物", notes = "返回值：List（Crop）")
     @ApiImplicitParam
-    @PostMapping("/initCrop")
+    @GetMapping("/initCrop")
     public List<Crop> initCrop(){
         List<Crop> crops = this.cropService.findAllCropByExist(1);
 //        for(Crop crop : crops){

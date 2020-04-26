@@ -1,5 +1,6 @@
 package com.knowledge_farm.user_friend.service;
 
+import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.*;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @ClassName UserFriendServiceImpl
@@ -34,28 +38,41 @@ public class UserFriendServiceImpl {
         return this.userFriendDao.findUserFriendPage(userId, PageRequest.of(pageNumber - 1, pageSize));
     }
 
-    public Page<User> findAllUserByAccount(String account, Integer pageNumber, Integer pageSize){
-        return this.userService.findAllUserByAccount(account, pageNumber, pageSize);
+    public Page<User> findAllUserByAccount(Integer userId, String account, Integer pageNumber, Integer pageSize){
+        if(account != null && !account.equals("")){
+            return this.userFriendDao.findAllUserByAccountAndExcludeMeFriendUser(userId, account, PageRequest.of(pageNumber - 1, pageSize));
+        }
+        return this.userFriendDao.findAllUserAndExcludeMeFriendUser(userId, PageRequest.of(pageNumber - 1, pageSize));
     }
 
     @Transactional(readOnly = false)
     public void addUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
+
         UserFriend userFriend = new UserFriend();
         userFriend.setUser(user);
         userFriend.setFriendUser(friendUser);
-        this.userFriendDao.save(userFriend);
+
+        UserFriend userFriend1 = new UserFriend();
+        userFriend1.setUser(friendUser);
+        userFriend1.setFriendUser(user);
+
+        List<UserFriend> friends = new ArrayList<>();
+        friends.add(userFriend);
+        friends.add(userFriend1);
+        this.userFriendDao.saveAll(friends);
     }
 
     @Transactional(readOnly = false)
     public void deleteUserFriend(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
-        UserFriend userFriend = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
-        this.userFriendDao.delete(userFriend);
+        List<UserFriend> userFriends2 = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
+        this.userFriendDao.deleteAll(userFriends2);
     }
 
+    @Task(description = "help_water")
     @Transactional(readOnly = false)
     public int waterForFriend(Integer userId, Integer friendId, String landNumber){
         User user = this.userService.findUserById(userId);
@@ -90,6 +107,7 @@ public class UserFriendServiceImpl {
         return 0;
     }
 
+    @Task(description = "help_fertilize")
     @Transactional(readOnly = false)
     public String fertilizerForFriend(Integer userId, Integer friendId, String landNumber){
         User user = this.userService.findUserById(userId);

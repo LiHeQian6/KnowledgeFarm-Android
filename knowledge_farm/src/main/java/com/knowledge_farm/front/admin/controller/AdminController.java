@@ -5,12 +5,11 @@ import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.admin.service.AdminServiceImpl;
 import com.knowledge_farm.util.Md5Encode;
 import com.knowledge_farm.util.PageUtil;
+import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +23,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-06 15:43
  */
+@Api(description = "后台管理员接口")
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -31,17 +31,17 @@ public class AdminController {
     @Resource
     private AdminServiceImpl adminService;
 
-    @RequestMapping("/gotoIndex")
+    @GetMapping("/gotoIndex")
     public String gotoIndex(){
         return "index";
     }
 
-    @RequestMapping("/toAdd")
+    @GetMapping("/toAdd")
     public String toAdd(){
         return "admin-add";
     }
 
-    @RequestMapping("/toEdit")
+    @GetMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, HttpServletRequest request){
         Admin admin = this.adminService.findById(id);
         if(admin != null){
@@ -51,7 +51,7 @@ public class AdminController {
         return "admin-edit";
     }
 
-    @RequestMapping("toPassword")
+    @GetMapping("toPassword")
     public String toPassword(@RequestParam("id") Integer id, HttpServletRequest request){
         Admin admin = this.adminService.findById(id);
         if(admin != null){
@@ -68,7 +68,7 @@ public class AdminController {
      * @Param [session]
      * @return java.lang.String
      **/
-    @RequestMapping("/logout")
+    @GetMapping("/logout")
     private String logout(HttpSession session){
         session.removeAttribute("admin");
         return "login";
@@ -81,7 +81,7 @@ public class AdminController {
      * @Param [account, password, session]
      * @return java.lang.String
      **/
-    @RequestMapping("/login")
+    @PostMapping("/login")
     @ResponseBody
     public String login(@RequestParam("account") String account, @RequestParam("password") String password, HttpSession session){
         Object obj = this.adminService.login(account, password);
@@ -101,7 +101,7 @@ public class AdminController {
      * @Param [account, pageNumber, pageSize, exist, session, model]
      * @return java.lang.String
      **/
-    @RequestMapping("/findAdminPage")
+    @GetMapping("/findAdminPage")
     public String list(@RequestParam(value = "account", required = false) String account,
                        @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                        @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
@@ -128,7 +128,7 @@ public class AdminController {
      * @Param [id, exist]
      * @return java.lang.String
      **/
-    @RequestMapping("/deleteOneAdmin")
+    @PostMapping("/deleteOneAdmin")
     @ResponseBody
     public String deleteOneAdmin(@RequestParam("id") Integer id){
         try {
@@ -147,7 +147,7 @@ public class AdminController {
      * @Param [ids, exist]
      * @return java.lang.String
      **/
-    @RequestMapping("/deleteMultiAdmin")
+    @PostMapping("/deleteMultiAdmin")
     @ResponseBody
     public String deleteMultiAdmin(@RequestParam("deleteStr") String deleteStr){
         String deleteIds[] = deleteStr.split(",");
@@ -164,7 +164,7 @@ public class AdminController {
         }
     }
 
-    @RequestMapping("/recoveryOneAdmin")
+    @PostMapping("/recoveryOneAdmin")
     @ResponseBody
     public String recoveryOneAdmin(@RequestParam("id") Integer id){
         try {
@@ -176,7 +176,7 @@ public class AdminController {
         }
     }
 
-    @RequestMapping("/recoveryMultiAdmin")
+    @PostMapping("/recoveryMultiAdmin")
     @ResponseBody
     public String recoveryMultiAdmin(@RequestParam("recoveryStr") String recoveryStr){
         String recoveryId[] = recoveryStr.split(",");
@@ -200,7 +200,7 @@ public class AdminController {
      * @Param [id]
      * @return java.lang.String
      **/
-    @RequestMapping("/deleteThoroughAdmin")
+    @PostMapping("/deleteThoroughAdmin")
     @ResponseBody
     public String deleteById(@RequestParam("id") Integer id){
         try {
@@ -219,7 +219,7 @@ public class AdminController {
      * @Param [admin]
      * @return java.lang.String
      **/
-    @RequestMapping("/addAdmin")
+    @PostMapping("/addAdmin")
     @ResponseBody
     public String add(@RequestParam("account") String account, @RequestParam("password") String password){
         if(this.adminService.findByAccountAndExist(account, null) == null){
@@ -244,7 +244,7 @@ public class AdminController {
      * @Param [id, account]
      * @return java.lang.String
      **/
-    @RequestMapping("/updateAdminAccount")
+    @PostMapping("/updateAdminAccount")
     @ResponseBody
     public String updateAdminAccount(@RequestParam("id") Integer id, @RequestParam("account") String account, @RequestParam("oldAccount") String excludeAccount){
         if(this.adminService.findByAccountExcludeAccount(account, excludeAccount) == null){
@@ -266,7 +266,7 @@ public class AdminController {
      * @Param [id, oldPassword, newPassword]
      * @return java.lang.String
      **/
-    @RequestMapping("/updateAdminPassword")
+    @PostMapping("/updateAdminPassword")
     @ResponseBody
     public String updateAdminPassword(@RequestParam("id") Integer id, @RequestParam("password") String password){
         try {

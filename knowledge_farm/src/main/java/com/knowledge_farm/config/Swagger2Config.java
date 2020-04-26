@@ -35,9 +35,9 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
          //页面标题
-        .title("Spring Boot 测试使用 Swagger2 构建RESTful API")
+        .title("知识农场接口整合")
          //创建人
-        .contact(new Contact("Ricky", "http://www.bytebeats.com", "ricky_feng@163.com"))
+        .contact(new Contact("知识农场", "https://github.com/LiHeQian6/KnowledgeFarm-Android", ""))
          //版本号
         .version("1.0")
          //描述

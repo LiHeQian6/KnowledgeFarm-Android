@@ -6,16 +6,14 @@ import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.front.user.service.FrontUserServiceImpl;
 import com.knowledge_farm.util.Md5Encode;
 import com.knowledge_farm.util.PageUtil;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -34,6 +32,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-04-15 20:59
  */
+@Api(description = "后台用户接口")
 @Controller
 @RequestMapping("/admin/user")
 public class FrontUserController {
@@ -48,12 +47,12 @@ public class FrontUserController {
     @Value("${file.userDefaultFileName}")
     private String userDefaultFileName;
 
-    @RequestMapping("/toAdd")
+    @GetMapping("/toAdd")
     public String toAdd(){
         return "member-add";
     }
 
-    @RequestMapping("/toEdit")
+    @GetMapping("/toEdit")
     public String toEdit(@RequestParam("id") Integer id, HttpServletRequest request) {
         User user = this.frontUserService.findUserById(id);
         if(user != null){
@@ -63,7 +62,7 @@ public class FrontUserController {
         return "member-edit";
     }
 
-    @RequestMapping("toPassword")
+    @GetMapping("toPassword")
     public String toPassword(@RequestParam("id") Integer id, HttpServletRequest request){
         User user = this.frontUserService.findUserById(id);
         if(user != null){
@@ -73,7 +72,7 @@ public class FrontUserController {
         return "member-password";
     }
 
-    @RequestMapping("/findUserPage")
+    @GetMapping("/findUserPage")
     public String findUserPage(@RequestParam(value = "account", required = false) String account,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
@@ -96,7 +95,7 @@ public class FrontUserController {
         return "";
     }
 
-    @RequestMapping("/deleteOneUser")
+    @PostMapping("/deleteOneUser")
     @ResponseBody
     public String deleteOneUser(@RequestParam("userId") Integer userId){
         try {
@@ -107,7 +106,7 @@ public class FrontUserController {
         }
     }
 
-    @RequestMapping("/deleteMultiUser")
+    @PostMapping("/deleteMultiUser")
     @ResponseBody
     public String deleteMultiUser(@RequestParam("deleteStr") String deleteStr) {
         String deleteIds[] = deleteStr.split(",");
@@ -123,7 +122,7 @@ public class FrontUserController {
         }
     }
 
-    @RequestMapping("/recoveryOneUser")
+    @PostMapping("/recoveryOneUser")
     @ResponseBody
     public String recoveryOneUser(@RequestParam("userId") Integer userId) {
         try {
@@ -134,7 +133,7 @@ public class FrontUserController {
         }
     }
 
-    @RequestMapping("/recoveryMultiUser")
+    @PostMapping("/recoveryMultiUser")
     @ResponseBody
     public String recoveryMultiUser(@RequestParam("recoveryStr") String recoveryStr) {
         String recoveryId[] = recoveryStr.split(",");
@@ -150,7 +149,7 @@ public class FrontUserController {
         }
     }
 
-    @RequestMapping("/deleteThoroughUser")
+    @PostMapping("/deleteThoroughUser")
     @ResponseBody
     public String deleteThoroughUser(@RequestParam("userId") Integer userId) {
         try {
@@ -161,7 +160,7 @@ public class FrontUserController {
         }
     }
 
-    @RequestMapping("/addUser")
+    @PostMapping("/addUser")
     @ResponseBody
     public String addUser(@RequestParam("nickName") String nickName,
                           @RequestParam("password") String password,
@@ -175,7 +174,7 @@ public class FrontUserController {
         }
     }
 
-    @RequestMapping("/updateUser")
+    @PostMapping("/updateUser")
     @ResponseBody
     public String updateUser(User editUser, @RequestParam("oldAccount") String excludeAccount, @RequestParam("upload") MultipartFile file){
         try {
@@ -202,7 +201,7 @@ public class FrontUserController {
         }
     }
 
-    @RequestMapping("/updateUserPassword")
+    @PostMapping("/updateUserPassword")
     @ResponseBody
     public String updateUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
         try {

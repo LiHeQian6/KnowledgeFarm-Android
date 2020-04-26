@@ -409,6 +409,7 @@ public class UserServiceImpl {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
+    @Task(description = "water")
     @Transactional(readOnly = false)
     public int waterCrop(Integer userId, String landNumber) {
         User user = this.userDao.findUserById(userId);
@@ -448,6 +449,7 @@ public class UserServiceImpl {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
+    @Task(description = "fertilize")
     @Transactional(readOnly = false)
     public String fertilizerCrop(Integer userId, String landNumber){
         User user = this.userDao.findUserById(userId);
@@ -505,6 +507,7 @@ public class UserServiceImpl {
                 UserBag userBag = new UserBag();
                 userBag.setCrop(crop);
                 userBag.setNumber(number);
+                userBag.setUser(user);
                 userBags.add(userBag);
             }
             user.setMoney(userMoney - needMoney);
@@ -520,6 +523,7 @@ public class UserServiceImpl {
      * @Param [userId, cropId, landNumber]
      * @return java.lang.String
      **/
+    @Task(description = "crop")
     @Transactional(readOnly = false)
     public int raiseCrop(Integer userId, Integer cropId, String landNumber){
         User user = this.userDao.findUserById(userId);
@@ -533,7 +537,9 @@ public class UserServiceImpl {
                 number = userBag.getNumber();
                 userBag.setNumber(number - 1);
                 if((number - 1) <= 0){
+                    System.out.println("sss" + number);
                     userBags.remove(userBag);
+                    userBag.setUser(null);
                     this.userBagService.deleteById(userBag.getId());
                 }
                 break;
@@ -555,6 +561,7 @@ public class UserServiceImpl {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
+    @Task(description = "harvest")
     @Transactional(readOnly = false)
     public String harvest(Integer userId, String landNumber){
         User user = this.userDao.findUserById(userId);

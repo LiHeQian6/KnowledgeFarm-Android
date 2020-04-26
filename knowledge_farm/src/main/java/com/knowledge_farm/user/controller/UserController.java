@@ -1,17 +1,17 @@
 package com.knowledge_farm.user.controller;
 
+import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.util.Email;
-import com.knowledge_farm.util.UserCropGrowJob;
-import org.quartz.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -28,13 +27,12 @@ import java.util.Date;
  * @Author 张帅华
  * @Date 2020-04-07 17:36
  */
+@Api(description = "前台用户接口")
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Resource
     private UserServiceImpl userService;
-    @Resource
-    private Scheduler scheduler;
     @Value("${file.photoUrl}")
     private String photoUrl;
     @Value("${file.photoLocation}")
@@ -53,7 +51,11 @@ public class UserController {
      * @Param [openId]
      * @return java.lang.String
      **/
-    @RequestMapping("/loginByOpenId")
+    @ApiOperation(value = "QQ登陆", notes = "返回值：User || notExist：openId不存在(返回后前端进行QQ新用户注册) || notEffect：openId不可用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openId", value = "openId", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/loginByOpenId")
     public Object loginByOpenId(@RequestParam("openId") String openId){
         Object obj = this.userService.loginByOpenId(openId);
 //        if(obj instanceof User){
@@ -74,7 +76,11 @@ public class UserController {
      * @Param [userId]
      * @return java.lang.String
      **/
-    @RequestMapping("/findUserInfoByUserId")
+    @ApiOperation(value = "根据id查询用户信息", notes = "返回值：User")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "userId", dataType = "int", paramType = "query", required = true)
+    })
+    @GetMapping("/findUserInfoByUserId")
     public Object findUserInfoByUserId(@RequestParam("userId") Integer userId){
         User user = this.userService.findUserById(userId);
         if(user != null){
@@ -94,7 +100,16 @@ public class UserController {
      * @Param [openId, nickName, grade, email, password]
      * @return java.lang.String
      **/
-    @RequestMapping("/addQQUser")
+    @ApiOperation(value = "QQ新注册用户", notes = "返回值：User || (String)fail：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openId", value = "openId", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "photo", value = "头像", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "grade", value = "年级", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "nickName", value = "昵称", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = false),
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/addQQUser")
     public Object addQQUser(@RequestParam("openId") String openId,
                             @RequestParam("photo") String photo,
                             @RequestParam("nickName") String nickName,
@@ -117,24 +132,6 @@ public class UserController {
             return Result.FAIL;
         }
     }
-    @RequestMapping("/addQQUser2")
-    public Object addQQUser2(){
-        try {
-            Object obj = this.userService.addQQUser("1", "12345", "1", 1, "1", "1");
-//            if(obj instanceof User){
-//                User user = (User) obj;
-//                user.setPassword("");
-//                if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                    user.setPhoto(this.photoUrl + user.getPhoto());
-//                }
-//                return user;
-//            }
-            return obj;
-        }catch (Exception e){
-            e.printStackTrace();
-            return Result.FAIL;
-        }
-    }
 
     /**
      * @Author 张帅华
@@ -143,7 +140,12 @@ public class UserController {
      * @Param [account, password]
      * @return java.lang.String
      **/
-    @RequestMapping("/loginByAccount")
+    @ApiOperation(value = "账号登陆", notes = "返回值：User || (String)PasswordError：密码错误 || (String)notEffect：账号不可用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "password", value = "面膜", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/loginByAccount")
     public Object loginByAccount(@RequestParam("account") String account, @RequestParam("password") String password){
         Object obj = this.userService.loginByAccount(account, password);
 //        if(obj instanceof User){
@@ -164,31 +166,20 @@ public class UserController {
      * @Param [nickName, grade, email, password]
      * @return java.lang.String
      **/
-    @RequestMapping("/registAccount")
+    @ApiOperation(value = "注册账号", notes = "返回值： User || (String)fail：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "nickName", value = "昵称", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "grade", value = "年级", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = false),
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/registAccount")
     public Object registAccount(@RequestParam("nickName") String nickName,
                                 @RequestParam("grade") Integer grade,
                                 @RequestParam(value = "email", defaultValue = "") String email,
                                 @RequestParam("password") String password){
         try {
             Object obj = this.userService.registAccount(nickName, grade, email, password);
-//            if(obj instanceof User){
-//                User user = (User) obj;
-//                user.setPassword("");
-//                if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                    user.setPhoto(this.photoUrl + user.getPhoto());
-//                }
-//                return user;
-//            }
-            return obj;
-        } catch (Exception e){
-            e.printStackTrace();
-            return Result.FAIL;
-        }
-    }
-    @RequestMapping("/registAccount2")
-    public Object registAccount2(){
-        try {
-            Object obj = this.userService.registAccount("2", 2, "2", "2");
 //            if(obj instanceof User){
 //                User user = (User) obj;
 //                user.setPassword("");
@@ -211,7 +202,12 @@ public class UserController {
      * @Param [account, email]
      * @return java.lang.String
      **/
-    @RequestMapping("/sendTestCodePassword")
+    @ApiOperation(value = "发送验证码用于找回密码，并返回验证码", notes = "返回值：(String)验证码 || (String)fail：发送失败 || EmailError：邮箱错误 || notBindingEmail：未绑定邮箱 || notExistAccount：不存在该账号")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/sendTestCodePassword")
     public String sendTestCodePassword(@RequestParam("account") String account, @RequestParam("email") String email){
         return this.userService.sendTestCodePassword(account,email);
     }
@@ -223,7 +219,12 @@ public class UserController {
      * @Param [account, password]
      * @return java.lang.String
      **/
-    @RequestMapping("/resetUserPassword")
+    @ApiOperation(value = "找回密码（重新给账号设置密码）", notes = "返回值： (String)true：成功 || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/resetUserPassword")
     public String resetUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
         try {
             this.userService.editPasswordByAccount(account, password);
@@ -241,7 +242,12 @@ public class UserController {
      * @Param [account, nickName]
      * @return java.lang.String
      **/
-    @RequestMapping("/updateUserNickName")
+    @ApiOperation(value = "修改用户昵称", notes = "返回值： (String)true：成功 || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "nickName", value = "昵称", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/updateUserNickName")
     public String updateUserNickName(@RequestParam("account") String account,
                                      @RequestParam("nickName") String nickName){
         try {
@@ -260,7 +266,12 @@ public class UserController {
      * @Param [account, grade]
      * @return java.lang.String
      **/
-    @RequestMapping("/updateUserGrade")
+    @ApiOperation(value = "修改用户年级", notes = "返回值： (String)true：成功 || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "grade", value = "年级", dataType = "int", paramType = "form", required = true)
+    })
+    @PostMapping("/updateUserGrade")
     public String updateUserGrade(@RequestParam("account") String account,
                                   @RequestParam("grade") Integer grade){
         try {
@@ -279,7 +290,13 @@ public class UserController {
      * @Param [account, password]
      * @return java.lang.String
      **/
-    @RequestMapping("/updateUserPassword")
+    @ApiOperation(value = "修改用户密码", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)PasswordError：密码输入错误")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "oldPassword", value = "旧密码", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "newPassword", value = "新密码", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/updateUserPassword")
     public String updateUserPassword(@RequestParam("account") String account,
                                      @RequestParam("oldPassword") String oldPassword,
                                      @RequestParam("newPassword") String newPassword){
@@ -303,7 +320,13 @@ public class UserController {
      * @Param [file, id, photo]
      * @return java.lang.String
      **/
-    @RequestMapping("/updatePhoto")
+    @ApiOperation(value = "修改用户头像", notes = "返回值： (String)photo：头像 || (String)false：失败 || (String)null：图片为空")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "upload", value = "图片", dataType = "MultipartFile", paramType = "form", required = true),
+            @ApiImplicitParam(name = "id", value = "用户Id", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "photo", value = "头像", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/updatePhoto")
     public String updatePhoto(@RequestParam("upload") MultipartFile file,
                               @RequestParam("id") Integer id,
                               @RequestParam("photo") String photo) throws IOException {
@@ -336,7 +359,11 @@ public class UserController {
      * @Param [account]
      * @return java.lang.String
      **/
-    @RequestMapping("/isBindingQQ")
+    @ApiOperation(value = "验证是否已经绑定QQ", notes = "返回值： (String)true：已绑定 || (String)false：未绑定 || (String)null：账号不存在")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/isBindingQQ")
     public String isBindingQQ(@RequestParam("account") String account){
         try {
             return this.userService.isBindingQQ(account);
@@ -353,7 +380,12 @@ public class UserController {
      * @Param [account, openId]
      * @return java.lang.String
      **/
-    @RequestMapping("/bindingQQ")
+    @ApiOperation(value = "账号绑定QQ", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)already：邮箱已被绑定")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "openId", value = "openId", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/bindingQQ")
     public String bindingQQ(@RequestParam("account") String account, @RequestParam("openId") String openId){
         try {
             return this.userService.bindingQQ(account, openId);
@@ -370,7 +402,11 @@ public class UserController {
      * @Param [account]
      * @return java.lang.String
      **/
-    @RequestMapping("unBindingQQ")
+    @ApiOperation(value = "账号解绑QQ", notes = "返回值： (String)true：成功 || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("unBindingQQ")
     public String unBindingQQ(@RequestParam("account") String account){
         try {
             this.userService.removeUserAuthority(account);
@@ -388,7 +424,11 @@ public class UserController {
      * @Param [email]
      * @return java.lang.String
      **/
-    @RequestMapping("/sendTestCodeBingEmail")
+    @ApiOperation(value = "发送验证码用于绑定邮箱，并返回验证码", notes = "返回值： (String)验证码 || (String)fail：发送失败 || already：邮箱已被绑定")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/sendTestCodeBingEmail")
     public String sendTestCodeBingEmail(@RequestParam("email") String email){
         if(this.userService.findUserByEmail(email) == null){
             if(Email.bindingMail(email)){
@@ -406,7 +446,12 @@ public class UserController {
      * @Param [account, email]
      * @return java.lang.String
      **/
-    @RequestMapping("/bindingEmail")
+    @ApiOperation(value = "绑定邮箱（直接设置邮箱）", notes = "返回值： (String)true：成功 || (String)fail：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/bindingEmail")
     public String bindingEmail(@RequestParam("account") String account, @RequestParam("email") String email){
         try {
             this.userService.editEmail(account, email);
@@ -424,7 +469,11 @@ public class UserController {
      * @Param
      * @return
      **/
-    @RequestMapping("/unBindingEmail")
+    @ApiOperation(value = "解绑邮箱", notes = "返回值： (String)true：成功 || (String)fail：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/unBindingEmail")
     public String unBindingEmail(@RequestParam("account") String account){
         try {
             this.userService.editEmail(account, "");
@@ -441,7 +490,14 @@ public class UserController {
      * @Param
      * @return
      **/
-    @RequestMapping("/lessRewardCount")
+    @ApiOperation(value = "添加浇水，施肥次数，减少奖励次数", notes = "返回值： (String)剩余奖励次数 || (String)-1：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "water", value = "水的次数", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "fertilizer", value = "肥料的次数", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "subject", value = "学科", dataType = "String", paramType = "form", required = true)
+    })
+    @PostMapping("/lessRewardCount")
     public String lessRewardCount(@RequestParam("userId") Integer userId,
                                   @RequestParam("water") Integer water,
                                   @RequestParam("fertilizer") Integer fertilizer,
@@ -461,7 +517,12 @@ public class UserController {
      * @Param [userId, subject]
      * @return java.lang.String
      **/
-    @RequestMapping("/getRewardCount")
+    @ApiOperation(value = "查询剩余奖励次数", notes = "返回值： (String)剩余奖励次数")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "subject", value = "学科", dataType = "String", paramType = "query", required = true)
+    })
+    @GetMapping("/getRewardCount")
     public String getRewardCount(@RequestParam("userId") Integer userId, @RequestParam("subject") String subject){
         User user = this.userService.findUserById(userId);
         if(user != null){
@@ -486,7 +547,12 @@ public class UserController {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
-    @RequestMapping("/waterCrop")
+    @ApiOperation(value = "浇水", notes = "返回值： (String)true：成功 || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
+    })
+    @GetMapping("/waterCrop")
     public String waterCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber, HttpServletRequest request){
         try {
             int result = this.userService.waterCrop(userId, landNumber);
@@ -512,7 +578,12 @@ public class UserController {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
-    @RequestMapping("/fertilizerCrop")
+    @ApiOperation(value = "施肥", notes = "返回值： (String)true：成功 || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
+    })
+    @GetMapping("/fertilizerCrop")
     public String fertilizerCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
         try {
             return this.userService.fertilizerCrop(userId, landNumber);
@@ -529,7 +600,13 @@ public class UserController {
      * @Param [userId, cropId, number]
      * @return java.lang.String
      **/
-    @RequestMapping("/buyCrop")
+    @ApiOperation(value = "购买种子后添加到背包", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "cropId", value = "作物Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "number", value = "数量", dataType = "int", paramType = "query", required = true)
+    })
+    @GetMapping("/buyCrop")
     public String buyCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("number") Integer number){
         try {
             return this.userService.buyCrop(userId, cropId, number);
@@ -546,7 +623,13 @@ public class UserController {
      * @Param [userId, cropId, landNumber]
      * @return java.lang.String
      **/
-    @RequestMapping("/raiseCrop")
+    @ApiOperation(value = "种植作物", notes = "返回值： (String)true：成功 || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "cropId", value = "作物Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "number", value = "数量", dataType = "int", paramType = "query", required = true)
+    })
+    @GetMapping("/raiseCrop")
     public String raiseCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("landNumber") String landNumber, HttpServletRequest request){
         try {
             int result = this.userService.raiseCrop(userId, cropId, landNumber);
@@ -568,7 +651,12 @@ public class UserController {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
-    @RequestMapping("/harvest")
+    @ApiOperation(value = "收获", notes = "返回值：  (String)up：升级 || (String)true：成功（未升级） || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
+    })
+    @GetMapping("/harvest")
     public String harvest(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
         try {
             return this.userService.harvest(userId, landNumber);
@@ -585,7 +673,13 @@ public class UserController {
      * @Param [userId, landNumber, money]
      * @return java.lang.String
      **/
-    @RequestMapping("/extensionLand")
+    @ApiOperation(value = "扩建土地", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "form", required = true),
+            @ApiImplicitParam(name = "needMoney", value = "开扩土地所需金币", dataType = "int", paramType = "form", required = true),
+    })
+    @PostMapping("/extensionLand")
     public String extensionLand(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber, @RequestParam("needMoney") Integer money){
         try {
             return this.userService.extensionLand(userId, landNumber, money);

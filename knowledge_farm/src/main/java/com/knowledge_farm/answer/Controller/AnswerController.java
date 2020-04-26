@@ -1,16 +1,16 @@
-package com.knowledge_farm.anwser.Controller;
+package com.knowledge_farm.answer.Controller;
 
-import com.knowledge_farm.anwser.entity.Question3Num;
-import com.knowledge_farm.anwser.service.AnswerService;
+import com.knowledge_farm.answer.entity.Question3Num;
+import com.knowledge_farm.answer.service.AnswerService;
 import com.knowledge_farm.entity.Chinese;
 import com.knowledge_farm.entity.Chinese23;
 import com.knowledge_farm.entity.English;
+import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -23,6 +23,7 @@ import java.util.Random;
  * @author: 景光赞
  * @create: 2020-04-09 19:19
  **/
+@Api(description = "前台答题接口")
 @Controller
 @RequestMapping("/answer")
 public class AnswerController {
@@ -37,7 +38,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/mathOneUp")
+    @GetMapping("/mathOneUp")
     public List OneUpMath() {
         List<Question3Num> list = new AnswerService().getQuestion3OneUpMath();
 
@@ -51,7 +52,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/mathOneDown")
+    @GetMapping("/mathOneDown")
     public List OneDownMath() {
         List<Question3Num> list = new AnswerService().getQuestion3OneDownMath();
 
@@ -66,7 +67,7 @@ public class AnswerController {
     * @Date: 2020/4/9
     */
     @ResponseBody
-    @RequestMapping("/ChineseOneUp")
+    @GetMapping("/ChineseOneUp")
     public Page<Chinese> findChineseOneUp(){
         int pageNumber = new Random().nextInt(3);
         int pageSize = 20;
@@ -81,7 +82,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/ChineseOneDown")
+    @GetMapping("/ChineseOneDown")
     public Page<Chinese> findChineseOneDown(){
         int pageNumber = new Random().nextInt(3);
         int pageSize = 20;
@@ -96,7 +97,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/ChineseTwoUp")
+    @GetMapping("/ChineseTwoUp")
     public Page<Chinese23> findChineseTwoUp(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
@@ -111,7 +112,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/ChineseTwoDown")
+    @GetMapping("/ChineseTwoDown")
     public Page<Chinese23> findChineseTwoDown(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
@@ -126,7 +127,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/ChineseThreeUp")
+    @GetMapping("/ChineseThreeUp")
     public Page<Chinese23> findChineseThreeUp(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
@@ -141,7 +142,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/ChineseThreeDown")
+    @GetMapping("/ChineseThreeDown")
     public Page<Chinese23> findChineseThreeDown(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
@@ -157,7 +158,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/englishOneUp")
+    @GetMapping("/englishOneUp")
     public Page<English> englishOneUp() {
         int pageNumber = new Random().nextInt(2);
         Page<English> page =  answerService.findEnglishOneUp(PageRequest.of(pageNumber, 25));
@@ -171,7 +172,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/englishOneDown")
+    @GetMapping("/englishOneDown")
     public Page<English> englishOneDown() {
         int pageNumber = new Random().nextInt(2);
         Page<English> page =  answerService.findEnglishOneDown(PageRequest.of(pageNumber, 23));
@@ -185,7 +186,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/englishTwoUp")
+    @GetMapping("/englishTwoUp")
     public Page<English> englishTwoUp() {
         int pageNumber = new Random().nextInt(3);
         Page<English> page =  answerService.findEnglishTwoUp(PageRequest.of(pageNumber, 18));
@@ -199,7 +200,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/englishTwoDown")
+    @GetMapping("/englishTwoDown")
     public Page<English> englishTwoDown() {
         int pageNumber = new Random().nextInt(3);
         Page<English> page =  answerService.findEnglishTwoDown(PageRequest.of(pageNumber, 18));
@@ -213,7 +214,7 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/englishThreeUp")
+    @GetMapping("/englishThreeUp")
     public Page<English> englishThreeUp() {
         int pageNumber = new Random().nextInt(3);
         Page<English> page =  answerService.findEnglishThreeUp(PageRequest.of(pageNumber, 20));
@@ -227,10 +228,11 @@ public class AnswerController {
      * @Date: 2020/4/9
      */
     @ResponseBody
-    @RequestMapping("/englishThreeDown")
+    @GetMapping("/englishThreeDown")
     public Page<English> englishThreeDown() {
         int pageNumber = new Random().nextInt(5);
         Page<English> page =  answerService.findEnglishThreeDown(PageRequest.of(pageNumber, 22));
         return page;
     }
+
 }
