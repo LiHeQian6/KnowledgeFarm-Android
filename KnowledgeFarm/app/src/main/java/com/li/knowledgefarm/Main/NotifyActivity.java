@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.FriendsPage;
@@ -49,6 +50,7 @@ public class NotifyActivity extends AppCompatActivity {
     private ListView listView;
     private FriendsPage<Notification> notify_list;
     private Handler get_system_notify;
+    private Handler get_mysend_notify;
     private String current_type = "1";
     private Button system_notify;
     private Button friend_notify;
@@ -144,7 +146,7 @@ public class NotifyActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
-                        .add("userId", 109+"")
+                        .add("userId", LoginActivity.user.getId() +"")
                         .add("typeId",type)
                         .add("pageNumber",pageNumber+"")
                         .add("pageSize",pageSize+"").build();
@@ -203,6 +205,39 @@ public class NotifyActivity extends AppCompatActivity {
         };
     }
 
+    private void getMySendNotify(final String type,final int pageNumber,final int pageSize){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                FormBody formBody = new FormBody.Builder()
+                        .add("userId", LoginActivity.user.getId() +"")
+                        .add("typeId",type)
+                        .add("pageNumber",pageNumber+"")
+                        .add("pageSize",pageSize+"").build();
+                Request request = new Request.Builder()
+                        .post(formBody)
+                        .url("http://39.106.18.238:8081"+"notification/findSendNotificationByType").build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("通知信息", "请求失败");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String notify_message = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = notify_message;
+                        get_system_notify.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
     class CustomerOnclickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
@@ -215,7 +250,7 @@ public class NotifyActivity extends AppCompatActivity {
                     current_type = "2";
                     getNotify("2",1,6);
                     break;
-                case R.id.message_btn:
+                case R.id.add_btn:
                     current_type = "3";
                     break;
                 case R.id.next_notify:
