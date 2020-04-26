@@ -72,7 +72,7 @@ public class FrontUserController {
         return "member-password";
     }
 
-    @PostMapping("/findUserPage")
+    @GetMapping("/findUserPage")
     public String findUserPage(@RequestParam(value = "account", required = false) String account,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,

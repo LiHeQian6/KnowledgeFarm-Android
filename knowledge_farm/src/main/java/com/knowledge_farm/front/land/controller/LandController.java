@@ -27,7 +27,7 @@ public class LandController {
     @Resource
     private LandService landService;
 
-    @PostMapping("/findPageLand")
+    @GetMapping("/findPageLand")
     public String findPageLand(@RequestParam(value = "account", required = false) String account,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,

@@ -164,7 +164,7 @@ public class UserFriendController {
             @ApiImplicitParam(name = "friendId", value = "好友Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "landNumber", value = "要施肥的土地号", dataType = "String", paramType = "query", required = true)
     })
-    @RequestMapping("fertilizerForFriend")
+    @GetMapping("fertilizerForFriend")
     public String fertilizerForFriend(@RequestParam("userId") Integer userId,
                                       @RequestParam("friendId") Integer friendId,
                                       @RequestParam("landNumber") String landNumber){

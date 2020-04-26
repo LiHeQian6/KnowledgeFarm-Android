@@ -56,7 +56,7 @@
         <div class="page-content">
           <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
-            <form id="form1" class="layui-form" enctype="multipart/form-data" action="javascript:addCrop()">
+            <form id="form1" class="layui-form" enctype="multipart/form-data" action="javascript:addCrop()" method="post">
             	<div class="layui-form-item">
                     <label class="layui-form-label">
                         	<font color="red">*</font>名称
