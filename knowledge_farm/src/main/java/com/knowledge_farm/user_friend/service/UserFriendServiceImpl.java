@@ -1,5 +1,6 @@
 package com.knowledge_farm.user_friend.service;
 
+import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.*;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
@@ -71,6 +72,7 @@ public class UserFriendServiceImpl {
         this.userFriendDao.deleteAll(userFriends2);
     }
 
+    @Task(description = "help_water")
     @Transactional(readOnly = false)
     public int waterForFriend(Integer userId, Integer friendId, String landNumber){
         User user = this.userService.findUserById(userId);
@@ -105,6 +107,7 @@ public class UserFriendServiceImpl {
         return 0;
     }
 
+    @Task(description = "help_fertilize")
     @Transactional(readOnly = false)
     public String fertilizerForFriend(Integer userId, Integer friendId, String landNumber){
         User user = this.userService.findUserById(userId);

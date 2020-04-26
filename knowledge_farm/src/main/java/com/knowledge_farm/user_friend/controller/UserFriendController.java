@@ -1,5 +1,6 @@
 package com.knowledge_farm.user_friend.controller;
 
+import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;

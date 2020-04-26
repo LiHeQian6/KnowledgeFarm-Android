@@ -409,6 +409,7 @@ public class UserServiceImpl {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
+    @Task(description = "water")
     @Transactional(readOnly = false)
     public int waterCrop(Integer userId, String landNumber) {
         User user = this.userDao.findUserById(userId);
@@ -448,6 +449,7 @@ public class UserServiceImpl {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
+    @Task(description = "fertilize")
     @Transactional(readOnly = false)
     public String fertilizerCrop(Integer userId, String landNumber){
         User user = this.userDao.findUserById(userId);
@@ -521,6 +523,7 @@ public class UserServiceImpl {
      * @Param [userId, cropId, landNumber]
      * @return java.lang.String
      **/
+    @Task(description = "crop")
     @Transactional(readOnly = false)
     public int raiseCrop(Integer userId, Integer cropId, String landNumber){
         User user = this.userDao.findUserById(userId);
@@ -558,6 +561,7 @@ public class UserServiceImpl {
      * @Param [userId, landNumber]
      * @return java.lang.String
      **/
+    @Task(description = "harvest")
     @Transactional(readOnly = false)
     public String harvest(Integer userId, String landNumber){
         User user = this.userDao.findUserById(userId);
