@@ -47,7 +47,7 @@ public class FrontAdminPasswordAspect {
         PageUtil<Admin> pageUtil = (PageUtil<Admin>) request.getAttribute("adminPage");
         if(pageUtil != null){
             for(Admin admin1 : pageUtil.getList()){
-                admin.setPassword("");
+                admin1.setPassword("");
             }
             request.setAttribute("adminPage", pageUtil);
         }

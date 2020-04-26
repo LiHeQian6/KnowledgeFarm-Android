@@ -57,7 +57,7 @@ public class FrontCropController {
         return "crop-edit";
     }
 
-    @PostMapping("/findCropPage")
+    @GetMapping("/findCropPage")
     public String findCropPage(@RequestParam(value = "name", required = false) String name,
                                @RequestParam("exist") Integer exist,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
@@ -166,27 +166,24 @@ public class FrontCropController {
             crop.setValue(value);
             crop.setExperience(experience);
             Crop saveCrop = this.frontCropService.save(crop);
-            if(saveCrop != null){
-                Integer id = saveCrop.getId();
-                entityManager.clear();
-                String img[] = new String[4];
-                int count = 1;
-                for(MultipartFile multipartFile : files){
-                    String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
-                    img[count-1] = this.cropPhotoFolderName + "/" + fileName;
-                    FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName));
-                    count++;
-                }
-
-                Crop editCrop = this.frontCropService.findCropById(id);
-                editCrop.setImg1(img[0]);
-                editCrop.setImg2(img[1]);
-                editCrop.setImg3(img[2]);
-                editCrop.setImg4(img[3]);
-                this.frontCropService.save(editCrop);
-                return Result.SUCCEED;
+            Integer id = saveCrop.getId();
+            entityManager.clear();
+            String img[] = new String[4];
+            int count = 1;
+            for(MultipartFile multipartFile : files){
+                String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                img[count-1] = this.cropPhotoFolderName + "/" + fileName;
+                FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName));
+                count++;
             }
-            return Result.FAIL;
+
+            Crop editCrop = this.frontCropService.findCropById(id);
+            editCrop.setImg1(img[0]);
+            editCrop.setImg2(img[1]);
+            editCrop.setImg3(img[2]);
+            editCrop.setImg4(img[3]);
+            this.frontCropService.save(editCrop);
+            return Result.SUCCEED;
         }catch (Exception e){
             return Result.FAIL;
         }
