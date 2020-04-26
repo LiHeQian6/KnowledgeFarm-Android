@@ -2,6 +2,8 @@ package com.li.knowledgefarm.Jpush;
 
 import android.app.Application;
 
+import com.li.knowledgefarm.Login.LoginActivity;
+
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -17,6 +19,5 @@ public class Myapplication extends Application {
         super.onCreate();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
-        JPushInterface.setAlias(this,1,"sun");
     }
 }
