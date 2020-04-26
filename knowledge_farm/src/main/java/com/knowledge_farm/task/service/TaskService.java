@@ -95,5 +95,9 @@ public class TaskService {
             return -1;
         }
     }
+    @Transactional(readOnly = false)
+    public int updateTaskEveryDay(){
+        return taskDao.updateTaskEveryDay();
+    }
 
 }

@@ -81,5 +81,9 @@ public class TaskController {
         return taskService.updateTask(userService.findUserById(userId),taskName);
     }
 
+    @GetMapping("/test")
+    public int test(){
+        return taskService.updateTaskEveryDay();
+    }
 
 }
