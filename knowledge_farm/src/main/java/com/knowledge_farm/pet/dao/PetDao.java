@@ -10,4 +10,6 @@ import java.io.Serializable;
 
 public interface PetDao extends JpaRepository<Pet,Integer>, JpaSpecificationExecutor<Pet>, Serializable {
     Page<Pet> findAllByIsOwn(int isOwn, Pageable pageable);
+
+    Pet findPetById(int petId);
 }

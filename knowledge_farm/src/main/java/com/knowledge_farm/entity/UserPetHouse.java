@@ -14,15 +14,14 @@ public class UserPetHouse {
     private int id;
     private User user;
     private Pet pet;
-    private int number;
+
 
     public UserPetHouse() {
     }
 
-    public UserPetHouse(User user, Pet pet, int number) {
+    public UserPetHouse(User user, Pet pet) {
         this.user = user;
         this.pet = pet;
-        this.number = number;
     }
 
     @Id
@@ -55,11 +54,4 @@ public class UserPetHouse {
         this.pet = pet;
     }
 
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
 }

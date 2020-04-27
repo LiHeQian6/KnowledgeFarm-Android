@@ -25,4 +25,7 @@ public class PetService {
         return petDao.findAllByIsOwn(0,pageable);
     }
 
+    public Pet findPetById(int petId){
+        return petDao.findPetById(petId);
+    }
 }

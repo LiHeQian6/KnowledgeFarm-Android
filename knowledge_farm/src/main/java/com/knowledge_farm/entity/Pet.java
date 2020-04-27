@@ -116,4 +116,12 @@ public class Pet {
     public void setImg3(String img3) {
         this.img3 = img3;
     }
+
+    public int getIsOwn() {
+        return isOwn;
+    }
+
+    public void setIsOwn(int isOwn) {
+        this.isOwn = isOwn;
+    }
 }

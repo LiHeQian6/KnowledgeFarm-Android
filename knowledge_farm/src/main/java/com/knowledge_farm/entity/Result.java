@@ -24,4 +24,5 @@ public class Result {
     public static String NOT_ENOUGH_MONEY = "notEnoughMoney";
     public static String UP = "up";
     public static String START = "start";
+    public static String OWN = "own";
 }

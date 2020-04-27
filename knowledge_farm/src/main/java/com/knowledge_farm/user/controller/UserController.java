@@ -688,5 +688,12 @@ public class UserController {
             return Result.FALSE;
         }
     }
+    @GetMapping("/test")
+    public String test(){
+        return userService.buyPet(109,2);    }
+    @GetMapping("/buyPet")
+    public String buyPet(@RequestParam("userId")int userId,@RequestParam("petId")int petId){
+        return userService.buyPet(userId,petId);
+    }
 
 }
