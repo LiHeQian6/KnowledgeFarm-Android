@@ -60,16 +60,19 @@ public class TaskService {
             task.setSignIn(2);
             user.setMoney(user.getMoney()+200);
             user.setExperience(user.getExperience()+100);
+            userService.saveUser(user);
             return taskDao.saveAndFlush(task).getSignIn();
         }else if(taskName.equals("water")&&task.getWater()==1){
             task.setWater(2);
             user.setMoney(user.getMoney()+100);
             user.setExperience(user.getExperience()+50);
+            userService.saveUser(user);
             return taskDao.saveAndFlush(task).getWater();
         }else if(taskName.equals("fertilize")&&task.getFertilize()==1){
             task.setFertilize(2);
             user.setMoney(user.getMoney()+100);
             user.setExperience(user.getExperience()+50);
+            userService.saveUser(user);
             return taskDao.saveAndFlush(task).getFertilize();
         }else if(taskName.equals("crop")&&task.getCrop()==1){
             task.setCrop(2);
@@ -80,16 +83,19 @@ public class TaskService {
             task.setHarvest(2);
             user.setMoney(user.getMoney()+100);
             user.setExperience(user.getExperience()+50);
+            userService.saveUser(user);
             return taskDao.saveAndFlush(task).getHarvest();
         }else if(taskName.equals("help_water")&&task.getHelpWater()==1){
             task.setHelpWater(2);
             user.setMoney(user.getMoney()+100);
             user.setExperience(user.getExperience()+50);
+            userService.saveUser(user);
             return taskDao.saveAndFlush(task).getHelpWater();
         }else if(taskName.equals("help_fertilize")&&task.getHelpFertilize()==1){
             task.setHelpFertilize(2);
             user.setMoney(user.getMoney()+100);
             user.setExperience(user.getExperience()+50);
+            userService.saveUser(user);
             return taskDao.saveAndFlush(task).getHelpFertilize();
         }else {
             return -1;

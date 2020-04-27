@@ -83,7 +83,7 @@ public class TaskController {
 
     @GetMapping("/test")
     public int test(){
-        return taskService.updateTaskEveryDay();
+        return taskService.finishTask(userService.findUserById(109),"water");
     }
 
 }

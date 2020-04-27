@@ -21,6 +21,7 @@ public class Pet {
     private String img1;
     private String img2;
     private String img3;
+    private int isOwn;
 
     public Pet() {
     }
@@ -31,6 +32,7 @@ public class Pet {
         this.intelligence = intelligence;
         this.physical = physical;
         this.growPeriod = 0;
+        this.isOwn = 0;
     }
 
     @Id

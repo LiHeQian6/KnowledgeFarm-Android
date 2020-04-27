@@ -3,10 +3,12 @@ package com.knowledge_farm.user.service;
 import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.crop.service.CropServiceImpl;
 import com.knowledge_farm.entity.*;
+import com.knowledge_farm.pet.service.PetService;
 import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.user_authority.service.UserAuthorityServiceImpl;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
+import com.knowledge_farm.user_pet_house.service.UserPetHoueService;
 import com.knowledge_farm.util.Email;
 import com.knowledge_farm.util.RandomUtil;
 import com.knowledge_farm.util.UserCropGrowJob;
@@ -44,6 +46,12 @@ public class UserServiceImpl {
     @Resource
     @Lazy
     private UserBagServiceImpl userBagService;
+    @Resource
+    @Lazy
+    private PetService petService;
+    @Resource
+    @Lazy
+    private UserPetHoueService userPetHoueService;
     @Resource
     private EntityManager entityManager;
     @Resource
