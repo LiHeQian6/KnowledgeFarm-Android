@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,8 +30,12 @@ public interface NotificationDao extends JpaRepository<Notification, Integer> {
     @Query("select n from Notification n where (n.to.id = ?1 or n.to.id is null) and n.notificationType.id = ?2")
     public Page<Notification> findReceivedSystemNotificationByNotificationType(Integer userId, Integer typeId, Pageable pageable);
 
-    @Query("select n.notificationType.id from Notification n where n.to.id = ?1")
-    public List<Notification> findNotificationByToUserId(Integer userId);
+    @Query("select n " +
+            "from Notification n " +
+            "where (n.to.id = ?1 and n.haveRead = 0) " +
+            "or (n.from.id = ?1 and n.haveRead in (-2,2)) " +
+            "or (n.to is null and n.createTime >= (select u.lastLogoutTime from User u where u.id = ?1))")
+    public List<Notification> findNotificationByToUserIdAndHaveReadAndUserLastLogoutTime(Integer userId);
 
     @Modifying
     @Query("delete from Notification n where n.to.id = ?1 and n.notificationType.id = ?2")

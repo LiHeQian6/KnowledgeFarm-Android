@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -108,6 +109,7 @@ public class UserServiceImpl {
         user.setPhoto(photo);
         user.setEmail(email);
         user.setGrade(grade);
+        user.setLastLogoutTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建UserAuthority
         UserAuthority userAuthority = new UserAuthority();
@@ -183,6 +185,7 @@ public class UserServiceImpl {
         user.setPhoto(this.userPhotoFolderName + "/" + this.userDefaultFileName);
         user.setEmail(email);
         user.setGrade(grade);
+        user.setLastLogoutTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建Land
         Land land = new Land();

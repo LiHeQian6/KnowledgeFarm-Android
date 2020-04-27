@@ -99,11 +99,19 @@ public class NotificationController {
         return pageUtil;
     }
 
-//    @ApiOperation(value = "查询是否有新消息", notes = "返回值：List（boolean）")
-//    @GetMapping("/isHavingNewNotification")
-//    public List<Boolean> isHavingNewNotification(){
-//
-//    }
+    @ApiOperation(value = "查询是否有新消息", notes = "返回值：List（boolean）：1、system；2、receive；3、send；4、message")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int", paramType = "query", required = true),
+    })
+    @GetMapping("/isHavingNewNotification")
+    public List<Boolean> isHavingNewNotification(@RequestParam("userId") Integer userId){
+        try {
+            return this.notificationService.isHavingNewNotification(userId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 
     @ApiOperation(value = "添加加好友的消息记录", notes = "返回值：(String)true：成功 || (String)false；失败")
     @ApiImplicitParams({
