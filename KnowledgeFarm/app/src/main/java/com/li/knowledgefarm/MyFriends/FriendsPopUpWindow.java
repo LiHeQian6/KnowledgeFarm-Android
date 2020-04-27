@@ -57,7 +57,7 @@ public class FriendsPopUpWindow extends PopupWindow {
     private EditText searchAccount;
     private ListView friendsListView;
     private RadioGroup searchSelected;
-    private FriendsPage<User> friendsPage;
+    public FriendsPage<User> friendsPage;
     private int searchSelectedItem=0;
     private OkHttpClient okHttpClient;
     private Handler friendsMessagesHandler;
@@ -68,10 +68,11 @@ public class FriendsPopUpWindow extends PopupWindow {
     private Button search;
     private long lastClickTime = 0;
     private long FAST_CLICK_DELAY_TIME = 500;
+    public FriendsCustomerAdapter customerAdapter;
+
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public FriendsPopUpWindow(Context context) {
-    public FriendsDialog(Context context) {
         super(context);
         this.context = context;
         this.setOutsideTouchable(true);
@@ -266,7 +267,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                     Type type = new TypeToken<FriendsPage<User>>(){}.getType();
                     friendsPage = gson.fromJson(messages,type);
                     now.setText(friendsPage.getCurrentPageNum()+"/"+friendsPage.getTotalPageNum());
-                    FriendsCustomerAdapter customerAdapter = new FriendsCustomerAdapter(context,friendsPage.getList(),R.layout.friends_list_item,searchSelectedItem);
+                    customerAdapter = new FriendsCustomerAdapter(context,friendsPage.getList(),R.layout.friends_list_item,searchSelectedItem);
                     friendsListView.setAdapter(customerAdapter);
                     customerAdapter.notifyDataSetChanged();
                 }else{

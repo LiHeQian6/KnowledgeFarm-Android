@@ -454,7 +454,7 @@ public class SettingActivity extends AppCompatActivity {
      * 判断是否已绑定邮箱，再修改页面
      */
     private void isBindingEmail(){
-        if(!LoginActivity.user.getEmail().equals("")){
+        if(null!=LoginActivity.user&&!LoginActivity.user.getEmail().equals("")){
             btnBindingEmail.setVisibility(View.GONE);
             btnUnBindingEmail.setVisibility(View.VISIBLE);
             tv_email.setText("您的账号"+LoginActivity.user.getAccount()+"已绑定邮箱：" + LoginActivity.user.getEmail());

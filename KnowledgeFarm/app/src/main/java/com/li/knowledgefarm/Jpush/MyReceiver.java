@@ -28,6 +28,7 @@ public class MyReceiver extends JPushMessageReceiver {
         Log.e("自定义消息：",title+","+message+","+extra);
         EventBean eventBean = new EventBean();
         eventBean.setMessage(title);
+        eventBean.setNotifyType(message);
         EventBus.getDefault().post(eventBean);
     }
 }

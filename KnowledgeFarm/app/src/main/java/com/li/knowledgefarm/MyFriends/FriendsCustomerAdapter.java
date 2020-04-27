@@ -126,6 +126,7 @@ public class FriendsCustomerAdapter extends BaseAdapter {
                     HashMap<Object, Object> event = new HashMap<>();
                     event.put(dataList.get(position).getAccount(),false);
                     EventBus.getDefault().post(event);
+                    notifyDataSetChanged();
                 }
             });
         }else{

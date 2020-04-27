@@ -55,10 +55,9 @@ import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
-import com.li.knowledgefarm.entity.BagCropNumber;
 import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
-import com.li.knowledgefarm.entity.FriendsPage;
+import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
 
@@ -128,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
     private DayTaskPopUpWindow dayTaskPopUpWindow;
     private ImageView notify_red;
     private ImageView daytask_red;
+    private static List<Boolean> notifyStatus=new ArrayList<>(4);
+    private Handler new_notification;
+    private FriendsPopUpWindow friendsPopUpWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         addListener();
         getCrop();
         JPushInterface.setAlias(this,1, LoginActivity.user.getAccount());
+//        haveNewNotifications();
     }
 
     @Override
@@ -257,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
         experience.setMax(levelExperience[l] - levelExperience[l - 1]);
         experience.setProgress((int) LoginActivity.user.getExperience() - levelExperience[l - 1]);
         experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l]);
-
     }
 
     /**
@@ -298,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFriends() {
         myFriends.setVisibility(View.GONE);
-        FriendsPopUpWindow friendsPopUpWindow = new FriendsPopUpWindow(this);
+        friendsPopUpWindow = new FriendsPopUpWindow(this);
         //获取屏幕显示区域尺寸
         WindowManager.LayoutParams attrs = getWindow().getAttributes();
         WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
@@ -355,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-//        setDialogSize(view);
+        setDialogSize(view);
         dialog.setContentView(view);
         dialog.show();
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -425,6 +427,16 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
                     }else {
                         Toast.makeText(MainActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
+                        if (option == 1){
+                            List<User> list = friendsPopUpWindow.friendsPage.getList();
+                            for (int i = 0; i < list.size(); i++) {
+                                if (list.get(i).getAccount().equals(num)) {
+                                    list.remove(i);
+                                    break;
+                                }
+                            }
+                            friendsPopUpWindow.customerAdapter.notifyDataSetChanged();
+                        }
                     }
                 } else {
                     Toast toast = Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT);
@@ -445,6 +457,12 @@ public class MainActivity extends AppCompatActivity {
     private void showDayTaskWindow() {
         dayTaskPopUpWindow = new DayTaskPopUpWindow(this);
         dayTaskPopUpWindow.showAtLocation(dayTask, Gravity.CENTER, 0, 0);
+        dayTaskPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                getUserInfo();
+            }
+        });
     }
 
     /**
@@ -902,7 +920,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDismiss() {
                 getCrop();
-//                showLand();
             }
         });
 //        {
@@ -1071,9 +1088,30 @@ public class MainActivity extends AppCompatActivity {
         daytask_red =findViewById(R.id.daytask_red);
     }
 
+    /**
+     * @Author li
+     * @param eventBean
+     * @return void
+     * @Description 消息红点的展示和在线时每种消息是否有新的消息的设置
+     * @Date 15:11 2020/4/27
+     **/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setRedPoint(EventBean eventBean){
         if (eventBean.getMessage().equals("notification")){
+            switch (eventBean.getNotifyType()){
+                case "system":
+                    notifyStatus.set(0,true);
+                    break;
+                case "receive":
+                    notifyStatus.set(1,true);
+                    break;
+                case "send":
+                    notifyStatus.set(2,true);
+                    break;
+                case "message":
+                    notifyStatus.set(3,true);
+                    break;
+            }
             notify_red.setVisibility(View.VISIBLE);
         }
         if (eventBean.getMessage().equals("task")){
@@ -1081,6 +1119,51 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void haveNewNotifications(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder()
+                        .url(getResources().getString(R.string.URL)+"/notification/isHavingNewNotification?userId="+LoginActivity.user.getId()).build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("新通知信息", "请求失败");
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        new_notification.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String notify_message = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = notify_message;
+                        new_notification.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        new_notification= new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+                Log.e("新通知信息",message);
+                if (!message.equals("Fail")){
+                    Type type = new TypeToken<List<Boolean>>(){}.getType();
+                    notifyStatus= gson.fromJson(message,type);
+                    if (notifyStatus.get(0)){
+                        notify_red.setVisibility(View.VISIBLE);
+                    }
+                }else {
+                    Toast.makeText(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
 
     /**
      * @Author li

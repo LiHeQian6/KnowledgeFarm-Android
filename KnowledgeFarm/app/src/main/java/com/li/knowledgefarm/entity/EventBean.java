@@ -12,6 +12,7 @@ public class EventBean {
     String account;
     private List<Question3Num> mathList;
     private String message;
+    private String notifyType;
 
     public String getAccount() {
         return account;
@@ -34,5 +35,13 @@ public class EventBean {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getNotifyType() {
+        return notifyType;
+    }
+
+    public void setNotifyType(String notifyType) {
+        this.notifyType = notifyType;
     }
 }
