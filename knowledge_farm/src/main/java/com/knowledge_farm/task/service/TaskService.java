@@ -23,8 +23,6 @@ public class TaskService {
     @Resource
     private TaskDao taskDao;
     @Resource
-    private UserServiceImpl userService;
-    @Resource
     private JpushService jpushService;
 
     @Transactional(readOnly = false)
