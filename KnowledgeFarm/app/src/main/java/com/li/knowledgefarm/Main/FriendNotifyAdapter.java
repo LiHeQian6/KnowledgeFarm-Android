@@ -102,7 +102,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
                 userMessagePopUp.showAtLocation(view, Gravity.CENTER,0,0);
             }
         });
-        friendViewHolder.id.setText("ID："+list.getList().get(position).getFrom().getId()+"");
+        friendViewHolder.id.setText("账号："+list.getList().get(position).getFrom().getAccount()+"");
         friendViewHolder.nickName.setText(list.getList().get(position).getFrom().getNickName()+" 申请添加你为他的好友");
         notifyDataSetChanged();
         return convertView;

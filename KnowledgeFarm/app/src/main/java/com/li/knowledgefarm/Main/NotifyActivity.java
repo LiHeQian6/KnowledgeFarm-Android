@@ -62,6 +62,8 @@ public class NotifyActivity extends AppCompatActivity {
     private ImageView next;
     private Gson gson;
     private TextView none_notify;
+    private Button delete_all_btn;
+    private Handler if_delete_all;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,6 +115,7 @@ public class NotifyActivity extends AppCompatActivity {
         next_notify = findViewById(R.id.next_notify);
         pre_nofify = findViewById(R.id.pre_notify);
         none_notify = findViewById(R.id.none_notify);
+        delete_all_btn = findViewById(R.id.delete_all_btn);
     }
 
     /**
@@ -131,6 +134,7 @@ public class NotifyActivity extends AppCompatActivity {
         next.setOnClickListener(new CustomerOnclickListener());
         next_notify.setOnClickListener(new CustomerOnclickListener());
         pre_nofify.setOnClickListener(new CustomerOnclickListener());
+        delete_all_btn.setOnClickListener(new CustomerOnclickListener());
     }
 
     /**
@@ -183,6 +187,14 @@ public class NotifyActivity extends AppCompatActivity {
                     notify_list = gson.fromJson(message, list_type);
                     if(notify_list.getList().size() == 0){
                         listView.setVisibility(View.GONE);
+                        switch (current_type){
+                            case "1":
+                                none_notify.setText("暂时没有系统通知哦");
+                                break;
+                            case "2":
+                                none_notify.setText("暂时没有好友申请，快去加好友吧");
+                                break;
+                        }
                         none_notify.setVisibility(View.VISIBLE);
                         return;
                     }else {
@@ -217,7 +229,7 @@ public class NotifyActivity extends AppCompatActivity {
                         .add("pageSize",pageSize+"").build();
                 Request request = new Request.Builder()
                         .post(formBody)
-                        .url("http://39.106.18.238:8081"+"notification/findSendNotificationByType").build();
+                        .url(getResources().getString(R.string.URL)+"/notification/findSendNotificationByType").build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -231,11 +243,69 @@ public class NotifyActivity extends AppCompatActivity {
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;
-                        get_system_notify.sendMessage(message);
+                        get_mysend_notify.sendMessage(message);
                     }
                 });
             }
         }.start();
+        get_mysend_notify = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+                Log.e("message",message);
+                Type list_type = new TypeToken<FriendsPage<Notification>>() {
+                }.getType();
+                if(!message.equals("") && !message.contains("html")) {
+                    notify_list = gson.fromJson(message, list_type);
+                    if(notify_list.getList().size() == 0){
+                        listView.setVisibility(View.GONE);
+                        none_notify.setText("没有添加好友请求呢，快去加好友吧");
+                        none_notify.setVisibility(View.VISIBLE);
+                        return;
+                    }else {
+                        listView.setVisibility(View.VISIBLE);
+                        none_notify.setVisibility(View.GONE);
+                    }
+                    SendNotifyAdapter sendNotifyAdapter = new SendNotifyAdapter(notify_list,R.layout.send_notify_item,getApplicationContext());
+                    listView.setAdapter(sendNotifyAdapter);
+                }
+            }
+        };
+    }
+
+
+    private void Delete_All_Notify(final String type){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder()
+                        .url("").build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String messages = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = messages;
+                        if_delete_all.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        if_delete_all = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+
+            }
+        };
     }
 
     class CustomerOnclickListener implements View.OnClickListener{
@@ -244,29 +314,30 @@ public class NotifyActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.system_btn:
                     current_type = "1";
-                    getNotify("1",1,6);
+                    delete_all_btn.setVisibility(View.VISIBLE);
+                    getNotify("1",1,4);
                     break;
                 case R.id.friend_btn:
                     current_type = "2";
-                    getNotify("2",1,6);
+                    delete_all_btn.setVisibility(View.INVISIBLE);
+                    getNotify("2",1,4);
                     break;
                 case R.id.add_btn:
                     current_type = "3";
+                    delete_all_btn.setVisibility(View.VISIBLE);
+                    getMySendNotify("2",1,4);
                     break;
                 case R.id.next_notify:
+
                     break;
                 case R.id.pre_notify:
+
+                    break;
+                case R.id.delete_all_btn:
 
                     break;
             }
         }
     }
 
-    protected void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//隐藏状态栏但不隐藏状态栏字体
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏，并且不显示字体
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏文字颜色为暗色
-        }
-    }
 }
