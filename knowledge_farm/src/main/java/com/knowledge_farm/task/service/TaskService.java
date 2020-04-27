@@ -2,12 +2,14 @@ package com.knowledge_farm.task.service;
 
 import com.knowledge_farm.entity.Task;
 import com.knowledge_farm.entity.User;
+import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.task.dao.TaskDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 /**
  * @program: knowledge_farm
@@ -22,6 +24,8 @@ public class TaskService {
     private TaskDao taskDao;
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private JpushService jpushService;
 
     public Task findTask(User user){
         return taskDao.findTaskByUser(user);
@@ -60,6 +64,7 @@ public class TaskService {
             task.setSignIn(2);
             user.setMoney(user.getMoney()+200);
             user.setExperience(user.getExperience()+100);
+            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
             return taskDao.saveAndFlush(task).getSignIn();
         }else if(taskName.equals("water")&&task.getWater()==1){
             task.setWater(2);
