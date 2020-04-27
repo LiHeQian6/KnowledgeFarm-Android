@@ -41,6 +41,7 @@ public class User {
     private Set<UserFriend> userFriends = new HashSet<>();
     private Set<Notification> sendNotifications = new HashSet<>();
     private Set<Notification> ReceiveNotifications = new HashSet<>();
+    private Set<UserPetHouse> petHouses = new HashSet<>();
 
     @Id
     @GeneratedValue(generator="identity")
@@ -271,4 +272,14 @@ public class User {
         ReceiveNotifications = receiveNotifications;
     }
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
+    @JsonIgnore
+    public Set<UserPetHouse> getPetHouses() {
+        return petHouses;
+    }
+
+    public void setPetHouses(Set<UserPetHouse> petHouses) {
+        this.petHouses = petHouses;
+    }
 }

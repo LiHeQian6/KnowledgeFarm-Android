@@ -57,12 +57,6 @@ public class UserFriendController {
         Page<User> page = this.userFriendService.findUserFriendPageByAccount(userId, account, pageNumber, pageSize);
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-//        for(User user : page.getContent()){
-//            user.setPassword("");
-//            if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                user.setPhoto(this.photoUrl + user.getPhoto());
-//            }
-//        }
         pageUtil.setList(page.getContent());
         return pageUtil;
     }
@@ -89,12 +83,6 @@ public class UserFriendController {
         Page<User> page = this.userFriendService.findAllUserByAccount(userId, account, pageNumber, pageSize);
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-//        for(User user : page.getContent()){
-//            user.setPassword("");
-//            if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                user.setPhoto(this.photoUrl + user.getPhoto());
-//            }
-//        }
         pageUtil.setList(page.getContent());
         return pageUtil;
     }
@@ -102,12 +90,15 @@ public class UserFriendController {
     @ApiOperation(value = "添加好友", notes = "返回值：(String)true || (String)false：失败")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "account", value = "要添加好友的账号", dataType = "String", paramType = "query", required = true)
+            @ApiImplicitParam(name = "account", value = "要添加好友的账号", dataType = "String", paramType = "query", required = true),
+            @ApiImplicitParam(name = "notificationId", value = "申请添加好友消息的Id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/addUserFriend")
-    public String addUserFriend(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
+    public String addUserFriend(@RequestParam("userId") Integer userId,
+                                @RequestParam("account") String account,
+                                @RequestParam("notificationId") Integer notificationId){
         try {
-            this.userFriendService.addUserFriend(userId, account);
+            this.userFriendService.addUserFriend(userId, account, notificationId);
             return Result.TRUE;
         }catch (Exception e){
             e.printStackTrace();

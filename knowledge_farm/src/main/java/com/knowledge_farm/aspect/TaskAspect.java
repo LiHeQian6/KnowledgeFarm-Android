@@ -2,6 +2,7 @@ package com.knowledge_farm.aspect;
 
 import com.knowledge_farm.entity.Task;
 import com.knowledge_farm.entity.User;
+import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.task.service.TaskService;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
+import java.util.HashMap;
 
 @Component
 @Aspect
@@ -24,6 +26,8 @@ public class TaskAspect {
     private TaskService taskService;
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private JpushService jpushService;
 
     /**
      * @Author 景光赞
@@ -58,6 +62,7 @@ public class TaskAspect {
         }else if(description.equals("help_fertilize")&&task.getHelpFertilize()==0){
             taskService.finishTask(user,"help_fertilize");
         }
+        jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
         System.out.println("*****Encode End*****");
         return result;
     }

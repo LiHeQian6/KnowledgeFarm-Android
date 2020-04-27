@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,9 +47,7 @@ public class AddFriendAspect {
         Notification notification = (Notification) request.getAttribute("addFriendNotification");
         if(result == Result.TRUE){
             try {
-                Type map = new TypeToken<Map<String, String>>(){}.getType();
-                Map<String, String> extra = new Gson().fromJson(notification.getExtra(), map);
-                jpushService.sendCustomPush(notification.getTitle(), notification.getContent(), extra, notification.getTo().getAccount());
+                jpushService.sendCustomPush("notification", "receive", new HashMap<>(), notification.getTo().getAccount());
                 return;
             }catch (Exception e){
                 e.printStackTrace();

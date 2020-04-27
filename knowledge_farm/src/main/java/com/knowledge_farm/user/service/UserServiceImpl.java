@@ -3,10 +3,12 @@ package com.knowledge_farm.user.service;
 import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.crop.service.CropServiceImpl;
 import com.knowledge_farm.entity.*;
+import com.knowledge_farm.pet.service.PetService;
 import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.user_authority.service.UserAuthorityServiceImpl;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
+import com.knowledge_farm.user_pet_house.service.UserPetHoueService;
 import com.knowledge_farm.util.Email;
 import com.knowledge_farm.util.RandomUtil;
 import com.knowledge_farm.util.UserCropGrowJob;
@@ -44,6 +46,12 @@ public class UserServiceImpl {
     @Resource
     @Lazy
     private UserBagServiceImpl userBagService;
+    @Resource
+    @Lazy
+    private PetService petService;
+    @Resource
+    @Lazy
+    private UserPetHoueService userPetHoueService;
     @Resource
     private EntityManager entityManager;
     @Resource
@@ -121,6 +129,9 @@ public class UserServiceImpl {
         land.setUserCrop3(userCrop3);
         land.setUserCrop4(userCrop4);
         user.setLand(land);
+        //宠物仓库
+        UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
+        user.getPetHouses().add(petHouse);
         //添加并返回新插入的User
         this.userDao.save(user);
         entityManager.clear();
@@ -187,6 +198,9 @@ public class UserServiceImpl {
         land.setUserCrop3(userCrop3);
         land.setUserCrop4(userCrop4);
         user.setLand(land);
+        //宠物仓库
+        UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
+        user.getPetHouses().add(petHouse);
         this.userDao.save(user);
         entityManager.clear();
         User resultUser = this.userDao.findUserById(user.getId());
@@ -511,6 +525,32 @@ public class UserServiceImpl {
                 userBags.add(userBag);
             }
             user.setMoney(userMoney - needMoney);
+            return Result.TRUE;
+        }
+        return Result.NOT_ENOUGH_MONEY;
+    }
+    /**
+     * @description: 购买宠物
+     * @author :景光赞
+     * @date :2020/4/27 18:18
+     * @param :[userId, petId]
+     * @return :java.lang.String
+     */
+    @Transactional(readOnly = false)
+    public String buyPet(Integer userId,Integer petId){
+        User user = findUserById(userId);
+        Set<UserPetHouse> petHouses = user.getPetHouses();
+        Pet pet = petService.findPetById(petId);
+        int userMoney = user.getMoney();
+        int petMoney = pet.getPrice();
+        if(userMoney >= petMoney){
+            for(UserPetHouse petHouse : petHouses){
+                if(petHouse.getPet() == pet){
+                    return Result.OWN;
+                }
+            }
+            petHouses.add(new UserPetHouse(user,pet));
+            user.setMoney(userMoney - petMoney);
             return Result.TRUE;
         }
         return Result.NOT_ENOUGH_MONEY;

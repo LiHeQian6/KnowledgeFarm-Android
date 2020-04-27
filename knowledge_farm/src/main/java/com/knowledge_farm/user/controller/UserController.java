@@ -106,7 +106,7 @@ public class UserController {
             @ApiImplicitParam(name = "photo", value = "头像", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "grade", value = "年级", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "nickName", value = "昵称", dataType = "String", paramType = "form", required = true),
-            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = false),
+            @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", defaultValue = ""),
             @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/addQQUser")
@@ -687,6 +687,13 @@ public class UserController {
             e.printStackTrace();
             return Result.FALSE;
         }
+    }
+    @GetMapping("/test")
+    public String test(){
+        return userService.buyPet(109,2);    }
+    @GetMapping("/buyPet")
+    public String buyPet(@RequestParam("userId")int userId,@RequestParam("petId")int petId){
+        return userService.buyPet(userId,petId);
     }
 
 }

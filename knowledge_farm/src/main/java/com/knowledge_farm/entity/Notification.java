@@ -13,24 +13,24 @@ import java.util.Date;
 @Entity
 @Table(name = "notification")
 public class Notification {
-    private int id;
+    private Integer id;
     private User from;
     private User to;
     private String title;
     private String content;
     private String extra;
     private Date createTime;
-    private boolean haveRead;
+    private Integer haveRead;
     private NotificationType notificationType;
 
     @Id
     @GeneratedValue(generator="identity")
     @GenericGenerator(name="identity", strategy = "identity")
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -88,11 +88,11 @@ public class Notification {
     }
 
     @Column(name = "have_read")
-    public boolean isHaveRead() {
+    public Integer getHaveRead() {
         return haveRead;
     }
 
-    public void setHaveRead(boolean haveRead) {
+    public void setHaveRead(Integer haveRead) {
         this.haveRead = haveRead;
     }
 

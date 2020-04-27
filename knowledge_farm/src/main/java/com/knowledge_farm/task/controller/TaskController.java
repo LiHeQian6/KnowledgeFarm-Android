@@ -36,12 +36,12 @@ public class TaskController {
      * @param :[userId]
      * @return :com.knowledge_farm.entity.Task
      */
-    @GetMapping("/getTask")
-    public Task getTasks(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        return taskService.findTask(user);
-    }
+//    @GetMapping("/getTask")
+//    public Task getTasks(HttpServletRequest request) {
+//        HttpSession session = request.getSession();
+//        User user = (User) session.getAttribute("user");
+//        return taskService.findTask(user);
+//    }
     /**
      * @description:  领取任务奖励
      * @author :景光赞
@@ -49,12 +49,12 @@ public class TaskController {
      * @param :[taskName, request]
      * @return :int
      */
-    @GetMapping("/getReward")
-    public int getReward(@RequestParam("taskName") String taskName,HttpServletRequest request){
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        return taskService.updateTask(user,taskName);
-    }
+//    @GetMapping("/getReward")
+//    public int getReward(@RequestParam("taskName") String taskName,HttpServletRequest request){
+//        HttpSession session = request.getSession();
+//        User user = (User) session.getAttribute("user");
+//        return taskService.updateTask(user,taskName);
+//    }
 
     /**
      * @description: 查询所有任务
@@ -66,7 +66,7 @@ public class TaskController {
     @GetMapping("/getTask2")
     public Task getTasks2(@RequestParam("userId") int userId) {
 
-        return taskService.findTask(userService.findUserById(userId));
+        return userService.findUserById(userId).getTask();
     }
     /**
      * @description:  领取任务奖励
@@ -83,7 +83,7 @@ public class TaskController {
 
     @GetMapping("/test")
     public int test(){
-        return taskService.updateTaskEveryDay();
+        return taskService.updateTask(userService.findUserById(109),"sign_in");
     }
 
 }
