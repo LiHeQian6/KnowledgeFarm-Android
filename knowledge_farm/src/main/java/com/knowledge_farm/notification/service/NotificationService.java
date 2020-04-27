@@ -37,24 +37,21 @@ public class NotificationService {
 
     public Page<Notification> findReceivedByNotificationType(Integer userId, Integer typeId, Integer pageNumber, Integer pageSize){
         if(typeId == 1){
-            return this.notificationDao.findReceivedByNotificationType2(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
+            return this.notificationDao.findReceivedSystemNotificationByNotificationType(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
         }
         return this.notificationDao.findReceivedByNotificationType(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
+    }
+
+    public Page<Notification> findReceivedAddFriendNotification(Integer userId, Integer pageNumber, Integer pageSize){
+        return this.notificationDao.findReceivedAddFriendNotification(userId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
     }
 
     public Page<Notification> findSendByNotificationType(Integer userId, Integer typeId, Integer pageNumber, Integer pageSize){
         return this.notificationDao.findSendByNotificationType(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
     }
 
-//    public List<Notification> findReceivedByNotificationType(Integer userId, Integer typeId){
-//        if(typeId == 1){
-//            return this.notificationDao.findReceivedByNotificationType2(userId, typeId, Sort.by(Sort.Direction.DESC, "createTime"));
-//        }
-//        return this.notificationDao.findReceivedByNotificationType(userId, typeId, Sort.by(Sort.Direction.DESC, "createTime"));
-//    }
+//    public List<Boolean> isHavingNewNotificaiton(){
 //
-//    public List<Notification> findSendByNotificationType(Integer userId, Integer typeId){
-//        return this.notificationDao.findSendByNotificationType(userId, typeId, Sort.by(Sort.Direction.DESC, "createTime"));
 //    }
 
     @Transactional(readOnly = false)
@@ -63,7 +60,7 @@ public class NotificationService {
         User friendUser = this.userService.findUserByAccount(account);
         String title = "新朋友";
         String content = friendUser.getNickName() + "请求添加你为好友";
-        Map<String, String> extra = new HashMap<>();
+        Map extra = new HashMap<>();
         Notification notification = new Notification();
         NotificationType notificationType = this.notificationTypeService.findNotificationTypeById(2);
         notification.setFrom(user);
@@ -72,22 +69,31 @@ public class NotificationService {
         notification.setContent(content);
         notification.setExtra(new Gson().toJson(extra));
         notification.setCreateTime(new Date());
-        notification.setHaveRead(false);
+        notification.setHaveRead(0);
         notification.setNotificationType(notificationType);
         this.notificationDao.save(notification);
         return notification;
     }
 
     @Transactional(readOnly = false)
-    public void deleteNotification(Integer notificationId){
-        this.notificationDao.deleteById(notificationId);
+    public void deleteNotification(List<Integer> idList){
+        List<Notification> notifications = this.notificationDao.findAllById(idList);
+        this.notificationDao.deleteAll(notifications);
     }
 
     @Transactional(readOnly = false)
-    public void editNotificationReadStatus(List<Integer> idList){
+    public void deleteNotificationByType(Integer userId, Integer typeId){
+        if(typeId != 2){
+            this.notificationDao.deleteNotificationByType(userId, typeId);
+        }
+        this.notificationDao.deleteNotificationByType2(userId, 2);
+    }
+
+    @Transactional(readOnly = false)
+    public void editNotificationReadStatus(List<Integer> idList, Integer haveRead){
         List<Notification> notifications = this.notificationDao.findAllById(idList);
         for(Notification notification : notifications){
-            notification.setHaveRead(true);
+            notification.setHaveRead(haveRead);
         }
         this.notificationDao.saveAll(notifications);
     }

@@ -2,6 +2,7 @@ package com.knowledge_farm.user_friend.service;
 
 import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.*;
+import com.knowledge_farm.notification.service.NotificationService;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import com.knowledge_farm.user_friend.dao.UserFriendDao;
@@ -30,6 +31,8 @@ public class UserFriendServiceImpl {
     private UserServiceImpl userService;
     @Resource
     private UserCropServiceImpl userCropService;
+    @Resource
+    private NotificationService notificationService;
 
     public Page<User> findUserFriendPageByAccount(Integer userId, String account, Integer pageNumber, Integer pageSize){
         if(account != null && !account.equals("")){
@@ -46,7 +49,7 @@ public class UserFriendServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public void addUserFriend(Integer userId, String account){
+    public void addUserFriend(Integer userId, String account, Integer notificationId){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
 
@@ -62,6 +65,10 @@ public class UserFriendServiceImpl {
         friends.add(userFriend);
         friends.add(userFriend1);
         this.userFriendDao.saveAll(friends);
+
+        List<Integer> idList = new ArrayList<>();
+        idList.add(notificationId);
+        this.notificationService.editNotificationReadStatus(idList, 1);
     }
 
     @Transactional(readOnly = false)
