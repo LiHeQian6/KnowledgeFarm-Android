@@ -27,13 +27,9 @@ public class TaskService {
     @Resource
     private JpushService jpushService;
 
-    public Task findTask(User user){
-        return taskDao.findTaskByUser(user);
-    }
-
     @Transactional(readOnly = false)
     public int finishTask(User user,String taskName){
-        Task task = findTask(user);
+        Task task = user.getTask();
         if(taskName.equals("water")&&task.getWater()==0){
             task.setWater(1);
             return taskDao.saveAndFlush(task).getWater();
@@ -59,7 +55,7 @@ public class TaskService {
 
     @Transactional(readOnly = false)
     public int updateTask(User user,String taskName){
-        Task task = findTask(user);
+        Task task = user.getTask();
         if(taskName.equals("sign_in")&&task.getSignIn()==0){
             task.setSignIn(2);
             user.setMoney(user.getMoney()+200);
