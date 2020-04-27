@@ -44,38 +44,54 @@
             android:layout_height="wrap_content"
             android:layout_weight="6"
             android:gravity="center">
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:id="@+id/refuse"
-                    android:src="@drawable/no"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="拒绝"
-                    android:textColor="@color/ShopTextColor"/>
-            </LinearLayout>
+                android:id="@+id/result"
+                android:text="已添加"
+                android:visibility="gone"
+                android:textColor="@color/ShopTextColor"
+                android:textSize="20dp">
+            </TextView>
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="15dp"
-                android:gravity="center">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:id="@+id/accept"
-                    android:src="@drawable/yes"/>
-                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:id="@+id/result_li"
+                android:visibility="visible">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="同意"
-                    android:textColor="@color/ShopTextColor"/>
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/refuse"
+                        android:src="@drawable/no"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="拒绝"
+                        android:textColor="@color/ShopTextColor"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/accept"
+                        android:src="@drawable/yes"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="同意"
+                        android:textColor="@color/ShopTextColor"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
