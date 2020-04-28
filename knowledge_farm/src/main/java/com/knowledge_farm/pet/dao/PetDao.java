@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.io.Serializable;
 
 public interface PetDao extends JpaRepository<Pet,Integer>, JpaSpecificationExecutor<Pet>, Serializable {
-    Page<Pet> findAllByIsOwn(int isOwn, Pageable pageable);
+    Page<Pet> findAllByExist(int exist, Pageable pageable);
 
     Pet findPetById(int petId);
 }

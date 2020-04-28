@@ -22,8 +22,6 @@ import java.util.HashMap;
 public class TaskService {
     @Resource
     private TaskDao taskDao;
-    @Resource
-    private JpushService jpushService;
 
     @Transactional(readOnly = false)
     public int finishTask(User user,String taskName){
@@ -58,7 +56,6 @@ public class TaskService {
             task.setSignIn(2);
             user.setMoney(user.getMoney()+200);
             user.setExperience(user.getExperience()+100);
-            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
             return taskDao.saveAndFlush(task).getSignIn();
         }else if(taskName.equals("water")&&task.getWater()==1){
             task.setWater(2);

@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,22 +50,22 @@ public class NotificationController {
         return pageUtil;
     }
 
-    @ApiOperation(value = "查询接收到的申请添加好友类型消息", notes = "返回值：Page（Notification）")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int", paramType = "form", required = true),
-            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", defaultValue = "1"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", defaultValue = "4")
-    })
-    @GetMapping("/findReceivedAddFriendNotification")
-    public PageUtil<Notification> findReceivedAddFriendNotification(@RequestParam("userId") Integer userId,
-                                                                 @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                                                 @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
-        Page<Notification> page = this.notificationService.findReceivedAddFriendNotification(userId, pageNumber, pageSize);
-        PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
-        pageUtil.setTotalCount((int) page.getTotalElements());
-        pageUtil.setList(page.getContent());
-        return pageUtil;
-    }
+//    @ApiOperation(value = "查询接收到的申请添加好友类型消息", notes = "返回值：Page（Notification）")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int", paramType = "form", required = true),
+//            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", defaultValue = "1"),
+//            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", defaultValue = "4")
+//    })
+//    @GetMapping("/findReceivedAddFriendNotification")
+//    public PageUtil<Notification> findReceivedAddFriendNotification(@RequestParam("userId") Integer userId,
+//                                                                 @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+//                                                                 @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
+//        Page<Notification> page = this.notificationService.findReceivedAddFriendNotification(userId, pageNumber, pageSize);
+//        PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
+//        pageUtil.setTotalCount((int) page.getTotalElements());
+//        pageUtil.setList(page.getContent());
+//        return pageUtil;
+//    }
 
     @ApiOperation(value = "根据通知类型查询已发送的消息", notes = "返回值：Page（Notification）")
     @ApiImplicitParams({
@@ -120,11 +119,9 @@ public class NotificationController {
     })
     @GetMapping("/addUserFriendNotification")
     public String addUserFriendNotification(@RequestParam("userId") Integer userId,
-                                            @RequestParam("account") String account,
-                                            HttpServletRequest request){
+                                            @RequestParam("account") String account){
         try {
-            Notification notification = this.notificationService.addUserFriendNotification(userId, account);
-            request.setAttribute("addFriendNotification", notification);
+            this.notificationService.addUserFriendNotification(userId, account);
             return Result.TRUE;
         }catch (Exception e){
             return Result.FALSE;

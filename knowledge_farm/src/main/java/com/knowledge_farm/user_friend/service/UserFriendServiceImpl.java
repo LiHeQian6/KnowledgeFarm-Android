@@ -49,8 +49,8 @@ public class UserFriendServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public void addUserFriend(Integer userId, String account, Integer notificationId){
-        User user = this.userService.findUserById(userId);
+    public void addUserFriend(String sendAccount, String account, Integer notificationId){
+        User user = this.userService.findUserByAccount(sendAccount);
         User friendUser = this.userService.findUserByAccount(account);
 
         UserFriend userFriend = new UserFriend();

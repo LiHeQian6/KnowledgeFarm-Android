@@ -15,11 +15,24 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class SendNotifyAdapter extends BaseAdapter {
 
     private FriendsPage<Notification> list;
     private int id;
     private Context context;
+    private String notifyYesId_str;
+    private String notifyNoId_str;
 
     public SendNotifyAdapter(FriendsPage<Notification> list, int id, Context context) {
         this.list = list;
@@ -51,6 +64,7 @@ public class SendNotifyAdapter extends BaseAdapter {
             viewHolder.photo = convertView.findViewById(R.id.send_photo);
             viewHolder.id = convertView.findViewById(R.id.send_id);
             viewHolder.nickName = convertView.findViewById(R.id.send_nickname);
+            viewHolder.result = convertView.findViewById(R.id.send_result);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
@@ -60,11 +74,56 @@ public class SendNotifyAdapter extends BaseAdapter {
                 .placeholder(R.drawable.photo)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(list.getList().get(position).getFrom().getPhoto()).apply(requestOptions).into(viewHolder.photo);
-        viewHolder.id.setText(list.getList().get(position).getFrom().getAccount());
-        viewHolder.nickName.setText(list.getList().get(position).getFrom().getNickName());
+        viewHolder.id.setText("账号："+list.getList().get(position).getTo().getAccount()+"");
+        viewHolder.nickName.setText("昵称："+list.getList().get(position).getTo().getNickName());
         //ToDo
-
+        if(list.getList().get(position).isHaveRead() == 0){
+            viewHolder.result.setText("正在等待回应");
+        }
+        if(list.getList().get(position).isHaveRead() == 2){
+            viewHolder.result.setText("已同意");
+            if(position == 0){
+                notifyYesId_str += list.getList().get(position).getId();
+            }else{
+                notifyYesId_str += "," + list.getList().get(position).getId();
+            }
+        }
+        if(list.getList().get(position).isHaveRead() ==-2){
+            viewHolder.result.setText("已拒绝");
+            if(position == 0){
+                notifyNoId_str += list.getList().get(position).getId();
+            }else{
+                notifyNoId_str += "," + list.getList().get(position).getId();
+            }
+        }
+        if(position == list.getList().size() -1){
+            ChangeReadStatus("-1",notifyNoId_str);
+            ChangeReadStatus("1",notifyYesId_str);
+        }
         return convertView;
+    }
+
+    private void ChangeReadStatus(final String if_read,final String ids){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder()
+                        .url(context.getResources().getString(R.string.URL)+"/notification/editNotificationReadStatus?haveRead="+if_read+"&ids="+ids).build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                    }
+                });
+            }
+        }.start();
     }
 
     private class ViewHolder{

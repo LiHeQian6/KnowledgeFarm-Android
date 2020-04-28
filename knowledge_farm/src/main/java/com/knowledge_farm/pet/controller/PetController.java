@@ -2,8 +2,13 @@ package com.knowledge_farm.pet.controller;
 
 import com.knowledge_farm.entity.Pet;
 import com.knowledge_farm.pet.service.PetService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +21,7 @@ import javax.annotation.Resource;
  * @author: 景光赞
  * @create: 2020-04-27 11:34
  **/
+@Api(description = "前台宠物接口")
 @RestController
 @RequestMapping("/pet")
 public class PetController {
@@ -29,10 +35,11 @@ public class PetController {
      * @param :[pageNum]
      * @return :org.springframework.data.domain.Page<com.knowledge_farm.entity.Pet>
      */
-    @RequestMapping("/showInStore")
+    @GetMapping("/showInStore")
     public Page<Pet> showInStore(@RequestParam("pageNum")int pageNum){
         return petService.showAllPetInStore(PageRequest.of(pageNum,3));
     }
+
     @RequestMapping("/test")
     public Page<Pet> showInStore(){
         return petService.showAllPetInStore(PageRequest.of(0,3));

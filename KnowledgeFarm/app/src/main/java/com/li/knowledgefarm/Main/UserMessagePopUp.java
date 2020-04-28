@@ -62,7 +62,7 @@ public class UserMessagePopUp extends PopupWindow {
 
     private void setText(){
         nickName.setText("昵称："+user.getNickName());
-        id.setText("ID："+user.getId()+"");
+        id.setText("账号："+user.getAccount()+"");
         level.setText("等级："+user.getLevel());
         grade.setText("年级："+user.getGrade());
     }

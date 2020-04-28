@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.knowledge_farm.entity.Notification;
 import com.knowledge_farm.entity.NotificationType;
 import com.knowledge_farm.entity.User;
+import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.notification.dao.NotificationDao;
 import com.knowledge_farm.notification_type.service.NotificationTypeService;
 import com.knowledge_farm.user.service.UserServiceImpl;
@@ -31,17 +32,21 @@ public class NotificationService {
     private UserServiceImpl userService;
     @Resource
     private NotificationTypeService notificationTypeService;
+    @Resource
+    private JpushService jpushService;
 
     public Page<Notification> findReceivedByNotificationType(Integer userId, Integer typeId, Integer pageNumber, Integer pageSize){
         if(typeId == 1){
             return this.notificationDao.findReceivedSystemNotificationByNotificationType(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
+        }else if(typeId == 2){
+            return this.notificationDao.findReceivedAddFriendNotification(userId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
         }
         return this.notificationDao.findReceivedByNotificationType(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
     }
 
-    public Page<Notification> findReceivedAddFriendNotification(Integer userId, Integer pageNumber, Integer pageSize){
-        return this.notificationDao.findReceivedAddFriendNotification(userId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
-    }
+//    public Page<Notification> findReceivedAddFriendNotification(Integer userId, Integer pageNumber, Integer pageSize){
+//        return this.notificationDao.findReceivedAddFriendNotification(userId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
+//    }
 
     public Page<Notification> findSendByNotificationType(Integer userId, Integer typeId, Integer pageNumber, Integer pageSize){
         return this.notificationDao.findSendByNotificationType(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
@@ -49,6 +54,9 @@ public class NotificationService {
 
     public List<Boolean> isHavingNewNotification(Integer userId){
         User user = this.userService.findUserById(userId);
+        if(user.getTask().getSignIn()==0){
+            jpushService.sendCustomPush("please sign_in", "", new HashMap<>(), user.getAccount());
+        }
         List<Boolean> isHavingRead = new ArrayList<>();
         for(int i = 0;i < 4;i++){
             isHavingRead.add(false);
@@ -76,7 +84,7 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = false)
-    public Notification addUserFriendNotification(Integer userId, String account){
+    public void addUserFriendNotification(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
         String title = "新朋友";
@@ -93,7 +101,6 @@ public class NotificationService {
         notification.setHaveRead(0);
         notification.setNotificationType(notificationType);
         this.notificationDao.save(notification);
-        return notification;
     }
 
     @Transactional(readOnly = false)

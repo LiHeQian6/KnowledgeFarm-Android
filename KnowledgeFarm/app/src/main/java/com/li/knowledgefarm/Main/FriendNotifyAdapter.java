@@ -77,17 +77,16 @@ public class FriendNotifyAdapter extends BaseAdapter {
         }else{
             friendViewHolder = (FriendViewHolder)convertView.getTag();
         }
-        final FriendViewHolder finalFriendViewHolder = friendViewHolder;
         friendViewHolder.yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YesForFriend(position, finalFriendViewHolder);
+                YesForFriend(position);
             }
         });
         friendViewHolder.no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NoForFriend(position,finalFriendViewHolder);
+                NoForFriend(position);
             }
         });
         RequestOptions requestOptions = new RequestOptions()
@@ -108,14 +107,14 @@ public class FriendNotifyAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void NoForFriend(final int position, final FriendViewHolder friendViewHolder){
+    private void NoForFriend(final int position){
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/userfriend/deleteUserFriend?account="
-                                +list.getList().get(position).getTo().getAccount()+"&userId="+list.getList().get(position).getFrom().getId()).build();
+                        .url(context.getResources().getString(R.string.URL)+"/userfriend/refuseUserFriend?notificationId="
+                                +list.getList().get(position).getId()+"&userId="+list.getList().get(position).getFrom().getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -140,9 +139,8 @@ public class FriendNotifyAdapter extends BaseAdapter {
                 super.handleMessage(msg);
                 String result = (String) msg.obj;
                 if(!result.equals("") && result.equals("true")){
-                    friendViewHolder.result_li.setVisibility(View.GONE);
-                    friendViewHolder.result.setText("已拒绝");
-                    friendViewHolder.result.setVisibility(View.VISIBLE);
+                    list.getList().remove(position);
+                    notifyDataSetChanged();
                 }else {
                     Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
                 }
@@ -150,14 +148,16 @@ public class FriendNotifyAdapter extends BaseAdapter {
         };
     }
 
-    private void YesForFriend(final int position, final FriendViewHolder friendViewHolder){
+    private void YesForFriend(final int position){
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/userfriend/addUserFriend?account="
-                                +list.getList().get(position).getTo().getAccount()+"&userId="+list.getList().get(position).getFrom().getId()).build();
+                                +list.getList().get(position).getTo().getAccount()+
+                                "&userId="+list.getList().get(position).getFrom().getId()+
+                                "&notificationId="+list.getList().get(position).getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -182,9 +182,8 @@ public class FriendNotifyAdapter extends BaseAdapter {
                 super.handleMessage(msg);
                 String result = (String) msg.obj;
                 if(!result.equals("") && result.equals("true")){
-                    friendViewHolder.result_li.setVisibility(View.GONE);
-                    friendViewHolder.result.setText("已同意");
-                    friendViewHolder.result.setVisibility(View.VISIBLE);
+                    list.getList().remove(position);
+                    notifyDataSetChanged();
                 }else {
                     Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
                 }

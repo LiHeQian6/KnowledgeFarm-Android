@@ -15,7 +15,7 @@ public class Notification {
     private String content;
     private String extra;
     private Date createTime;
-    private boolean haveRead;
+    private int haveRead;
     private NotificationType notificationType;
 
     public int getId() {
@@ -74,11 +74,11 @@ public class Notification {
         this.createTime = createTime;
     }
 
-    public boolean isHaveRead() {
+    public int isHaveRead() {
         return haveRead;
     }
 
-    public void setHaveRead(boolean haveRead) {
+    public void setHaveRead(int haveRead) {
         this.haveRead = haveRead;
     }
 

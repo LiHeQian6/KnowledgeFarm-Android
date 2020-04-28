@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.TaskItem;
 
@@ -57,6 +58,8 @@ public class DayTaskPopUpWindow extends PopupWindow {
         getDayTask();
     }
 
+
+
     /**
      * @Author li
      * @param
@@ -75,6 +78,16 @@ public class DayTaskPopUpWindow extends PopupWindow {
                 null, false);
         this.setContentView(contentView);
         getViews(contentView);
+    }
+
+    @Override
+    public void showAtLocation(View parent, int gravity, int x, int y) {
+        setFocusable(false);
+        super.showAtLocation(parent, gravity, x, y);
+        final View view = getContentView();
+        FullScreen.hideBottomUIMenu(view);
+        setFocusable(true);
+        update();
     }
 
     /**

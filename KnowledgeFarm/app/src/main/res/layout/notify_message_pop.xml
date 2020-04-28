@@ -60,7 +60,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:id="@+id/delete_notify"
-                android:text="删除"/>
+                android:text="删除"
+                android:textSize="20dp"
+                android:background="@drawable/buttonbackground"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
