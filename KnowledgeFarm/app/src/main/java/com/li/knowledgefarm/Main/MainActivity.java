@@ -302,15 +302,11 @@ public class MainActivity extends AppCompatActivity {
         myFriends.setVisibility(View.GONE);
         friendsPopUpWindow = new FriendsPopUpWindow(this);
         //获取屏幕显示区域尺寸
-        WindowManager.LayoutParams attrs = getWindow().getAttributes();
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics ds = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
-        attrs.gravity = Gravity.RIGHT;
-        attrs.width = (int)(displayWidth*0.40);
-        attrs.height = (int)(displayHeight*0.95);
         friendsPopUpWindow.setHeight((int)(displayHeight*0.95));
         friendsPopUpWindow.setWidth((int)(displayWidth*0.40));
         friendsPopUpWindow.showAtLocation(myFriends,Gravity.RIGHT,0,0);
@@ -1008,17 +1004,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showBagMessages() {
         bagPopUpWindow = new BagPopUpWindow(this);
-        WindowManager.LayoutParams attrs = getWindow().getAttributes();
         WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics ds = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
-        attrs.gravity = Gravity.RIGHT;
-        attrs.width = (int) (displayWidth * 0.40);
-        attrs.height = (int) (displayHeight * 0.95);
-        bagPopUpWindow.setWidth(attrs.width);
-        bagPopUpWindow.setHeight(attrs.height);
+        bagPopUpWindow.setWidth((int) (displayWidth * 0.40));
+        bagPopUpWindow.setHeight((int) (displayHeight * 0.95));
         bagPopUpWindow.showAtLocation(bag,Gravity.RIGHT,0,0);
         planting(bagPopUpWindow.getGridView());
     }

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,7 +73,52 @@ public class NotifyActivity extends AppCompatActivity {
         getViews();
         registListener();
         FullScreen.NavigationBarStatusBar(NotifyActivity.this,true);
-        getNotify("2",1,6);
+//        getNotify("1",1,6);
+        getNotifyHandler();
+    }
+
+    private void getNotifyHandler() {
+        get_system_notify = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+                int code = msg.arg1;
+                Log.e("message",message);
+                Type list_type = new TypeToken<FriendsPage<Notification>>() {
+                }.getType();
+                if(!message.equals("") && code == 200) {
+                    notify_list = gson.fromJson(message, list_type);
+                    if(notify_list.getList().size() == 0){
+                        listView.setVisibility(View.GONE);
+                        switch (current_type){
+                            case "1":
+                                none_notify.setText("暂时没有系统通知哦");
+                                break;
+                            case "2":
+                                none_notify.setText("暂时没有好友申请，快去加好友吧");
+                                break;
+                        }
+                        none_notify.setVisibility(View.VISIBLE);
+                        return;
+                    }else {
+                        listView.setVisibility(View.VISIBLE);
+                        none_notify.setVisibility(View.GONE);
+                    }
+                    switch (current_type) {
+                        case "1":
+                            SystemNotifyAdapter listAdapter = new SystemNotifyAdapter(notify_list,R.layout.notify_item_layout,getApplicationContext());
+                            listView.setAdapter(listAdapter);
+                            OnclickItem();
+                            break;
+                        case "2":
+                            FriendNotifyAdapter listAdapter1 = new FriendNotifyAdapter(notify_list,R.layout.friend_notify_item,getApplicationContext());
+                            listView.setAdapter(listAdapter1);
+                            break;
+                    }
+                }
+            }
+        };
     }
 
     @Override
@@ -137,6 +183,35 @@ public class NotifyActivity extends AppCompatActivity {
         delete_all_btn.setOnClickListener(new CustomerOnclickListener());
     }
 
+    private void getFriendNotify(final int id,final int pageNumber,final int pageSize){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/notification/findReceivedAddFriendNotification?userId="
+                        +id+"&pageSize="+pageSize+"&pageNumber="+pageNumber).build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("通知信息", "请求失败");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String notify_message = response.body().string();
+                        int code = response.code();
+                        Message message = Message.obtain();
+                        message.arg1 = code;
+                        message.obj = notify_message;
+                        get_system_notify.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
     /**
      * @Description 获取指定类型消息
      * @Author 孙建旺
@@ -170,51 +245,12 @@ public class NotifyActivity extends AppCompatActivity {
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;
+                        message.arg1 = response.code();
                         get_system_notify.sendMessage(message);
                     }
                 });
             }
         }.start();
-        get_system_notify = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String message = (String)msg.obj;
-                Log.e("message",message);
-                Type list_type = new TypeToken<FriendsPage<Notification>>() {
-                }.getType();
-                if(!message.equals("") && !message.contains("html")) {
-                    notify_list = gson.fromJson(message, list_type);
-                    if(notify_list.getList().size() == 0){
-                        listView.setVisibility(View.GONE);
-                        switch (current_type){
-                            case "1":
-                                none_notify.setText("暂时没有系统通知哦");
-                                break;
-                            case "2":
-                                none_notify.setText("暂时没有好友申请，快去加好友吧");
-                                break;
-                        }
-                        none_notify.setVisibility(View.VISIBLE);
-                        return;
-                    }else {
-                        listView.setVisibility(View.VISIBLE);
-                        none_notify.setVisibility(View.GONE);
-                    }
-                    switch (type) {
-                        case "1":
-                            SystemNotifyAdapter listAdapter = new SystemNotifyAdapter(notify_list,R.layout.notify_item_layout,getApplicationContext());
-                            listView.setAdapter(listAdapter);
-                            OnclickItem();
-                            break;
-                        case "2":
-                            FriendNotifyAdapter listAdapter1 = new FriendNotifyAdapter(notify_list,R.layout.friend_notify_item,getApplicationContext());
-                            listView.setAdapter(listAdapter1);
-                            break;
-                    }
-                }
-            }
-        };
     }
 
     private void getMySendNotify(final String type,final int pageNumber,final int pageSize){
@@ -242,6 +278,7 @@ public class NotifyActivity extends AppCompatActivity {
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
+                        message.arg1 = response.code();
                         message.obj = notify_message;
                         get_mysend_notify.sendMessage(message);
                     }
@@ -256,7 +293,7 @@ public class NotifyActivity extends AppCompatActivity {
                 Log.e("message",message);
                 Type list_type = new TypeToken<FriendsPage<Notification>>() {
                 }.getType();
-                if(!message.equals("") && !message.contains("html")) {
+                if(!message.equals("") && msg.arg1 == 200) {
                     notify_list = gson.fromJson(message, list_type);
                     if(notify_list.getList().size() == 0){
                         listView.setVisibility(View.GONE);
@@ -275,13 +312,13 @@ public class NotifyActivity extends AppCompatActivity {
     }
 
 
-    private void Delete_All_Notify(final String type){
+    private void Delete_All_Notify(final String type,final int userId){
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url("").build();
+                        .url(getResources().getString(R.string.URL)+"/notification/deleteNotificationByType?typeId="+type+"&userId="+userId).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -303,7 +340,12 @@ public class NotifyActivity extends AppCompatActivity {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-
+                String message = (String)msg.obj;
+                if(message.equals("true") && !message.equals("")){
+                    Toast.makeText(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT);
+                }else {
+                    Toast.makeText(NotifyActivity.this,"网络出了点问题",Toast.LENGTH_SHORT);
+                }
             }
         };
     }
@@ -320,7 +362,7 @@ public class NotifyActivity extends AppCompatActivity {
                 case R.id.friend_btn:
                     current_type = "2";
                     delete_all_btn.setVisibility(View.INVISIBLE);
-                    getNotify("2",1,4);
+                    getFriendNotify(LoginActivity.user.getId(),1,4);
                     break;
                 case R.id.add_btn:
                     current_type = "3";
@@ -334,7 +376,7 @@ public class NotifyActivity extends AppCompatActivity {
 
                     break;
                 case R.id.delete_all_btn:
-
+                    Delete_All_Notify(current_type,LoginActivity.user.getId());
                     break;
             }
         }
