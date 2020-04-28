@@ -198,7 +198,7 @@ public class BindingEmailActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout", LoginActivity.user.getAccount()).add("email", edtEmail.getText().toString().trim()).build();
+                FormBody formBody = new FormBody.Builder().add("account", LoginActivity.user.getAccount()).add("email", edtEmail.getText().toString().trim()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {

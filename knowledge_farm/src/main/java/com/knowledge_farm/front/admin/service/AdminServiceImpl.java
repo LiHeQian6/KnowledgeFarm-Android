@@ -34,7 +34,6 @@ public class AdminServiceImpl {
      * @return java.lang.String
      **/
     public Object login(String account, String password){
-        password = Md5Encode.getMD5(password.getBytes());
         if(this.adminDao.findAdminByAccountAndExist(account, 0) == null){
             Admin admin = this.adminDao.findAdminByAccountAndPassword(account, password);
             if(admin != null){

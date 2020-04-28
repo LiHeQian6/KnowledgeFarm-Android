@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +36,7 @@ public class User {
     private Integer fertilizer;
     private Integer online;
     private Integer exist;
+    private Date lastLogoutTime;
     private Land land;
     private UserAuthority userAuthority;
     private Set<UserBag> userBags = new HashSet<>();
@@ -193,6 +196,15 @@ public class User {
 
     public void setExist(Integer exist) {
         this.exist = exist;
+    }
+
+    @Column(name = "last_logout_time")
+    public Date getLastLogoutTime() {
+        return lastLogoutTime;
+    }
+
+    public void setLastLogoutTime(Date lastLogoutTime) {
+        this.lastLogoutTime = lastLogoutTime;
     }
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

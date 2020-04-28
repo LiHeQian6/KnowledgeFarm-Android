@@ -2,6 +2,7 @@ package com.li.knowledgefarm.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.li.knowledgefarm.Util.Md5Encode;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -279,7 +280,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
                 .add("account", accountStr)
-                .add("password", stringMD5(pwdStr))
+                .add("password", Md5Encode.getMD5(pwdStr.getBytes()))
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByAccount").build();
         //Call
@@ -495,23 +496,6 @@ public class LoginByAccountActivity extends AppCompatActivity {
         return isConn;
     }
 
-    //MD5加密
-    public String stringMD5(String input) {
-        try {
-            // 拿到一个MD5转换器（如果想要SHA1参数换成”SHA1”）
-            MessageDigest messageDigest =MessageDigest.getInstance("MD5");
-            // 输入的字符串转换成字节数组
-            byte[] inputByteArray = input.getBytes();
-            // inputByteArray是输入字符串转换得到的字节数组
-            messageDigest.update(inputByteArray);
-            // 转换并返回结果，也是字节数组，包含16个元素
-            byte[] resultByteArray = messageDigest.digest();
-            // 字符数组转换成字符串返回
-            return byteArrayToHex(resultByteArray);
-        } catch (NoSuchAlgorithmException e) {
-            return null;
-        }
-    }
 
     //将字节数组换成成16进制的字符串
     public String byteArrayToHex(byte[] byteArray) {

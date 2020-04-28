@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @ClassName NotificationService
@@ -50,9 +47,33 @@ public class NotificationService {
         return this.notificationDao.findSendByNotificationType(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
     }
 
-//    public List<Boolean> isHavingNewNotificaiton(){
-//
-//    }
+    public List<Boolean> isHavingNewNotification(Integer userId){
+        User user = this.userService.findUserById(userId);
+        List<Boolean> isHavingRead = new ArrayList<>();
+        for(int i = 0;i < 4;i++){
+            isHavingRead.add(false);
+        }
+        List<Notification> notifications = this.notificationDao.findNotificationByToUserIdAndHaveReadAndUserLastLogoutTime(userId);
+        System.out.println("记录的个数"  + notifications.size());
+        for(Notification notification : notifications){
+            switch (notification.getNotificationType().getId()){
+                case 1:
+                    isHavingRead.set(0, true);
+                    break;
+                case 2:
+                    if(notification.getFrom() == user){
+                        isHavingRead.set(2, true);
+                    }else{
+                        isHavingRead.set(1, true);
+                    }
+                    break;
+                case 3:
+                    isHavingRead.set(3, true);
+                    break;
+            }
+        }
+        return isHavingRead;
+    }
 
     @Transactional(readOnly = false)
     public Notification addUserFriendNotification(Integer userId, String account){

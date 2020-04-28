@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,6 +91,8 @@ public class FrontUserServiceImpl {
         user.setPhoto(this.userPhotoFolderName + "/" + this.userDefaultFileName);
         user.setEmail(email);
         user.setGrade(grade);
+        user.setLastLogoutTime(new Date());
+        user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建Land
         Land land = new Land();
         //构建UserCrop

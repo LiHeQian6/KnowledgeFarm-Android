@@ -68,7 +68,14 @@ public class UserFriendServiceImpl {
 
         List<Integer> idList = new ArrayList<>();
         idList.add(notificationId);
-        this.notificationService.editNotificationReadStatus(idList, 1);
+        this.notificationService.editNotificationReadStatus(idList, 2);
+    }
+
+    @Transactional(readOnly = false)
+    public void refuseUserFriend(Integer notificationId){
+        List<Integer> idList = new ArrayList<>();
+        idList.add(notificationId);
+        this.notificationService.editNotificationReadStatus(idList, -2);
     }
 
     @Transactional(readOnly = false)

@@ -87,7 +87,6 @@ public class AdminController {
         Object obj = this.adminService.login(account, password);
         if(obj instanceof Admin){
             Admin admin = (Admin) obj;
-//            admin.setPassword("");
             session.setAttribute("admin", admin);
             obj = Result.SUCCEED;
         }
@@ -225,7 +224,6 @@ public class AdminController {
         if(this.adminService.findByAccountAndExist(account, null) == null){
             Admin admin = new Admin();
             admin.setAccount(account);
-            admin.setPassword(Md5Encode.getMD5(password.getBytes()));
             try {
                 this.adminService.add(admin);
                 return Result.SUCCEED;

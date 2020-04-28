@@ -1,5 +1,6 @@
 package com.knowledge_farm.util;
 
+import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.task.service.TaskService;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -7,6 +8,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 /**
  * @program: knowledge_farm
@@ -18,11 +20,14 @@ import javax.annotation.Resource;
 public class EveryDayTaskJob extends QuartzJobBean{
     @Resource
     private TaskService taskService;
+    @Resource
+    private JpushService jpushService;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         try {
             this.taskService.updateTaskEveryDay();
+            this.jpushService.sendCustomPush("task", "", new HashMap<>(), "");
         }catch (Exception e){
             e.printStackTrace();
         }
