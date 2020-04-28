@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.knowledge_farm.entity.Notification;
 import com.knowledge_farm.entity.NotificationType;
 import com.knowledge_farm.entity.User;
+import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.notification.dao.NotificationDao;
 import com.knowledge_farm.notification_type.service.NotificationTypeService;
 import com.knowledge_farm.user.service.UserServiceImpl;
@@ -31,6 +32,8 @@ public class NotificationService {
     private UserServiceImpl userService;
     @Resource
     private NotificationTypeService notificationTypeService;
+    @Resource
+    private JpushService jpushService;
 
     public Page<Notification> findReceivedByNotificationType(Integer userId, Integer typeId, Integer pageNumber, Integer pageSize){
         if(typeId == 1){
@@ -49,6 +52,9 @@ public class NotificationService {
 
     public List<Boolean> isHavingNewNotification(Integer userId){
         User user = this.userService.findUserById(userId);
+        if(user.getTask().getSignIn()==0){
+            jpushService.sendCustomPush("please sign_in", "", new HashMap<>(), user.getAccount());
+        }
         List<Boolean> isHavingRead = new ArrayList<>();
         for(int i = 0;i < 4;i++){
             isHavingRead.add(false);
