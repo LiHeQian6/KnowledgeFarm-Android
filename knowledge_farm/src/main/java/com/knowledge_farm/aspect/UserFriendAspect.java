@@ -49,12 +49,10 @@ public class UserFriendAspect {
 
     @AfterReturning(pointcut = "addUserFriendNotification()", returning="result")
     public void addUserFriendNotification(JoinPoint joinPoint, Object result) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        Notification notification = (Notification) request.getAttribute("addFriendNotification");
         if(result == Result.TRUE){
             try {
-                jpushService.sendCustomPush("notification", "receive", new HashMap<>(), notification.getTo().getAccount());
+                Object[] args = joinPoint.getArgs();
+                jpushService.sendCustomPush("notification", "receive", new HashMap<>(), (String) args[1]);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -68,8 +66,7 @@ public class UserFriendAspect {
         if(result == Result.TRUE){
             try {
                 Object[] args = joinPoint.getArgs();
-                User user = this.userService.findUserById((Integer)args[0]);
-                jpushService.sendCustomPush("notification", "send", new HashMap<>(), user.getAccount());
+                jpushService.sendCustomPush("notification", "send", new HashMap<>(), (String) args[0]);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -83,9 +80,7 @@ public class UserFriendAspect {
         if(result == Result.TRUE){
             try {
                 Object[] args = joinPoint.getArgs();
-                User user = this.userService.findUserById((Integer)args[0]);
-                System.out.println(user.getAccount());
-                jpushService.sendCustomPush("notification", "send", new HashMap<>(), user.getAccount());
+                jpushService.sendCustomPush("notification", "send", new HashMap<>(), (String) args[0]);
             }catch (Exception e){
                 e.printStackTrace();
             }

@@ -89,16 +89,16 @@ public class UserFriendController {
 
     @ApiOperation(value = "添加好友", notes = "返回值：(String)true || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "sendAccount", value = "发送方用户账号", dataType = "String", paramType = "query", required = true),
             @ApiImplicitParam(name = "account", value = "要添加好友的账号", dataType = "String", paramType = "query", required = true),
             @ApiImplicitParam(name = "notificationId", value = "申请添加好友的消息Id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/addUserFriend")
-    public String addUserFriend(@RequestParam("userId") Integer userId,
+    public String addUserFriend(@RequestParam("sendAccount") String sendAccount,
                                 @RequestParam("account") String account,
                                 @RequestParam("notificationId") Integer notificationId){
         try {
-            this.userFriendService.addUserFriend(userId, account, notificationId);
+            this.userFriendService.addUserFriend(sendAccount, account, notificationId);
             return Result.TRUE;
         }catch (Exception e){
             e.printStackTrace();
@@ -108,11 +108,11 @@ public class UserFriendController {
 
     @ApiOperation(value = "拒绝添加好友的申请", notes = "返回值：(String)true || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "发送方用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "account", value = "发送方用户账号", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "notificationId", value = "拒绝添加好友的消息Id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/refuseUserFriend")
-    public String refuseUserFriend(@RequestParam("userId") Integer userId, @RequestParam("notificationId") Integer notificationId){
+    public String refuseUserFriend(@RequestParam("account") String account, @RequestParam("notificationId") Integer notificationId){
         try {
             this.userFriendService.refuseUserFriend(notificationId);
             return Result.TRUE;
