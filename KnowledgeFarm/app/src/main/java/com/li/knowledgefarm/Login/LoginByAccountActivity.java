@@ -176,6 +176,8 @@ public class LoginByAccountActivity extends AppCompatActivity {
         returnImg = findViewById(R.id.loginByAccountReturn);
         edtCount = findViewById(R.id.account);
         pwd = findViewById(R.id.pwd);
+        edtCount.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        pwd.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         eventBus = EventBus.getDefault();
         if(!eventBus.isRegistered(this)){
             eventBus.register(LoginByAccountActivity.this);

@@ -3,24 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@color/editBac">
+    android:background="@color/colorPrimary">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2">
+        android:layout_weight="6">
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="6"
+        android:layout_weight="2"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
             android:gravity="center">
 
             <TextView
@@ -28,19 +28,19 @@
                 android:layout_height="wrap_content"
                 android:text="个人信息"
                 android:textSize="25sp"
-                android:textColor="@color/blackTextColor"
+                android:textColor="@color/ShopTextColor"
                 android:gravity="center_horizontal" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="8">
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="5"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -57,109 +57,224 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="5">
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:orientation="horizontal">
 
-                <ScrollView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:id="@+id/user_mess_li">
 
-                    <LinearLayout
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="match_parent">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <ImageView
-                                android:layout_width="50dp"
-                                android:id="@+id/user_image"
-                                android:layout_height="50dp"
-                                android:src="@drawable/photo"/>
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_marginLeft="15dp"
-                                android:layout_gravity="center_vertical">
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_width="50dp"
+                                    android:id="@+id/user_image"
+                                    android:layout_height="50dp"
+                                    android:src="@drawable/photo"/>
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginLeft="15dp"
                                     android:layout_gravity="center_vertical">
-                                    <TextView
+                                    <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/blackTextColor"
-                                        android:text="昵称:小完能"/>
-                                    <ImageView
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
-                                        android:src="@drawable/modify"/>
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="5dp">
-                                    <TextView
+                                        android:layout_gravity="center_vertical">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/ShopTextColor"
+                                            android:text="昵称:小完能"/>
+                                        <ImageView
+                                            android:layout_width="20dp"
+                                            android:layout_height="20dp"
+                                            android:src="@drawable/modify"/>
+                                    </LinearLayout>
+                                    <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Id:123456"
-                                        android:textColor="@color/blackTextColor"/>
+                                        android:layout_marginTop="5dp">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Id:123456"
+                                            android:textColor="@color/ShopTextColor"/>
+                                    </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>
-                        </LinearLayout>
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="15dp">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:id="@+id/change_grade_li">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="年级："
+                                            android:id="@+id/grade"
+                                            android:layout_centerVertical="true"
+                                            android:textColor="@color/ShopTextColor"
+                                            android:textSize="25dp"/>
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_toRightOf="@+id/grade"
+                                            android:layout_centerVertical="true"
+                                            android:text="一年级"
+                                            android:textColor="@color/ShopTextColor"
+                                            android:textSize="25dp"/>
+                                        <Spinner
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_toRightOf="@+id/grade"
+                                            android:visibility="gone"
+                                            android:layout_centerVertical="true"/>
+                                    </LinearLayout>
+                                    <Button
+                                        android:layout_width="80dp"
+                                        android:layout_height="50dp"
+                                        android:background="@drawable/buttonbackground"
+                                        android:text="修改"
+                                        android:layout_marginLeft="10dp"
+                                        android:id="@+id/change_grade_btn"
+                                        android:gravity="center"
+                                        android:textSize="20dp"
+                                        android:layout_toRightOf="@+id/change_grade_li"/>
+                                </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_height="wrap_content">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:id="@+id/bangding_qq_li">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="绑定QQ："
+                                            android:id="@+id/bangding"
+                                            android:textColor="@color/ShopTextColor"
+                                            android:textSize="25dp"/>
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="12345678"
+                                            android:textColor="@color/ShopTextColor"
+                                            android:layout_centerVertical="true"
+                                            android:textSize="25dp"
+                                            android:layout_toRightOf="@+id/bangding"/>
+                                    </LinearLayout>
+                                    <Button
+                                        android:layout_width="80dp"
+                                        android:layout_height="50dp"
+                                        android:layout_marginLeft="10dp"
+                                        android:text="绑定"
+                                        android:textSize="20dp"
+                                        android:background="@drawable/buttonbackground"
+                                        android:layout_toRightOf="@+id/bangding_qq_li"/>
+                                </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="15dp">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:id="@+id/bangding_email_li">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="绑定邮箱："
+                                            android:textColor="@color/ShopTextColor"
+                                            android:textSize="25dp"/>
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="123456789@qq.com"
+                                            android:textSize="25dp"
+                                            android:textColor="@color/ShopTextColor"/>
+                                    </LinearLayout>
+                                    <Button
+                                        android:layout_width="80dp"
+                                        android:layout_height="50dp"
+                                        android:layout_marginLeft="10dp"
+                                        android:background="@drawable/buttonbackground"
+                                        android:layout_toRightOf="@id/bangding_email_li"
+                                        android:text="绑定"
+                                        android:textSize="20dp"/>
+                                </RelativeLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </ScrollView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:id="@+id/change_password_li"
+                            android:layout_centerVertical="true">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="15dp"
-                                android:text="年级"
-                                android:textColor="@color/blackTextColor"
-                                android:textSize="25dp"/>
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_marginTop="15dp"
-                                android:layout_height="wrap_content">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="绑定QQ"
-                                    android:textColor="@color/blackTextColor"
-                                    android:textSize="25dp"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="15dp">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="绑定邮箱"
-                                    android:textColor="@color/blackTextColor"
-                                    android:textSize="25dp"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-                            </LinearLayout>
+                                android:text="修改密码"
+                                android:textSize="25dp"
+                                android:textColor="@color/ShopTextColor"/>
                         </LinearLayout>
-                    </LinearLayout>
-                </ScrollView>
+                        <Button
+                            android:layout_width="80dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="修改"
+                            android:textSize="20dp"
+                            android:layout_toRightOf="@id/change_password_li"
+                            android:background="@drawable/buttonbackground"
+                            android:textColor="@color/ShopTextColor"/>
+                    </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2">
+        android:layout_weight="6">
     </LinearLayout>
 </LinearLayout>
