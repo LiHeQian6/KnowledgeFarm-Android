@@ -3,6 +3,9 @@ package com.li.knowledgefarm.Main;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,18 @@ import android.widget.TextView;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.Notification;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import androidx.annotation.NonNull;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+
 public class NotifyPopUpWindow extends PopupWindow {
 
     private Button delete;
@@ -20,6 +35,7 @@ public class NotifyPopUpWindow extends PopupWindow {
     private TextView not_title;
     private TextView not_content;
     private TextView not_time;
+    private Handler if_delete_handler;
 
 
 
@@ -47,9 +63,51 @@ public class NotifyPopUpWindow extends PopupWindow {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                deleteThisNotify();
                 dismiss();
             }
         });
+    }
+
+    /**
+     * @Description 删除通知
+     * @Author 孙建旺
+     * @Date 上午10:09 2020/04/28
+     * @Param []
+     * @return void
+     */
+    private void deleteThisNotify(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                final Request request = new Request.Builder()
+                        .url("").build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("Error","网络错误");
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String messages = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = messages;
+                        if_delete_handler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        if_delete_handler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+
+            }
+        };
     }
 
     private void setText(){
