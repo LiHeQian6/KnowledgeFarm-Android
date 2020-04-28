@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.entity.User;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -128,7 +129,7 @@ public class QQFirstActivity extends AppCompatActivity {
         //Request对象(Post、FormBody)
         FormBody formBody = new FormBody.Builder()
                 .add("grade",grade)
-                .add("password",stringMD5(password))
+                .add("password", Md5Encode.getMD5(password.getBytes()))
                 .add("openId",openId)
                 .add("photo", Path)
                 .add("nickName",Nickname)
@@ -208,24 +209,6 @@ public class QQFirstActivity extends AppCompatActivity {
     public void exit() {
         finish();
         System.exit(0);
-    }
-
-    //MD5加密
-    public String stringMD5(String input) {
-        try {
-            // 拿到一个MD5转换器（如果想要SHA1参数换成”SHA1”）
-            MessageDigest messageDigest =MessageDigest.getInstance("MD5");
-            // 输入的字符串转换成字节数组
-            byte[] inputByteArray = input.getBytes();
-            // inputByteArray是输入字符串转换得到的字节数组
-            messageDigest.update(inputByteArray);
-            // 转换并返回结果，也是字节数组，包含16个元素
-            byte[] resultByteArray = messageDigest.digest();
-            // 字符数组转换成字符串返回
-            return byteArrayToHex(resultByteArray);
-        } catch (NoSuchAlgorithmException e) {
-            return null;
-        }
     }
 
     //将字节数组换成成16进制的字符串
