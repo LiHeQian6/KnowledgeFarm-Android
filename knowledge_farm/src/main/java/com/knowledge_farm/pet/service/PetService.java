@@ -22,7 +22,7 @@ public class PetService {
     private PetDao petDao;
 
     public Page<Pet> showAllPetInStore(Pageable pageable){
-        return petDao.findAllByIsOwn(0,pageable);
+        return petDao.findAllByExist(1, pageable);
     }
 
     public Pet findPetById(int petId){

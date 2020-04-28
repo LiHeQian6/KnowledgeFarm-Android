@@ -11,37 +11,39 @@ import javax.persistence.*;
 @Entity
 @Table(name = "pet")
 public class Pet {
-    private int id;
+    private Integer id;
     private String name;
-    private int growPeriod;
-    private int life;
-    private int intelligence;
-    private int physical;
-    private int price;
+    private String description;
+    private Integer growPeriod;
+    private Integer life;
+    private Integer intelligence;
+    private Integer physical;
+    private Integer price;
     private String img1;
     private String img2;
     private String img3;
-    private int isOwn;
+    private Integer exist;
 
     public Pet() {
     }
 
-    public Pet(String name, int life, int intelligence, int physical) {
-        this.name = name;
-        this.life = life;
-        this.intelligence = intelligence;
-        this.physical = physical;
-        this.growPeriod = 0;
-        this.isOwn = 0;
-    }
+//    public Pet(String name, String description, Integer life, Integer intelligence, Integer physical) {
+//        this.name = name;
+//        this.description = description;
+//        this.life = life;
+//        this.intelligence = intelligence;
+//        this.physical = physical;
+//        this.growPeriod = 0;
+//        this.exist = 1;
+//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -53,43 +55,52 @@ public class Pet {
         this.name = name;
     }
 
-    public int getGrowPeriod() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Column(name = "grow_period")
+    public Integer getGrowPeriod() {
         return growPeriod;
     }
 
-    public void setGrowPeriod(int growPeriod) {
+    public void setGrowPeriod(Integer growPeriod) {
         this.growPeriod = growPeriod;
     }
 
-    public int getLife() {
+    public Integer getLife() {
         return life;
     }
 
-    public void setLife(int life) {
+    public void setLife(Integer life) {
         this.life = life;
     }
 
-    public int getIntelligence() {
+    public Integer getIntelligence() {
         return intelligence;
     }
 
-    public void setIntelligence(int intelligence) {
+    public void setIntelligence(Integer intelligence) {
         this.intelligence = intelligence;
     }
 
-    public int getPhysical() {
+    public Integer getPhysical() {
         return physical;
     }
 
-    public void setPhysical(int physical) {
+    public void setPhysical(Integer physical) {
         this.physical = physical;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -117,11 +128,13 @@ public class Pet {
         this.img3 = img3;
     }
 
-    public int getIsOwn() {
-        return isOwn;
+    @Column(insertable = false, columnDefinition = "1")
+    public Integer getExist() {
+        return exist;
     }
 
-    public void setIsOwn(int isOwn) {
-        this.isOwn = isOwn;
+    public void setExist(Integer exist) {
+        this.exist = exist;
     }
+
 }
