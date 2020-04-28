@@ -33,6 +33,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
@@ -54,6 +57,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.List;
 
 import com.li.knowledgefarm.R;
 
@@ -156,6 +160,24 @@ public class LoginActivity extends AppCompatActivity {
         FullScreen.NavigationBarStatusBar(LoginActivity.this,true);
         getViews();
         registListener();
+        XXPermissions.with(this)
+            // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+            //.constantRequest()
+            // 支持请求6.0悬浮窗权限8.0请求安装权限
+            //.permission(Permission.SYSTEM_ALERT_WINDOW, Permission.REQUEST_INSTALL_PACKAGES)
+            // 不指定权限则自动获取清单中的危险权限
+            .request(new OnPermission() {
+
+                @Override
+                public void hasPermission(List<String> granted, boolean all) {
+
+                }
+
+                @Override
+                public void noPermission(List<String> denied, boolean quick) {
+
+                }
+            });
     }
 
     /**

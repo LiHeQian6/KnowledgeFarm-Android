@@ -60,6 +60,7 @@ import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
+import com.li.knowledgefarm.pet.PetPopUpWindow;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
     private static List<Boolean> notifyStatus=new ArrayList<>(4);
     private Handler new_notification;
     private FriendsPopUpWindow friendsPopUpWindow;
+    private PetPopUpWindow petPopUpWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         addListener();
         getCrop();
         JPushInterface.setAlias(this,1, LoginActivity.user.getAccount());
-//        haveNewNotifications();
+        haveNewNotifications();
     }
 
     @Override
@@ -1061,9 +1063,6 @@ public class MainActivity extends AppCompatActivity {
         bag = findViewById(R.id.bag);
         shop = findViewById(R.id.shop);
         pet = findViewById(R.id.pet);
-        TextView tv = findViewById(R.id.pett);
-        tv.setVisibility(View.GONE);
-        pet.setVisibility(View.GONE);
         setting = findViewById(R.id.setting);
         photo = findViewById(R.id.photo);
         nickName = findViewById(R.id.nickName);
@@ -1155,7 +1154,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!message.equals("Fail")){
                     Type type = new TypeToken<List<Boolean>>(){}.getType();
                     notifyStatus= gson.fromJson(message,type);
-                    if (notifyStatus.get(0)){
+                    if (notifyStatus.contains(true)){
                         notify_red.setVisibility(View.VISIBLE);
                     }
                 }else {
@@ -1213,6 +1212,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.pet:
+                    petPopUpWindow = new PetPopUpWindow(getApplicationContext());
+                    petPopUpWindow.showAtLocation(dayTask, Gravity.CENTER, 0, 0);
                     break;
                 case R.id.setting:
                     intent = new Intent();

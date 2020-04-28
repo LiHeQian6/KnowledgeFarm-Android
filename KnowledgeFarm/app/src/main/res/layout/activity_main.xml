@@ -144,8 +144,8 @@
                         android:src="@drawable/red"
                         android:visibility="gone"
                         android:id="@+id/notify_red"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"/>
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"/>
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -345,8 +345,8 @@
                     android:src="@drawable/red"
                     android:id="@+id/daytask_red"
                     android:visibility="gone"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"/>
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"/>
             </RelativeLayout>
             <TextView android:layout_width="wrap_content"
                       android:text="每日任务"

@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.daytask;
+package com.li.knowledgefarm.pet;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,11 +13,15 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
-import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.FriendsPage;
+import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.TaskItem;
+import com.li.knowledgefarm.entity.User;
+import com.li.knowledgefarm.view.HorizontalListView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +29,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +37,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -42,19 +46,19 @@ import okhttp3.Response;
  * @Description
  * @Date 10:49 2020/4/22
  **/
-public class DayTaskPopUpWindow extends PopupWindow {
-    private ListView task;
+public class PetPopUpWindow extends PopupWindow {
+    private HorizontalListView pet;
     private Context context;
     private Gson gson;
-    private Handler get_day_task;
+    private Handler get_pet;
     private View contentView;
-    private ArrayList<TaskItem> tasks = new ArrayList<>();
+    private ArrayList<Pet> pets= new ArrayList<>();
 
-    public DayTaskPopUpWindow(Context context) {
+    public PetPopUpWindow(Context context) {
         super(context);
         this.context = context;
         Init();
-        getDayTask();
+        getPetInfo();
     }
 
     /**
@@ -71,7 +75,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
-        contentView = LayoutInflater.from(context).inflate(R.layout.daytask_popup_layout,
+        contentView = LayoutInflater.from(context).inflate(R.layout.pet_layout,
                 null, false);
         this.setContentView(contentView);
         getViews(contentView);
@@ -86,16 +90,16 @@ public class DayTaskPopUpWindow extends PopupWindow {
      **/
     private void getViews(View view){
         gson = new Gson();
-        task=contentView.findViewById(R.id.task);
+        pet=contentView.findViewById(R.id.pet);
     }
 
     /**
      * @Author li
      * @return void
-     * @Description 获取每日任务信息
+     * @Description 获取用户的宠物的信息
      * @Date 10:53 2020/4/22
      **/
-    private void getDayTask(){
+    private void getPetInfo(){
         new Thread(){
             @Override
             public void run() {
@@ -106,10 +110,10 @@ public class DayTaskPopUpWindow extends PopupWindow {
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Log.e("每日任务信息", "请求失败");
+                        Log.e("宠物信息", "请求失败");
                         Message message = Message.obtain();
                         message.obj = "Fail";
-                        get_day_task.sendMessage(message);
+                        get_pet.sendMessage(message);
                     }
 
                     @Override
@@ -117,21 +121,27 @@ public class DayTaskPopUpWindow extends PopupWindow {
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;
-                        get_day_task.sendMessage(message);
+                        get_pet.sendMessage(message);
                     }
                 });
             }
         }.start();
-        get_day_task = new Handler(){
+        get_pet = new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
-                Log.e("每日任务信息",message);
+                Log.e("宠物信息",message);
                 if (!message.equals("Fail")){
-                    Task myTask = gson.fromJson(message,Task.class);
-                    initTask(myTask);
-                    task.setAdapter(new DayTaskAdapter(context,R.layout.daytask_item_layout,tasks));
+                    Type type = new TypeToken<List<Pet>>(){}.getType();
+//                    pets= gson.fromJson(message,type);
+                    Pet pet = new Pet("二哈","狗中贵族",100,200,100);
+                    Pet pet2 = new Pet("二哈","狗中贵族",100,200,100);
+                    Pet pet3 = new Pet("二哈","狗中贵族",100,200,100);
+                    pets.add(pet);
+                    pets.add(pet2);
+                    pets.add(pet3);
+                    PetPopUpWindow.this.pet.setAdapter(new PetAdapter(context,R.layout.pet_item_layout,pets));
                 }else {
                     Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
@@ -139,33 +149,5 @@ public class DayTaskPopUpWindow extends PopupWindow {
         };
     }
 
-    /**
-     * @Author li
-     * @param task
-     * @return void
-     * @Description 初始化任务数据
-     * @Date 11:56 2020/4/22
-     **/
-    public void initTask(Task task){
-        Field[] fields = task.getClass().getDeclaredFields();
-        for (int i = fields.length - 1; i >= 0; i--) {
-            TaskItem taskItem = new TaskItem();
-            String name = fields[i].getName();
-            taskItem.setType(name);
-            try {
-                Method method = task.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1));
-                int status = (int) method.invoke(task);
-                taskItem.setStatus(status);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            tasks.add(taskItem);
-        }
-        Collections.sort(tasks);
-    }
 
 }
