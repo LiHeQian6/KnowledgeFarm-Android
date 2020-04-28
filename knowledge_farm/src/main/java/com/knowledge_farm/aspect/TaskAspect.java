@@ -51,18 +51,23 @@ public class TaskAspect {
         Task task = user.getTask();
         if (description.equals("water")&&task.getWater()==0){
             taskService.finishTask(user,"water");
+            jpushService.sendCustomPush("finish water", "", new HashMap<>(), user.getAccount());
         }else if(description.equals("fertilize")&&task.getFertilize()==0){
             taskService.finishTask(user,"fertilize");
+            jpushService.sendCustomPush("finish fertilize", "", new HashMap<>(), user.getAccount());
         }else if(description.equals("crop")&&task.getCrop()==0){
             taskService.finishTask(user,"crop");
+            jpushService.sendCustomPush("finish crop", "", new HashMap<>(), user.getAccount());
         }else if(description.equals("harvest")&&task.getHarvest()==0){
             taskService.finishTask(user,"harvest");
+            jpushService.sendCustomPush("finish harvest", "", new HashMap<>(), user.getAccount());
         }else if(description.equals("help_water")&&task.getHelpWater()==0){
             taskService.finishTask(user,"help_water");
+            jpushService.sendCustomPush("finish helpWater", "", new HashMap<>(), user.getAccount());
         }else if(description.equals("help_fertilize")&&task.getHelpFertilize()==0){
             taskService.finishTask(user,"help_fertilize");
+            jpushService.sendCustomPush("finish helpFertilize", "", new HashMap<>(), user.getAccount());
         }
-        jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
         System.out.println("*****Encode End*****");
         return result;
     }
