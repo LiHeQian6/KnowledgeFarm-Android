@@ -89,6 +89,7 @@ public class GetEnglishQuestion extends SubjectInterface {
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                             Message message = Message.obtain();
                             message.obj = response.body().string();
+                            message.arg1 = response.code();
                             getMath.sendMessage(message);
                         }
                     });
@@ -111,7 +112,7 @@ public class GetEnglishQuestion extends SubjectInterface {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
-                if(!data.equals("Fail") && !data.equals("html")) {
+                if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
                     Type type = new TypeToken<QuestionPage<English>>() {
                     }.getType();
                     list = gson.fromJson(data, type);

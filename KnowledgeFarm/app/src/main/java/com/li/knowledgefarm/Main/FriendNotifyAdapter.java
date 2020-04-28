@@ -114,7 +114,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
                 super.run();
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/userfriend/refuseUserFriend?notificationId="
-                                +list.getList().get(position).getId()+"&userId="+list.getList().get(position).getFrom().getId()).build();
+                                +list.getList().get(position).getId()+"&account="+list.getList().get(position).getFrom().getAccount()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -156,7 +156,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/userfriend/addUserFriend?account="
                                 +list.getList().get(position).getTo().getAccount()+
-                                "&userId="+list.getList().get(position).getFrom().getId()+
+                                "&account="+list.getList().get(position).getFrom().getAccount()+
                                 "&notificationId="+list.getList().get(position).getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {

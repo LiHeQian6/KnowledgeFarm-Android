@@ -73,7 +73,7 @@ public class NotifyActivity extends AppCompatActivity {
         getViews();
         registListener();
         FullScreen.NavigationBarStatusBar(NotifyActivity.this,true);
-//        getNotify("1",1,6);
+        getNotify("1",1,6);
         getNotifyHandler();
     }
 
@@ -362,7 +362,7 @@ public class NotifyActivity extends AppCompatActivity {
                 case R.id.friend_btn:
                     current_type = "2";
                     delete_all_btn.setVisibility(View.INVISIBLE);
-                    getFriendNotify(LoginActivity.user.getId(),1,4);
+                    getNotify("2",1,4);
                     break;
                 case R.id.add_btn:
                     current_type = "3";

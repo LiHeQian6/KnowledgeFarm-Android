@@ -51,6 +51,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.MyFriends.FriendsPopUpWindow;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
+import com.li.knowledgefarm.Settings.SettingMessagePopUp;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
@@ -1158,6 +1159,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * @Description 展示用户信息和设置弹窗
+     * @Author 孙建旺
+     * @Date 下午9:21 2020/04/28
+     * @Param []
+     * @return void
+     */
+    private void ShowSettingAndMessage(){
+        SettingMessagePopUp messagePopUp = new SettingMessagePopUp(this);
+        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+        messagePopUp.setWidth((int) (displayWidth * 0.70));
+        messagePopUp.setHeight((int) (displayHeight * 0.8));
+        messagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
+//        planting(bagPopUpWindow.getGridView());
+    }
+    /**
      * @Author li
      * @return null
      * @Description 监听器类
@@ -1227,10 +1247,11 @@ public class MainActivity extends AppCompatActivity {
                     notify_red.setVisibility(View.GONE);
                     break;
                 case R.id.photo:
-                    intent = new Intent();
-                    intent.setClass(MainActivity.this, SettingActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0);
+//                    intent = new Intent();
+//                    intent.setClass(MainActivity.this, SettingActivity.class);
+//                    startActivity(intent);
+//                    overridePendingTransition(0, 0);
+                    ShowSettingAndMessage();
                     break;
                 case R.id.task:
                     showDayTaskWindow();

@@ -8,12 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="6">
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_weight="2"
         android:orientation="vertical">
 
@@ -47,11 +41,13 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/my_message_btn"
                     android:text="个人信息"/>
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/system_setting"
                     android:text="系统设置"/>
 
             </LinearLayout>
@@ -83,7 +79,7 @@
                                 android:layout_height="wrap_content">
                                 <ImageView
                                     android:layout_width="50dp"
-                                    android:id="@+id/user_image"
+                                    android:id="@+id/btnUpdatePhoto"
                                     android:layout_height="50dp"
                                     android:src="@drawable/photo"/>
                                 <LinearLayout
@@ -100,10 +96,18 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:textColor="@color/ShopTextColor"
+                                            android:visibility="visible"
                                             android:text="昵称:小完能"/>
+                                        <EditText
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/ShopTextColor"
+                                            android:visibility="gone"
+                                            android:hint="小完能"/>
                                         <ImageView
                                             android:layout_width="20dp"
                                             android:layout_height="20dp"
+                                            android:layout_gravity="center"
                                             android:src="@drawable/modify"/>
                                     </LinearLayout>
                                     <LinearLayout
@@ -161,7 +165,7 @@
                                         android:background="@drawable/buttonbackground"
                                         android:text="修改"
                                         android:layout_marginLeft="10dp"
-                                        android:id="@+id/change_grade_btn"
+                                        android:id="@+id/btnUpdateGrade"
                                         android:gravity="center"
                                         android:textSize="20dp"
                                         android:layout_toRightOf="@+id/change_grade_li"/>
@@ -197,6 +201,7 @@
                                         android:layout_marginLeft="10dp"
                                         android:text="绑定"
                                         android:textSize="20dp"
+                                        android:id="@+id/btnUpdatePassword"
                                         android:background="@drawable/buttonbackground"
                                         android:layout_toRightOf="@+id/bangding_qq_li"/>
                                 </RelativeLayout>
@@ -229,6 +234,7 @@
                                         android:background="@drawable/buttonbackground"
                                         android:layout_toRightOf="@id/bangding_email_li"
                                         android:text="绑定"
+                                        android:id="@+id/btnBindingEmail"
                                         android:textSize="20dp"/>
                                 </RelativeLayout>
                             </LinearLayout>
@@ -241,6 +247,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="5"
                     android:orientation="vertical"
+                    android:id="@+id/system_setting_li"
                     android:visibility="gone">
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -270,11 +277,5 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="6">
     </LinearLayout>
 </LinearLayout>
