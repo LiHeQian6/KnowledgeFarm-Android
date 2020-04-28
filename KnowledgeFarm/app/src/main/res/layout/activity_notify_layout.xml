@@ -115,7 +115,7 @@
                 android:id="@+id/delete_all_btn"
                 android:layout_gravity="center"
                 android:textSize="20dp"
-                android:text="一键删除"/>
+                android:text="删除已读"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

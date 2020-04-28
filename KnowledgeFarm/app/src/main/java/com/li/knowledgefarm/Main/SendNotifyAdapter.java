@@ -64,6 +64,7 @@ public class SendNotifyAdapter extends BaseAdapter {
             viewHolder.photo = convertView.findViewById(R.id.send_photo);
             viewHolder.id = convertView.findViewById(R.id.send_id);
             viewHolder.nickName = convertView.findViewById(R.id.send_nickname);
+            viewHolder.result = convertView.findViewById(R.id.send_result);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
@@ -73,8 +74,8 @@ public class SendNotifyAdapter extends BaseAdapter {
                 .placeholder(R.drawable.photo)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(list.getList().get(position).getFrom().getPhoto()).apply(requestOptions).into(viewHolder.photo);
-        viewHolder.id.setText(list.getList().get(position).getFrom().getAccount());
-        viewHolder.nickName.setText(list.getList().get(position).getFrom().getNickName());
+        viewHolder.id.setText("账号："+list.getList().get(position).getTo().getAccount()+"");
+        viewHolder.nickName.setText("昵称："+list.getList().get(position).getTo().getNickName());
         //ToDo
         if(list.getList().get(position).isHaveRead() == 0){
             viewHolder.result.setText("正在等待回应");
