@@ -290,7 +290,7 @@ public class UserController {
      * @Param [account, password]
      * @return java.lang.String
      **/
-    @ApiOperation(value = "修改用户密码", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)PasswordError：密码输入错误")
+    @ApiOperation(value = "修改用户密码", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)PasswordError：旧密码错误")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "oldPassword", value = "旧密码", dataType = "String", paramType = "form", required = true),

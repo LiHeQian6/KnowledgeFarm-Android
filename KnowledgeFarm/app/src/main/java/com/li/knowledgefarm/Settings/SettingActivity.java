@@ -184,27 +184,25 @@ public class SettingActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"解绑邮箱成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
-                            Toast.makeText(getApplicationContext(),"解绑邮箱失败",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"解绑邮箱失败", Toast.LENGTH_SHORT).show();
                             break;
                     }
                     break;
                 case 4: //修改头像判断
                     String aString = (String)msg.obj;
                     if(aString.equals("false") || aString.equals("")){
-                        Toast.makeText(getApplicationContext(),"头像上传失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"头像上传失败", Toast.LENGTH_SHORT).show();
+                    }else if(aString.equals("null")){
+                        Toast.makeText(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
                     }else{
-                        Type type = new TypeToken<Map<String,String>>(){}.getType();
-                        Map<String,String> map = gson.fromJson(aString,type);
-                        String photo = URLDecoder.decode(map.get("photo"));
-                        LoginActivity.user.setPhoto(photo);
-                        LoginActivity.user.setPhotoName(map.get("photoName"));
+                        LoginActivity.user.setPhoto(aString);
                         RequestOptions options = new RequestOptions();
                         options.placeholder(R.drawable.huancun2) //加载图片时
                                 .error(R.drawable.huancun2) //请求出错（图片资源不存在，无访问权限）
                                 .fallback(R.drawable.huancun2) //请求资源为null
                                 .circleCrop() //转换图片效果
                                 .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
-                        Glide.with(getApplicationContext()).load(photo).apply(options).into(iv_photo);
+                        Glide.with(getApplicationContext()).load(aString).apply(options).into(iv_photo);
                     }
 
             }
@@ -276,7 +274,7 @@ public class SettingActivity extends AppCompatActivity {
                     showAlertDialogEmail();
                     break;
                 case R.id.btnRegout:
-                    showAlertDialogLogOut();
+                    showAlertDialogLogout();
                     break;
             }
         }
@@ -401,10 +399,9 @@ public class SettingActivity extends AppCompatActivity {
                 }
                 RequestBody requestBody = RequestBody.create(photo,mimeType);
                 RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("accout",LoginActivity.user.getAccount())
+                        .addFormDataPart("id", "" + LoginActivity.user.getId())
                         .addFormDataPart("photo", URLEncoder.encode(LoginActivity.user.getPhoto()))
-                        .addFormDataPart("photoName",LoginActivity.user.getPhotoName())
-                        .addFormDataPart("file",photo.getName(),requestBody)
+                        .addFormDataPart("upload",photo.getName(),requestBody)
                         .build();
                 Request request = new Request.Builder().post(body).url(getResources().getString(R.string.URL)+"/user/updatePhoto").build();
                 Call call = okHttpClient.newCall(request);
@@ -431,7 +428,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/isBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -544,7 +541,7 @@ public class SettingActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).add("openId",openId).build();
+                            FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).add("openId",openId).build();
                             final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -582,7 +579,7 @@ public class SettingActivity extends AppCompatActivity {
      * @Param []
      * @return void
      */
-    private void showAlertDialogLogOut(){
+    private void showAlertDialogLogout(){
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
         //设置标题
         builder.setTitle("温馨提示");
@@ -634,7 +631,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -683,7 +680,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("accout",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
