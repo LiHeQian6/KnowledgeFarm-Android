@@ -19,6 +19,7 @@ public class UserPetHouse {
     private Integer life;       //生命值
     private Integer intelligence;       //智力值
     private Integer physical;         //体力值
+    private Integer growPeriod;     //成长阶段
 
     public UserPetHouse() {
     }
@@ -30,6 +31,7 @@ public class UserPetHouse {
         life = new Random().nextInt(pet.getLife())+30;
         intelligence = new Random().nextInt(pet.getIntelligence())+30;
         physical = new Random().nextInt(pet.getPhysical())+30;
+        this.growPeriod = 0;
     }
 
     @Id
@@ -92,5 +94,13 @@ public class UserPetHouse {
 
     public void setPhysical(Integer physical) {
         this.physical = physical;
+    }
+
+    public Integer getGrowPeriod() {
+        return growPeriod;
+    }
+
+    public void setGrowPeriod(Integer growPeriod) {
+        this.growPeriod = growPeriod;
     }
 }
