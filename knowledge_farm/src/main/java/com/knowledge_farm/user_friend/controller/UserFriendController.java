@@ -4,6 +4,7 @@ import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserVO;
+import com.knowledge_farm.notification.service.NotificationService;
 import com.knowledge_farm.user_friend.service.UserFriendServiceImpl;
 import com.knowledge_farm.util.PageUtil;
 import io.swagger.annotations.Api;
@@ -32,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 public class UserFriendController {
     @Resource
     private UserFriendServiceImpl userFriendService;
+    @Resource
+    private NotificationService notificationService;
     @Value("${file.photoUrl}")
     private String photoUrl;
 
@@ -155,9 +158,11 @@ public class UserFriendController {
                 case -1:
                     return Result.FALSE;
                 case 0:
+                    this.notificationService.addWaterForFriendNotification(userId, friendId);
                     return Result.TRUE;
                 default:
                     request.setAttribute("StartUserCropGrowJob", new Integer[]{friendId, result, Integer.parseInt(landNumber.substring(4))});
+                    this.notificationService.addWaterForFriendNotification(userId, friendId);
                     return Result.TRUE;
             }
         }catch (Exception e){
@@ -177,7 +182,31 @@ public class UserFriendController {
                                       @RequestParam("friendId") Integer friendId,
                                       @RequestParam("landNumber") String landNumber){
         try {
-            return this.userFriendService.fertilizerForFriend(userId, friendId, landNumber);
+            String result = this.userFriendService.fertilizerForFriend(userId, friendId, landNumber);
+            this.notificationService.addFertilizerForFriendNotification(userId, friendId);
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+    }
+
+    @GetMapping("/test")
+    public String waterForFriend2(
+                                 HttpServletRequest request){
+        try {
+            int result = this.userFriendService.waterForFriend(109, 124, "land1");
+            switch (result){
+                case -1:
+                    return Result.FALSE;
+                case 0:
+                    this.notificationService.addWaterForFriendNotification(109, 124);
+                    return Result.TRUE;
+                default:
+                    request.setAttribute("StartUserCropGrowJob", new Integer[]{124, result, Integer.parseInt("land1".substring(4))});
+                    this.notificationService.addWaterForFriendNotification(109, 124);
+                    return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
             return Result.FALSE;

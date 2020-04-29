@@ -8,10 +8,9 @@ import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.user_authority.service.UserAuthorityServiceImpl;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
-import com.knowledge_farm.user_pet_house.service.UserPetHoueService;
+import com.knowledge_farm.user_tag.service.UserTagServiceImpl;
 import com.knowledge_farm.util.Email;
 import com.knowledge_farm.util.RandomUtil;
-import com.knowledge_farm.util.UserCropGrowJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -51,8 +49,7 @@ public class UserServiceImpl {
     @Lazy
     private PetService petService;
     @Resource
-    @Lazy
-    private UserPetHoueService userPetHoueService;
+    private UserTagServiceImpl userTagService;
     @Resource
     private EntityManager entityManager;
     @Resource
@@ -109,7 +106,7 @@ public class UserServiceImpl {
         user.setPhoto(photo);
         user.setEmail(email);
         user.setGrade(grade);
-        user.setLastLogoutTime(new Date());
+        user.setLastReadTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建UserAuthority
         UserAuthority userAuthority = new UserAuthority();
@@ -122,6 +119,10 @@ public class UserServiceImpl {
         UserCrop userCrop2 = new UserCrop();
         UserCrop userCrop3 = new UserCrop();
         UserCrop userCrop4 = new UserCrop();
+        //宠物仓库
+        UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
+        //UserTag
+        UserTag tag = this.userTagService.findUserTagById(1);
         //关联
         user.setUserAuthority(userAuthority);
         userAuthority.setUser(user);
@@ -131,9 +132,9 @@ public class UserServiceImpl {
         land.setUserCrop3(userCrop3);
         land.setUserCrop4(userCrop4);
         user.setLand(land);
-        //宠物仓库
-        UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
+        user.setTag(tag);
         user.getPetHouses().add(petHouse);
+
         //添加并返回新插入的User
         this.userDao.save(user);
         entityManager.clear();
@@ -185,7 +186,7 @@ public class UserServiceImpl {
         user.setPhoto(this.userPhotoFolderName + "/" + this.userDefaultFileName);
         user.setEmail(email);
         user.setGrade(grade);
-        user.setLastLogoutTime(new Date());
+        user.setLastReadTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建Land
         Land land = new Land();
@@ -194,6 +195,10 @@ public class UserServiceImpl {
         UserCrop userCrop2 = new UserCrop();
         UserCrop userCrop3 = new UserCrop();
         UserCrop userCrop4 = new UserCrop();
+        //宠物仓库
+        UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
+        //UserTag
+        UserTag tag = this.userTagService.findUserTagById(1);
         //关联
         land.setUser(user);
         land.setUserCrop1(userCrop1);
@@ -201,9 +206,8 @@ public class UserServiceImpl {
         land.setUserCrop3(userCrop3);
         land.setUserCrop4(userCrop4);
         user.setLand(land);
-        //宠物仓库
-        UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
         user.getPetHouses().add(petHouse);
+        user.setTag(tag);
         this.userDao.save(user);
         entityManager.clear();
         User resultUser = this.userDao.findUserById(user.getId());
@@ -578,12 +582,11 @@ public class UserServiceImpl {
             if(userBag.getCrop() == crop){
                 flag = 1;
                 number = userBag.getNumber();
-                userBag.setNumber(number - 1);
                 if((number - 1) <= 0){
-                    System.out.println("sss" + number);
                     userBags.remove(userBag);
-                    userBag.setUser(null);
-                    this.userBagService.deleteById(userBag.getId());
+                    this.userBagService.delete(userBag);
+                }else{
+                    userBag.setNumber(number - 1);
                 }
                 break;
             }

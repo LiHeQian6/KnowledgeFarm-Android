@@ -8,7 +8,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +27,6 @@ import java.util.List;
 public class NotificationController {
     @Resource
     private NotificationService notificationService;
-    @Value("${file.photoUrl}")
-    private String photoUrl;
 
     @ApiOperation(value = "根据通知类型查询接收到的消息", notes = "返回值：Page（Notification）")
     @ApiImplicitParams({
@@ -38,34 +35,23 @@ public class NotificationController {
             @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", defaultValue = "1"),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", defaultValue = "4")
     })
-    @PostMapping("/findReceivedNotificationByType")
+    @GetMapping("/findReceivedNotificationByType")
     public PageUtil<Notification> findReceivedNotificationByType(@RequestParam("userId") Integer userId,
                                                                  @RequestParam("typeId") Integer typeId,
                                                                  @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                                                  @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
-        Page<Notification> page = this.notificationService.findReceivedByNotificationType(userId, typeId, pageNumber, pageSize);
         PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
-        pageUtil.setTotalCount((int) page.getTotalElements());
-        pageUtil.setList(page.getContent());
+        try {
+            Page<Notification> page = this.notificationService.findReceivedByNotificationType(userId, typeId, pageNumber, pageSize);
+            pageUtil.setTotalCount((int) page.getTotalElements());
+            pageUtil.setList(page.getContent());
+        }catch (Exception e){
+            e.printStackTrace();
+            pageUtil.setTotalCount(0);
+            pageUtil.setList(new ArrayList<>());
+        }
         return pageUtil;
     }
-
-//    @ApiOperation(value = "查询接收到的申请添加好友类型消息", notes = "返回值：Page（Notification）")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int", paramType = "form", required = true),
-//            @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", defaultValue = "1"),
-//            @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", defaultValue = "4")
-//    })
-//    @GetMapping("/findReceivedAddFriendNotification")
-//    public PageUtil<Notification> findReceivedAddFriendNotification(@RequestParam("userId") Integer userId,
-//                                                                 @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-//                                                                 @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
-//        Page<Notification> page = this.notificationService.findReceivedAddFriendNotification(userId, pageNumber, pageSize);
-//        PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
-//        pageUtil.setTotalCount((int) page.getTotalElements());
-//        pageUtil.setList(page.getContent());
-//        return pageUtil;
-//    }
 
     @ApiOperation(value = "根据通知类型查询已发送的消息", notes = "返回值：Page（Notification）")
     @ApiImplicitParams({
@@ -82,18 +68,6 @@ public class NotificationController {
         Page<Notification> page = this.notificationService.findSendByNotificationType(userId, typeId, pageNumber, pageSize);
         PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-//        for(Notification notification : page.getContent()){
-//            User from = notification.getFrom();
-//            User to = notification.getTo();
-//            to.setPassword("");
-//            from.setPassword("");
-//            if(!(from.getPhoto().substring(0,4)).equals("http")){
-//                from.setPhoto(this.photoUrl + from.getPhoto());
-//            }
-//            if(!(to.getPhoto().substring(0,4)).equals("http")){
-//                to.setPhoto(this.photoUrl + to.getPhoto());
-//            }
-//        }
         pageUtil.setList(page.getContent());
         return pageUtil;
     }

@@ -39,7 +39,7 @@ public class TaskAspect {
     @Around("taskAspect()")
     public Object encode(ProceedingJoinPoint joinPoint) throws ParseException {
         String description = ((MethodSignature)joinPoint.getSignature()).getMethod().getAnnotation(com.knowledge_farm.annotation.Task.class).description();
-        System.out.println("*****Encode Start*****");
+        System.out.println("*****Task Start*****");
         Object[] args = joinPoint.getArgs();
         Object result = null;
         try {
@@ -68,7 +68,7 @@ public class TaskAspect {
             taskService.finishTask(user,"help_fertilize");
             jpushService.sendCustomPush("finish helpFertilize", "", new HashMap<>(), user.getAccount());
         }
-        System.out.println("*****Encode End*****");
+        System.out.println("*****Task End*****");
         return result;
     }
 

@@ -46,8 +46,8 @@ public class UserBagServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public void deleteById(Integer id){
-        this.userBagDao.deleteById(id);
+    public void delete(UserBag userBag){
+        this.userBagDao.delete(userBag);
     }
 
 }
