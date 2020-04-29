@@ -47,6 +47,14 @@ public class UserFriendAspect {
     private void refuseUserFriend() {
     }
 
+    @Pointcut(value = "execution(* com.knowledge_farm.user_friend.controller.UserFriendController.waterForFriend(..))")
+    private void waterForFriend() {
+    }
+
+    @Pointcut(value = "execution(* com.knowledge_farm.user_friend.controller.UserFriendController.fertilizerForFriend(..))")
+    private void fertilizerForFriend() {
+    }
+
     @AfterReturning(pointcut = "addUserFriendNotification()", returning="result")
     public void addUserFriendNotification(JoinPoint joinPoint, Object result) {
         if(result == Result.TRUE){
@@ -87,6 +95,36 @@ public class UserFriendAspect {
             return;
         }
         logger.info("拒绝好友申请失败");
+    }
+
+    @AfterReturning(pointcut = "waterForFriend()", returning="result")
+    public void waterForFriend(JoinPoint joinPoint, Object result) {
+        if(result == Result.TRUE){
+            try {
+                Object[] args = joinPoint.getArgs();
+                User user = this.userService.findUserById((Integer) args[1]);
+                jpushService.sendCustomPush("notification", "message", new HashMap<>(), user.getAccount());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return;
+        }
+        logger.info("给好友浇水失败");
+    }
+
+    @AfterReturning(pointcut = "fertilizerForFriend()", returning="result")
+    public void fertilizerForFriend(JoinPoint joinPoint, Object result) {
+        if(result == Result.TRUE){
+            try {
+                Object[] args = joinPoint.getArgs();
+                User user = this.userService.findUserById((Integer) args[1]);
+                jpushService.sendCustomPush("notification", "message", new HashMap<>(), user.getAccount());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return;
+        }
+        logger.info("给好友施肥失败");
     }
 
 }
