@@ -58,14 +58,6 @@ public class UserController {
     @PostMapping("/loginByOpenId")
     public Object loginByOpenId(@RequestParam("openId") String openId){
         Object obj = this.userService.loginByOpenId(openId);
-//        if(obj instanceof User){
-//            User user = (User) obj;
-//            user.setPassword("");
-//            if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                user.setPhoto(this.photoUrl + user.getPhoto());
-//            }
-//            return user;
-//        }
         return obj;
     }
 

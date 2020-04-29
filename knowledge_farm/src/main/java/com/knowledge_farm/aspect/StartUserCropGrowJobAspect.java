@@ -1,5 +1,6 @@
 package com.knowledge_farm.aspect;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.util.UserCropGrowJob;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -47,48 +48,70 @@ public class StartUserCropGrowJobAspect {
     }
 
     @AfterReturning(pointcut = "raiseCrop()", returning="result")
-    public void raiseCrop(JoinPoint joinPoint, Object result) throws SchedulerException {
+    public void raiseCrop(JoinPoint joinPoint, Object result) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
-        if(start != null){
-            startJob(scheduler, start[0], start[1], start[2]);
+        if(result == Result.TRUE){
+            Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
+            try {
+                startJob(scheduler, start[0], start[1], start[2]);
+            }catch (SchedulerException e){
+                logger.info("种植作物后开启任务失败");
+            }
             return;
         }
         logger.info("种植作物失败");
     }
 
     @AfterReturning(pointcut = "waterCrop()", returning="result")
-    public void water(JoinPoint joinPoint, Object result) throws SchedulerException {
+    public void water(JoinPoint joinPoint, Object result) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
-        if(start != null){
-            startJob(scheduler, start[0], start[1], start[2]);
+        if(result == Result.TRUE) {
+            Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
+            if(start != null) {
+                try {
+                    startJob(scheduler, start[0], start[1], start[2]);
+                }catch (SchedulerException e){
+                    logger.info("浇水后开启任务失败");
+                }
+            }
             return;
         }
         logger.info("浇水失败");
     }
 
     @AfterReturning(pointcut = "editLand()", returning="result")
-    public void editLand(JoinPoint joinPoint, Object result) throws SchedulerException {
+    public void editLand(JoinPoint joinPoint, Object result) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
-        if(start != null){
-            startJob(scheduler, start[0], start[1], start[2]);
+        if(result == Result.SUCCEED){
+            Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
+            if(start != null){
+                try {
+                    startJob(scheduler, start[0], start[1], start[2]);
+                }catch (SchedulerException e){
+                    logger.info("后台管理界面种植作物后开启任务失败");
+                }
+            }
             return;
         }
-        logger.info("种植作物失败");
+        logger.info("后台管理界面种植作物失败");
     }
 
     @AfterReturning(pointcut = "waterForFriend()", returning="result")
-    public void waterForFriend(JoinPoint joinPoint, Object result) throws SchedulerException {
+    public void waterForFriend(JoinPoint joinPoint, Object result) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
-        if(start != null){
-            startJob(scheduler, start[0], start[1], start[2]);
+        if(result == Result.TRUE){
+            Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
+            if(start != null){
+                try {
+                    startJob(scheduler, start[0], start[1], start[2]);
+                }catch (SchedulerException e){
+                    logger.info("给好友浇水后开启任务失败");
+                }
+            }
             return;
         }
         logger.info("给好友浇水失败");

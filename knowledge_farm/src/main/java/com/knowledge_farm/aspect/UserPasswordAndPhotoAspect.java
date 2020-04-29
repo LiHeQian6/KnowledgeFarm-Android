@@ -48,16 +48,20 @@ public class UserPasswordAndPhotoAspect {
     @AfterReturning(pointcut = "notification()", returning="result")
     public void notification(JoinPoint joinPoint, Object result) {
         if(result instanceof PageUtil){
-            for(Notification notification :  ((PageUtil<Notification>) result).getList()){
+            for(Notification notification : ((PageUtil<Notification>) result).getList()){
                 User from = notification.getFrom();
                 User to = notification.getTo();
-                to.setPassword("");
-                from.setPassword("");
-                if(!(from.getPhoto().substring(0,4)).equals("http")){
-                    from.setPhoto(this.photoUrl + from.getPhoto());
+                if(from != null){
+                    from.setPassword("");
+                    if(!(from.getPhoto().substring(0,4)).equals("http")){
+                        from.setPhoto(this.photoUrl + from.getPhoto());
+                    }
                 }
-                if(!(to.getPhoto().substring(0,4)).equals("http")){
-                    to.setPhoto(this.photoUrl + to.getPhoto());
+                if(to != null){
+                    to.setPassword("");
+                    if(!(to.getPhoto().substring(0,4)).equals("http")){
+                        to.setPhoto(this.photoUrl + to.getPhoto());
+                    }
                 }
             }
         }

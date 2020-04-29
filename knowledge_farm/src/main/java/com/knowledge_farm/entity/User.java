@@ -36,7 +36,7 @@ public class User {
     private Integer fertilizer;
     private Integer online;
     private Integer exist;
-    private Date lastLogoutTime;
+    private Date lastReadTime;
     private Land land;
     private UserAuthority userAuthority;
     private Set<UserBag> userBags = new HashSet<>();
@@ -45,6 +45,7 @@ public class User {
     private Set<Notification> sendNotifications = new HashSet<>();
     private Set<Notification> ReceiveNotifications = new HashSet<>();
     private Set<UserPetHouse> petHouses = new HashSet<>();
+    private UserTag tag;
 
     @Id
     @GeneratedValue(generator="identity")
@@ -198,13 +199,13 @@ public class User {
         this.exist = exist;
     }
 
-    @Column(name = "last_logout_time")
-    public Date getLastLogoutTime() {
-        return lastLogoutTime;
+    @Column(name = "last_read_time")
+    public Date getLastReadTime() {
+        return lastReadTime;
     }
 
-    public void setLastLogoutTime(Date lastLogoutTime) {
-        this.lastLogoutTime = lastLogoutTime;
+    public void setLastReadTime(Date lastReadTime) {
+        this.lastReadTime = lastReadTime;
     }
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -262,7 +263,7 @@ public class User {
         this.userFriends = userFriends;
     }
 
-    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "from")
     @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<Notification> getSendNotifications() {
@@ -273,7 +274,7 @@ public class User {
         this.sendNotifications = sendNotifications;
     }
 
-    @OneToMany(mappedBy = "to", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "to")
     @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<Notification> getReceiveNotifications() {
@@ -294,4 +295,15 @@ public class User {
     public void setPetHouses(Set<UserPetHouse> petHouses) {
         this.petHouses = petHouses;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "tag", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    public UserTag getTag() {
+        return tag;
+    }
+
+    public void setTag(UserTag tag) {
+        this.tag = tag;
+    }
+
 }

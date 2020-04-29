@@ -8,6 +8,8 @@ import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.notification.dao.NotificationDao;
 import com.knowledge_farm.notification_type.service.NotificationTypeService;
 import com.knowledge_farm.user.service.UserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,12 +36,13 @@ public class NotificationService {
     private NotificationTypeService notificationTypeService;
     @Resource
     private JpushService jpushService;
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional(readOnly = false)
     public Page<Notification> findReceivedByNotificationType(Integer userId, Integer typeId, Integer pageNumber, Integer pageSize){
         if(typeId == 1){
             User user = this.userService.findUserById(userId);
-            user.setLastLogoutTime(new Date());
+            user.setLastReadTime(new Date());
             return this.notificationDao.findReceivedSystemNotificationByNotificationType(userId, 1, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
         }else if(typeId == 2){
             return this.notificationDao.findReceivedAddFriendNotification(userId, 2, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
@@ -60,8 +63,8 @@ public class NotificationService {
         for(int i = 0;i < 4;i++){
             isHavingRead.add(false);
         }
-        List<Notification> notifications = this.notificationDao.findNotificationByToUserIdAndHaveReadAndUserLastLogoutTime(userId);
-        System.out.println("记录的个数"  + notifications.size());
+        List<Notification> notifications = this.notificationDao.isHavingNewNotification(userId);
+        logger.info("新消息个数"  + notifications.size());
         for(Notification notification : notifications){
             switch (notification.getNotificationType().getId()){
                 case 1:

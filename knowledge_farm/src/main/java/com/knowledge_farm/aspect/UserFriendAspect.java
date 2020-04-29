@@ -12,11 +12,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import java.util.HashMap;
 
@@ -106,6 +103,7 @@ public class UserFriendAspect {
                 jpushService.sendCustomPush("notification", "message", new HashMap<>(), user.getAccount());
             }catch (Exception e){
                 e.printStackTrace();
+                logger.info("给好友浇水后发送通知失败");
             }
             return;
         }
@@ -121,6 +119,7 @@ public class UserFriendAspect {
                 jpushService.sendCustomPush("notification", "message", new HashMap<>(), user.getAccount());
             }catch (Exception e){
                 e.printStackTrace();
+                logger.info("给好友施肥后发送通知失败");
             }
             return;
         }
