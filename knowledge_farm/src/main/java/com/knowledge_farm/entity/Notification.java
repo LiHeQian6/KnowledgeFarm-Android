@@ -16,6 +16,7 @@ public class Notification {
     private Integer id;
     private User from;
     private User to;
+    private UserTag tag;
     private String title;
     private String content;
     private String extra;
@@ -52,6 +53,16 @@ public class Notification {
 
     public void setTo(User to) {
         this.to = to;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "tag", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    public UserTag getTag() {
+        return tag;
+    }
+
+    public void setTag(UserTag tag) {
+        this.tag = tag;
     }
 
     public String getTitle() {

@@ -27,15 +27,17 @@ public interface NotificationDao extends JpaRepository<Notification, Integer> {
     @Query("select n from Notification n where n.to.id = ?1 and n.notificationType.id = ?2 and n.haveRead = 0")
     public Page<Notification> findReceivedAddFriendNotification(Integer userId, Integer typeId, Pageable pageable);
 
-    @Query("select n from Notification n where (n.to.id = ?1 or n.to.id is null) and n.notificationType.id = ?2")
+    @Query("select n " +
+            "from Notification n " +
+            "where (n.to.id = ?1 or (n.to.id is null and n.tag is null) or (n.to.id is null and n.tag = (select u.tag from User u where u.id = ?1))) and n.notificationType.id = ?2")
     public Page<Notification> findReceivedSystemNotificationByNotificationType(Integer userId, Integer typeId, Pageable pageable);
 
     @Query("select n " +
             "from Notification n " +
             "where (n.to.id = ?1 and n.haveRead = 0) " +
             "or (n.from.id = ?1 and n.haveRead in (-2,2)) " +
-            "or (n.to is null and n.createTime >= (select u.lastLogoutTime from User u where u.id = ?1))")
-    public List<Notification> findNotificationByToUserIdAndHaveReadAndUserLastLogoutTime(Integer userId);
+            "or (((n.to is null and n.tag is null) or (n.to.id is null and n.tag = (select u.tag from User u where u.id = ?1))) and n.createTime >= (select u.lastReadTime from User u where u.id = ?1))")
+    public List<Notification> isHavingNewNotification(Integer userId);
 
     @Modifying
     @Query("delete from Notification n where n.to.id = ?1 and n.notificationType.id = ?2 and n.haveRead = 1")
