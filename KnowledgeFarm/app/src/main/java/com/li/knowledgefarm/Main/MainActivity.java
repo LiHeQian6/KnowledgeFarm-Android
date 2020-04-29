@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -15,7 +14,6 @@ import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,14 +49,13 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.MyFriends.FriendsPopUpWindow;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
-import com.li.knowledgefarm.Settings.SettingMessagePopUp;
+import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
-import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
 import com.li.knowledgefarm.pet.PetPopUpWindow;
@@ -1165,15 +1162,15 @@ public class MainActivity extends AppCompatActivity {
      * @return void
      */
     private void ShowSettingAndMessage(){
-        SettingMessagePopUp messagePopUp = new SettingMessagePopUp(this);
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayHeight = ds.heightPixels;
-        displayWidth = ds.widthPixels;
-        messagePopUp.setWidth((int) (displayWidth * 0.70));
-        messagePopUp.setHeight((int) (displayHeight * 0.8));
-        messagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
+//        SettingMessageActivity messagePopUp = new SettingMessageActivity(this,MainActivity.this,LoginActivity.user);
+//        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+//        DisplayMetrics ds = new DisplayMetrics();
+//        wm.getDefaultDisplay().getMetrics(ds);
+//        displayHeight = ds.heightPixels;
+//        displayWidth = ds.widthPixels;
+//        messagePopUp.setWidth((int) (displayWidth * 0.70));
+//        messagePopUp.setHeight((int) (displayHeight * 0.8));
+//        messagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
 //        planting(bagPopUpWindow.getGridView());
     }
     /**
@@ -1248,11 +1245,9 @@ public class MainActivity extends AppCompatActivity {
                     notify_red.setVisibility(View.GONE);
                     break;
                 case R.id.photo:
-//                    intent = new Intent();
-//                    intent.setClass(MainActivity.this, SettingActivity.class);
-//                    startActivity(intent);
-//                    overridePendingTransition(0, 0);
-                    ShowSettingAndMessage();
+                    intent = new Intent();
+                    intent.setClass(MainActivity.this, SettingMessageActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.task:
                     showDayTaskWindow();
