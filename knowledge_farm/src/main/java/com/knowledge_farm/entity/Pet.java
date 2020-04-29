@@ -14,7 +14,6 @@ public class Pet {
     private Integer id;
     private String name;
     private String description;
-    private Integer growPeriod;
     private Integer life;       //生命值上限
     private Integer intelligence;       //智力值上限
     private Integer physical;         //体力值上限
@@ -27,14 +26,15 @@ public class Pet {
     public Pet() {
     }
 
-    public Pet(String name, String description, Integer life, Integer intelligence, Integer physical) {
+    public Pet(String name, String description, Integer life, Integer intelligence,
+               Integer physical,Integer price) {
         this.name = name;
         this.description = description;
         this.life = life;
         this.intelligence = intelligence;
         this.physical = physical;
-        this.growPeriod = 0;
         this.exist = 1;
+        this.price = price;
     }
 
     @Id
@@ -61,15 +61,6 @@ public class Pet {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Column(name = "grow_period")
-    public Integer getGrowPeriod() {
-        return growPeriod;
-    }
-
-    public void setGrowPeriod(Integer growPeriod) {
-        this.growPeriod = growPeriod;
     }
 
     public Integer getLife() {

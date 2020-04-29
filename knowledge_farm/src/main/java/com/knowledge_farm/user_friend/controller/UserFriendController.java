@@ -191,4 +191,26 @@ public class UserFriendController {
         }
     }
 
+    @GetMapping("/test")
+    public String waterForFriend2(
+                                 HttpServletRequest request){
+        try {
+            int result = this.userFriendService.waterForFriend(109, 124, "land1");
+            switch (result){
+                case -1:
+                    return Result.FALSE;
+                case 0:
+                    this.notificationService.addWaterForFriendNotification(109, 124);
+                    return Result.TRUE;
+                default:
+                    request.setAttribute("StartUserCropGrowJob", new Integer[]{124, result, Integer.parseInt("land1".substring(4))});
+                    this.notificationService.addWaterForFriendNotification(109, 124);
+                    return Result.TRUE;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+    }
+
 }
