@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: knowledge_farm
@@ -21,8 +22,8 @@ public class PetService {
     @Resource
     private PetDao petDao;
 
-    public Page<Pet> showAllPetInStore(Pageable pageable){
-        return petDao.findAllByExist(1, pageable);
+    public List<Pet> showAllPetInStore(){
+        return petDao.findAllByExist(1);
     }
 
     public Pet findPetById(int petId){

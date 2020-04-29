@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: knowledge_farm
@@ -36,12 +37,12 @@ public class PetController {
      * @return :org.springframework.data.domain.Page<com.knowledge_farm.entity.Pet>
      */
     @GetMapping("/showInStore")
-    public Page<Pet> showInStore(@RequestParam("pageNum")int pageNum){
-        return petService.showAllPetInStore(PageRequest.of(pageNum,3));
+    public List<Pet> showInStore(){
+        return petService.showAllPetInStore();
     }
 
     @RequestMapping("/test")
-    public Page<Pet> showInStore(){
-        return petService.showAllPetInStore(PageRequest.of(0,3));
+    public List<Pet> showInStore2(){
+        return petService.showAllPetInStore();
     }
 }
