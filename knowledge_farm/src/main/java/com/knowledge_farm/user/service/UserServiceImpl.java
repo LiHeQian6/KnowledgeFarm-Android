@@ -8,7 +8,6 @@ import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.user_authority.service.UserAuthorityServiceImpl;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
-import com.knowledge_farm.user_pet_house.service.UserPetHoueService;
 import com.knowledge_farm.user_tag.service.UserTagServiceImpl;
 import com.knowledge_farm.util.Email;
 import com.knowledge_farm.util.RandomUtil;

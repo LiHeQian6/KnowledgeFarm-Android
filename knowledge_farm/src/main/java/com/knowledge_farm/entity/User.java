@@ -221,7 +221,6 @@ public class User {
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     @org.hibernate.annotations.ForeignKey(name = "none")
-    @JsonIgnore
     public UserAuthority getUserAuthority() {
         return userAuthority;
     }
