@@ -15,9 +15,9 @@ public class Pet {
     private String name;
     private String description;
     private Integer growPeriod;
-    private Integer life;
-    private Integer intelligence;
-    private Integer physical;
+    private Integer life;       //生命值上限
+    private Integer intelligence;       //智力值上限
+    private Integer physical;         //体力值上限
     private Integer price;
     private String img1;
     private String img2;
@@ -27,15 +27,15 @@ public class Pet {
     public Pet() {
     }
 
-//    public Pet(String name, String description, Integer life, Integer intelligence, Integer physical) {
-//        this.name = name;
-//        this.description = description;
-//        this.life = life;
-//        this.intelligence = intelligence;
-//        this.physical = physical;
-//        this.growPeriod = 0;
-//        this.exist = 1;
-//    }
+    public Pet(String name, String description, Integer life, Integer intelligence, Integer physical) {
+        this.name = name;
+        this.description = description;
+        this.life = life;
+        this.intelligence = intelligence;
+        this.physical = physical;
+        this.growPeriod = 0;
+        this.exist = 1;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

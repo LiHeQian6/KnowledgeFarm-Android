@@ -1,6 +1,7 @@
 package com.knowledge_farm.entity;
 
 import javax.persistence.*;
+import java.util.Random;
 
 /**
  * @program: knowledge_farm
@@ -14,7 +15,10 @@ public class UserPetHouse {
     private int id;
     private User user;
     private Pet pet;
-
+    private int ifUsing;            //是否正在使用
+    private Integer life;       //生命值
+    private Integer intelligence;       //智力值
+    private Integer physical;         //体力值
 
     public UserPetHouse() {
     }
@@ -22,6 +26,10 @@ public class UserPetHouse {
     public UserPetHouse(User user, Pet pet) {
         this.user = user;
         this.pet = pet;
+        ifUsing = 0;
+        life = new Random().nextInt(pet.getLife())+30;
+        intelligence = new Random().nextInt(pet.getIntelligence())+30;
+        physical = new Random().nextInt(pet.getPhysical())+30;
     }
 
     @Id
@@ -54,4 +62,35 @@ public class UserPetHouse {
         this.pet = pet;
     }
 
+    public int getIfUsing() {
+        return ifUsing;
+    }
+
+    public void setIfUsing(int ifUsing) {
+        this.ifUsing = ifUsing;
+    }
+
+    public Integer getLife() {
+        return life;
+    }
+
+    public void setLife(Integer life) {
+        this.life = life;
+    }
+
+    public Integer getIntelligence() {
+        return intelligence;
+    }
+
+    public void setIntelligence(Integer intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public Integer getPhysical() {
+        return physical;
+    }
+
+    public void setPhysical(Integer physical) {
+        this.physical = physical;
+    }
 }
