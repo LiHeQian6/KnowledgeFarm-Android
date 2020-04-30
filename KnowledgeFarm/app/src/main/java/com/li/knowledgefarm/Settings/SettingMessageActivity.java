@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -110,10 +111,14 @@ public class SettingMessageActivity extends AppCompatActivity {
         resultHandler();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ShowUserMessage();
+    }
+
     private void ShowUserMessage(){
-        int position = LoginActivity.user.getGrade() - 1;
-        newGrade = spin[position];
-        select_grade.setSelection(position,true);
+        user = LoginActivity.user;
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.photo)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
@@ -164,7 +169,6 @@ public class SettingMessageActivity extends AppCompatActivity {
      * @return void
      */
     private void getViews() {
-        user = LoginActivity.user;
         my_message = findViewById(R.id.my_message_btn);
         system_setting = findViewById(R.id.system_setting);
         user_mess_li = findViewById(R.id.user_mess_li);
@@ -183,6 +187,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         change_nickname = findViewById(R.id.change_nickname);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
         spin = getResources().getStringArray(R.array.sarry);
+        okHttpClient = new OkHttpClient();
     }
 
 
@@ -248,6 +253,10 @@ public class SettingMessageActivity extends AppCompatActivity {
                     case 5: // 修改年级判断
                         if(msg.obj.equals("true")){
                             LoginActivity.user.setGrade(transmit(newGrade));
+                            change_grade.setText("修改");
+                            show_grade.setVisibility(View.VISIBLE);
+                            show_grade.setText(DoubleToString(LoginActivity.user.getGrade()));
+                            select_grade.setVisibility(View.GONE);
                             Toast.makeText(SettingMessageActivity.this,"年级修改成功",Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(SettingMessageActivity.this,"年级修改失败",Toast.LENGTH_SHORT).show();
@@ -471,6 +480,12 @@ public class SettingMessageActivity extends AppCompatActivity {
         popUpWindow.setHeight((int)(ds.heightPixels*0.7));
         popUpWindow.setWidth((int)(ds.widthPixels*0.5));
         popUpWindow.showAtLocation(change_Email, Gravity.CENTER,0,0);
+        popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                ShowUserMessage();
+            }
+        });
     }
 
     /**
@@ -494,7 +509,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                         String result = response.body().string();
                         Message message = new Message();
                         message.obj = result;
-                        message.arg1 = 5;
+                        message.what = 5;
                         message.arg2 = response.code();
                         handler.sendMessage(message);
                     }
@@ -503,22 +518,40 @@ public class SettingMessageActivity extends AppCompatActivity {
         }.start();
     }
 
+    private String DoubleToString(int grade){
+        switch (grade){
+            case 1:
+                return "一年级 上";
+            case 2:
+                return "一年级 下";
+            case 3:
+                return "二年级 上";
+            case 4:
+                return "二年级 下";
+            case 5:
+                return "三年级 上";
+            case 6:
+                return "三年级 下";
+        }
+        return "一年级 上";
+    }
+
     /**
      * 年级形式转换(string -> double)
      */
     private int transmit(String grade){
         switch (grade){
-            case "一年级上":
+            case "一年级 上":
                 return 1;
-            case "一年级下":
+            case "一年级 下":
                 return 2;
-            case "二年级上":
+            case "二年级 上":
                 return 3;
-            case "二年级下":
+            case "二年级 下":
                 return 4;
-            case "三年级上":
+            case "三年级 上":
                 return 5;
-            case "三年级下":
+            case "三年级 下":
                 return 6;
         }
         return 0;
@@ -540,6 +573,9 @@ public class SettingMessageActivity extends AppCompatActivity {
                     if(change_grade.getText().toString().equals("修改")) {
                         show_grade.setVisibility(View.GONE);
                         select_grade.setVisibility(View.VISIBLE);
+//                        int position = LoginActivity.user.getGrade() - 1;
+//                        newGrade = spin[position];
+//                        select_grade.setSelection(position,true);
                         change_grade.setText("保存");
                     }else {
                         save();

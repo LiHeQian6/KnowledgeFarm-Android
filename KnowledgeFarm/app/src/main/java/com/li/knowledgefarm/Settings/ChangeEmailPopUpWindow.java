@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -81,7 +82,9 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                 case 2:
                     if(msg.obj.equals("true")){
                         LoginActivity.user.setNickName(new_message.getText().toString().trim());
-                        dismiss();
+                        Toast toast = Toast.makeText(context,"修改成功！",Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,0);
+                        toast.show();
                         dismiss();
                     }else{
                         Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
