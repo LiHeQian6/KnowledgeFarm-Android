@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -31,11 +33,11 @@ public class AnswerController {
     private AnswerService answerService;
 
     /**
-     * @Description: 数学一年级上册
-     * @Param:
-     * @return:
-     * @Author: 景光赞
-     * @Date: 2020/4/9
+     * @description: 一年级数学上册
+     * @author :景光赞
+     * @date :2020/4/30 11:11
+     * @param :[]
+     * @return :java.util.List
      */
     @ResponseBody
     @GetMapping("/mathOneUp")
@@ -47,7 +49,7 @@ public class AnswerController {
     /**
      * @Description: 数学一年级下册
      * @Param:
-     * @return:
+     * @return: java.util.List
      * @Author: 景光赞
      * @Date: 2020/4/9
      */
@@ -68,11 +70,13 @@ public class AnswerController {
     */
     @ResponseBody
     @GetMapping("/ChineseOneUp")
-    public Page<Chinese> findChineseOneUp(){
+    public List<Chinese> findChineseOneUp(){
         int pageNumber = new Random().nextInt(3);
         int pageSize = 20;
         Page<Chinese> page =  answerService.findChineseOneUp(PageRequest.of(pageNumber, pageSize));
-        return page;
+        List<Chinese> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 语文一年级下册
@@ -83,11 +87,13 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/ChineseOneDown")
-    public Page<Chinese> findChineseOneDown(){
+    public List<Chinese> findChineseOneDown(){
         int pageNumber = new Random().nextInt(3);
         int pageSize = 20;
         Page<Chinese> page =  answerService.findChineseOneDown(PageRequest.of(pageNumber, pageSize));
-        return page;
+        List<Chinese> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 语文二年级上册
@@ -98,11 +104,13 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/ChineseTwoUp")
-    public Page<Chinese23> findChineseTwoUp(){
+    public List<Chinese23> findChineseTwoUp(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
         Page<Chinese23> page =  answerService.findChineseTwoUp(PageRequest.of(pageNumber, pageSize));
-        return page;
+        List<Chinese23> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 语文二年级下册
@@ -113,11 +121,13 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/ChineseTwoDown")
-    public Page<Chinese23> findChineseTwoDown(){
+    public List<Chinese23> findChineseTwoDown(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
         Page<Chinese23> page =  answerService.findChineseTwoDown(PageRequest.of(pageNumber, pageSize));
-        return page;
+        List<Chinese23> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 语文三年级上册
@@ -128,11 +138,13 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/ChineseThreeUp")
-    public Page<Chinese23> findChineseThreeUp(){
+    public List<Chinese23> findChineseThreeUp(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
         Page<Chinese23> page =  answerService.findChineseThreeUp(PageRequest.of(pageNumber, pageSize));
-        return page;
+        List<Chinese23> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 语文三年级下册
@@ -143,11 +155,13 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/ChineseThreeDown")
-    public Page<Chinese23> findChineseThreeDown(){
+    public List<Chinese23> findChineseThreeDown(){
         int pageNumber = new Random().nextInt(5);
         int pageSize = 20;
         Page<Chinese23> page =  answerService.findChineseThreeDown(PageRequest.of(pageNumber, pageSize));
-        return page;
+        List<Chinese23> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
 
     /**
@@ -159,10 +173,12 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/englishOneUp")
-    public Page<English> englishOneUp() {
-        int pageNumber = new Random().nextInt(2);
-        Page<English> page =  answerService.findEnglishOneUp(PageRequest.of(pageNumber, 25));
-        return page;
+    public List<English> englishOneUp() {
+        int pageNumber = new Random().nextInt(3);
+        Page<English> page =  answerService.findEnglishOneUp(PageRequest.of(pageNumber, 17));
+        List<English> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 英语一年级下册
@@ -173,10 +189,12 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/englishOneDown")
-    public Page<English> englishOneDown() {
-        int pageNumber = new Random().nextInt(2);
-        Page<English> page =  answerService.findEnglishOneDown(PageRequest.of(pageNumber, 23));
-        return page;
+    public List<English> englishOneDown() {
+        int pageNumber = new Random().nextInt(3);
+        Page<English> page =  answerService.findEnglishOneDown(PageRequest.of(pageNumber, 16));
+        List<English> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 英语二年级上册
@@ -187,10 +205,12 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/englishTwoUp")
-    public Page<English> englishTwoUp() {
+    public List<English> englishTwoUp() {
         int pageNumber = new Random().nextInt(3);
         Page<English> page =  answerService.findEnglishTwoUp(PageRequest.of(pageNumber, 18));
-        return page;
+        List<English> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 英语二年级下册
@@ -201,10 +221,12 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/englishTwoDown")
-    public Page<English> englishTwoDown() {
+    public List<English> englishTwoDown() {
         int pageNumber = new Random().nextInt(3);
         Page<English> page =  answerService.findEnglishTwoDown(PageRequest.of(pageNumber, 18));
-        return page;
+        List<English> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 英语三年级上册
@@ -215,10 +237,12 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/englishThreeUp")
-    public Page<English> englishThreeUp() {
-        int pageNumber = new Random().nextInt(3);
-        Page<English> page =  answerService.findEnglishThreeUp(PageRequest.of(pageNumber, 20));
-        return page;
+    public List<English> englishThreeUp() {
+        int pageNumber = new Random().nextInt(4);
+        Page<English> page =  answerService.findEnglishThreeUp(PageRequest.of(pageNumber, 15));
+        List<English> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
     /**
      * @Description: 英语三年级下册
@@ -230,8 +254,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/englishThreeDown")
     public Page<English> englishThreeDown() {
-        int pageNumber = new Random().nextInt(5);
-        Page<English> page =  answerService.findEnglishThreeDown(PageRequest.of(pageNumber, 22));
+        int pageNumber = new Random().nextInt(6);
+        Page<English> page =  answerService.findEnglishThreeDown(PageRequest.of(pageNumber, 18));
         return page;
     }
 
