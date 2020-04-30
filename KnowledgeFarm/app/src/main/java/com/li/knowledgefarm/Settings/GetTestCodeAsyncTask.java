@@ -2,13 +2,14 @@ package com.li.knowledgefarm.Settings;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class GetTestCodeAsyncTask extends AsyncTask<Object,Integer,Object> {
     private Context context;
-    private TextView tv_getTestCode;
+    private Button tv_getTestCode;
 
-    public GetTestCodeAsyncTask(Context context, TextView tv_getTestCode){
+    public GetTestCodeAsyncTask(Context context, Button tv_getTestCode){
         this.context = context;
         this.tv_getTestCode = tv_getTestCode;
     }

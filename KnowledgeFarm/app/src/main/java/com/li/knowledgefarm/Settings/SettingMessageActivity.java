@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -94,6 +95,9 @@ public class SettingMessageActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private ChangeEmailPopUpWindow popUpWindow;
     private ImageView change_nickname;
+    /** 选中的年级*/
+    private String newGrade;
+    private String[] spin;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,9 +107,13 @@ public class SettingMessageActivity extends AppCompatActivity {
         getViews();
         registListener();
         ShowUserMessage();
+        resultHandler();
     }
 
     private void ShowUserMessage(){
+        int position = LoginActivity.user.getGrade() - 1;
+        newGrade = spin[position];
+        select_grade.setSelection(position,true);
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.photo)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
@@ -135,6 +143,17 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_photo.setOnClickListener(new CustomerOnclickListener());
         change_Email.setOnClickListener(new CustomerOnclickListener());
         change_nickname.setOnClickListener(new CustomerOnclickListener());
+        select_grade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                newGrade = spin[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     /**
@@ -163,6 +182,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         email_edit = findViewById(R.id.bindingEmail_edit);
         change_nickname = findViewById(R.id.change_nickname);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
+        spin = getResources().getStringArray(R.array.sarry);
     }
 
 
@@ -225,7 +245,14 @@ public class SettingMessageActivity extends AppCompatActivity {
                                     .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
                             Glide.with(getApplicationContext()).load(aString).apply(options).into(user_photo);
                         }
-
+                    case 5: // 修改年级判断
+                        if(msg.obj.equals("true")){
+                            LoginActivity.user.setGrade(transmit(newGrade));
+                            Toast.makeText(SettingMessageActivity.this,"年级修改成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(SettingMessageActivity.this,"年级修改失败",Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                 }
             }
         };
@@ -446,6 +473,57 @@ public class SettingMessageActivity extends AppCompatActivity {
         popUpWindow.showAtLocation(change_Email, Gravity.CENTER,0,0);
     }
 
+    /**
+     * 保存
+     */
+    private void save(){
+        new Thread(){
+            @Override
+            public void run() {
+                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).add("grade",""+transmit(newGrade)).build();
+                final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/updateUserGrade").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i("lww","请求失败");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result = response.body().string();
+                        Message message = new Message();
+                        message.obj = result;
+                        message.arg1 = 5;
+                        message.arg2 = response.code();
+                        handler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    /**
+     * 年级形式转换(string -> double)
+     */
+    private int transmit(String grade){
+        switch (grade){
+            case "一年级上":
+                return 1;
+            case "一年级下":
+                return 2;
+            case "二年级上":
+                return 3;
+            case "二年级下":
+                return 4;
+            case "三年级上":
+                return 5;
+            case "三年级下":
+                return 6;
+        }
+        return 0;
+    }
+
     private class CustomerOnclickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
@@ -464,7 +542,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                         select_grade.setVisibility(View.VISIBLE);
                         change_grade.setText("保存");
                     }else {
-
+                        save();
                     }
                     break;
                 case R.id.btnUpdatePhoto:

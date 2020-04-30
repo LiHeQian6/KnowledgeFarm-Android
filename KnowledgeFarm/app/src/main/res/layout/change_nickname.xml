@@ -86,6 +86,7 @@
                                     android:layout_width="50dp"
                                     android:id="@+id/btnUpdatePhoto"
                                     android:layout_height="50dp"
+                                    android:layout_gravity="center"
                                     android:src="@drawable/photo"/>
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -96,7 +97,8 @@
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="center_vertical">
+                                        android:layout_gravity="center_vertical"
+                                        android:gravity="center">
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
@@ -110,12 +112,14 @@
                                             android:layout_height="wrap_content"
                                             android:textColor="@color/ShopTextColor"
                                             android:visibility="gone"
-                                            android:hint="小完能"/>
+                                            android:hint="小完能"
+                                            android:textSize="18dp"/>
                                         <ImageView
-                                            android:layout_width="20dp"
-                                            android:layout_height="20dp"
+                                            android:layout_width="30dp"
+                                            android:layout_height="30dp"
                                             android:layout_gravity="center"
                                             android:id="@+id/change_nickname"
+                                            android:layout_marginLeft="6dp"
                                             android:src="@drawable/modify"/>
                                     </LinearLayout>
                                     <LinearLayout
