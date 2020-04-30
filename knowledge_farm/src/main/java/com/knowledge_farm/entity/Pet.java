@@ -33,7 +33,6 @@ public class Pet {
         this.life = life;
         this.intelligence = intelligence;
         this.physical = physical;
-        this.exist = 1;
         this.price = price;
     }
 

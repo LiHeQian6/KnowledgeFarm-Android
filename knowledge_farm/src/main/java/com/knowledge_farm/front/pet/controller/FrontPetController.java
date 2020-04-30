@@ -2,7 +2,7 @@ package com.knowledge_farm.front.pet.controller;
 
 import com.knowledge_farm.entity.Pet;
 import com.knowledge_farm.entity.Result;
-import com.knowledge_farm.front.pet.service.PetService;
+import com.knowledge_farm.front.pet.service.FrontPetService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -24,9 +24,9 @@ import java.util.Date;
  **/
 @Controller
 @RequestMapping("/admin/pet")
-public class PetController {
+public class FrontPetController {
     @Resource
-    private PetService petService;
+    private FrontPetService frontPetService;
     @Resource
     private EntityManager entityManager;
     @Value("${file.petPhotoFolderName}")
@@ -48,7 +48,7 @@ public class PetController {
             }
         }
         try{
-            int id = petService.addPet(new Pet(name,description,life,intelligence,physical,
+            int id = frontPetService.addPet(new Pet(name,description,life,intelligence,physical,
                     price));
             entityManager.clear();
             String img[] = new String[3];
@@ -59,11 +59,11 @@ public class PetController {
                 FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName));
                 count++;
             }
-            Pet editPet = petService.findPetById(id);
+            Pet editPet = frontPetService.findPetById(id);
             editPet.setImg1(img[0]);
             editPet.setImg2(img[1]);
             editPet.setImg3(img[2]);
-            petService.updatePet(editPet);
+            frontPetService.updatePet(editPet);
             return Result.SUCCEED;
         }catch (Exception e){
             return Result.FAIL;

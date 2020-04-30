@@ -3,12 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/learnback">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="6"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="2"
+        android:background="@color/colorPrimaryDark"
         android:orientation="vertical">
 
         <LinearLayout
@@ -39,16 +44,16 @@
                 android:orientation="vertical">
 
                 <Button
+                    android:id="@+id/my_message_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/my_message_btn"
-                    android:text="个人信息"/>
+                    android:text="个人信息" />
 
                 <Button
+                    android:id="@+id/system_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/system_setting"
-                    android:text="系统设置"/>
+                    android:text="系统设置" />
 
             </LinearLayout>
 
@@ -97,7 +102,9 @@
                                             android:layout_height="wrap_content"
                                             android:textColor="@color/ShopTextColor"
                                             android:visibility="visible"
-                                            android:text="昵称:小完能"/>
+                                            android:id="@+id/user_nickname"
+                                            android:text="昵称:小完能"
+                                            android:textSize="18dp"/>
                                         <EditText
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
@@ -108,6 +115,7 @@
                                             android:layout_width="20dp"
                                             android:layout_height="20dp"
                                             android:layout_gravity="center"
+                                            android:id="@+id/change_nickname"
                                             android:src="@drawable/modify"/>
                                     </LinearLayout>
                                     <LinearLayout
@@ -118,6 +126,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Id:123456"
+                                            android:textSize="18dp"
+                                            android:id="@+id/user_account"
                                             android:textColor="@color/ShopTextColor"/>
                                     </LinearLayout>
                                 </LinearLayout>
@@ -139,24 +149,24 @@
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="年级："
-                                            android:id="@+id/grade"
-                                            android:layout_centerVertical="true"
                                             android:textColor="@color/ShopTextColor"
+                                            android:text="年级："
                                             android:textSize="25dp"/>
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_toRightOf="@+id/grade"
                                             android:layout_centerVertical="true"
                                             android:text="一年级"
+                                            android:id="@+id/show_grade"
                                             android:textColor="@color/ShopTextColor"
-                                            android:textSize="25dp"/>
+                                            android:textSize="20dp"/>
                                         <Spinner
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_toRightOf="@+id/grade"
                                             android:visibility="gone"
+                                            android:id="@+id/grade_spinner"
+                                            android:entries="@array/sarry"
                                             android:layout_centerVertical="true"/>
                                     </LinearLayout>
                                     <Button
@@ -182,18 +192,17 @@
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="绑定QQ："
-                                            android:id="@+id/bangding"
-                                            android:textColor="@color/ShopTextColor"
-                                            android:textSize="25dp"/>
+                                            android:text="QQ："
+                                            android:textSize="25dp"
+                                            android:textColor="@color/ShopTextColor"/>
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="12345678"
+                                            android:id="@+id/showQQ"
                                             android:textColor="@color/ShopTextColor"
                                             android:layout_centerVertical="true"
-                                            android:textSize="25dp"
-                                            android:layout_toRightOf="@+id/bangding"/>
+                                            android:textSize="20dp" />
                                     </LinearLayout>
                                     <Button
                                         android:layout_width="80dp"
@@ -201,7 +210,7 @@
                                         android:layout_marginLeft="10dp"
                                         android:text="绑定"
                                         android:textSize="20dp"
-                                        android:id="@+id/btnUpdatePassword"
+                                        android:id="@+id/btnUpdateQQ"
                                         android:background="@drawable/buttonbackground"
                                         android:layout_toRightOf="@+id/bangding_qq_li"/>
                                 </RelativeLayout>
@@ -217,15 +226,22 @@
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="绑定邮箱："
+                                            android:text="邮箱："
                                             android:textColor="@color/ShopTextColor"
                                             android:textSize="25dp"/>
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="123456789@qq.com"
-                                            android:textSize="25dp"
+                                            android:textSize="20dp"
+                                            android:id="@+id/showEmail"
                                             android:textColor="@color/ShopTextColor"/>
+                                        <EditText
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:id="@+id/bindingEmail_edit"
+                                            android:visibility="gone"
+                                            android:hint="请输入邮箱"/>
                                     </LinearLayout>
                                     <Button
                                         android:layout_width="80dp"
@@ -233,7 +249,7 @@
                                         android:layout_marginLeft="10dp"
                                         android:background="@drawable/buttonbackground"
                                         android:layout_toRightOf="@id/bangding_email_li"
-                                        android:text="绑定"
+                                        android:text="去绑定"
                                         android:id="@+id/btnBindingEmail"
                                         android:textSize="20dp"/>
                                 </RelativeLayout>
@@ -278,4 +294,8 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="6"/>
 </LinearLayout>

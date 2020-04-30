@@ -38,7 +38,6 @@ public class UserPasswordAndPhotoAspect {
     public void user(JoinPoint joinPoint, Object result) {
         if(result instanceof User){
             User user = (User) result;
-            user.setPassword("");
             if(!(user.getPhoto().substring(0,4)).equals("http")){
                 user.setPhoto(this.photoUrl + user.getPhoto());
             }
@@ -52,13 +51,11 @@ public class UserPasswordAndPhotoAspect {
                 User from = notification.getFrom();
                 User to = notification.getTo();
                 if(from != null){
-                    from.setPassword("");
                     if(!(from.getPhoto().substring(0,4)).equals("http")){
                         from.setPhoto(this.photoUrl + from.getPhoto());
                     }
                 }
                 if(to != null){
-                    to.setPassword("");
                     if(!(to.getPhoto().substring(0,4)).equals("http")){
                         to.setPhoto(this.photoUrl + to.getPhoto());
                     }
@@ -70,8 +67,7 @@ public class UserPasswordAndPhotoAspect {
     @AfterReturning(pointcut = "userFriend()", returning="result")
     public void userFriend(JoinPoint joinPoint, Object result) {
         if(result instanceof PageUtil){
-            for(User user :  ((PageUtil<User>) result).getList()){
-                user.setPassword("");
+            for(User user : ((PageUtil<User>) result).getList()){
                 if(!(user.getPhoto().substring(0,4)).equals("http")){
                     user.setPhoto(this.photoUrl + user.getPhoto());
                 }

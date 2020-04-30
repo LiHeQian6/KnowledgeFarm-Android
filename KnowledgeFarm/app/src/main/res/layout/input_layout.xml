@@ -31,7 +31,7 @@
                 android:id="@+id/account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
+                android:gravity="center_horizontal"
                 android:textColorHint="#cecece"
                 android:textColor="#000"
                 android:maxLength="16"
@@ -72,7 +72,7 @@
                 android:textCursorDrawable="@color/cursorCorlor"
                 android:background="@null"
                 android:inputType="textPassword"
-                android:textAlignment="center"
+                android:gravity="center_horizontal"
                 android:imeOptions="flagNoExtractUi"
                 android:textSize="16sp" />
         </LinearLayout>
