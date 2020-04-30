@@ -20,6 +20,13 @@ public class UserCrop {
     private Integer progress;
     private Integer status;
 
+    public UserCrop(){
+        this.waterLimit = 15;
+        this.fertilizerLimit = 15;
+        this.progress = 0;
+        this.status = 1;
+    }
+
     @Id
     @GeneratedValue(generator="identity")
     @GenericGenerator(name="identity", strategy="identity")
@@ -41,7 +48,7 @@ public class UserCrop {
         this.crop = crop;
     }
 
-    @Column(name = "water_limit", insertable = false, columnDefinition = "int default 15")
+    @Column(name = "water_limit", columnDefinition = "int default 15")
     public Integer getWaterLimit() {
         return waterLimit;
     }
@@ -50,7 +57,7 @@ public class UserCrop {
         this.waterLimit = waterLimit;
     }
 
-    @Column(name = "fertilizer_limit", insertable = false, columnDefinition = "int default 15")
+    @Column(name = "fertilizer_limit", columnDefinition = "int default 15")
     public Integer getFertilizerLimit() {
         return fertilizerLimit;
     }
@@ -59,7 +66,7 @@ public class UserCrop {
         this.fertilizerLimit = fertilizerLimit;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 0")
+    @Column(columnDefinition = "int default 0")
     public Integer getProgress() {
         return progress;
     }
@@ -68,7 +75,7 @@ public class UserCrop {
         this.progress = progress;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 1")
+    @Column(columnDefinition = "int default 1")
     public Integer getStatus() {
         return status;
     }
