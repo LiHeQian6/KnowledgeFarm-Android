@@ -35,7 +35,7 @@ public class NotificationController {
             @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "form", defaultValue = "1"),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "form", defaultValue = "4")
     })
-    @GetMapping("/findReceivedNotificationByType")
+    @PostMapping("/findReceivedNotificationByType")
     public PageUtil<Notification> findReceivedNotificationByType(@RequestParam("userId") Integer userId,
                                                                  @RequestParam("typeId") Integer typeId,
                                                                  @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
