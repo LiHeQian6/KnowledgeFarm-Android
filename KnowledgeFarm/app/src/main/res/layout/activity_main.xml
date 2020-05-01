@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
                 android:id="@+id/notify">
                 <RelativeLayout
                     android:layout_width="60dp"
@@ -333,7 +333,7 @@
                       android:layout_marginRight="20dp"
                       android:layout_height="wrap_content">
             <RelativeLayout
-                android:layout_width="60dp"
+                android:layout_width="65dp"
                 android:layout_height="wrap_content">
                 <ImageView android:layout_width="60dp"
                     android:src="@drawable/daytask"

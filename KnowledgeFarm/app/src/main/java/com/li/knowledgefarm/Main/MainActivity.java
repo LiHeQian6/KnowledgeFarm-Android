@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         okHttpClient = new OkHttpClient();
         gson = new Gson();
         ImageView dog = findViewById(R.id.dog);
-        Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
+        Glide.with(this).asGif().load(R.drawable.mydog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
         getViews();
         addListener();
         getCrop();
