@@ -1,19 +1,10 @@
-package com.knowledge_farm.entity;
+package com.li.knowledgefarm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
 import java.util.Random;
 
-/**
- * @program: knowledge_farm
- * @description: 宠物仓库
- * @author: 景光赞
- * @create: 2020-04-27 10:37
- **/
-@Entity
-@Table(name = "user_pet")
-public class UserPetHouse {
+import androidx.annotation.Nullable;
+
+public class UserPetHouse implements Comparable<UserPetHouse> {
     private Integer id;
     private User user;
     private Pet pet;
@@ -36,8 +27,6 @@ public class UserPetHouse {
         this.growPeriod = 0;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -46,9 +35,6 @@ public class UserPetHouse {
         this.id = id;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    @JsonIgnore
     public User getUser() {
         return user;
     }
@@ -57,8 +43,6 @@ public class UserPetHouse {
         this.user = user;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "pet_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     public Pet getPet() {
         return pet;
     }
@@ -67,7 +51,6 @@ public class UserPetHouse {
         this.pet = pet;
     }
 
-    @Column(columnDefinition = "int default 0")
     public Integer getIfUsing() {
         return ifUsing;
     }
@@ -76,7 +59,6 @@ public class UserPetHouse {
         this.ifUsing = ifUsing;
     }
 
-    @Column(columnDefinition = "int default 0")
     public Integer getGrowPeriod() {
         return growPeriod;
     }
@@ -109,4 +91,17 @@ public class UserPetHouse {
         this.physical = physical;
     }
 
+
+    @Override
+    public int compareTo(UserPetHouse userPetHouse) {
+        if (ifUsing==1)
+            return -1;
+        else if(userPetHouse.getIfUsing()==1)
+            return 1;
+        if (id>userPetHouse.getId())
+            return 1;
+        else if (id<userPetHouse.getId())
+            return -1;
+        return 0;
+    }
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,7 +44,19 @@ public class User {
     private Set<Notification> sendNotifications = new HashSet<>();
     private Set<Notification> ReceiveNotifications = new HashSet<>();
     private Set<UserPetHouse> petHouses = new HashSet<>();
-    private UserTag tag;
+
+    public User(){
+        this.level = 1;
+        this.experience = 0;
+        this.money = 1000;
+        this.mathRewardCount = 3;
+        this.chineseRewardCount = 3;
+        this.englishRewardCount = 3;
+        this.water = 0;
+        this.fertilizer = 0;
+        this.online = 1;
+        this.exist = 1;
+    }
 
     @Id
     @GeneratedValue(generator="identity")
@@ -100,7 +111,7 @@ public class User {
         this.email = email;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 1")
+    @Column(columnDefinition = "int default 1")
     public Integer getLevel() {
         return level;
     }
@@ -109,7 +120,7 @@ public class User {
         this.level = level;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 0")
+    @Column(columnDefinition = "int default 0")
     public Integer getExperience() {
         return experience;
     }
@@ -118,7 +129,7 @@ public class User {
         this.experience = experience;
     }
 
-    @Column(columnDefinition = "int default 1")
+    @Column
     public Integer getGrade() {
         return grade;
     }
@@ -127,7 +138,7 @@ public class User {
         this.grade = grade;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 1000")
+    @Column(columnDefinition = "int default 1000")
     public Integer getMoney() {
         return money;
     }
@@ -136,7 +147,7 @@ public class User {
         this.money = money;
     }
 
-    @Column(name = "math_reward_count", insertable = false, columnDefinition = "int default 3")
+    @Column(name = "math_reward_count", columnDefinition = "int default 3")
     public Integer getMathRewardCount() {
         return mathRewardCount;
     }
@@ -145,7 +156,7 @@ public class User {
         this.mathRewardCount = mathRewardCount;
     }
 
-    @Column(name = "english_reward_count", insertable = false, columnDefinition = "int default 3")
+    @Column(name = "english_reward_count", columnDefinition = "int default 3")
     public Integer getEnglishRewardCount() {
         return englishRewardCount;
     }
@@ -154,7 +165,7 @@ public class User {
         this.englishRewardCount = englishRewardCount;
     }
 
-    @Column(name = "chinese_reward_count", insertable = false, columnDefinition = "int default 3")
+    @Column(name = "chinese_reward_count", columnDefinition = "int default 3")
     public Integer getChineseRewardCount() {
         return chineseRewardCount;
     }
@@ -163,7 +174,7 @@ public class User {
         this.chineseRewardCount = chineseRewardCount;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 0")
+    @Column(columnDefinition = "int default 0")
     public Integer getWater() {
         return water;
     }
@@ -172,7 +183,7 @@ public class User {
         this.water = water;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 0")
+    @Column(columnDefinition = "int default 0")
     public Integer getFertilizer() {
         return fertilizer;
     }
@@ -181,7 +192,7 @@ public class User {
         this.fertilizer = fertilizer;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 1")
+    @Column(columnDefinition = "int default 1")
     public Integer getOnline() {
         return online;
     }
@@ -190,7 +201,7 @@ public class User {
         this.online = online;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 1")
+    @Column(columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }
@@ -293,16 +304,6 @@ public class User {
 
     public void setPetHouses(Set<UserPetHouse> petHouses) {
         this.petHouses = petHouses;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "tag", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    public UserTag getTag() {
-        return tag;
-    }
-
-    public void setTag(UserTag tag) {
-        this.tag = tag;
     }
 
 }

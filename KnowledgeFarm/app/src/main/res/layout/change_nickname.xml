@@ -8,7 +8,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="6"/>
+        android:layout_weight="6">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/returns_message"
+            android:src="@drawable/returns"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,16 +26,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:gravity="center">
-
-            <TextView
+            android:layout_weight="8">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="个人信息"
-                android:textSize="25sp"
-                android:textColor="@color/ShopTextColor"
-                android:gravity="center_horizontal" />
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="个人信息"
+                    android:textSize="25sp"
+                    android:textColor="@color/ShopTextColor"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -86,6 +96,7 @@
                                     android:layout_width="50dp"
                                     android:id="@+id/btnUpdatePhoto"
                                     android:layout_height="50dp"
+                                    android:layout_gravity="center"
                                     android:src="@drawable/photo"/>
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -96,7 +107,8 @@
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="center_vertical">
+                                        android:layout_gravity="center_vertical"
+                                        android:gravity="center">
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
@@ -110,12 +122,14 @@
                                             android:layout_height="wrap_content"
                                             android:textColor="@color/ShopTextColor"
                                             android:visibility="gone"
-                                            android:hint="小完能"/>
+                                            android:hint="小完能"
+                                            android:textSize="18dp"/>
                                         <ImageView
-                                            android:layout_width="20dp"
-                                            android:layout_height="20dp"
+                                            android:layout_width="30dp"
+                                            android:layout_height="30dp"
                                             android:layout_gravity="center"
                                             android:id="@+id/change_nickname"
+                                            android:layout_marginLeft="6dp"
                                             android:src="@drawable/modify"/>
                                     </LinearLayout>
                                     <LinearLayout

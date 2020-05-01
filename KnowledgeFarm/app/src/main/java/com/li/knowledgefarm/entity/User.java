@@ -1,6 +1,8 @@
 package com.li.knowledgefarm.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable {
     private int id;
@@ -22,6 +24,7 @@ public class User implements Serializable {
     private int online;
     private int exist;
     private UserAuthority userAuthority;
+    private List<UserPetHouse> petHouses=new ArrayList<>();
 
     public UserAuthority getUserAuthority() {
         return userAuthority;
@@ -176,6 +179,13 @@ public class User implements Serializable {
         this.exist = exist;
     }
 
+    public List<UserPetHouse> getPetHouses() {
+        return petHouses;
+    }
+
+    public void setPetHouses(List<UserPetHouse> petHouses) {
+        this.petHouses = petHouses;
+    }
 
     @Override
     public String toString() {

@@ -15,10 +15,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -94,6 +96,10 @@ public class SettingMessageActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private ChangeEmailPopUpWindow popUpWindow;
     private ImageView change_nickname;
+    /** 选中的年级*/
+    private String newGrade;
+    private String[] spin;
+    private ImageView returns_message;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,16 +109,24 @@ public class SettingMessageActivity extends AppCompatActivity {
         getViews();
         registListener();
         ShowUserMessage();
+        resultHandler();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ShowUserMessage();
     }
 
     private void ShowUserMessage(){
+        user = LoginActivity.user;
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.photo)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(user_photo);
         user_account.setText("账号："+user.getAccount());
         user_nickName.setText("昵称："+user.getNickName());
-        show_grade.setText(user.getGrade()+"年级");
+        show_grade.setText(DoubleToString(user.getGrade()));
         if(!(user.getEmail() == null)){
             user_Email.setText("已绑定"+user.getEmail());
             change_Email.setText("修改");
@@ -135,6 +149,18 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_photo.setOnClickListener(new CustomerOnclickListener());
         change_Email.setOnClickListener(new CustomerOnclickListener());
         change_nickname.setOnClickListener(new CustomerOnclickListener());
+        returns_message.setOnClickListener(new CustomerOnclickListener());
+        select_grade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                newGrade = spin[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     /**
@@ -145,7 +171,6 @@ public class SettingMessageActivity extends AppCompatActivity {
      * @return void
      */
     private void getViews() {
-        user = LoginActivity.user;
         my_message = findViewById(R.id.my_message_btn);
         system_setting = findViewById(R.id.system_setting);
         user_mess_li = findViewById(R.id.user_mess_li);
@@ -163,6 +188,9 @@ public class SettingMessageActivity extends AppCompatActivity {
         email_edit = findViewById(R.id.bindingEmail_edit);
         change_nickname = findViewById(R.id.change_nickname);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
+        spin = getResources().getStringArray(R.array.sarry);
+        okHttpClient = new OkHttpClient();
+        returns_message = findViewById(R.id.returns_message);
     }
 
 
@@ -223,9 +251,21 @@ public class SettingMessageActivity extends AppCompatActivity {
                                     .fallback(R.drawable.huancun2) //请求资源为null
                                     .circleCrop() //转换图片效果
                                     .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
-                            Glide.with(getApplicationContext()).load(aString).apply(options).into(user_photo);
+                            Glide.with(getApplicationContext()).load(LoginActivity.user.getPhoto()).apply(options).into(user_photo);
                         }
-
+                        break;
+                    case 5: // 修改年级判断
+                        if(msg.obj.equals("true")){
+                            LoginActivity.user.setGrade(transmit(newGrade));
+                            change_grade.setText("修改");
+                            show_grade.setVisibility(View.VISIBLE);
+                            show_grade.setText(DoubleToString(LoginActivity.user.getGrade()));
+                            select_grade.setVisibility(View.GONE);
+                            Toast.makeText(SettingMessageActivity.this,"年级修改成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(SettingMessageActivity.this,"年级修改失败",Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                 }
             }
         };
@@ -444,6 +484,81 @@ public class SettingMessageActivity extends AppCompatActivity {
         popUpWindow.setHeight((int)(ds.heightPixels*0.7));
         popUpWindow.setWidth((int)(ds.widthPixels*0.5));
         popUpWindow.showAtLocation(change_Email, Gravity.CENTER,0,0);
+        popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                ShowUserMessage();
+            }
+        });
+    }
+
+    /**
+     * 保存
+     */
+    private void save(){
+        new Thread(){
+            @Override
+            public void run() {
+                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).add("grade",""+transmit(newGrade)).build();
+                final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/updateUserGrade").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i("lww","请求失败");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result = response.body().string();
+                        Message message = new Message();
+                        message.obj = result;
+                        message.what = 5;
+                        message.arg2 = response.code();
+                        handler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private String DoubleToString(int grade){
+        switch (grade){
+            case 1:
+                return "一年级 上";
+            case 2:
+                return "一年级 下";
+            case 3:
+                return "二年级 上";
+            case 4:
+                return "二年级 下";
+            case 5:
+                return "三年级 上";
+            case 6:
+                return "三年级 下";
+        }
+        return "一年级 上";
+    }
+
+    /**
+     * 年级形式转换(string -> double)
+     */
+    private int transmit(String grade){
+        switch (grade){
+            case "一年级 上":
+                return 1;
+            case "一年级 下":
+                return 2;
+            case "二年级 上":
+                return 3;
+            case "二年级 下":
+                return 4;
+            case "三年级 上":
+                return 5;
+            case "三年级 下":
+                return 6;
+        }
+        return 0;
     }
 
     private class CustomerOnclickListener implements View.OnClickListener{
@@ -462,9 +577,12 @@ public class SettingMessageActivity extends AppCompatActivity {
                     if(change_grade.getText().toString().equals("修改")) {
                         show_grade.setVisibility(View.GONE);
                         select_grade.setVisibility(View.VISIBLE);
+//                        int position = LoginActivity.user.getGrade() - 1;
+//                        newGrade = spin[position];
+//                        select_grade.setSelection(position,true);
                         change_grade.setText("保存");
                     }else {
-
+                        save();
                     }
                     break;
                 case R.id.btnUpdatePhoto:
@@ -474,7 +592,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                     if(change_Email.getText().toString().equals("去绑定")){
                         ShowChangeMessagePop("Email");
                     }else {
-
+                        ShowChangeMessagePop("Email");
                     }
                     break;
                 case R.id.btnBindingQQ:
@@ -482,6 +600,9 @@ public class SettingMessageActivity extends AppCompatActivity {
                     break;
                 case R.id.change_nickname:
                     ShowChangeMessagePop("NickName");
+                    break;
+                case R.id.returns_message:
+                    finish();
                     break;
             }
         }

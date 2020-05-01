@@ -8,7 +8,6 @@ import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.user_authority.service.UserAuthorityServiceImpl;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
-import com.knowledge_farm.user_tag.service.UserTagServiceImpl;
 import com.knowledge_farm.util.Email;
 import com.knowledge_farm.util.RandomUtil;
 import org.quartz.*;
@@ -48,8 +47,6 @@ public class UserServiceImpl {
     @Resource
     @Lazy
     private PetService petService;
-    @Resource
-    private UserTagServiceImpl userTagService;
     @Resource
     private EntityManager entityManager;
     @Resource
@@ -121,8 +118,6 @@ public class UserServiceImpl {
         UserCrop userCrop4 = new UserCrop();
         //宠物仓库
         UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
-        //UserTag
-        UserTag tag = this.userTagService.findUserTagById(1);
         //关联
         user.setUserAuthority(userAuthority);
         userAuthority.setUser(user);
@@ -132,9 +127,7 @@ public class UserServiceImpl {
         land.setUserCrop3(userCrop3);
         land.setUserCrop4(userCrop4);
         user.setLand(land);
-        user.setTag(tag);
         user.getPetHouses().add(petHouse);
-
         //添加并返回新插入的User
         this.userDao.save(user);
         entityManager.clear();
@@ -197,8 +190,6 @@ public class UserServiceImpl {
         UserCrop userCrop4 = new UserCrop();
         //宠物仓库
         UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
-        //UserTag
-        UserTag tag = this.userTagService.findUserTagById(1);
         //关联
         land.setUser(user);
         land.setUserCrop1(userCrop1);
@@ -207,7 +198,6 @@ public class UserServiceImpl {
         land.setUserCrop4(userCrop4);
         user.setLand(land);
         user.getPetHouses().add(petHouse);
-        user.setTag(tag);
         this.userDao.save(user);
         entityManager.clear();
         User resultUser = this.userDao.findUserById(user.getId());

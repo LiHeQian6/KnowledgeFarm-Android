@@ -3,10 +3,8 @@ package com.knowledge_farm.front.user.service;
 import com.knowledge_farm.entity.*;
 import com.knowledge_farm.pet.service.PetService;
 import com.knowledge_farm.user.dao.UserDao;
-import com.knowledge_farm.user_tag.service.UserTagServiceImpl;
 import com.knowledge_farm.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,8 +28,6 @@ public class FrontUserServiceImpl {
     private UserDao userDao;
     @Resource
     private PetService petService;
-    @Resource
-    private UserTagServiceImpl userTagService;
     @Resource
     private EntityManager entityManager;
     @Value("${file.userPhotoFolderName}")
@@ -108,8 +104,6 @@ public class FrontUserServiceImpl {
         UserCrop userCrop4 = new UserCrop();
         //宠物仓库
         UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
-        //UserTag
-        UserTag tag = this.userTagService.findUserTagById(1);
         //关联
         land.setUser(user);
         land.setUserCrop1(userCrop1);
@@ -118,7 +112,6 @@ public class FrontUserServiceImpl {
         land.setUserCrop4(userCrop4);
         user.setLand(land);
         user.getPetHouses().add(petHouse);
-        user.setTag(tag);
         this.userDao.save(user);
         entityManager.clear();
     }

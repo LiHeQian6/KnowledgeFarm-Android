@@ -31,17 +31,12 @@
         android:layout_height="wrap_content"
         android:gravity="center">
 
-        <GridView
-            android:id="@+id/gird_view"
-            android:scrollbars="none"
+        <androidx.viewpager.widget.ViewPager
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:cacheColorHint="#00000000"
-            android:columnWidth="50dp"
-            android:horizontalSpacing="10dp"
-            android:numColumns="4"
-            android:verticalSpacing="10dp">
+            android:id="@+id/pager_view">
 
-        </GridView>
+        </androidx.viewpager.widget.ViewPager>
+
     </LinearLayout>
 </LinearLayout>

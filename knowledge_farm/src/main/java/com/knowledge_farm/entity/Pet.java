@@ -34,6 +34,7 @@ public class Pet {
         this.intelligence = intelligence;
         this.physical = physical;
         this.price = price;
+        this.exist = 1;
     }
 
     @Id
@@ -118,7 +119,7 @@ public class Pet {
         this.img3 = img3;
     }
 
-    @Column(insertable = false, columnDefinition = "1")
+    @Column(columnDefinition = "1")
     public Integer getExist() {
         return exist;
     }

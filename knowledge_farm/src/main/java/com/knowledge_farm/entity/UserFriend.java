@@ -18,6 +18,10 @@ public class UserFriend {
     private User friendUser;
     private Integer status;
 
+    public UserFriend(){
+        this.status = 1;
+    }
+
     @Id
     @GeneratedValue(generator="identity")
     @GenericGenerator(name="identity", strategy="identity")
@@ -49,7 +53,7 @@ public class UserFriend {
         this.friendUser = friendUser;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 1")
+    @Column( columnDefinition = "int default 1")
     public Integer getStatus() {
         return status;
     }

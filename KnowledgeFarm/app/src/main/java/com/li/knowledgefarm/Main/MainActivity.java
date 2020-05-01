@@ -58,6 +58,7 @@ import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
+import com.li.knowledgefarm.entity.UserPetHouse;
 import com.li.knowledgefarm.pet.PetPopUpWindow;
 
 import org.greenrobot.eventbus.EventBus;
@@ -119,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
     private NotifyActivity notifyActivity;
     private UserMessagePopUp userMessagePopUp;
     private ListView notify_list_view;
-    private float LAND_WIDTH_2 = 150;
-    private float LAND_HEIGHT_2 = 76;
+    private float LAND_WIDTH_2 = 224;
+    private float LAND_HEIGHT_2 = 114;
     private Handler friendMessagesHandler;
     private ImageView dayTask;
     private DayTaskPopUpWindow dayTaskPopUpWindow;
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler new_notification;
     private FriendsPopUpWindow friendsPopUpWindow;
     private PetPopUpWindow petPopUpWindow;
+    private ImageView dog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,8 +140,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
-        ImageView dog = findViewById(R.id.dog);
-        Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
         getViews();
         addListener();
         getCrop();
@@ -260,6 +260,11 @@ public class MainActivity extends AppCompatActivity {
         experience.setMax(levelExperience[l] - levelExperience[l - 1]);
         experience.setProgress((int) LoginActivity.user.getExperience() - levelExperience[l - 1]);
         experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l]);
+        List<UserPetHouse> petHouses = LoginActivity.user.getPetHouses();
+        if (petHouses.size()!=0) {
+            Glide.with(this).asGif().load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
+        }else
+            Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
     }
 
     /**
@@ -534,7 +539,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 18; i++) {
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             final View landGroup = inflater.inflate(R.layout.land_group, null);
-            landGroup.setLayoutParams(new FrameLayout.LayoutParams(320, 160));
+            landGroup.setLayoutParams(new FrameLayout.LayoutParams(480, 240));
             int num = i + 1;
             if ((num - 1) % 3 == 0) {
                 x = ((num - 1) / 3) * LAND_WIDTH_2 + LAND_WIDTH_2 * 2;
@@ -557,9 +562,9 @@ public class MainActivity extends AppCompatActivity {
             if (cropList.get(i) == null) {//cropItem为null表示土地未开垦，crop为null代表未种植，不为null为种植的对应植物，当第一次运行到的时候表示该块土地上是扩建牌
                 if (flag == 0) {
                     plant.setVisibility(View.VISIBLE);
-                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(160, 160);
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(240, 240);
                     params.gravity = Gravity.CENTER;
-                    params.topMargin = -60;
+                    params.topMargin = -90;
                     plant.setLayoutParams(params);
                     plant.setImageResource(R.drawable.kuojian);
                     //扩建
@@ -616,7 +621,7 @@ public class MainActivity extends AppCompatActivity {
                     //展示植物不同阶段
                     final double status = (crop.getProgress() + 0.0) / crop.getCrop().getMatureTime();
                     if (status < 0.2) {
-                        plant.setTranslationY(40);
+                        plant.setTranslationY(80);
                         plant.setImageResource(R.drawable.seed);
                     } else if (status < 0.3) {
                         Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
@@ -1075,6 +1080,7 @@ public class MainActivity extends AppCompatActivity {
         dayTask = findViewById(R.id.task);
         notify_red =findViewById(R.id.notify_red);
         daytask_red =findViewById(R.id.daytask_red);
+        dog=findViewById(R.id.dog);
     }
 
     /**
@@ -1241,7 +1247,7 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent();
                     intent.setClass(MainActivity.this, NotifyActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.notify_pop_in, 0);
+//                    overridePendingTransition(R.anim.notify_pop_in, 0);
                     notify_red.setVisibility(View.GONE);
                     break;
                 case R.id.photo:

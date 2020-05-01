@@ -167,7 +167,7 @@ public class FrontCropController {
             crop.setExperience(experience);
             Crop saveCrop = this.frontCropService.save(crop);
             Integer id = saveCrop.getId();
-            entityManager.clear();
+//            entityManager.clear();
             String img[] = new String[4];
             int count = 1;
             for(MultipartFile multipartFile : files){

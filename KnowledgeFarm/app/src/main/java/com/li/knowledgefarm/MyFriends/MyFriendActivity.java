@@ -58,6 +58,7 @@ import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
+import com.li.knowledgefarm.entity.UserPetHouse;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -113,8 +114,8 @@ public class MyFriendActivity extends AppCompatActivity {
     private int displayWidth;
     private int displayHeight;
     private User user;
-    private float LAND_WIDTH_2=150;
-    private float LAND_HEIGHT_2=76;
+    private float LAND_WIDTH_2=224;
+    private float LAND_HEIGHT_2=114;
     private Handler friendMessagesHandler;
     private ImageView dayTask;
     private DayTaskPopUpWindow dayTaskPopUpWindow;
@@ -124,6 +125,7 @@ public class MyFriendActivity extends AppCompatActivity {
     private static List<Boolean> notifyStatus=new ArrayList<>(4);
     private Handler new_notification;
     private ImageView notify;
+    private ImageView dog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,8 +137,7 @@ public class MyFriendActivity extends AppCompatActivity {
         gson = new Gson();
         dataList = new ArrayList<>();
         user= (User) getIntent().getSerializableExtra("friend");
-        ImageView dog = findViewById(R.id.dog);
-        Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
+//        Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
         getViews();
         addListener();
         getCrop();
@@ -305,6 +306,10 @@ public class MyFriendActivity extends AppCompatActivity {
         experience.setMax(levelExperience[l]-levelExperience[l-1]);
         experience.setProgress((int) user.getExperience()-levelExperience[l-1]);
         experienceValue.setText("" + user.getExperience() + "/" + levelExperience[l]);
+        List<UserPetHouse> petHouses = user.getPetHouses();
+        if (petHouses.size()!=0)
+            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.mydog).into(dog);
+        Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
     }
 
     /**
@@ -318,7 +323,7 @@ public class MyFriendActivity extends AppCompatActivity {
         for (int i = 0; i <18 ; i++) {
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             View landGroup = inflater.inflate(R.layout.land_group,null);
-            landGroup.setLayoutParams(new FrameLayout.LayoutParams(320,160));
+            landGroup.setLayoutParams(new FrameLayout.LayoutParams(480, 240));
             int num=i+1;
             if ((num-1)%3==0){
                 x=((num-1)/3)*LAND_WIDTH_2+LAND_WIDTH_2*2;
@@ -582,6 +587,7 @@ public class MyFriendActivity extends AppCompatActivity {
         notify_red =findViewById(R.id.notify_red);
         daytask_red =findViewById(R.id.daytask_red);
         notify = findViewById(R.id.notify_img);
+        dog=findViewById(R.id.dog);
     }
     class MainListener implements View.OnClickListener {
 
@@ -650,6 +656,7 @@ public class MyFriendActivity extends AppCompatActivity {
                     break;
                 case R.id.task:
                     showDayTaskWindow();
+                    daytask_red.setVisibility(View.GONE);
                     break;
             }
         }

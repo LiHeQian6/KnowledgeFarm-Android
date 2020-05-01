@@ -25,6 +25,10 @@ public class Crop {
     private Integer experience;
     private Integer exist;
 
+    public Crop(){
+        this.exist = 1;
+    }
+
     @Id
     @GeneratedValue(generator="identity")
     @GenericGenerator(name="identity", strategy="identity")
@@ -109,7 +113,7 @@ public class Crop {
         this.experience = experience;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 1")
+    @Column(columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }
