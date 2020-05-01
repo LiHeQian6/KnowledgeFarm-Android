@@ -36,6 +36,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Login.StartActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +61,7 @@ public class ShopActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private Gson gson;
     private List<ShopItemBean> shopList;
+    private List<Pet> pet_list;
     private GridView gridView;
     private Handler messages;
     private ImageView imageView;
@@ -85,19 +87,40 @@ public class ShopActivity extends AppCompatActivity {
 
         getViews();
         getShopingsItems();
+        getAllPets();
         FullScreen.NavigationBarStatusBar(ShopActivity.this,true);
         setViewSize();
-
+        registerOnclickListener();
 
         messages = new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-                String message = (String)msg.obj;
-                Type type = new TypeToken<List<ShopItemBean>>(){}
-                        .getType();
-                shopList = gson.fromJson(message,type);
-                setAdapter();
+                switch (msg.what){
+                    case 1:
+                        String message = (String)msg.obj;
+                        if(!message.equals("") && msg.arg1 == 200) {
+                            Type type = new TypeToken<List<ShopItemBean>>() {
+                            }
+                                    .getType();
+                            shopList = gson.fromJson(message, type);
+                            setAdapter();
+                            registerItemListener();
+                        }else {
+                            Toast.makeText(ShopActivity.this,"网络出了点问题",Toast.LENGTH_SHORT);
+                        }
+                        break;
+                    case 2:
+                        String pet_string = (String)msg.obj;
+                        if(!pet_string.equals("") && msg.arg1 == 200) {
+                            Type type = new TypeToken<List<Pet>>() {
+                            }.getType();
+                            pet_list = gson.fromJson(pet_string, type);
+                        }else {
+                            Toast.makeText(ShopActivity.this,"网络出了点问题",Toast.LENGTH_SHORT);
+                        }
+                        break;
+                }
             }
         };
 
@@ -190,6 +213,18 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     /**
+     * @Description 绑定宠物视图和数据
+     * @Author 孙建旺
+     * @Date 下午4:15 2020/05/01
+     * @Param []
+     * @return void
+     */
+    private void setPetAdapter() {
+        PetItemAdapter itemAdapter = new PetItemAdapter(this,R.layout.shopitem_girdview,pet_list);
+        gridView.setAdapter(itemAdapter);
+    }
+
+    /**
      * @Description 绑定视图和数据
      * @Auther 孙建旺
      * @Date 下午 12:07 2019/12/07
@@ -199,6 +234,16 @@ public class ShopActivity extends AppCompatActivity {
     private void setAdapter() {
         final ShopItemAdapter itemAdapter = new ShopItemAdapter(this,shopList,R.layout.shopitem_girdview);
         gridView.setAdapter(itemAdapter);
+    }
+
+    /**
+     * @Description 注册GirdView Item监听器
+     * @Author 孙建旺
+     * @Date 下午4:12 2020/05/01
+     * @Param []
+     * @return void
+     */
+    private void registerItemListener(){
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -363,6 +408,41 @@ public class ShopActivity extends AppCompatActivity {
         shopList = new ArrayList<>();
         gridView = findViewById(R.id.gird_view);
         imageView = findViewById(R.id.goBack);
+        plant_shop = findViewById(R.id.plant_btn);
+        pet_shop = findViewById(R.id.pet_btn);
+    }
+
+    /**
+     * @Description 获取所有宠物数据
+     * @Author 孙建旺
+     * @Date 下午3:55 2020/05/01
+     * @Param []
+     * @return void
+     */
+    private void getAllPets(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/showInStore").build();
+                Call call = new OkHttpClient().newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.what = 2;
+                        message.arg1 = response.code();
+                        message.obj = response.body().string();
+                        messages.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
     }
 
     /**
@@ -386,6 +466,8 @@ public class ShopActivity extends AppCompatActivity {
                     public void onResponse(@NotNull okhttp3.Call call, @NotNull Response response) throws IOException {
                         String shopItemMessages = response.body().string();
                         Message message = Message.obtain();
+                        message.what = 1;
+                        message.arg1 = response.code();
                         message.obj = shopItemMessages;
                         messages.sendMessage(message);
                     }
@@ -398,4 +480,23 @@ public class ShopActivity extends AppCompatActivity {
         }.start();
     }
 
+    private void registerOnclickListener(){
+        pet_shop.setOnClickListener(new CustomerOnclickListener());
+        plant_shop.setOnClickListener(new CustomerOnclickListener());
+    }
+
+    private class CustomerOnclickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.plant_btn:
+                    setAdapter();
+                    break;
+                case R.id.pet_btn:
+                    setPetAdapter();
+                    break;
+            }
+        }
+    }
 }

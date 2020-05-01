@@ -26,12 +26,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="植物"
-                android:id="@+id/zhiwu"
+                android:id="@+id/plant_btn"
                 android:layout_toRightOf="@+id/goBack"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/zhiwu"
+                android:layout_toRightOf="@+id/plant_btn"
                 android:id="@+id/pet_btn"
                 android:text="宠物"/>
         </RelativeLayout>
