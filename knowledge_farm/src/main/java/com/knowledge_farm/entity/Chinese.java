@@ -3,6 +3,7 @@ package com.knowledge_farm.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @ClassName Chinese
@@ -12,7 +13,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "chinese")
-public class Chinese {
+public class Chinese implements Serializable {
     private Integer id;
     private String quantify;
     private String word;

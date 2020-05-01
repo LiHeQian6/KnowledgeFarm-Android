@@ -22,6 +22,18 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/returns"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="植物"
+                android:id="@+id/zhiwu"
+                android:layout_toRightOf="@+id/goBack"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/zhiwu"
+                android:id="@+id/pet_btn"
+                android:text="宠物"/>
         </RelativeLayout>
 
     </RelativeLayout>

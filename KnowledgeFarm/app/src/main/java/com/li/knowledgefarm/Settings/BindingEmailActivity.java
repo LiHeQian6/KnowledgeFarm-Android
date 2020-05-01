@@ -182,13 +182,13 @@ public class BindingEmailActivity extends AppCompatActivity {
             }
         }.start();
 
-        /** 1分钟倒计时*/
-        asyncTask = new GetTestCodeAsyncTask(getApplicationContext(),tv_getTestCode);
-        asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        /** 2分钟倒计时*/
-        testAsync = new TestCodeEffectAsyncTask(tv_testCode);
-        testAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        /** 1分钟倒计时*/
+//        asyncTask = new GetTestCodeAsyncTask(getApplicationContext(),tv_getTestCode);
+//        asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//
+//        /** 2分钟倒计时*/
+//        testAsync = new TestCodeEffectAsyncTask(tv_testCode);
+//        testAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**

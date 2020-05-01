@@ -1,6 +1,9 @@
 package com.knowledge_farm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.Random;
 
 /**
  * @program: knowledge_farm
@@ -11,10 +14,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user_pet")
 public class UserPetHouse {
-    private int id;
+    private Integer id;
     private User user;
     private Pet pet;
-
+    private Integer ifUsing;            //是否正在使用
+    private Integer growPeriod;
+    private Integer life;       //生命值
+    private Integer intelligence;       //智力值
+    private Integer physical;         //体力值
 
     public UserPetHouse() {
     }
@@ -22,20 +29,26 @@ public class UserPetHouse {
     public UserPetHouse(User user, Pet pet) {
         this.user = user;
         this.pet = pet;
+        life = new Random().nextInt(pet.getLife())+30;
+        intelligence = new Random().nextInt(pet.getIntelligence())+30;
+        physical = new Random().nextInt(pet.getPhysical())+30;
+        this.ifUsing = 0;
+        this.growPeriod = 0;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnore
     public User getUser() {
         return user;
     }
@@ -52,6 +65,48 @@ public class UserPetHouse {
 
     public void setPet(Pet pet) {
         this.pet = pet;
+    }
+
+    @Column(columnDefinition = "int default 0")
+    public Integer getIfUsing() {
+        return ifUsing;
+    }
+
+    public void setIfUsing(Integer ifUsing) {
+        this.ifUsing = ifUsing;
+    }
+
+    @Column(columnDefinition = "int default 0")
+    public Integer getGrowPeriod() {
+        return growPeriod;
+    }
+
+    public void setGrowPeriod(Integer growPeriod) {
+        this.growPeriod = growPeriod;
+    }
+
+    public Integer getLife() {
+        return life;
+    }
+
+    public void setLife(Integer life) {
+        this.life = life;
+    }
+
+    public Integer getIntelligence() {
+        return intelligence;
+    }
+
+    public void setIntelligence(Integer intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public Integer getPhysical() {
+        return physical;
+    }
+
+    public void setPhysical(Integer physical) {
+        this.physical = physical;
     }
 
 }

@@ -57,10 +57,7 @@ public class NotifyActivity extends AppCompatActivity {
     private Button friend_notify;
     private Button mess_notify;
     private Button add_notify;
-    private ImageView next_notify;
-    private ImageView pre_nofify;
-    private ImageView pre;
-    private ImageView next;
+    private ImageView returns;
     private Gson gson;
     private TextView none_notify;
     private Button delete_all_btn;
@@ -73,7 +70,7 @@ public class NotifyActivity extends AppCompatActivity {
         getViews();
         registListener();
         FullScreen.NavigationBarStatusBar(NotifyActivity.this,true);
-//        getNotify("1",1,6);
+        getNotify("1",1,6);
         getNotifyHandler();
     }
 
@@ -156,12 +153,9 @@ public class NotifyActivity extends AppCompatActivity {
         friend_notify = findViewById(R.id.friend_btn);
         mess_notify = findViewById(R.id.message_btn);
         add_notify = findViewById(R.id.add_btn);
-        pre = findViewById(R.id.pre_notify);
-        next = findViewById(R.id.next_notify);
-        next_notify = findViewById(R.id.next_notify);
-        pre_nofify = findViewById(R.id.pre_notify);
         none_notify = findViewById(R.id.none_notify);
         delete_all_btn = findViewById(R.id.delete_all_btn);
+        returns = findViewById(R.id.goBack_notify);
     }
 
     /**
@@ -176,11 +170,8 @@ public class NotifyActivity extends AppCompatActivity {
         friend_notify.setOnClickListener(new CustomerOnclickListener());
         mess_notify.setOnClickListener(new CustomerOnclickListener());
         add_notify.setOnClickListener(new CustomerOnclickListener());
-        pre.setOnClickListener(new CustomerOnclickListener());
-        next.setOnClickListener(new CustomerOnclickListener());
-        next_notify.setOnClickListener(new CustomerOnclickListener());
-        pre_nofify.setOnClickListener(new CustomerOnclickListener());
         delete_all_btn.setOnClickListener(new CustomerOnclickListener());
+        returns.setOnClickListener(new CustomerOnclickListener());
     }
 
     private void getFriendNotify(final int id,final int pageNumber,final int pageSize){
@@ -362,21 +353,18 @@ public class NotifyActivity extends AppCompatActivity {
                 case R.id.friend_btn:
                     current_type = "2";
                     delete_all_btn.setVisibility(View.INVISIBLE);
-                    getFriendNotify(LoginActivity.user.getId(),1,4);
+                    getNotify("2",1,4);
                     break;
                 case R.id.add_btn:
                     current_type = "3";
                     delete_all_btn.setVisibility(View.VISIBLE);
                     getMySendNotify("2",1,4);
                     break;
-                case R.id.next_notify:
-
-                    break;
-                case R.id.pre_notify:
-
-                    break;
                 case R.id.delete_all_btn:
                     Delete_All_Notify(current_type,LoginActivity.user.getId());
+                    break;
+                case R.id.goBack_notify:
+                    finish();
                     break;
             }
         }

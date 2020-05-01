@@ -58,14 +58,6 @@ public class UserController {
     @PostMapping("/loginByOpenId")
     public Object loginByOpenId(@RequestParam("openId") String openId){
         Object obj = this.userService.loginByOpenId(openId);
-//        if(obj instanceof User){
-//            User user = (User) obj;
-//            user.setPassword("");
-//            if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                user.setPhoto(this.photoUrl + user.getPhoto());
-//            }
-//            return user;
-//        }
         return obj;
     }
 
@@ -84,10 +76,6 @@ public class UserController {
     public Object findUserInfoByUserId(@RequestParam("userId") Integer userId){
         User user = this.userService.findUserById(userId);
         if(user != null){
-//            user.setPassword("");
-//            if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                user.setPhoto(this.photoUrl + user.getPhoto());
-//            }
             return user;
         }
         return "{}";
@@ -118,14 +106,6 @@ public class UserController {
                             @RequestParam("password") String password){
         try {
             Object obj = this.userService.addQQUser(openId, photo, nickName, grade, email, password);
-//            if(obj instanceof User){
-//                User user = (User) obj;
-//                user.setPassword("");
-//                if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                    user.setPhoto(this.photoUrl + user.getPhoto());
-//                }
-//                return user;
-//            }
             return obj;
         }catch (Exception e){
             e.printStackTrace();
@@ -148,14 +128,6 @@ public class UserController {
     @PostMapping("/loginByAccount")
     public Object loginByAccount(@RequestParam("account") String account, @RequestParam("password") String password){
         Object obj = this.userService.loginByAccount(account, password);
-//        if(obj instanceof User){
-//            User user = (User) obj;
-//            user.setPassword("");
-//            if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                user.setPhoto(this.photoUrl + user.getPhoto());
-//            }
-//            return user;
-//        }
         return obj;
     }
 
@@ -180,14 +152,6 @@ public class UserController {
                                 @RequestParam("password") String password){
         try {
             Object obj = this.userService.registAccount(nickName, grade, email, password);
-//            if(obj instanceof User){
-//                User user = (User) obj;
-//                user.setPassword("");
-//                if(!(user.getPhoto().substring(0,4)).equals("http")){
-//                    user.setPhoto(this.photoUrl + user.getPhoto());
-//                }
-//                return user;
-//            }
             return obj;
         } catch (Exception e){
             e.printStackTrace();

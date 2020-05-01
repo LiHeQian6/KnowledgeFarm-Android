@@ -16,17 +16,16 @@ import java.util.Set;
 @Entity
 @Table(name = "notification_type")
 public class NotificationType {
-    private int id;
+    private Integer id;
     private String name;
-    private Set<Notification> notifications = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -36,17 +35,6 @@ public class NotificationType {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @OneToMany(mappedBy = "notificationType")
-    @org.hibernate.annotations.ForeignKey(name = "none")
-    @JsonIgnore
-    public Set<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<Notification> notifications) {
-        this.notifications = notifications;
     }
     
 }

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -15,7 +14,6 @@ import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,13 +49,13 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.MyFriends.FriendsPopUpWindow;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
+import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
-import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
 import com.li.knowledgefarm.pet.PetPopUpWindow;
@@ -1157,6 +1155,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * @Description 展示用户信息和设置弹窗
+     * @Author 孙建旺
+     * @Date 下午9:21 2020/04/28
+     * @Param []
+     * @return void
+     */
+    private void ShowSettingAndMessage(){
+//        SettingMessageActivity messagePopUp = new SettingMessageActivity(this,MainActivity.this,LoginActivity.user);
+//        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+//        DisplayMetrics ds = new DisplayMetrics();
+//        wm.getDefaultDisplay().getMetrics(ds);
+//        displayHeight = ds.heightPixels;
+//        displayWidth = ds.widthPixels;
+//        messagePopUp.setWidth((int) (displayWidth * 0.70));
+//        messagePopUp.setHeight((int) (displayHeight * 0.8));
+//        messagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
+//        planting(bagPopUpWindow.getGridView());
+    }
+    /**
      * @Author li
      * @return null
      * @Description 监听器类
@@ -1224,14 +1241,13 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent();
                     intent.setClass(MainActivity.this, NotifyActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.notify_pop_in, 0);
+//                    overridePendingTransition(R.anim.notify_pop_in, 0);
                     notify_red.setVisibility(View.GONE);
                     break;
                 case R.id.photo:
                     intent = new Intent();
-                    intent.setClass(MainActivity.this, SettingActivity.class);
+                    intent.setClass(MainActivity.this, SettingMessageActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(0, 0);
                     break;
                 case R.id.task:
                     showDayTaskWindow();

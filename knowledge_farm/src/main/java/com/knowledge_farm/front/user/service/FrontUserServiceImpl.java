@@ -1,10 +1,10 @@
 package com.knowledge_farm.front.user.service;
 
 import com.knowledge_farm.entity.*;
+import com.knowledge_farm.pet.service.PetService;
 import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,8 @@ import java.util.List;
 public class FrontUserServiceImpl {
     @Resource
     private UserDao userDao;
+    @Resource
+    private PetService petService;
     @Resource
     private EntityManager entityManager;
     @Value("${file.userPhotoFolderName}")
@@ -91,7 +93,7 @@ public class FrontUserServiceImpl {
         user.setPhoto(this.userPhotoFolderName + "/" + this.userDefaultFileName);
         user.setEmail(email);
         user.setGrade(grade);
-        user.setLastLogoutTime(new Date());
+        user.setLastReadTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建Land
         Land land = new Land();
@@ -100,6 +102,8 @@ public class FrontUserServiceImpl {
         UserCrop userCrop2 = new UserCrop();
         UserCrop userCrop3 = new UserCrop();
         UserCrop userCrop4 = new UserCrop();
+        //宠物仓库
+        UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
         //关联
         land.setUser(user);
         land.setUserCrop1(userCrop1);
@@ -107,6 +111,7 @@ public class FrontUserServiceImpl {
         land.setUserCrop3(userCrop3);
         land.setUserCrop4(userCrop4);
         user.setLand(land);
+        user.getPetHouses().add(petHouse);
         this.userDao.save(user);
         entityManager.clear();
     }

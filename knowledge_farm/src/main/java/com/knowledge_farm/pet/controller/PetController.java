@@ -1,6 +1,7 @@
 package com.knowledge_farm.pet.controller;
 
 import com.knowledge_farm.entity.Pet;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.pet.service.PetService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: knowledge_farm
@@ -35,13 +37,28 @@ public class PetController {
      * @param :[pageNum]
      * @return :org.springframework.data.domain.Page<com.knowledge_farm.entity.Pet>
      */
+    @ApiOperation(value = "商店展示所有宠物", notes = "返回值：List（Pet）")
     @GetMapping("/showInStore")
-    public Page<Pet> showInStore(@RequestParam("pageNum")int pageNum){
-        return petService.showAllPetInStore(PageRequest.of(pageNum,3));
+    public List<Pet> showInStore(){
+        return petService.showAllPetInStore();
     }
 
-    @RequestMapping("/test")
-    public Page<Pet> showInStore(){
-        return petService.showAllPetInStore(PageRequest.of(0,3));
+    @ApiOperation(value = "切换使用的宠物", notes = "返回值：(String)true || (String)false")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "usingPetId", value = "正在使用的宠物Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "willUsingPetId", value = "将要使用的宠物Id", dataType = "int", paramType = "query", required = true)
+    })
+    @GetMapping("/changePet")
+    public String changePet(@RequestParam("userId") Integer userId,
+                            @RequestParam("usingPetId") Integer usingPetId,
+                            @RequestParam("willUsingPetId") Integer willUsingPetId){
+        try {
+            this.petService.changePet(userId, usingPetId, willUsingPetId);
+            return Result.TRUE;
+        }catch (Exception e){
+            return Result.FALSE;
+        }
     }
+
 }

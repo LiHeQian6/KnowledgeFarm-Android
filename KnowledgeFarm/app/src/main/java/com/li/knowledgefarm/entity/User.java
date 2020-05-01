@@ -21,6 +21,15 @@ public class User implements Serializable {
     private int fertilizer;
     private int online;
     private int exist;
+    private UserAuthority userAuthority;
+
+    public UserAuthority getUserAuthority() {
+        return userAuthority;
+    }
+
+    public void setUserAuthority(UserAuthority userAuthority) {
+        this.userAuthority = userAuthority;
+    }
 
     public int getId() {
         return id;
