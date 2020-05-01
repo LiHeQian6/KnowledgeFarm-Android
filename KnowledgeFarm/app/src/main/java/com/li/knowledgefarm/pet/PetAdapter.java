@@ -53,6 +53,8 @@ public class PetAdapter extends BaseAdapter {
         ImageView border=convertView.findViewById(R.id.border);
         if (position==0){
             border.setVisibility(View.VISIBLE);
+        }else{
+            border.setVisibility(View.INVISIBLE);
         }
         Glide.with(context).load(list.get(position).getPet().getImg1()).apply(RequestOptions.bitmapTransform(new CircleCrop())).error(R.drawable.dog).into(photo);
         return convertView;

@@ -26,15 +26,14 @@
             android:id="@+id/lands"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="60dp"
             android:layout_weight="1"
-            android:clipChildren="false"
-            android:rotationY="-4"
-            android:rotationX="16"
+            android:scaleY="0.8"
+            android:scaleX="0.8"
+            android:rotationX="10"
             android:rotation="-10"
-            android:scaleX="1.2"
-            android:scaleY="1.2">
+            android:clipChildren="false">
 
         </FrameLayout>
         <TextView
@@ -43,13 +42,14 @@
             android:layout_height="match_parent">
         </TextView>
     </LinearLayout>
-    <ImageView android:layout_width="200dp"
+    <ImageView android:layout_width="100dp"
         android:layout_alignParentRight="true"
         android:src="@drawable/dog"
         android:id="@+id/dog"
         android:layout_marginTop="60dp"
+        android:layout_marginRight="50dp"
         android:layout_alignParentTop="true"
-        android:layout_height="200dp"/>
+        android:layout_height="160dp"/>
     <RelativeLayout android:layout_width="match_parent"
                   android:gravity="center_vertical"
                   android:layout_height="wrap_content">

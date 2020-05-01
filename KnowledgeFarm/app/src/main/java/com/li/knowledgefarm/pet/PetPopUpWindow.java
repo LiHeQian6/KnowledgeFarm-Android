@@ -3,17 +3,12 @@ package com.li.knowledgefarm.pet;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.wifi.aware.DiscoverySession;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,12 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.entity.EventBean;
-import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.UserPetHouse;
-import com.li.knowledgefarm.view.HorizontalListView;
-
-import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -332,6 +322,7 @@ public class PetPopUpWindow extends PopupWindow {
                                 pets.get(i).setIfUsing(0);
                             }
                         }
+                        selectItem=0;
                         isUse.setVisibility(View.VISIBLE);
                         use.setVisibility(View.GONE);
                         Collections.sort(pets);
