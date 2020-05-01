@@ -156,7 +156,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/userfriend/addUserFriend?account="
                                 +list.getList().get(position).getTo().getAccount()+
-                                "&account="+list.getList().get(position).getFrom().getAccount()+
+                                "&sendAccount="+list.getList().get(position).getFrom().getAccount()+
                                 "&notificationId="+list.getList().get(position).getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
