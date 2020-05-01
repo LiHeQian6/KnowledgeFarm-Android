@@ -42,12 +42,12 @@
             android:layout_height="match_parent">
         </TextView>
     </LinearLayout>
-    <ImageView android:layout_width="100dp"
+    <ImageView android:layout_width="50dp"
         android:layout_alignParentRight="true"
         android:src="@drawable/dog"
         android:id="@+id/dog"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="100dp"
         android:layout_alignParentTop="true"
         android:layout_height="160dp"/>
     <RelativeLayout android:layout_width="match_parent"
