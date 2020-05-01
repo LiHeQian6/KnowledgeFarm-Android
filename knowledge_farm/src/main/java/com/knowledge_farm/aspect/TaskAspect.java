@@ -1,5 +1,6 @@
 package com.knowledge_farm.aspect;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.Task;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.jpush.service.JpushService;
@@ -49,22 +50,23 @@ public class TaskAspect {
         }
         User user = userService.findUserById((Integer) args[0]);
         Task task = user.getTask();
-        if (description.equals("water")&&task.getWater()==0){
+        int value = (int) result;
+        if (description.equals("water")&&task.getWater()==0 && -1!= value){
             taskService.finishTask(user,"water");
             jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("fertilize")&&task.getFertilize()==0){
+        }else if(description.equals("fertilize")&&task.getFertilize()==0 && Result.TRUE.equals(result)){
             taskService.finishTask(user,"fertilize");
             jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("crop")&&task.getCrop()==0){
+        }else if(description.equals("crop")&&task.getCrop()==0&& -1!= value){
             taskService.finishTask(user,"crop");
             jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("harvest")&&task.getHarvest()==0){
+        }else if(description.equals("harvest")&&task.getHarvest()==0 && (Result.TRUE.equals(result)||Result.UP.equals(result))){
             taskService.finishTask(user,"harvest");
             jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("help_water")&&task.getHelpWater()==0){
+        }else if(description.equals("help_water")&&task.getHelpWater()==0 && -1!= value){
             taskService.finishTask(user,"help_water");
             jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("help_fertilize")&&task.getHelpFertilize()==0){
+        }else if(description.equals("help_fertilize")&&task.getHelpFertilize()==0 && Result.TRUE.equals(result)){
             taskService.finishTask(user,"help_fertilize");
             jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
         }
