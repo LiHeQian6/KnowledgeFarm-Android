@@ -1241,7 +1241,7 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent();
                     intent.setClass(MainActivity.this, NotifyActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.notify_pop_in, 0);
+//                    overridePendingTransition(R.anim.notify_pop_in, 0);
                     notify_red.setVisibility(View.GONE);
                     break;
                 case R.id.photo:

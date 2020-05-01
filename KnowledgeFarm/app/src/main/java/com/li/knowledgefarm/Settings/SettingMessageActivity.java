@@ -99,6 +99,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     /** 选中的年级*/
     private String newGrade;
     private String[] spin;
+    private ImageView returns_message;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,7 +126,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(user_photo);
         user_account.setText("账号："+user.getAccount());
         user_nickName.setText("昵称："+user.getNickName());
-        show_grade.setText(user.getGrade()+"年级");
+        show_grade.setText(DoubleToString(user.getGrade()));
         if(!(user.getEmail() == null)){
             user_Email.setText("已绑定"+user.getEmail());
             change_Email.setText("修改");
@@ -148,6 +149,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_photo.setOnClickListener(new CustomerOnclickListener());
         change_Email.setOnClickListener(new CustomerOnclickListener());
         change_nickname.setOnClickListener(new CustomerOnclickListener());
+        returns_message.setOnClickListener(new CustomerOnclickListener());
         select_grade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -188,6 +190,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
         spin = getResources().getStringArray(R.array.sarry);
         okHttpClient = new OkHttpClient();
+        returns_message = findViewById(R.id.returns_message);
     }
 
 
@@ -248,8 +251,9 @@ public class SettingMessageActivity extends AppCompatActivity {
                                     .fallback(R.drawable.huancun2) //请求资源为null
                                     .circleCrop() //转换图片效果
                                     .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
-                            Glide.with(getApplicationContext()).load(aString).apply(options).into(user_photo);
+                            Glide.with(getApplicationContext()).load(LoginActivity.user.getPhoto()).apply(options).into(user_photo);
                         }
+                        break;
                     case 5: // 修改年级判断
                         if(msg.obj.equals("true")){
                             LoginActivity.user.setGrade(transmit(newGrade));
@@ -588,7 +592,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                     if(change_Email.getText().toString().equals("去绑定")){
                         ShowChangeMessagePop("Email");
                     }else {
-
+                        ShowChangeMessagePop("Email");
                     }
                     break;
                 case R.id.btnBindingQQ:
@@ -596,6 +600,9 @@ public class SettingMessageActivity extends AppCompatActivity {
                     break;
                 case R.id.change_nickname:
                     ShowChangeMessagePop("NickName");
+                    break;
+                case R.id.returns_message:
+                    finish();
                     break;
             }
         }

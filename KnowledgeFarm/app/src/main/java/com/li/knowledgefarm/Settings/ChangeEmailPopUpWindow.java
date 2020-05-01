@@ -146,6 +146,8 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         get_vertical_btn = view.findViewById(R.id.getVertical_btn);
         commit_btn = view.findViewById(R.id.commit_btn);
         get_vertical_li = view.findViewById(R.id.getVertical_li);
+        new_message.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        vertical.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         okHttpClient = new OkHttpClient();
         registerListener();
     }

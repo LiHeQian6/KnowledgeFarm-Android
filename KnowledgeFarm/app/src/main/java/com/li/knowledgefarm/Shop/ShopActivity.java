@@ -75,6 +75,8 @@ public class ShopActivity extends AppCompatActivity {
     private int displayWidth;
     private int displayHeight;
     private Toast toast;
+    private Button plant_shop;
+    private Button pet_shop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
