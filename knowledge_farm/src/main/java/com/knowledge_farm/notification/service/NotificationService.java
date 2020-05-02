@@ -146,6 +146,40 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = false)
+    public void addSystemNotification(String title, String content, Map extra, String... alias){
+        List<Notification> notificationList = new ArrayList<>();
+        if(alias.length != 0){
+            for(String arr : alias){
+                User user = this.userService.findUserByAccount(arr);
+                Notification notification = new Notification();
+                NotificationType notificationType = this.notificationTypeService.findNotificationTypeById(1);
+                notification.setFrom(null);
+                notification.setTo(user);
+                notification.setTitle(title);
+                notification.setContent(content);
+                notification.setExtra(new Gson().toJson(extra));
+                notification.setCreateTime(new Date());
+                notification.setHaveRead(0);
+                notification.setNotificationType(notificationType);
+                notificationList.add(notification);
+            }
+            this.notificationDao.saveAll(notificationList);
+        }else{
+            Notification notification = new Notification();
+            NotificationType notificationType = this.notificationTypeService.findNotificationTypeById(1);
+            notification.setFrom(null);
+            notification.setTo(null);
+            notification.setTitle(title);
+            notification.setContent(content);
+            notification.setExtra(new Gson().toJson(extra));
+            notification.setCreateTime(new Date());
+            notification.setHaveRead(0);
+            notification.setNotificationType(notificationType);
+            this.notificationDao.save(notification);
+        }
+    }
+
+    @Transactional(readOnly = false)
     public void deleteNotification(List<Integer> idList){
         List<Notification> notifications = this.notificationDao.findAllById(idList);
         this.notificationDao.deleteAll(notifications);

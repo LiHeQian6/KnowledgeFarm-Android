@@ -32,8 +32,8 @@ public class UserPetHouse {
         life = new Random().nextInt(pet.getLife())+30;
         intelligence = new Random().nextInt(pet.getIntelligence())+30;
         physical = new Random().nextInt(pet.getPhysical())+30;
-        this.ifUsing = 0;
         this.growPeriod = 0;
+        this.ifUsing = 0;
     }
 
     @Id
@@ -67,7 +67,7 @@ public class UserPetHouse {
         this.pet = pet;
     }
 
-    @Column(columnDefinition = "int default 0")
+    @Column(name = "if_using", columnDefinition = "int default 0")
     public Integer getIfUsing() {
         return ifUsing;
     }
