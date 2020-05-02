@@ -83,7 +83,6 @@
             android:theme="@style/customApp" />
         <activity
             android:name=".Study.SubjectListActivity"
-            android:screenOrientation="landscape"
             android:theme="@style/customApp" />
         <activity
             android:name=".Settings.SettingActivity"
