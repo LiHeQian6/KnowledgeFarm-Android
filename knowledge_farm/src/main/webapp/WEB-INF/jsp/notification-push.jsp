@@ -158,6 +158,27 @@
                 <li class="list" >
                     <a href="javascript:;">
                         <i class="iconfont">&#xe6a3;</i>
+                        宠物管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initPetManager" class="sub-menu">
+                        <li id="initPetManager1">
+                            <a href="${ctx}/admin/pet/findPetPage?exist=1">
+                                <i class="iconfont">&#xe6a7;</i>
+                                宠物列表
+                            </a>
+                        </li>
+                        <li id="initPetManager2">
+                            <a href="${ctx}/admin/pet/findPetPage?exist=0">
+                                <i class="iconfont">&#xe6a7;</i>
+                                宠物删除
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list" >
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
                         管理员管理
                         <i class="iconfont nav_right">&#xe697;</i>
                     </a>
@@ -327,7 +348,7 @@
 
         div.setAttribute("class", "layui-form-item");
         div.setAttribute("id", extraDivId);
-        div.innerHTML = "<label class='layui-form-label'></label><div class='layui-inline'><div class='layui-input-inline' style='width: 150px;'><input id='"+extraKeyId+"' type='text' placeholder='键' autocomplete='off' class='layui-input'></div><div class='layui-form-mid'>：</div><div class='layui-input-inline' style='width: 150px;'><input id='"+extraValueId+"' type='text' name='price_max' placeholder='值' autocomplete='off' class='layui-input'></div><div class='layui-input-inline' style='margin-top: 10px;margin-left:-2px'><a href='javascript:removeKeyValue(&quot;"+extraDivId+"&quot;,&quot;"+extraKeyId+"&quot;,&quot;"+extraValueId+"&quot;)'><img src='images/decrease.png' style='width:22px;height:22px'/></a></div></div>";
+        div.innerHTML = "<label class='layui-form-label'></label><div class='layui-inline'><div class='layui-input-inline' style='width: 150px;'><input id='"+extraKeyId+"' type='text' placeholder='键' autocomplete='off' class='layui-input'></div><div class='layui-form-mid'>：</div><div class='layui-input-inline' style='width: 150px;'><input id='"+extraValueId+"' type='text' name='price_max' placeholder='值' autocomplete='off' class='layui-input'></div><div class='layui-input-inline' style='margin-top: 10px;margin-left:-2px'><a href='javascript:removeKeyValue(&quot;"+extraDivId+"&quot;,&quot;"+extraKeyId+"&quot;,&quot;"+extraValueId+"&quot;)'><img src='${ctx}/images/decrease.png' style='width:22px;height:22px'/></a></div></div>";
         extraAll.appendChild(div);
 
         count++;

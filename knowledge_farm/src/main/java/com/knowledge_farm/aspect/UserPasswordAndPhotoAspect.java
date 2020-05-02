@@ -1,9 +1,6 @@
 package com.knowledge_farm.aspect;
 
-import com.knowledge_farm.entity.Notification;
-import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserPetHouse;
-import com.knowledge_farm.entity.UserVO;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.util.PageUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -78,42 +75,16 @@ public class UserPasswordAndPhotoAspect {
         }
         Iterator<UserPetHouse> iterator = user.getPetHouses().iterator();
         while(iterator.hasNext()){
-            if(iterator.next().getIfUsing() != 1){
+            UserPetHouse userPetHouse = iterator.next();
+            Pet pet = userPetHouse.getPet();
+            pet.setImg1(photoUrl + pet.getImg1());
+            pet.setImg2(photoUrl + pet.getImg2());
+            pet.setImg3(photoUrl + pet.getImg3());
+            if(userPetHouse.getIfUsing() != 1){
                 iterator.remove();
             }
         }
         return user;
     }
 
-    public UserVO varyUserToUserVO(User user){
-        if(!(user.getPhoto().substring(0,4)).equals("http")){
-            user.setPhoto(this.photoUrl + user.getPhoto());
-        }
-        Set<UserPetHouse> userPetHouseSet = user.getPetHouses();
-        for(UserPetHouse userPetHouse : userPetHouseSet){
-            if(userPetHouse.getIfUsing() != 1){
-                userPetHouseSet.remove(userPetHouse);
-            }
-        }
-        UserVO userVO = new UserVO();
-        userVO.setId(user.getId());
-        userVO.setAccount(user.getAccount());
-        userVO.setNickName(user.getNickName());
-        userVO.setPhoto(user.getPhoto());
-        userVO.setEmail(user.getEmail());
-        userVO.setLevel(user.getLevel());
-        userVO.setExperience(user.getExperience());
-        userVO.setGrade(user.getGrade());
-        userVO.setMoney(user.getMoney());
-        userVO.setMathRewardCount(user.getMathRewardCount());
-        userVO.setEnglishRewardCount(user.getEnglishRewardCount());
-        userVO.setChineseRewardCount(user.getChineseRewardCount());
-        userVO.setWater(user.getWater());
-        userVO.setFertilizer(user.getFertilizer());
-        userVO.setOnline(user.getOnline());
-        userVO.setExist(user.getExist());
-        userVO.setUserAuthority(user.getUserAuthority());
-        userVO.setUserPetHouseSet(user.getPetHouses());
-        return userVO;
-    }
 }

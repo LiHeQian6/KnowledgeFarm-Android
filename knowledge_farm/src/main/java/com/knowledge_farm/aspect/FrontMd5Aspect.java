@@ -20,7 +20,7 @@ import java.util.Date;
  */
 @Component
 @Aspect
-public class Md5Aspect {
+public class FrontMd5Aspect {
 
     @Pointcut(value = "execution(* com.knowledge_farm.front.admin.controller.AdminController.login(..))")
     private void adminLoginPassword() {
