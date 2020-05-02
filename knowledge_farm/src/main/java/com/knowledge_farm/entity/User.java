@@ -297,7 +297,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @org.hibernate.annotations.ForeignKey(name = "none")
-    @JsonIgnore
     public Set<UserPetHouse> getPetHouses() {
         return petHouses;
     }

@@ -67,7 +67,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
     private Handler getMath;
     private Handler getWAF;
     private Gson gson;
-    private QuestionPage<English> datalist;
+    private List<English> datalist;
     private int position=0;
     private int TrueAnswerNumber = 0;
     private Dialog ifReturn;
@@ -93,7 +93,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         /** 注册点击事件监听器*/
         registListener();
         FullScreen.NavigationBarStatusBar(EnglishActivity.this,true);
-        datalist = (QuestionPage<English>) getIntent().getSerializableExtra("english");
+        datalist = (List<English>) getIntent().getSerializableExtra("english");
         showQuestion(position);
     }
 
@@ -298,32 +298,32 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
      */
     @Override
     public void showQuestion(int pos){
-        if(position == datalist.getContent().size()-1){
+        if(position == datalist.size()-1){
             btnNextQuestion.setText("我答完啦");
         }else{
             btnNextQuestion.setText("下一题");
         }
-        if(!datalist.getContent().get(pos).getIfDone().equals("true")) {
+        if(!datalist.get(pos).getIfDone().equals("true")) {
             isFalse.setText("");
             answerA.setVisibility(View.VISIBLE);
             answerB.setVisibility(View.VISIBLE);
             trueAnswer.setVisibility(View.GONE);
             isTrue.setVisibility(View.INVISIBLE);
             isTrue2.setVisibility(View.INVISIBLE);
-            question.setText(datalist.getContent().get(pos).getWord());
+            question.setText(datalist.get(pos).getWord());
             if(new Random().nextInt(2) == 0) {
-                answer1.setText(datalist.getContent().get(pos).getTrans());
+                answer1.setText(datalist.get(pos).getTrans());
                 String trans = null;
                 do{
-                    trans = datalist.getContent().get(new Random().nextInt(datalist.getContent().size())).getTrans();
-                }while (trans.equals(datalist.getContent().get(pos).getTrans()) && trans != null);
+                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
+                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
                 answer2.setText(trans);
             }else{
-                answer2.setText(datalist.getContent().get(pos).getTrans());
+                answer2.setText(datalist.get(pos).getTrans());
                 String trans = null;
                 do{
-                    trans = datalist.getContent().get(new Random().nextInt(datalist.getContent().size())).getTrans();
-                }while (trans.equals(datalist.getContent().get(pos).getTrans()) && trans != null);
+                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
+                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
                 answer1.setText(trans);
             }
         }else {
@@ -331,8 +331,8 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
             answerA.setVisibility(View.GONE);
             answerB.setVisibility(View.GONE);
             trueAnswer.setVisibility(View.VISIBLE);
-            question.setText(datalist.getContent().get(pos).getWord());
-            trueAnswer.setText(datalist.getContent().get(pos).getTrans());
+            question.setText(datalist.get(pos).getWord());
+            trueAnswer.setText(datalist.get(pos).getTrans());
 
             LinearLayout.LayoutParams params_trueanswer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params_trueanswer.gravity = Gravity.CENTER_HORIZONTAL;
@@ -349,7 +349,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.getContent().size() && LoginActivity.user.getEnglishRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getEnglishRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
@@ -362,7 +362,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                     break;
                 case R.id.transOne:
                     String t1 = answer1.getText().toString().trim();
-                    if(t1.equals(datalist.getContent().get(position).getTrans())){
+                    if(t1.equals(datalist.get(position).getTrans())){
                         TrueAnswerNumber++;
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue.setVisibility(View.VISIBLE);
@@ -370,12 +370,12 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                         isFalse.setText("答对啦！获得了奖励哦！");
                         StudyUtil.PlayTrueSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
-                        if((position+1)<=datalist.getContent().size()-1) {
+                        if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    datalist.getContent().get(position).setIfDone("true");
+                                    datalist.get(position).setIfDone("true");
                                     position = ++position;
                                     showQuestion(position);
                                 }
@@ -391,8 +391,8 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                     break;
                 case R.id.transTwo:
                     String t2 = answer2.getText().toString().trim();
-                    if(t2.equals(datalist.getContent().get(position).getTrans())){
-                        datalist.getContent().get(position).setIfDone("true");
+                    if(t2.equals(datalist.get(position).getTrans())){
+                        datalist.get(position).setIfDone("true");
                         TrueAnswerNumber++;
                         isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue2.setVisibility(View.VISIBLE);
@@ -400,12 +400,12 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                         isFalse.setText("答对啦！获得了奖励哦！");
                         StudyUtil.PlayTrueSound(getApplicationContext());
                         isFalse.setVisibility(View.VISIBLE);
-                        if((position+1)<=datalist.getContent().size()-1) {
+                        if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    datalist.getContent().get(position).setIfDone("true");
+                                    datalist.get(position).setIfDone("true");
                                     position = ++position;
                                     showQuestion(position);
                                 }
@@ -420,11 +420,11 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                     }
                     break;
                 case R.id.btnNextEnglish:
-                    if((position+1)<=datalist.getContent().size()-1) {
+                    if((position+1)<=datalist.size()-1) {
                         position = ++position;
                         showQuestion(position);
                     }else{
-                        if(TrueAnswerNumber < datalist.getContent().size()){
+                        if(TrueAnswerNumber < datalist.size()){
                             Toast.makeText(EnglishActivity.this,"你还没有答完哦",Toast.LENGTH_SHORT).show();;
                         }else {
                             getWandFCallBack();
@@ -445,7 +445,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         iv_return = findViewById(R.id.iv_return);
         okHttpClient = new OkHttpClient();
         gson = new Gson();
-        datalist = new QuestionPage<>();
+        datalist = new ArrayList<>();
         btnPreQuestion = findViewById(R.id.btnPreEnglish);
         btnNextQuestion = findViewById(R.id.btnNextEnglish);
         question = findViewById(R.id.englishQuestion);
@@ -485,7 +485,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
     }
 
     public void exit() {
-        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.getContent().size() && LoginActivity.user.getMathRewardCount()>0)
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
             showIfReturn();
         else
             finish();

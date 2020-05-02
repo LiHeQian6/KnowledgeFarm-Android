@@ -64,20 +64,23 @@
             android:gravity="center"
             android:layout_below="@+id/linearEnglishQuestion"
             android:layout_marginTop="15dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
 
             <LinearLayout
                 android:id="@+id/AnswerA"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right|center">
+                android:layout_weight="2"
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/transOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="你好"
-                    android:textAlignment="center"
                     android:textColor="#ffffff"
                     android:textSize="30dp" />
 
@@ -104,15 +107,14 @@
                 android:id="@+id/AnswerB"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left|center">
+                android:layout_weight="2"
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/transTwo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="再见"
-                    android:textAlignment="center"
                     android:textColor="#ffffff"
                     android:textSize="30dp" />
                 <ImageView
@@ -123,6 +125,11 @@
                     android:src="@drawable/cha">
                 </ImageView>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

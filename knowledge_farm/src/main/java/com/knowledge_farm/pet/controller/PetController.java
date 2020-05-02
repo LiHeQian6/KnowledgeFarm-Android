@@ -46,15 +46,13 @@ public class PetController {
     @ApiOperation(value = "切换使用的宠物", notes = "返回值：(String)true || (String)false")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "usingPetId", value = "正在使用的宠物Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "willUsingPetId", value = "将要使用的宠物Id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/changePet")
     public String changePet(@RequestParam("userId") Integer userId,
-                            @RequestParam("usingPetId") Integer usingPetId,
                             @RequestParam("willUsingPetId") Integer willUsingPetId){
         try {
-            this.petService.changePet(userId, usingPetId, willUsingPetId);
+            this.petService.changePet(userId, willUsingPetId);
             return Result.TRUE;
         }catch (Exception e){
             return Result.FALSE;

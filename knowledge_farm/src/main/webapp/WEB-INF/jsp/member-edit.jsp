@@ -76,7 +76,7 @@
                         <font color="red">*</font>邮箱
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="email" name="email" required="" lay-verify="nikename"
+                        <input type="text" id="email" name="email" lay-verify="nikename"
                         autocomplete="off" class="layui-input" value="${user.email}">
                     </div>
                 </div>

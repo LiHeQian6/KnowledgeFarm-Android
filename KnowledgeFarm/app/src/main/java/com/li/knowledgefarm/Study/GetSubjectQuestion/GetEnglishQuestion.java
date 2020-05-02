@@ -40,7 +40,7 @@ import okhttp3.Response;
 public class GetEnglishQuestion extends SubjectInterface {
     private OkHttpClient okHttpClient = new OkHttpClient();
     private Gson gson = new Gson();
-    private QuestionPage<English> list = null;
+    private List<English> list = null;
     private Handler getMath;
     private final Activity context;
     private Intent intent;
@@ -113,7 +113,7 @@ public class GetEnglishQuestion extends SubjectInterface {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
                 if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
-                    Type type = new TypeToken<QuestionPage<English>>() {
+                    Type type = new TypeToken<List<English>>() {
                     }.getType();
                     list = gson.fromJson(data, type);
                     if(list != null){
