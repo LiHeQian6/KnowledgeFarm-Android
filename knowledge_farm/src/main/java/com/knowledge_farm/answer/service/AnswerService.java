@@ -224,16 +224,7 @@ public class AnswerService {
             String signal = random.nextBoolean()?"×":"÷";
             int doubleNum = random.nextInt(390)+10;
             int singleNum = random.nextInt(8)+2;
-            int num1 = 0;
-            int num2 = 0;
-            if(random.nextBoolean()){
-                num1 = doubleNum;
-                num2 = singleNum;
-            }else {
-                num1 = singleNum;
-                num2 = doubleNum;
-            }
-            list.add(new Multiple(num1,signal,num2,doubleNum*singleNum));
+            list.add(new Multiple(doubleNum,signal,singleNum,doubleNum*singleNum));
         }
         return list;
     }
@@ -343,7 +334,7 @@ public class AnswerService {
                     }
                 }else {
                     num1 = random.nextInt(390)+11;
-                    num2 = random.nextInt(num1)+2;
+                    num2 = random.nextInt(8)+2;
                     if(brackets2.equals("false")){
                         int remain = num1 % num2;
                         if(remain == 0) {
