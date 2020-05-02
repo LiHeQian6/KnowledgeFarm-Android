@@ -3,23 +3,18 @@ package com.knowledge_farm.front.user.controller;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.front.user.service.FrontUserServiceImpl;
-import com.knowledge_farm.util.Md5Encode;
 import com.knowledge_farm.util.PageUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,6 +96,7 @@ public class FrontUserController {
             this.frontUserService.deleteOneUser(userId, 0);
             return Result.SUCCEED;
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
@@ -117,6 +113,7 @@ public class FrontUserController {
             this.frontUserService.editStatusListByIdList(idList, 0);
             return Result.SUCCEED;
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
@@ -128,6 +125,7 @@ public class FrontUserController {
             this.frontUserService.deleteOneUser(userId, 1);
             return Result.SUCCEED;
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
@@ -144,6 +142,7 @@ public class FrontUserController {
             this.frontUserService.editStatusListByIdList(idList, 1);
             return Result.SUCCEED;
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
@@ -155,6 +154,7 @@ public class FrontUserController {
             this.frontUserService.deleteThoroughUser(userId);
             return Result.SUCCEED;
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
@@ -169,6 +169,7 @@ public class FrontUserController {
             this.frontUserService.addUser(nickName, password, email, grade);
             return Result.SUCCEED;
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
@@ -196,6 +197,7 @@ public class FrontUserController {
             }
             return Result.ALREADY;
         }catch (Exception e){
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
@@ -207,6 +209,7 @@ public class FrontUserController {
             this.frontUserService.editPasswordByAccount(account, password);
             return Result.SUCCEED;
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
