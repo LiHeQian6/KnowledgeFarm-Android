@@ -107,9 +107,6 @@ public class AdminController {
                        @RequestParam(value = "exist") Integer exist,
                        HttpServletRequest request){
         Page<Admin> page = this.adminService.findPageAdminByAccount(account, exist, pageNumber, pageSize);
-//        for(Admin admin : page.getContent()){
-//            admin.setPassword("");
-//        }
         PageUtil<Admin> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
         pageUtil.setList(page.getContent());

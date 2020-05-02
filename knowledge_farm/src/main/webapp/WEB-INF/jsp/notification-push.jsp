@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Administrator
+  Date: 2020/5/2 0002
+  Time: 11:19
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
@@ -16,6 +23,64 @@
     <script src="${ctx}/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
 
+    <script type="text/javascript">
+        //初始化左侧菜单（管理员管理）
+        window.onload = function(){
+            $("#sendNotificationManager").attr("class","sub-menu opened");
+            $("#sendPushManager").attr("class","current");
+        }
+        function sendCustomMessage() {
+            var title = $("#title").val();
+            var content = $("#content").val();
+            var extra = MapToJson();
+            var alias = $("#aliasInput").val();
+            var aliasRadioValue = $('input[name="alias"]:checked').val();
+            if(aliasRadioValue == 0){
+                alias = "";
+            }
+            $.post("${ctx}/admin/notification/sendPush",{"title":title,"content":content,"extra":extra,"alias":alias},function(data){
+                switch (data) {
+                    case "succeed":
+                        layer.msg('发送成功');
+                        break;
+                    case "fail":
+                        layer.msg('发送失败');
+                        break;
+                    case "notExist":
+                        layer.msg('存在不能识别的设备别名');
+                        break;
+                    case "false":
+                        layer.msg('极光推送连接错误');
+                        break;
+                }
+            })
+        }
+        function MapToJson() {
+            var map = new Map();
+            for(var i = 0,j = 0;i < extraKeys.length && j < extraValues.length;i++,j++){
+                var key = $("#" + extraKeys[i]).val();
+                var value = $("#" + extraValues[i]).val();
+                if(key == "" && value == ""){
+                    continue;
+                }else{
+                    map.set(key, value);
+                }
+            }
+
+            var str = '{';
+            var n = 1;
+            map.forEach(function (item, key, mapObj) {
+                if(mapObj.size == n){
+                    str += '"'+ key+'":"'+ item + '"';
+                }else{
+                    str += '"'+ key+'":"'+ item + '",';
+                }
+                n++;
+            });
+            str +='}';
+            return str;
+        }
+    </script>
 </head>
 <body>
 <!-- 顶部开始 -->
@@ -37,7 +102,7 @@
 <!-- 中部开始 -->
 <div class="wrapper">
     <!-- 左侧菜单开始 -->
-<%--    <%@ include file="/layout/menuLeft.jsp"%>--%>
+    <%--    <%@ include file="/layout/menuLeft.jsp"%>--%>
     <div class="left-nav">
         <div id="side-nav">
             <ul id="nav">
@@ -154,66 +219,54 @@
     <!-- 右侧主体开始 -->
     <div class="page-content">
         <div class="content">
-            <!-- 右侧内容框架，更改从这里开始 -->
-            <blockquote class="layui-elem-quote">
-                欢迎登陆知识农场后台管理系统<span class="f-14"></span>
-            </blockquote>
-            <fieldset class="layui-elem-field layui-field-title site-title">
-                <legend><a name="default">服务器</a></legend>
-            </fieldset>
-            <table class="layui-table">
-                <thead>
-                <tr>
-                    <th colspan="2" scope="col">服务器信息</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th width="30%">服务器计算机名</th>
-                    <td><span id="lbServerName">ROOT</span></td>
-                </tr>
-                <tr>
-                    <td>服务器IP地址</td>
-                    <td>39.106.18.238</td>
-                </tr>
-                <tr>
-                    <td>服务器域名</td>
-                    <td>www.knowledgefarm.com</td>
-                </tr>
-                <tr>
-                    <td>服务器端口 </td>
-                    <td>8080</td>
-                </tr>
-                <tr>
-                    <td>服务器版本 </td>
-                    <td>apache-tomcat-8.5.39</td>
-                </tr>
-                <tr>
-                    <td>本文件所在文件夹 </td>
-                    <td>/home/admin/Tomcat/apache-tomcat-8.5.39/webapps/FarmKnowledge/</td>
-                </tr>
-                <tr>
-                    <td>服务器操作系统 </td>
-                    <td>Ubuntu16.04</td>
-                </tr>
-                <tr>
-                    <td>服务器的语言种类 </td>
-                    <td>Chinese (People's Republic of China)</td>
-                </tr>
-                <tr>
-                    <td>CPU 总数 </td>
-                    <td>1</td>
-                </tr>
-                <tr>
-                    <td>虚拟内存 </td>
-                    <td>2048M</td>
-                </tr>
-                <tr>
-                    <td>当前系统用户名 </td>
-                    <td>ROOT</td>
-                </tr>
-                </tbody>
-            </table>
+            <form class="layui-form" action="javascript:sendCustomMessage()">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">通知标题</label>
+                    <div class="layui-input-block">
+                        <input id="title" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入通知标题" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">通知内容</label>
+                    <div class="layui-input-block">
+                        <textarea id="content" placeholder="请输入通知内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div id="extraAll" class="layui-form-item">
+                    <div id="extraDiv0" class="layui-form-item">
+                        <label class="layui-form-label">附加字段</label>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 150px;">
+                                <input id="extraKey0" type="text" name="price_min" placeholder="键" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">：</div>
+                            <div class="layui-input-inline" style="width: 150px;">
+                                <input id="extraValue0" type="text" name="price_max" placeholder="值" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-input-inline" style="margin-top: 10px">
+                                <a href="javascript:addKeyValue()"><i class="layui-icon">&#xe608;</i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">目标人群</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="alias" value="0" lay-filter="aliasEvent" title="广播给所有人" checked="">
+                        <input type="radio" name="alias" value="1" lay-filter="aliasEvent" title="设备别名(Alias)">
+                    </div>
+                </div>
+                <div id="aliasDiv" class="layui-form-item" hidden>
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input id="aliasInput" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="添加设备别名，用逗号分隔开" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <button class="layui-btn" lay-filter="add" lay-submit="">添加</button>
+                </div>
+            </form>
             <!-- 右侧内容框架，更改从这里结束 -->
         </div>
     </div>
@@ -254,6 +307,64 @@
         var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(hm, s);
     })();
+</script>
+
+<!-- 键值对 -->
+<script type="text/javascript">
+    var count = 0;
+    var extraKeys = new Array();
+    var extraValues = new Array();
+    extraKeys[count] = "extraKey0";
+    extraValues[count] = "extraValue0";
+
+    function addKeyValue() {
+        var extraAll = document.getElementById("extraAll");
+        var div = document.createElement("div");
+        var id = count + 1;
+        var extraDivId = "extraDiv" + id;
+        var extraKeyId = "extraKey" + id;
+        var extraValueId = "extraValue" + id;
+
+        div.setAttribute("class", "layui-form-item");
+        div.setAttribute("id", extraDivId);
+        div.innerHTML = "<label class='layui-form-label'></label><div class='layui-inline'><div class='layui-input-inline' style='width: 150px;'><input id='"+extraKeyId+"' type='text' placeholder='键' autocomplete='off' class='layui-input'></div><div class='layui-form-mid'>：</div><div class='layui-input-inline' style='width: 150px;'><input id='"+extraValueId+"' type='text' name='price_max' placeholder='值' autocomplete='off' class='layui-input'></div><div class='layui-input-inline' style='margin-top: 10px;margin-left:-2px'><a href='javascript:removeKeyValue(&quot;"+extraDivId+"&quot;,&quot;"+extraKeyId+"&quot;,&quot;"+extraValueId+"&quot;)'><img src='images/decrease.png' style='width:22px;height:22px'/></a></div></div>";
+        extraAll.appendChild(div);
+
+        count++;
+        extraKeys[count] = extraKeyId;
+        extraValues[count] = extraValueId;
+    }
+
+    Array.prototype.remove = function(val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+
+    function removeKeyValue(divId, keyId, valueId){
+        var extraAll = document.getElementById("extraAll");
+        var extraDiv = document.getElementById(divId);
+        extraAll.removeChild(extraDiv);
+        extraKeys.remove(keyId);
+        extraValues.remove(valueId);
+    }
+</script>
+
+<!-- 别名 -->
+<script type="text/javascript">
+    layui.use(['form'], function(){
+        var form = layui.form();
+        form.on('radio(aliasEvent)', function(data){
+            var value = data.value;
+            if(value == 0){
+                $("#aliasDiv").hide();
+            }
+            if(value == 1){
+                $("#aliasDiv").show();
+            }
+        });
+    });
 </script>
 </body>
 </html>

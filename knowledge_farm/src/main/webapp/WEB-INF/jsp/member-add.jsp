@@ -87,7 +87,7 @@
                         <font color="red">*</font>邮箱
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="email" name="nickName" required="" lay-verify="nikename"
+                        <input type="text" id="email" name="nickName" lay-verify=""
                         autocomplete="off" class="layui-input">
                     </div>
                 </div>

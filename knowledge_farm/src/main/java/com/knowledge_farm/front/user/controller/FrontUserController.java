@@ -2,7 +2,6 @@ package com.knowledge_farm.front.user.controller;
 
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.front.user.service.FrontUserServiceImpl;
 import com.knowledge_farm.util.Md5Encode;
 import com.knowledge_farm.util.PageUtil;

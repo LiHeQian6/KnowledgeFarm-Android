@@ -104,6 +104,7 @@ public class FrontUserServiceImpl {
         UserCrop userCrop4 = new UserCrop();
         //宠物仓库
         UserPetHouse petHouse = new UserPetHouse(user,petService.findPetById(1));
+        petHouse.setIfUsing(1);
         //关联
         land.setUser(user);
         land.setUserCrop1(userCrop1);

@@ -1,5 +1,8 @@
 package com.knowledge_farm.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @ClassName UserVO
  * @Description
@@ -23,6 +26,8 @@ public class UserVO {
     private Integer fertilizer;
     private Integer online;
     private Integer exist;
+    private UserAuthority userAuthority;
+    private Set<UserPetHouse> userPetHouseSet = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -150,6 +155,22 @@ public class UserVO {
 
     public void setExist(Integer exist) {
         this.exist = exist;
+    }
+
+    public UserAuthority getUserAuthority() {
+        return userAuthority;
+    }
+
+    public void setUserAuthority(UserAuthority userAuthority) {
+        this.userAuthority = userAuthority;
+    }
+
+    public Set<UserPetHouse> getUserPetHouseSet() {
+        return userPetHouseSet;
+    }
+
+    public void setUserPetHouseSet(Set<UserPetHouse> userPetHouseSet) {
+        this.userPetHouseSet = userPetHouseSet;
     }
 
 }

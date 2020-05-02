@@ -188,6 +188,27 @@
 							</li>
 						</ul>
 					</li>
+					<li class="list" >
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
+							通知管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="sendNotificationManager" class="sub-menu">
+							<li id="sendPushManager">
+								<a href="${ctx}/admin/notification/toNotification">
+									<i class="iconfont">&#xe6a7;</i>
+									发送通知
+								</a>
+							</li>
+							<li id="sendCustomMessageManager">
+								<a href="${ctx}/admin/notification/toNotificationCustomMessage">
+									<i class="iconfont">&#xe6a7;</i>
+									自定义消息
+								</a>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 		</div>

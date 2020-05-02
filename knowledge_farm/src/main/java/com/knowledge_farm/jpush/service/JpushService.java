@@ -161,7 +161,7 @@ public class JpushService {
      *
      * @return PushPayload
      */
-    private PushPayload buildPushPayload(String title, String content, Map<String, String> extrasMap, String... alias) {
+    public PushPayload buildPushPayload(String title, String content, Map<String, String> extrasMap, String... alias) {
         if (extrasMap == null || extrasMap.isEmpty()) {
             extrasMap = new HashMap<String, String>();
         }
@@ -183,7 +183,7 @@ public class JpushService {
      *
      * @return PushPayload
      */
-    private PushPayload buildCustomPushPayload(String title, String content, Map<String, String> extrasMap,
+    public PushPayload buildCustomPushPayload(String title, String content, Map<String, String> extrasMap,
                                                String... alias) {
         // 批量删除数组中空元素
         String[] newAlias = removeArrayEmptyElement(alias);
@@ -221,7 +221,7 @@ public class JpushService {
      * @param strArray
      * @return String[]
      */
-    private String[] removeArrayEmptyElement(String... strArray) {
+    public String[] removeArrayEmptyElement(String... strArray) {
         if (null == strArray || strArray.length == 0) {
             return null;
         }

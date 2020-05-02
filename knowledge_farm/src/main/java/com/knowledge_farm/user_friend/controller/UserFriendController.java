@@ -3,7 +3,6 @@ package com.knowledge_farm.user_friend.controller;
 import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserVO;
 import com.knowledge_farm.notification.service.NotificationService;
 import com.knowledge_farm.user_friend.service.UserFriendServiceImpl;
 import com.knowledge_farm.util.PageUtil;

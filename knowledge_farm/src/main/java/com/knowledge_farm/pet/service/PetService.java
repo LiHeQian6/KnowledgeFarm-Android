@@ -37,18 +37,17 @@ public class PetService {
     }
 
     @Transactional(readOnly = false)
-    public void changePet(Integer userId, Integer usingPetId, Integer willUsingPetId){
+    public void changePet(Integer userId, Integer willUsingPetId){
         User user = this.userService.findUserById(userId);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         int isChanging1 = 0;
         int isChanging2 = 0;
         for(UserPetHouse userPetHouse : userPetHouses){
-            Integer petId = userPetHouse.getPet().getId();
-            if(petId == usingPetId){
+            if(userPetHouse.getIfUsing() == 1){
                 userPetHouse.setIfUsing(0);
                 isChanging1 = 1;
             }
-            if(petId == willUsingPetId){
+            if(userPetHouse.getPet().getId() == willUsingPetId){
                 userPetHouse.setIfUsing(1);
                 isChanging2 = 1;
             }
