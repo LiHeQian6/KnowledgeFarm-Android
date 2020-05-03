@@ -8,6 +8,7 @@ import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.user_authority.service.UserAuthorityServiceImpl;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
+import com.knowledge_farm.user_pet_house.service.UserPetHouseService;
 import com.knowledge_farm.util.Email;
 import com.knowledge_farm.util.RandomUtil;
 import org.quartz.*;
@@ -48,6 +49,9 @@ public class UserServiceImpl {
     @Resource
     @Lazy
     private PetService petService;
+    @Resource
+    @Lazy
+    private UserPetHouseService petHouseService;
     @Resource
     private EntityManager entityManager;
     @Resource
@@ -106,6 +110,7 @@ public class UserServiceImpl {
         user.setGrade(grade);
         user.setLastReadTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
+        user.setPetFood(new PetFood(user,"狗粮",0));
         //构建UserAuthority
         UserAuthority userAuthority = new UserAuthority();
         userAuthority.setOpenId(openId);
@@ -183,6 +188,7 @@ public class UserServiceImpl {
         user.setGrade(grade);
         user.setLastReadTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
+        user.setPetFood(new PetFood(user,"狗粮",0));
         //构建Land
         Land land = new Land();
         //构建UserCrop
@@ -554,6 +560,49 @@ public class UserServiceImpl {
             return Result.TRUE;
         }
         return Result.NOT_ENOUGH_MONEY;
+    }
+    /**
+     * @description: 购买宠物饲料
+     * @author :景光赞
+     * @date :2020/5/3 21:28
+     * @param :[userId, num]
+     * @return :java.lang.String
+     */
+    @Transactional(readOnly = false)
+    public String buyPetFood(Integer userId,Integer num){
+        User user = findUserById(userId);
+        Set<UserPetHouse> petHouses = user.getPetHouses();
+        int userMoney = user.getMoney();
+        PetFood petFood = user.getPetFood();
+        int petFoodMoney = petFood.getPrice()*num;
+        if(userMoney >= petFoodMoney){
+            petFood.setNum(petFood.getNum()+num);
+            petService.savePetFood(petFood);
+            user.setMoney(userMoney - petFoodMoney);
+            return Result.TRUE;
+        }
+        return Result.NOT_ENOUGH_MONEY;
+    }
+    /**
+     * @description: 宠物喂食
+     * @author :景光赞
+     * @date :2020/5/3 22:01
+     * @param :[userId, petId]
+     * @return :java.lang.String
+     */
+    public String feedPet(Integer userId,Integer petId){
+        User user = findUserById(userId);
+        Pet pet = petService.findPetById(petId);
+        UserPetHouse userPetHouse = petHouseService.findByUser(user,pet);
+        int intelligence = userPetHouse.getIntelligence();
+        int num = user.getPetFood().getNum();
+        if(num>0){
+            user.getPetFood().setNum(num-1);
+            userPetHouse.setIntelligence(intelligence+30);
+            return Result.SUCCEED;
+        }
+        return "食物吃完啦！";
+
     }
 
     /**

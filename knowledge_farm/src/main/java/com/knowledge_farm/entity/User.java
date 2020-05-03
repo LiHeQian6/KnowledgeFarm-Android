@@ -44,6 +44,7 @@ public class User {
     private Set<Notification> sendNotifications = new HashSet<>();
     private Set<Notification> ReceiveNotifications = new HashSet<>();
     private Set<UserPetHouse> petHouses = new HashSet<>();
+    private PetFood petFood;
 
     public User(){
         this.level = 1;
@@ -305,4 +306,14 @@ public class User {
         this.petHouses = petHouses;
     }
 
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "pet_food_id",foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnore
+    public PetFood getPetFood() {
+        return petFood;
+    }
+
+    public void setPetFood(PetFood petFood) {
+        this.petFood = petFood;
+    }
 }
