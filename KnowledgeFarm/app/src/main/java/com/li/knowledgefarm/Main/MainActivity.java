@@ -544,7 +544,6 @@ public class MainActivity extends AppCompatActivity {
                     120, getResources().getDisplayMetrics());
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     60, getResources().getDisplayMetrics());
-            System.out.println(width+"   "+height);
             LAND_WIDTH_2=width/2.0f-12;
             LAND_HEIGHT_2=height/2.0f-6;
             landGroup.setLayoutParams(new FrameLayout.LayoutParams(width, height));
@@ -1089,6 +1088,16 @@ public class MainActivity extends AppCompatActivity {
         notify_red =findViewById(R.id.notify_red);
         daytask_red =findViewById(R.id.daytask_red);
         dog=findViewById(R.id.dog);
+        ViewGroup.MarginLayoutParams params =(ViewGroup.MarginLayoutParams)lands.getLayoutParams();
+        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+        params.topMargin=displayHeight/6;
+        params.leftMargin=displayWidth/100;
+        System.out.println(displayHeight+"  "+displayWidth);
+        lands.setLayoutParams(params);
     }
 
     /**

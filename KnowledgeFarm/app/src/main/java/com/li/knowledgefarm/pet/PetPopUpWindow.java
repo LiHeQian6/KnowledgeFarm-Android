@@ -85,9 +85,9 @@ public class PetPopUpWindow extends PopupWindow {
      **/
     private void Init(){
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                350, context.getResources().getDisplayMetrics());
+                300, context.getResources().getDisplayMetrics());
         int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                600, context.getResources().getDisplayMetrics());
+                500, context.getResources().getDisplayMetrics());
         this.setHeight(height);
         this.setWidth(width);
         this.setOutsideTouchable(true);
