@@ -8,7 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/loginbackground</item>
-        <item name="android:windowIsTranslucent">true</item>
+<!--        <item name="android:windowIsTranslucent">true</item>-->
+        <item name="android:windowFullscreen">true</item>
         <item name="android:fontFamily">@font/font</item>
         <item name="android:screenOrientation">landscape</item>
     </style>
