@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Iterator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,18 +63,49 @@ public class NotifyActivity extends AppCompatActivity {
     private TextView none_notify;
     private Button delete_all_btn;
     private Handler if_delete_all;
+    private SendNotifyAdapter sendNotifyAdapter;
+    private ImageView system_notify_red;
+    private ImageView friend_notify_red;
+    private ImageView send_notify_red;
+    private ImageView other_notify_red;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify_layout);
         getViews();
+        showRed();
         registListener();
         FullScreen.NavigationBarStatusBar(NotifyActivity.this,true);
         getNotify("1",1,6);
         getNotifyHandler();
     }
 
+    /**
+     * @Description 提示新消息
+     * @Author 孙建旺
+     * @Date 下午6:14 2020/05/03
+     * @Param []
+     * @return void
+     */
+    private void showRed() {
+        if(MainActivity.notifyStatus.get(0))
+            system_notify_red.setVisibility(View.VISIBLE);
+        if(MainActivity.notifyStatus.get(1))
+            friend_notify_red.setVisibility(View.VISIBLE);
+        if(MainActivity.notifyStatus.get(2))
+            send_notify_red.setVisibility(View.VISIBLE);
+        if(MainActivity.notifyStatus.get(3))
+            other_notify_red.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * @Description 处理返回信息
+     * @Author 孙建旺
+     * @Date 下午6:14 2020/05/03
+     * @Param []
+     * @return void
+     */
     private void getNotifyHandler() {
         get_system_notify = new Handler(){
             @Override
@@ -107,10 +139,12 @@ public class NotifyActivity extends AppCompatActivity {
                             SystemNotifyAdapter listAdapter = new SystemNotifyAdapter(notify_list,R.layout.notify_item_layout,getApplicationContext());
                             listView.setAdapter(listAdapter);
                             OnclickItem();
+                            system_notify_red.setVisibility(View.INVISIBLE);
                             break;
                         case "2":
                             FriendNotifyAdapter listAdapter1 = new FriendNotifyAdapter(notify_list,R.layout.friend_notify_item,getApplicationContext());
                             listView.setAdapter(listAdapter1);
+                            friend_notify_red.setVisibility(View.INVISIBLE);
                             break;
                     }
                 }
@@ -124,6 +158,13 @@ public class NotifyActivity extends AppCompatActivity {
         overridePendingTransition(0, R.anim.notify_pop_out);
     }
 
+    /**
+     * @Description 注册ListView Item点击事件监听器
+     * @Author 孙建旺
+     * @Date 下午6:15 2020/05/03
+     * @Param []
+     * @return void
+     */
     private void OnclickItem(){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -156,6 +197,10 @@ public class NotifyActivity extends AppCompatActivity {
         none_notify = findViewById(R.id.none_notify);
         delete_all_btn = findViewById(R.id.delete_all_btn);
         returns = findViewById(R.id.goBack_notify);
+        system_notify_red = findViewById(R.id.system_notify_red);
+        friend_notify_red = findViewById(R.id.friend_notify_red);
+        send_notify_red = findViewById(R.id.send_notify_red);
+        other_notify_red = findViewById(R.id.other_notify_red);
     }
 
     /**
@@ -172,35 +217,6 @@ public class NotifyActivity extends AppCompatActivity {
         add_notify.setOnClickListener(new CustomerOnclickListener());
         delete_all_btn.setOnClickListener(new CustomerOnclickListener());
         returns.setOnClickListener(new CustomerOnclickListener());
-    }
-
-    private void getFriendNotify(final int id,final int pageNumber,final int pageSize){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/notification/findReceivedAddFriendNotification?userId="
-                        +id+"&pageSize="+pageSize+"&pageNumber="+pageNumber).build();
-                Call call = new OkHttpClient().newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Log.e("通知信息", "请求失败");
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String notify_message = response.body().string();
-                        int code = response.code();
-                        Message message = Message.obtain();
-                        message.arg1 = code;
-                        message.obj = notify_message;
-                        get_system_notify.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
     }
 
     /**
@@ -244,6 +260,13 @@ public class NotifyActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * @Description 查询我发送到好友请求
+     * @Author 孙建旺
+     * @Date 下午6:15 2020/05/03
+     * @Param [type, pageNumber, pageSize]
+     * @return void
+     */
     private void getMySendNotify(final String type,final int pageNumber,final int pageSize){
         new Thread(){
             @Override
@@ -295,14 +318,21 @@ public class NotifyActivity extends AppCompatActivity {
                         listView.setVisibility(View.VISIBLE);
                         none_notify.setVisibility(View.GONE);
                     }
-                    SendNotifyAdapter sendNotifyAdapter = new SendNotifyAdapter(notify_list,R.layout.send_notify_item,getApplicationContext());
+                    sendNotifyAdapter = new SendNotifyAdapter(notify_list,R.layout.send_notify_item,getApplicationContext());
                     listView.setAdapter(sendNotifyAdapter);
+                    send_notify_red.setVisibility(View.INVISIBLE);
                 }
             }
         };
     }
 
-
+    /**
+     * @Description 删除所有已读信息
+     * @Author 孙建旺
+     * @Date 下午6:16 2020/05/03
+     * @Param [type, userId]
+     * @return void
+     */
     private void Delete_All_Notify(final String type,final int userId){
         new Thread(){
             @Override
@@ -333,9 +363,17 @@ public class NotifyActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
                 if(message.equals("true") && !message.equals("")){
-                    Toast.makeText(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT);
+                    Iterator<Notification> it = notify_list.getList().iterator();
+                    while (it.hasNext()){
+                        Notification n = it.next();
+                        if(n.isHaveRead()!=0){
+                            it.remove();
+                        }
+                    }
+                    sendNotifyAdapter.notifyDataSetChanged();
+                    Toast.makeText(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(NotifyActivity.this,"网络出了点问题",Toast.LENGTH_SHORT);
+                    Toast.makeText(NotifyActivity.this,"网络出了点问题",Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -356,7 +394,7 @@ public class NotifyActivity extends AppCompatActivity {
                     getNotify("2",1,4);
                     break;
                 case R.id.add_btn:
-                    current_type = "3";
+                    current_type = "2";
                     delete_all_btn.setVisibility(View.VISIBLE);
                     getMySendNotify("2",1,4);
                     break;
