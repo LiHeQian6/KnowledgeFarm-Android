@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -120,14 +121,14 @@ public class MainActivity extends AppCompatActivity {
     private NotifyActivity notifyActivity;
     private UserMessagePopUp userMessagePopUp;
     private ListView notify_list_view;
-    private float LAND_WIDTH_2 = 224;
-    private float LAND_HEIGHT_2 = 114;
+    private float LAND_WIDTH_2;
+    private float LAND_HEIGHT_2;
     private Handler friendMessagesHandler;
     private ImageView dayTask;
     private DayTaskPopUpWindow dayTaskPopUpWindow;
     private ImageView notify_red;
     private ImageView daytask_red;
-    private static List<Boolean> notifyStatus=new ArrayList<>(4);
+    public static List<Boolean> notifyStatus=new ArrayList<>(4);
     private Handler new_notification;
     private FriendsPopUpWindow friendsPopUpWindow;
     private PetPopUpWindow petPopUpWindow;
@@ -539,7 +540,13 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 18; i++) {
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             final View landGroup = inflater.inflate(R.layout.land_group, null);
-            landGroup.setLayoutParams(new FrameLayout.LayoutParams(480, 240));
+            int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    120, getResources().getDisplayMetrics());
+            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    60, getResources().getDisplayMetrics());
+            LAND_WIDTH_2=width/2.0f-12;
+            LAND_HEIGHT_2=height/2.0f-6;
+            landGroup.setLayoutParams(new FrameLayout.LayoutParams(width, height));
             int num = i + 1;
             if ((num - 1) % 3 == 0) {
                 x = ((num - 1) / 3) * LAND_WIDTH_2 + LAND_WIDTH_2 * 2;
@@ -1081,6 +1088,16 @@ public class MainActivity extends AppCompatActivity {
         notify_red =findViewById(R.id.notify_red);
         daytask_red =findViewById(R.id.daytask_red);
         dog=findViewById(R.id.dog);
+        ViewGroup.MarginLayoutParams params =(ViewGroup.MarginLayoutParams)lands.getLayoutParams();
+        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = ds.heightPixels;
+        displayWidth = ds.widthPixels;
+        params.topMargin=displayHeight/6;
+        params.leftMargin=displayWidth/100;
+        System.out.println(displayHeight+"  "+displayWidth);
+        lands.setLayoutParams(params);
     }
 
     /**

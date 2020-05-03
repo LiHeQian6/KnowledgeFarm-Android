@@ -1,10 +1,10 @@
 package com.li.knowledgefarm.entity;
 
+import java.io.Serializable;
 import java.util.Random;
 
-import androidx.annotation.Nullable;
 
-public class UserPetHouse implements Comparable<UserPetHouse> {
+public class UserPetHouse implements Comparable<UserPetHouse>, Serializable {
     private Integer id;
     private User user;
     private Pet pet;

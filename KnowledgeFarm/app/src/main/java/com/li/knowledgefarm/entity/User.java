@@ -201,10 +201,15 @@ public class User implements Serializable {
                 ", experience=" + experience +
                 ", grade=" + grade +
                 ", money=" + money +
+                ", mathRewardCount=" + mathRewardCount +
+                ", englishRewardCount=" + englishRewardCount +
+                ", chineseRewardCount=" + chineseRewardCount +
                 ", water=" + water +
                 ", fertilizer=" + fertilizer +
                 ", online=" + online +
                 ", exist=" + exist +
+                ", userAuthority=" + userAuthority +
+                ", petHouses=" + petHouses +
                 '}';
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -68,8 +69,12 @@ public class DayTaskPopUpWindow extends PopupWindow {
      * @Date 10:52 2020/4/22
      **/
     private void Init(){
-        this.setHeight(900);
-        this.setWidth(1600);
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                300, context.getResources().getDisplayMetrics());
+        int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                500, context.getResources().getDisplayMetrics());
+        this.setHeight(height);
+        this.setWidth(width);
         this.setOutsideTouchable(true);
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

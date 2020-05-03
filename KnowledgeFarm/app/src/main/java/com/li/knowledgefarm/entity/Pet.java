@@ -1,7 +1,9 @@
 package com.li.knowledgefarm.entity;
 
 
-public class Pet {
+import java.io.Serializable;
+
+public class Pet implements Serializable {
     private Integer id;
     private String name;
     private String description;

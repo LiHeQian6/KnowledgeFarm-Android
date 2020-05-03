@@ -59,14 +59,6 @@ public class NotifyPopUpWindow extends PopupWindow {
         not_title = view.findViewById(R.id.not_title);
         not_time = view.findViewById(R.id.not_time);
         not_content = view.findViewById(R.id.not_content);
-        delete = view.findViewById(R.id.delete);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteThisNotify();
-                dismiss();
-            }
-        });
     }
 
     /**
@@ -112,7 +104,7 @@ public class NotifyPopUpWindow extends PopupWindow {
 
     private void setText(){
         not_title.setText(notification.getTitle());
-        not_content.setText(notification.getContent());
+        not_content.setText("内容："+notification.getContent());
         not_time.setText(notification.getCreateTime().toString());
     }
 }

@@ -122,6 +122,9 @@ public class SettingMessageActivity extends AppCompatActivity {
         user = LoginActivity.user;
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.photo)
+                .error(R.drawable.photo)
+                .fallback(R.drawable.photo)
+                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(user_photo);
         user_account.setText("账号："+user.getAccount());
@@ -240,8 +243,10 @@ public class SettingMessageActivity extends AppCompatActivity {
                     case 4: //修改头像判断
                         String aString = (String)msg.obj;
                         if(aString.equals("false") || aString.equals("")){
+                            Log.e("photo","上传头像失败1");
                             Toast.makeText(getApplicationContext(),"头像上传失败", Toast.LENGTH_SHORT).show();
                         }else if(aString.equals("null")){
+                            Log.e("photo","上传头像失败2");
                             Toast.makeText(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
                         }else{
                             LoginActivity.user.setPhoto(aString);
@@ -252,6 +257,8 @@ public class SettingMessageActivity extends AppCompatActivity {
                                     .circleCrop() //转换图片效果
                                     .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
                             Glide.with(getApplicationContext()).load(LoginActivity.user.getPhoto()).apply(options).into(user_photo);
+                            Log.e("photo","上传头像成功");
+                            Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 5: // 修改年级判断
@@ -418,7 +425,8 @@ public class SettingMessageActivity extends AppCompatActivity {
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.i("lww","请求失败");
+
+                        Log.i("photo",e.toString());
                     }
 
                     @Override

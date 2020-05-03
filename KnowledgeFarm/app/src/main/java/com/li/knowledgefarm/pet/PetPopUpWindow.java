@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.UserPetHouse;
 import org.jetbrains.annotations.NotNull;
 
@@ -82,8 +84,12 @@ public class PetPopUpWindow extends PopupWindow {
      * @Date 10:52 2020/4/22
      **/
     private void Init(){
-        this.setHeight(1000);
-        this.setWidth(1800);
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                300, context.getResources().getDisplayMetrics());
+        int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                500, context.getResources().getDisplayMetrics());
+        this.setHeight(height);
+        this.setWidth(width);
         this.setOutsideTouchable(true);
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -92,6 +98,16 @@ public class PetPopUpWindow extends PopupWindow {
                 null, false);
         this.setContentView(contentView);
         getViews(contentView);
+    }
+
+    @Override
+    public void showAtLocation(View parent, int gravity, int x, int y) {
+        setFocusable(false);
+        super.showAtLocation(parent, gravity, x, y);
+        final View view = getContentView();
+        FullScreen.hideBottomUIMenu(view);
+        setFocusable(true);
+        update();
     }
 
     /**
