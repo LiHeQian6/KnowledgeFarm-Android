@@ -164,6 +164,27 @@
 					<li class="list" >
 						<a href="javascript:;">
 							<i class="iconfont">&#xe6a3;</i>
+							宠物管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initPetManager" class="sub-menu">
+							<li id="initPetManager1">
+								<a href="${ctx}/admin/pet/findPetPage?exist=1">
+									<i class="iconfont">&#xe6a7;</i>
+									宠物列表
+								</a>
+							</li>
+							<li id="initPetManager2">
+								<a href="${ctx}/admin/pet/findPetPage?exist=0">
+									<i class="iconfont">&#xe6a7;</i>
+									宠物删除
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="list" >
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
 							管理员管理
 							<i class="iconfont nav_right">&#xe697;</i>
 						</a>

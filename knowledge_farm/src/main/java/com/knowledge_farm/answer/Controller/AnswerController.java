@@ -1,10 +1,13 @@
 package com.knowledge_farm.answer.Controller;
 
+import com.knowledge_farm.answer.entity.Mix;
+import com.knowledge_farm.answer.entity.Multiple;
 import com.knowledge_farm.answer.entity.Question3Num;
 import com.knowledge_farm.answer.service.AnswerService;
 import com.knowledge_farm.entity.Chinese;
 import com.knowledge_farm.entity.Chinese23;
 import com.knowledge_farm.entity.English;
+import com.knowledge_farm.entity.Math23;
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,6 +62,86 @@ public class AnswerController {
         List<Question3Num> list = new AnswerService().getQuestion3OneDownMath();
 
         return list;
+    }
+    /**
+     * @description: 二年级上册数学
+     * @author :景光赞
+     * @date :2020/5/2 18:41
+     * @param :[]
+     * @return :java.util.List
+     */
+    @ResponseBody
+    @GetMapping("/mathTwoUp")
+    public List twoUpMath(){
+        int pageNumber = new Random().nextInt(5);
+        Page<Math23> page = answerService.mathTwoUp(PageRequest.of(pageNumber,20));
+        List<Math23> list = new ArrayList<>(page.getContent());
+        Collections.shuffle(list);
+        return list;
+    }
+    /**
+     * @description: 二年级下册数学
+     * @author :景光赞
+     * @date :2020/5/2 18:41
+     * @param :[]
+     * @return :java.util.List
+     */
+    @ResponseBody
+    @GetMapping("/mathTwoDown")
+    public List twoDownMath(){
+        int pageNumber = new Random().nextInt(5);
+        Page<Math23> page = answerService.mathTwoDown(PageRequest.of(pageNumber,22));
+        List<Math23> list = new ArrayList<>(page.getContent());
+        Collections.shuffle(list);
+        return list;
+    }
+    /**
+     * @description: 九九乘法题 10道
+     * @author :景光赞
+     * @date :2020/5/2 18:44
+     * @param :[]
+     * @return :java.util.List<com.knowledge_farm.answer.entity.Multiple>
+     */
+    @ResponseBody
+    @GetMapping("/math99Multiple")
+    public List<Multiple> get99Multiple(){
+        return answerService.get99Multiple();
+    }
+    /**
+     * @description: 三年级数学上册2、3位数乘 1 位数乘除法. 20道
+     * @author :景光赞
+     * @date :2020/5/2 18:44
+     * @param :[]
+     * @return :java.util.List<com.knowledge_farm.answer.entity.Multiple>
+     */
+    @ResponseBody
+    @GetMapping("/mathThreeUp23Num")
+    public List<Multiple> mathThreeUp23Num(){
+        return answerService.get23Multiple();
+    }
+    /**
+     * @description: 三年级数学上下册通用：四则运算  20 道
+     * @author :景光赞
+     * @date :2020/5/2 18:44
+     * @param :[]
+     * @return :java.util.List<com.knowledge_farm.answer.entity.Mix>
+     */
+    @ResponseBody
+    @GetMapping("/mathThreeMix")
+    public List<Mix> mathThreeMix(){
+        return answerService.getMix();
+    }
+    /**
+     * @description: 三年级数学下册：2位数乘2位数
+     * @author :景光赞
+     * @date :2020/5/2 18:44
+     * @param :[]
+     * @return :java.util.List<com.knowledge_farm.answer.entity.Multiple>
+     */
+    @ResponseBody
+    @GetMapping("/mathThreeDown")
+    public List<Multiple> mathThreeDown(){
+        return answerService.doubleMutiple();
     }
 
     /**

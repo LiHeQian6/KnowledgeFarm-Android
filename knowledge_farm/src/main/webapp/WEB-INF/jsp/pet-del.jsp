@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2020/4/28 0028
-  Time: 16:42
+  Date: 2020/5/2 0002
+  Time: 18:29
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -23,67 +23,74 @@
     <script src="${ctx}/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
 
-    <script type="text/javascript">
-        //初始化左侧菜单（管理员管理）
-        window.onload = function(){
-            $("#sendNotificationManager").attr("class","sub-menu opened");
-            $("#sendCustomMessageManager").attr("class","current");
+    <style>
+        .page{
+            margin-right:25px;
         }
-        function sendCustomMessage() {
-            var title = $("#title").val();
-            var content = $("#content").val();
-            var extra = MapToJson();
-            var alias = $("#aliasInput").val();
-            var aliasRadioValue = $('input[name="alias"]:checked').val();
-            if(aliasRadioValue == 0){
-                alias = "";
-            }
-            $.post("${ctx}/admin/notification/sendCustomMessage",{"title":title,"content":content,"extra":extra,"alias":alias},function(data){
-                switch (data) {
-                    case "succeed":
-                        layer.msg('发送成功');
-                        break;
-                    case "fail":
-                        layer.msg('发送失败');
-                    case "notExist":
-                        layer.msg('存在不能识别的设备别名');
-                        break;
-                    case "false":
-                        layer.msg('极光推送连接错误');
-                        break;
-                }
-            })
-        }
-        function MapToJson() {
-            var map = new Map();
-            for(var i = 0,j = 0;i < extraKeys.length && j < extraValues.length;i++,j++){
-                var key = $("#" + extraKeys[i]).val();
-                var value = $("#" + extraValues[i]).val();
-                if(key == "" && value == ""){
-                    continue;
-                }else{
-                    map.set(key, value);
-                }
-            }
+    </style>
 
-            var str = '{';
-            var n = 1;
-            map.forEach(function (item, key, mapObj) {
-                if(mapObj.size == n){
-                    str += '"'+ key+'":"'+ item + '"';
-                }else{
-                    str += '"'+ key+'":"'+ item + '",';
-                }
-                n++;
+    <script>
+        //初始化左侧菜单（作物管理）
+        window.onload = function(){
+            $("#initPetManager").attr("class","sub-menu opened");
+            $("#initPetManager2").attr("class","current");
+        }
+
+        //恢复单个作物信息
+        function recoveryOnePet(id){
+            layer.confirm('确认要恢复吗？',function(index){
+                $.post("${ctx}/admin/pet/recoveryOnePet",{"id":id},function(data){
+                    if(data == "succeed"){
+                        window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=0";
+                    }else if(data == "fail"){
+                        layer.msg('恢复失败');
+                    }
+                })
             });
-            str +='}';
-            return str;
+        }
+
+        //恢复批量作物信息
+        function recoveryMultiPet() {
+            var arrRecovery = document.getElementsByName("checkBox");
+            var recoveryStr="";
+            for(i in arrRecovery){
+                if(arrRecovery[i].checked){
+                    recoveryStr = recoveryStr + arrRecovery[i].value + ",";
+                }
+            }
+            layer.confirm('确认要批量恢复吗？',function(index){
+                if(recoveryStr != ""){
+                    $.post("${ctx}/admin/pet/recoveryMultiPet",{"recoveryStr":recoveryStr},function(data){
+                        if(data == "succeed"){
+                            window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=0";
+                        }else if(data == "fail"){
+                            layer.msg('恢复失败');
+                        }
+                    })
+                }else{
+                    layer.msg('恢复不能为空');
+                }
+            });
+        }
+
+        //彻底删除作物信息
+        function deleteThoroughPet(id){
+            layer.confirm('彻底删除无法恢复，确认要删除数据吗？',function(index){
+                $.post("${ctx}/admin/pet/deleteThoroughPet",{"id":id},function(data){
+                    if(data == "succeed"){
+                        window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=0";
+                    }else if(data == "fail"){
+                        layer.msg('删除失败');
+                    }
+                })
+            });
         }
     </script>
+
 </head>
 <body>
 <!-- 顶部开始 -->
-<%--<%@ include file="/layout/header.jsp"%>--%>
+<%--    	<%@ include file="/layout/header.jsp"%>--%>
 <div class="container">
     <div class="logo"><a href="${ctx}/admin/gotoIndex">知识农场后台管理系统</a></div>
     <div class="open-nav"><i class="iconfont">&#xe699;</i></div>
@@ -101,7 +108,7 @@
 <!-- 中部开始 -->
 <div class="wrapper">
     <!-- 左侧菜单开始 -->
-    <%--    <%@ include file="/layout/menuLeft.jsp"%>--%>
+    <%--        	<%@ include file="/layout/menuLeft.jsp"%>--%>
     <div class="left-nav">
         <div id="side-nav">
             <ul id="nav">
@@ -239,56 +246,88 @@
     <!-- 右侧主体开始 -->
     <div class="page-content">
         <div class="content">
-            <form class="layui-form" action="javascript:sendCustomMessage()">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">通知标题</label>
-                    <div class="layui-input-block">
-                        <input id="title" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入通知标题" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">通知内容</label>
-                    <div class="layui-input-block">
-                        <textarea id="content" placeholder="请输入通知内容" class="layui-textarea"></textarea>
-                    </div>
-                </div>
-                <div id="extraAll" class="layui-form-item">
-                    <div id="extraDiv0" class="layui-form-item">
-                        <label class="layui-form-label">附加字段</label>
-                        <div class="layui-inline">
-                            <div class="layui-input-inline" style="width: 150px;">
-                                <input id="extraKey0" type="text" name="price_min" placeholder="键" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-form-mid">：</div>
-                            <div class="layui-input-inline" style="width: 150px;">
-                                <input id="extraValue0" type="text" name="price_max" placeholder="值" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-input-inline" style="margin-top: 10px">
-                                <a href="javascript:addKeyValue()"><i class="layui-icon">&#xe608;</i></a>
-                            </div>
+            <!-- 右侧内容框架，更改从这里开始 -->
+            <form class="layui-form xbs" action="${ctx}/admin/pet/findPetPage">
+                <div class="layui-form-pane" style="text-align: center;">
+                    <div class="layui-form-item" style="display: inline-block;">
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="请输入宠物名称" autocomplete="off" class="layui-input" value="${param.name}">
+                            <input type="hidden" name="exist" value="0"/>
+                        </div>
+                        <div class="layui-input-inline" style="width:80px">
+                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">目标人群</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="alias" value="0" lay-filter="aliasEvent" title="广播给所有人" checked="">
-                        <input type="radio" name="alias" value="1" lay-filter="aliasEvent" title="设备别名(Alias)">
-                    </div>
-                </div>
-                <div id="aliasDiv" class="layui-form-item" hidden>
-                    <label class="layui-form-label"></label>
-                    <div class="layui-input-block">
-                        <input id="aliasInput" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="添加设备别名，用逗号分隔开" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label"></label>
-                    <button class="layui-btn" lay-filter="add" lay-submit="">添加</button>
-                </div>
             </form>
+            <xblock>
+                <button class="layui-btn layui-btn-danger" onclick="recoveryMultiPet()">
+                    <i class="layui-icon">&#xe640;</i>批量恢复
+                </button>
+                <span class="x-right" style="line-height:40px">共有数据：${petPage.totalCount} 条</span>
+            </xblock>
+            <table class="layui-table">
+                <thead >
+                <tr>
+                    <th></th>
+                    <th style="text-align:center;">宠物ID</th>
+                    <th style="text-align:center;">名称</th>
+                    <th style="text-align:center;">描述</th>
+                    <th style="text-align:center;">img1</th>
+                    <th style="text-align:center;">img2</th>
+                    <th style="text-align:center;">img3</th>
+                    <th style="text-align:center;">价格</th>
+                    <th style="text-align:center;">生命值</th>
+                    <th style="text-align:center;">智力值</th>
+                    <th style="text-align:center;">体力值</th>
+                    <th style="text-align:center;">状态</th>
+                    <th style="text-align:center;">操作</th>
+                </tr>
+                </thead>
+                <tbody align="center">
+                <c:forEach var="petPage" items="${petPage.list}">
+                    <tr>
+                        <td><input type="checkbox" value="${petPage.id}" name="checkBox"></td>
+                        <td>${petPage.id}</td>
+                        <td>${petPage.name}</td>
+                        <td>${petPage.description}</td>
+                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img1}"/></td>
+                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img2}"/></td>
+                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img3}"/></td>
+                        <td>${petPage.price}金币</td>
+                        <td>${petPage.life}</td>
+                        <td>${petPage.intelligence}</td>
+                        <td>${petPage.physical}</td>
+                        <td class="td-status">
+                            <span class="layui-btn layui-btn-danger layui-btn-mini">已删除</span>
+                        </td>
+                        <td class="td-manage" align="center">
+                            <a style="text-decoration:none" onclick="recoveryOnePet(${petPage.id})" href="javascript:;" title="恢复">
+                                <i class="layui-icon">&#xe618;</i>
+                            </a>
+                            <a title="彻底删除" href="javascript:;" onclick="deleteThoroughPet(${petPage.id})" style="text-decoration:none">
+                                <i class="layui-icon">&#xe640;</i>
+                            </a>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
             <!-- 右侧内容框架，更改从这里结束 -->
         </div>
+        <!-- 分页处理开始 -->
+        <div align="center">
+            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=1&&pageSize=${petPage.pageSize}&&exist=1">首页</a>
+            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.prePageNum}&&pageSize=${petPage.pageSize}&&exist=1">上一页</a>
+            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.nextPageNum}&&pageSize=${petPage.pageSize}&&exist=1">下一页</a>
+            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.totalPageNum}&&pageSize=${petPage.pageSize}&&exist=1">末页</a>
+        </div>
+        <div align="center" style="margin-top:20px;">
+            <span style="margin-right:10px;">${petPage.currentPageNum}</span>
+            <span>/</span>
+            <span style="margin-left:10px;">${petPage.totalPageNum}</span>
+        </div>
+        <!-- 分页处理结束 -->
     </div>
     <!-- 右侧主体结束 -->
 </div>
@@ -296,7 +335,7 @@
 <!-- 底部开始 -->
 <!-- 底部结束 -->
 <!-- 背景切换开始 -->
-<%--<%@ include file="/layout/background.jsp"%>--%>
+<%--    	<%@ include file="/layout/background.jsp"%>--%>
 <div class="bg-changer">
     <div class="swiper-container changer-list">
         <div class="swiper-wrapper">
@@ -318,6 +357,79 @@
     <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
 </div>
 <!-- 背景切换结束 -->
+<!-- 页面动态效果 -->
+<script>
+
+    layui.use(['laydate'], function(){
+        laydate = layui.laydate;//日期插件
+
+        //以上模块根据需要引入
+        //
+
+
+
+        var start = {
+            min: laydate.now()
+            ,max: '2099-06-16 23:59:59'
+            ,istoday: false
+            ,choose: function(datas){
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+
+        var end = {
+            min: laydate.now()
+            ,max: '2099-06-16 23:59:59'
+            ,istoday: false
+            ,choose: function(datas){
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+
+        document.getElementById('LAY_demorange_s').onclick = function(){
+            start.elem = this;
+            laydate(start);
+        }
+        document.getElementById('LAY_demorange_e').onclick = function(){
+            end.elem = this
+            laydate(end);
+        }
+
+    });
+
+    /*用户-添加*/
+    function member_add(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    /*用户-查看*/
+    function member_show(title,url,id,w,h){
+        x_admin_show(title,url,w,h);
+    }
+
+    /*用户-停用*/
+    function member_stop(obj,id){
+        layer.confirm('确认要停用吗？',function(index){
+            //发异步把用户状态进行更改
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="layui-icon">&#xe62f;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="layui-btn layui-btn-disabled layui-btn-mini">已停用</span>');
+            $(obj).remove();
+            layer.msg('已停用!',{icon: 5,time:1000});
+        });
+    }
+
+    /*用户-启用*/
+    function member_start(obj,id){
+        layer.confirm('确认要启用吗？',function(index){
+            //发异步把用户状态进行更改
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="layui-icon">&#xe601;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span>');
+            $(obj).remove();
+            layer.msg('已启用!',{icon: 6,time:1000});
+        });
+    }
+
+</script>
 <script>
     //百度统计可去掉
     var _hmt = _hmt || [];
@@ -328,63 +440,6 @@
         s.parentNode.insertBefore(hm, s);
     })();
 </script>
-
-<!-- 键值对 -->
-<script type="text/javascript">
-    var count = 0;
-    var extraKeys = new Array();
-    var extraValues = new Array();
-    extraKeys[count] = "extraKey0";
-    extraValues[count] = "extraValue0";
-
-    function addKeyValue() {
-        var extraAll = document.getElementById("extraAll");
-        var div = document.createElement("div");
-        var id = count + 1;
-        var extraDivId = "extraDiv" + id;
-        var extraKeyId = "extraKey" + id;
-        var extraValueId = "extraValue" + id;
-
-        div.setAttribute("class", "layui-form-item");
-        div.setAttribute("id", extraDivId);
-        div.innerHTML = "<label class='layui-form-label'></label><div class='layui-inline'><div class='layui-input-inline' style='width: 150px;'><input id='"+extraKeyId+"' type='text' placeholder='键' autocomplete='off' class='layui-input'></div><div class='layui-form-mid'>：</div><div class='layui-input-inline' style='width: 150px;'><input id='"+extraValueId+"' type='text' name='price_max' placeholder='值' autocomplete='off' class='layui-input'></div><div class='layui-input-inline' style='margin-top: 10px;margin-left:-2px'><a href='javascript:removeKeyValue(&quot;"+extraDivId+"&quot;,&quot;"+extraKeyId+"&quot;,&quot;"+extraValueId+"&quot;)'><img src='${ctx}/images/decrease.png' style='width:22px;height:22px'/></a></div></div>";
-        extraAll.appendChild(div);
-
-        count++;
-        extraKeys[count] = extraKeyId;
-        extraValues[count] = extraValueId;
-    }
-
-    Array.prototype.remove = function(val) {
-        var index = this.indexOf(val);
-        if (index > -1) {
-            this.splice(index, 1);
-        }
-    };
-
-    function removeKeyValue(divId, keyId, valueId){
-        var extraAll = document.getElementById("extraAll");
-        var extraDiv = document.getElementById(divId);
-        extraAll.removeChild(extraDiv);
-        extraKeys.remove(keyId);
-        extraValues.remove(valueId);
-    }
-</script>
-
-<!-- 别名 -->
-<script type="text/javascript">
-    layui.use(['form'], function(){
-        var form = layui.form();
-        form.on('radio(aliasEvent)', function(data){
-            var value = data.value;
-            if(value == 0){
-                $("#aliasDiv").hide();
-            }
-            if(value == 1){
-                $("#aliasDiv").show();
-            }
-        });
-    });
-</script>
 </body>
+</html>
 </html>

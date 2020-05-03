@@ -12,6 +12,7 @@ import com.knowledge_farm.entity.JpushConfig;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.notification.service.FrontNotificationService;
 import com.knowledge_farm.jpush.service.JpushService;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import java.util.Map;
  * @Author 张帅华
  * @Date 2020-04-30 16:45
  */
+@Api(description = "后台通知接口")
 @Controller
 @RequestMapping("/admin/notification")
 public class FrontNotificationController {
@@ -94,6 +96,7 @@ public class FrontNotificationController {
             LOG.error("Sendno: " + payload.getSendno());
             return Result.NOT_EXIST;
         }catch (Exception e){
+            e.printStackTrace();
             return Result.FAIL;
         }
     }
@@ -142,6 +145,7 @@ public class FrontNotificationController {
             LOG.error("Sendno: " + payload.getSendno());
             return Result.NOT_EXIST;
         }catch (Exception e){
+            e.printStackTrace();
             return Result.FAIL;
         }
     }

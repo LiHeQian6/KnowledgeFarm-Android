@@ -10,6 +10,7 @@ import com.knowledge_farm.answer.repository.Math23Repository;
 import com.knowledge_farm.entity.Chinese;
 import com.knowledge_farm.entity.Chinese23;
 import com.knowledge_farm.entity.English;
+import com.knowledge_farm.entity.Math23;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -195,6 +196,15 @@ public class AnswerService {
         }
         return list;
     }
+    //二年级上册数学
+    public Page<Math23> mathTwoUp(Pageable pageable){
+        return math23Repository.findAllByGrade("TwoUp",pageable);
+    }
+    //二年级上册数学
+    public Page<Math23> mathTwoDown(Pageable pageable){
+        return math23Repository.findAllByGrade("TwoDown",pageable);
+    }
+
     //数学乘法——九九乘法表
     public List<Multiple> get99Multiple(){
         List<Multiple> list  = new ArrayList<Multiple>();
@@ -206,24 +216,15 @@ public class AnswerService {
         return list;
     }
     //数学乘除法——2,3位数乘以一位数，除以一位数
-    public List<Multiple> get2Multiple(){
+    public List<Multiple> get23Multiple(){
         Random random = new Random();
         List<Multiple> list  = new ArrayList<Multiple>();
         int i = 20;
         while (i-->0){
             String signal = random.nextBoolean()?"×":"÷";
-            int doubleNum = random.nextInt(690)+10;
+            int doubleNum = random.nextInt(390)+10;
             int singleNum = random.nextInt(8)+2;
-            int num1 = 0;
-            int num2 = 0;
-            if(random.nextBoolean()){
-                num1 = doubleNum;
-                num2 = singleNum;
-            }else {
-                num1 = singleNum;
-                num2 = doubleNum;
-            }
-            list.add(new Multiple(num1,signal,num2,doubleNum*singleNum));
+            list.add(new Multiple(doubleNum,signal,singleNum,doubleNum*singleNum));
         }
         return list;
     }
@@ -241,9 +242,10 @@ public class AnswerService {
             String brackets1 = "false";
             String brackets2 = "false";
             String signal1 = randomSignal();
+            String signal2 = "null";
             if(signal1.equals("+")||signal1.equals("-")){
                 brackets1 = random.nextBoolean()?"false":"true";
-                String signal2 = random.nextBoolean()?"×":"÷";
+                signal2 = random.nextBoolean()?"×":"÷";
                 num2 = random.nextInt(80)+10;
                 num3 = random.nextInt(8)+2;
                 int num12 = 0;
@@ -261,12 +263,12 @@ public class AnswerService {
                         num12 = num1 + num2;
                         num = num12 * num3;
                         if(signal2.equals("÷")){
-                            if(num12%num3==0){
+                            int remain = num12 % num3;
+                            if(remain == 0){
                                 num = num12/num3;
                             }else {
-                                num12 = num * num3;
-                                num1 = random.nextInt(num12)+10;
-                                num2 = num12 - num1;
+                                num2 += num3 - remain;
+                                num = (num1 + num2)/num3;
                             }
                         }
                     }
@@ -287,15 +289,113 @@ public class AnswerService {
                             num = num1 - num23;
                         }
                     }else {
-
+                        if(num1<num2){
+                            num1 = num2+random.nextInt(90)+10;
+                        }
+                        num12 = num1 - num2;
+                        num = num12 * num3;
+                        if(signal2.equals("÷")){
+                            int remain = num12 % num3;
+                            if(remain == 0){
+                                num = num12/num3;
+                            }else {
+                                num1 += num3 - remain;
+                                num = (num1 - num2)/num3;
+                            }
+                        }
                     }
                 }
             }else {
                 brackets2 = random.nextBoolean()?"false":"true";
+                signal2 = random.nextBoolean()?"+":"-";
+                num1 = random.nextInt(80)+10;
+                num2 = random.nextInt(8)+2;
+                num3 = random.nextInt(290)+10;
+                int num12 = 0;
+                int num23 = 0;
+                if(signal1.equals("×")){
+                    if(brackets2.equals("false")){
+                        num12 = num1 * num2;
+                        num = num12 + num3;
+                        if(signal2.equals("-")){
+                            num1 += num3/num2;
+                            num  = num1 * num2 - num3;
+                        }
+                    }else {
+                        num1 = random.nextInt(8)+2;
+                        num2 = random.nextInt(290)+10;
+                        num3 = random.nextInt(290)+10;
+                        num = num1 * (num2 + num3);
+                        if(signal2.equals("-")){
+                            num2 = random.nextInt(390)+50;
+                            num3 = random.nextInt(num2)+20;
+                            num = num1 * (num2 - num3);
+                        }
+                    }
+                }else {
+                    num1 = random.nextInt(390)+11;
+                    num2 = random.nextInt(8)+2;
+                    if(brackets2.equals("false")){
+                        int remain = num1 % num2;
+                        if(remain == 0) {
+                            num = num1 / num2;
+                        }else {
+                            num1 += num2 - remain;
+                        }
+                        num12 = num1/num2;
+                        num = num12 + num3;
+                        if(signal2.equals("-")){
+                            num3 = random.nextInt(num12)+1;
+                            num = num12 - num3;
+                        }
+                    }else {
+                        num1 = random.nextInt(590)+10;
+                        num2 = random.nextInt(9)+1;
+                        num3 = random.nextInt(9-num2);
+                        num23 = num2 + num3;
+                        int remain = num1 % num23;
+                        if(remain == 0) {
+                            num = num1 / num23;
+                        }else {
+                            num1 += num23 - remain;
+                            num = num1 / num23;
+                        }
+                        if(signal2.equals("-")){
+                            num3 = random.nextInt(290)+1;
+                            num2 = random.nextInt(10)+num3;
+                            num23 = num2 - num3;
+                            remain = num1 % num23;
+                            if(remain == 0) {
+                                num = num1 / num23;
+                            }else {
+                                num1 += num23 - remain;
+                                num = num1 / num23;
+                            }
+                        }
+                    }
+                }
             }
+            list.add(new Mix(num1,signal1,num2,signal2,num3,brackets1,brackets2,num));
         }
         return list;
     }
+
+    //两位数乘法————三年级下册
+    public List<Multiple> doubleMutiple(){
+        Random random = new Random();
+        List<Multiple> list  = new ArrayList<Multiple>();
+        int i = 20;
+        while (i-->0){
+            String signal = "×";
+            int num1 = random.nextInt(90)+10;
+            int num2 = random.nextInt(90)+10;
+            int num = num1 * num2;
+            list.add(new Multiple(num1,signal,num2,num));
+        }
+        return list;
+    }
+
+
     //随机符号
     public String randomSignal(){
         int a = new Random().nextInt(4);

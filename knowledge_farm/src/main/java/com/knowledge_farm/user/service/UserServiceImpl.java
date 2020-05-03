@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -570,12 +571,15 @@ public class UserServiceImpl {
         Set<UserBag> userBags = user.getUserBags();
         int flag = 0;
         int number = 0;
-        for(UserBag userBag : userBags){
+        Iterator<UserBag> iterator = userBags.iterator();
+        while(iterator.hasNext()){
+            UserBag userBag = iterator.next();
             if(userBag.getCrop() == crop){
                 flag = 1;
                 number = userBag.getNumber();
                 if((number - 1) <= 0){
-                    userBags.remove(userBag);
+                    iterator.remove();
+                    userBag.setUser(null);
                     this.userBagService.delete(userBag);
                 }else{
                     userBag.setNumber(number - 1);
