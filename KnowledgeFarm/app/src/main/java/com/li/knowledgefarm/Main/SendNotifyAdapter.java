@@ -31,8 +31,8 @@ public class SendNotifyAdapter extends BaseAdapter {
     private FriendsPage<Notification> list;
     private int id;
     private Context context;
-    private String notifyYesId_str;
-    private String notifyNoId_str;
+    private String notifyYesId_str = "";
+    private String notifyNoId_str = "";
 
     public SendNotifyAdapter(FriendsPage<Notification> list, int id, Context context) {
         this.list = list;
@@ -82,15 +82,15 @@ public class SendNotifyAdapter extends BaseAdapter {
         }
         if(list.getList().get(position).isHaveRead() == 2){
             viewHolder.result.setText("已同意");
-            if(position == 0){
+            if(notifyYesId_str.length() == 0){
                 notifyYesId_str += list.getList().get(position).getId();
             }else{
                 notifyYesId_str += "," + list.getList().get(position).getId();
             }
         }
-        if(list.getList().get(position).isHaveRead() ==-2){
+        if(list.getList().get(position).isHaveRead() == -2){
             viewHolder.result.setText("已拒绝");
-            if(position == 0){
+            if(notifyNoId_str.length() == 0){
                 notifyNoId_str += list.getList().get(position).getId();
             }else{
                 notifyNoId_str += "," + list.getList().get(position).getId();

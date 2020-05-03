@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     private DayTaskPopUpWindow dayTaskPopUpWindow;
     private ImageView notify_red;
     private ImageView daytask_red;
-    private static List<Boolean> notifyStatus=new ArrayList<>(4);
+    public static List<Boolean> notifyStatus=new ArrayList<>(4);
     private Handler new_notification;
     private FriendsPopUpWindow friendsPopUpWindow;
     private PetPopUpWindow petPopUpWindow;
