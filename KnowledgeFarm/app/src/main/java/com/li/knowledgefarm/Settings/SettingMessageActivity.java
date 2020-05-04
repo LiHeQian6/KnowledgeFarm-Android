@@ -90,6 +90,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     private Button change_grade; //修改年级Button
     private Button change_QQ; //绑定QQButton
     private Button change_Email; //绑定邮箱Button
+    private Button change_password;
     private ImageView user_photo; //用户头像
     private User user;
     private EditText email_edit; //邮箱输入框
@@ -100,6 +101,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     private String newGrade;
     private String[] spin;
     private ImageView returns_message;
+    private Button log_out;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,13 +134,13 @@ public class SettingMessageActivity extends AppCompatActivity {
         show_grade.setText(DoubleToString(user.getGrade()));
         if(!(user.getEmail() == null)){
             user_Email.setText("已绑定"+user.getEmail());
-            change_Email.setText("修改");
+            change_Email.setText("解绑");
         }else{
             user_Email.setText("未绑定");
             change_Email.setText("去绑定");
         }
         if(!(user.getUserAuthority() == null)){
-
+            change_QQ.setText("解绑");
         }else {
             user_QQ.setText("未绑定");
             change_QQ.setText("去绑定");
@@ -153,6 +155,8 @@ public class SettingMessageActivity extends AppCompatActivity {
         change_Email.setOnClickListener(new CustomerOnclickListener());
         change_nickname.setOnClickListener(new CustomerOnclickListener());
         returns_message.setOnClickListener(new CustomerOnclickListener());
+        change_password.setOnClickListener(new CustomerOnclickListener());
+        log_out.setOnClickListener(new CustomerOnclickListener());
         select_grade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -186,10 +190,12 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_nickName = findViewById(R.id.user_nickname);
         change_Email = findViewById(R.id.btnBindingEmail);
         change_QQ = findViewById(R.id.btnUpdateQQ);
+        change_password = findViewById(R.id.change_password);
         user_QQ = findViewById(R.id.showQQ);
         user_Email = findViewById(R.id.showEmail);
         email_edit = findViewById(R.id.bindingEmail_edit);
         change_nickname = findViewById(R.id.change_nickname);
+        log_out = findViewById(R.id.btn_logout);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
         spin = getResources().getStringArray(R.array.sarry);
         okHttpClient = new OkHttpClient();
@@ -609,8 +615,14 @@ public class SettingMessageActivity extends AppCompatActivity {
                 case R.id.change_nickname:
                     ShowChangeMessagePop("NickName");
                     break;
+                case R.id.change_password:
+                    ShowChangeMessagePop("Password");
+                    break;
                 case R.id.returns_message:
                     finish();
+                    break;
+                case R.id.btn_logout:
+                    ShowChangeMessagePop("Logout");
                     break;
             }
         }

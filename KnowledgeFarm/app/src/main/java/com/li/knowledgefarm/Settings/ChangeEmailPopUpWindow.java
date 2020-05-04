@@ -1,11 +1,15 @@
 package com.li.knowledgefarm.Settings;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +24,8 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.Md5Encode;
+import com.tencent.tauth.Tencent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,10 +46,20 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
     private String type;
     private TextView show_title;
     private EditText new_message;
+    private EditText old_password;
     private EditText vertical;
+    /** 新密码输入框 */
+    private EditText new_password;
+    /** 确认新密码输入框 */
+    private EditText again_new_password;
     private Button get_vertical_btn;
     private Button commit_btn;
+    private Button cancel_logout;
+    private Button sure_logout;
     private LinearLayout get_vertical_li;
+    private LinearLayout new_password_li;
+    private LinearLayout log_btn_li;
+    private LinearLayout input_li;
     private OkHttpClient okHttpClient;
     /** 异步线程*/
     private GetTestCodeAsyncTask asyncTask;
@@ -90,6 +106,21 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                         Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
                     }
                     break;
+                case 3://修改密码判断
+                    switch ((String)msg.obj){
+                        case "true":
+                            LoginActivity.user.setPassword(new_password.getText().toString().trim());
+                            dismiss();
+                            Toast.makeText(context,"密码修改成功",Toast.LENGTH_SHORT).show();
+                            break;
+                        case "PasswordError":
+                            Toast.makeText(context, "旧密码错误", Toast.LENGTH_SHORT).show();
+                            break;
+                        case "false":
+                            Toast.makeText(context,"密码修改失败",Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    break;
             }
         }
     };
@@ -120,16 +151,27 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         if(type.equals("Email")){
             show_title.setText("绑定邮箱");
             new_message.setHint("请输入邮箱");
-        }else {
+        }else if (type.equals("NickName")){
             show_title.setText("修改昵称");
             new_message.setHint("请输入新的昵称");
-            get_vertical_li.setVisibility(View.INVISIBLE);
+            get_vertical_li.setVisibility(View.GONE);
+        }else if(type.equals("Password")){
+            show_title.setText("修改密码");
+            new_message.setVisibility(View.GONE);
+            get_vertical_li.setVisibility(View.GONE);
+            new_password_li.setVisibility(View.VISIBLE);
+        }else {
+            show_title.setText("确定要退出吗");
+            input_li.setVisibility(View.GONE);
+            log_btn_li.setVisibility(View.VISIBLE);
         }
     }
 
     private void registerListener(){
         commit_btn.setOnClickListener(new CustomerOnclickListener());
         get_vertical_btn.setOnClickListener(new CustomerOnclickListener());
+        cancel_logout.setOnClickListener(new CustomerOnclickListener());
+        sure_logout.setOnClickListener(new CustomerOnclickListener());
     }
     
     /**
@@ -144,8 +186,16 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         new_message = view.findViewById(R.id.new_message);
         vertical = view.findViewById(R.id.vertical_edit);
         get_vertical_btn = view.findViewById(R.id.getVertical_btn);
+        old_password = view.findViewById(R.id.old_password);
+        new_password = view.findViewById(R.id.new_password);
+        again_new_password = view.findViewById(R.id.again_password);
+        new_password_li =  view.findViewById(R.id.new_password_li);
         commit_btn = view.findViewById(R.id.commit_btn);
         get_vertical_li = view.findViewById(R.id.getVertical_li);
+        log_btn_li = view.findViewById(R.id.btn_li);
+        input_li = view.findViewById(R.id.input_li);
+        cancel_logout = view.findViewById(R.id.cancel_logout);
+        sure_logout = view.findViewById(R.id.sure_logout);
         new_message.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         vertical.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         okHttpClient = new OkHttpClient();
@@ -294,15 +344,82 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         testAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    /**
+     * 保存
+     */
+    private void savePassword(){
+        final String oldPassword = old_password.getText().toString().trim();
+        final String newPassword = new_password.getText().toString().trim();
+        final String newPasswordTest = again_new_password.getText().toString().trim();
+        if(oldPassword.equals("") || newPassword.equals("") || newPasswordTest.equals("")){
+            Toast.makeText(context,"您还有没填写的内容！",Toast.LENGTH_SHORT).show();
+        }else {
+            if (!newPassword.equals(newPasswordTest)) {
+                Toast.makeText(context, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
+            }else if(newPassword.equals(newPasswordTest) && newPassword.length() < 8){
+                Toast.makeText(context, "密码长度最低为8位", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        FormBody formBody = new FormBody.Builder()
+                                .add("account", LoginActivity.user.getAccount())
+                                .add("oldPassword", Md5Encode.getMD5(oldPassword.getBytes()))
+                                .add("newPassword", Md5Encode.getMD5(newPassword.getBytes()))
+                                .build();
+                        final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL) + "/user/updateUserPassword").build();
+                        Call call = okHttpClient.newCall(request);
+                        call.enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.i("lww", "请求失败");
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                String result = response.body().string();
+                                sendMessage(3,response.code(), result);
+                            }
+                        });
+                    }
+                }.start();
+            }
+        }
+    }
+
+    /**
+     * 切换账号
+     */
+    private void regout() {
+        /** 其中mAppId是分配给第三方应用的appid，类型为String*/
+        String mAppId = "1110065654";//101827370
+        /** Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI*/
+        Tencent mTencent = Tencent.createInstance(mAppId, context);;
+        mTencent.logout(context);
+
+        /** 删除SharedPreferences内Token信息*/
+        SharedPreferences sp = context.getSharedPreferences("token",context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
+
+        /** 跳转到登录页面*/
+        Intent intent = new Intent();
+        intent.setClass(context, LoginActivity.class);
+        context.startActivity(intent);
+        dismiss();
+    }
+
     private class CustomerOnclickListener implements View.OnClickListener{
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.commit_btn:
-                    if(!type.equals("Email"))
+                    if(type.equals("NickName"))
                         save();
-                    else {
+                    else if(type.equals("Email")){
                         if(!vertical.getText().toString().trim().equals("")){ //验证码不为空
                             if(vertical.getText().toString().trim().equals(testCode)){ //验证码正确
                                 over();
@@ -312,6 +429,8 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                         }else{ //验证码为空
                             Toast.makeText(context,"验证码不能为空",Toast.LENGTH_SHORT).show();
                         }
+                    }else {
+                        savePassword();
                     }
                     break;
                 case R.id.getVertical_btn:
@@ -324,6 +443,12 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     }else { //邮箱为空
                         Toast.makeText(context,"邮箱不能为空",Toast.LENGTH_SHORT).show();
                     }
+                    break;
+                case R.id.cancel_logout:
+                    dismiss();
+                    break;
+                case R.id.sure_logout:
+                    regout();
                     break;
             }
         }

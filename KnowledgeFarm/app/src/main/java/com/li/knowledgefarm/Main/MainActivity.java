@@ -1031,6 +1031,8 @@ public class MainActivity extends AppCompatActivity {
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
+        Log.e("midu",ds.density+"");
+        Log.e("高度，宽度",displayHeight/ds.density+","+displayWidth/ds.density);
         bagPopUpWindow.setWidth((int) (displayWidth * 0.40));
         bagPopUpWindow.setHeight((int) (displayHeight * 0.95));
         bagPopUpWindow.showAtLocation(bag,Gravity.RIGHT,0,0);
