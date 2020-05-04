@@ -533,6 +533,11 @@ public class MainActivity extends AppCompatActivity {
      * 初始化土地
      */
     private void showLand() {
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = (int) (ds.heightPixels/ds.density);
+        displayWidth = (int) (ds.widthPixels/ds.density);
         lands.removeAllViews();
         int flag = 0;
         float x = 0;
@@ -541,12 +546,13 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             final View landGroup = inflater.inflate(R.layout.land_group, null);
             int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    120, getResources().getDisplayMetrics());
+                    displayWidth/6, getResources().getDisplayMetrics());
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    60, getResources().getDisplayMetrics());
-            LAND_WIDTH_2=width/2.0f-12;
-            LAND_HEIGHT_2=height/2.0f-6;
-            landGroup.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+                    displayWidth/12, getResources().getDisplayMetrics());
+            LAND_WIDTH_2=width/2.1f;
+            LAND_HEIGHT_2=height/2.1f;
+            FrameLayout.LayoutParams param = new FrameLayout.LayoutParams(width, height);
+            landGroup.setLayoutParams(param);
             int num = i + 1;
             if ((num - 1) % 3 == 0) {
                 x = ((num - 1) / 3) * LAND_WIDTH_2 + LAND_WIDTH_2 * 2;
@@ -569,7 +575,11 @@ public class MainActivity extends AppCompatActivity {
             if (cropList.get(i) == null) {//cropItem为null表示土地未开垦，crop为null代表未种植，不为null为种植的对应植物，当第一次运行到的时候表示该块土地上是扩建牌
                 if (flag == 0) {
                     plant.setVisibility(View.VISIBLE);
-                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(240, 240);
+                    int w = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                            60, getResources().getDisplayMetrics());
+                    int h = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                            60, getResources().getDisplayMetrics());
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(w, h);
                     params.gravity = Gravity.CENTER;
                     params.topMargin = -90;
                     plant.setLayoutParams(params);
@@ -1089,15 +1099,14 @@ public class MainActivity extends AppCompatActivity {
         daytask_red =findViewById(R.id.daytask_red);
         dog=findViewById(R.id.dog);
         ViewGroup.MarginLayoutParams params =(ViewGroup.MarginLayoutParams)lands.getLayoutParams();
-        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayHeight = ds.heightPixels;
-        displayWidth = ds.widthPixels;
-        params.topMargin=displayHeight/6;
-        params.leftMargin=displayWidth/100;
-        System.out.println(displayHeight+"  "+displayWidth);
-        lands.setLayoutParams(params);
+        float density = getResources().getDisplayMetrics().density;
+        float displayHeight = getResources().getDisplayMetrics().heightPixels/density;
+        float displayWidth = getResources().getDisplayMetrics().widthPixels/density;
+        if (displayWidth>598){
+            params.topMargin=(int)displayHeight/4;
+            params.leftMargin=(int)displayWidth/5;
+            lands.setLayoutParams(params);
+        }
     }
 
     /**

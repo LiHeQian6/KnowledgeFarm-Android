@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:id="@+id/touch"
     android:background="@drawable/main_background"
-    android:padding="5dp"
     android:clipChildren="false"
     tools:context=".Main.MainActivity">
 
