@@ -1105,7 +1105,7 @@ public class MainActivity extends AppCompatActivity {
         float displayHeight = getResources().getDisplayMetrics().heightPixels/density;
         float displayWidth = getResources().getDisplayMetrics().widthPixels/density;
         if (displayWidth>598){
-            params.topMargin=(int)displayHeight/4;
+            params.topMargin= (int) (displayHeight/2.4f);
             params.leftMargin=(int)displayWidth/5;
             lands.setLayoutParams(params);
         }
