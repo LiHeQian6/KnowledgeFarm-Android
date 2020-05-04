@@ -1,7 +1,7 @@
-package com.knowledge_farm.pet_food.controller;
+package com.knowledge_farm.pet_util.controller;
 
-import com.knowledge_farm.entity.PetFood;
-import com.knowledge_farm.pet_food.service.PetFoodService;
+import com.knowledge_farm.entity.PetUtil;
+import com.knowledge_farm.pet_util.service.PetUtilService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,15 +17,15 @@ import java.util.List;
  * @Date 2020-05-04 10:03
  */
 @RestController
-@RequestMapping("/petfood")
-public class PetFoodController {
+@RequestMapping("/petutil")
+public class PetUtilController {
     @Resource
-    private PetFoodService petFoodService;
+    private PetUtilService petUtilService;
 
-    @ApiOperation(value = "商店展示所有饲料", notes = "返回值：List（PetFood）")
+    @ApiOperation(value = "商店展示所有饲料或工具", notes = "返回值：List（PetFood）")
     @GetMapping("showInStore")
-    public List<PetFood> showInStore(){
-        return this.petFoodService.showInStore();
+    public List<PetUtil> showInStore(){
+        return this.petUtilService.showInStore();
     }
 
 }

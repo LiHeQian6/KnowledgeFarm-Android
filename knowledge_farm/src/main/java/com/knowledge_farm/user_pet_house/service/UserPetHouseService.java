@@ -1,10 +1,10 @@
 package com.knowledge_farm.user_pet_house.service;
 
-import com.knowledge_farm.entity.Pet;
-import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserPetHouse;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.user.service.UserServiceImpl;
+import com.knowledge_farm.user_pet_house.dao.UserPetUtilBagDao;
 import com.knowledge_farm.user_pet_house.dao.UserPetHouseDao;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +25,21 @@ public class UserPetHouseService {
     @Resource
     private UserPetHouseDao userPetHouseDao;
     @Resource
+    @Lazy
     private UserServiceImpl userService;
+    @Resource
+    private UserPetUtilBagDao userPetUtilBagDao;
 
     public UserPetHouse findByUser(User user, Pet pet){
         return userPetHouseDao.findUserPetHouseByUserAndPet(user,pet);
+    }
+
+    public UserPetHouse findUserPetHouseById(Integer id){
+        return this.userPetHouseDao.findUserPetHouseById(id);
+    }
+
+    public UserPetUtilBag findUserPetUtilBagById(Integer id){
+        return this.userPetUtilBagDao.findUserPetUtilBagById(id);
     }
 
     public List<UserPetHouse> showUserPet(Integer userId){
@@ -41,8 +52,22 @@ public class UserPetHouseService {
         return userPetHouseList;
     }
 
+    public List<BagPetUtilItem> initUserPetUtilBag(Integer userId){
+        User user = this.userService.findUserById(userId);
+        if(user != null){
+            Set<UserPetUtilBag> userPetUtilBags = user.getUserPetUtilBags();
+            List<BagPetUtilItem> bagPetUtilItems = new ArrayList<>();
+            for(UserPetUtilBag userPetUtilBag : userPetUtilBags){
+                BagPetUtilItem bagPetUtilItem = new BagPetUtilItem(userPetUtilBag.getNumber(), userPetUtilBag.getPetUtil());
+                bagPetUtilItems.add(bagPetUtilItem);
+            }
+            return bagPetUtilItems;
+        }
+        return new ArrayList<>();
+    }
+
     @Transactional(readOnly = false)
-    public int buyPet(){
-        return 0;
+    public void deleteUserPetUtilBag(UserPetUtilBag userPetUtilBag){
+        this.userPetUtilBagDao.delete(userPetUtilBag);
     }
 }

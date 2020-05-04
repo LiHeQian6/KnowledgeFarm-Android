@@ -24,7 +24,7 @@ import java.util.HashMap;
  */
 @Component
 @Aspect
-public class UserFriendAspect {
+public class UserFriendNotificationAspect {
     @Resource
     private UserServiceImpl userService;
     @Resource
