@@ -1,6 +1,5 @@
 package com.knowledge_farm.aspect;
 
-import com.knowledge_farm.entity.Notification;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.jpush.service.JpushService;

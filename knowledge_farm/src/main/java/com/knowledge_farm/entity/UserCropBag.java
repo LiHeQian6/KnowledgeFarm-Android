@@ -11,8 +11,8 @@ import javax.persistence.*;
  * @Date 2020-04-06 14:12
  */
 @Entity
-@Table(name = "user_bag")
-public class UserBag {
+@Table(name = "user_crop_bag")
+public class UserCropBag {
     private Integer id;
     private User user;
     private Crop crop;

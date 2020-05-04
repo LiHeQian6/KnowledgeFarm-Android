@@ -38,12 +38,13 @@ public class User {
     private Date lastReadTime;
     private Land land;
     private UserAuthority userAuthority;
-    private Set<UserBag> userBags = new HashSet<>();
+    private Set<UserCropBag> userCropBags = new HashSet<>();
     private Task task;
     private Set<UserFriend> userFriends = new HashSet<>();
     private Set<Notification> sendNotifications = new HashSet<>();
     private Set<Notification> ReceiveNotifications = new HashSet<>();
     private Set<UserPetHouse> petHouses = new HashSet<>();
+    private Set<UserPetFoodBag> userPetFoodBags = new HashSet<>();
 
     public User(){
         this.level = 1;
@@ -243,12 +244,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
-    public Set<UserBag> getUserBags() {
-        return userBags;
+    public Set<UserCropBag> getUserCropBags() {
+        return userCropBags;
     }
 
-    public void setUserBags(Set<UserBag> userBags) {
-        this.userBags = userBags;
+    public void setUserCropBags(Set<UserCropBag> userCropBags) {
+        this.userCropBags = userCropBags;
     }
 
     @OneToOne(cascade=CascadeType.ALL)
@@ -303,6 +304,17 @@ public class User {
 
     public void setPetHouses(Set<UserPetHouse> petHouses) {
         this.petHouses = petHouses;
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
+    @JsonIgnore
+    public Set<UserPetFoodBag> getUserPetFoodBags() {
+        return userPetFoodBags;
+    }
+
+    public void setUserPetFoodBags(Set<UserPetFoodBag> userPetFoodBags) {
+        this.userPetFoodBags = userPetFoodBags;
     }
 
 }
