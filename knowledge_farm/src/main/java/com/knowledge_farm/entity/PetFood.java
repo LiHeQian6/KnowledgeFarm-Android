@@ -16,6 +16,7 @@ public class PetFood {
     private Integer id;
     private String name;
     private String description;
+    private String img;
     private Integer value;
     private Integer price;
     private Integer exist;
@@ -49,6 +50,14 @@ public class PetFood {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public Integer getValue() {

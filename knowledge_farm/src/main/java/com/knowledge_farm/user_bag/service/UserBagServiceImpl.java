@@ -1,10 +1,9 @@
 package com.knowledge_farm.user_bag.service;
 
-import com.knowledge_farm.entity.BagCropItem;
-import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserCropBag;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.user_bag.dao.UserBagDao;
+import com.knowledge_farm.user_bag.dao.UserPetFoodBagDao;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +25,12 @@ public class UserBagServiceImpl {
     @Resource
     private UserBagDao userBagDao;
     @Resource
+    private UserPetFoodBagDao userPetFoodBagDao;
+    @Resource
     @Lazy
     private UserServiceImpl userService;
 
-    public List<BagCropItem> initUserBag(Integer userId){
+    public List<BagCropItem> initUserCropBag(Integer userId){
         User user = this.userService.findUserById(userId);
         if(user != null){
             Set<UserCropBag> userCropBags = user.getUserCropBags();
@@ -45,9 +46,28 @@ public class UserBagServiceImpl {
         return new ArrayList<>();
     }
 
+    public List<BagPetFoodItem> initUserPetFoodBag(Integer userId){
+        User user = this.userService.findUserById(userId);
+        if(user != null){
+            Set<UserPetFoodBag> userPetFoodBags = user.getUserPetFoodBags();
+            List<BagPetFoodItem> bagPetFoodItems = new ArrayList<>();
+            for(UserPetFoodBag userPetFoodBag : userPetFoodBags){
+                BagPetFoodItem bagPetFoodItem = new BagPetFoodItem(userPetFoodBag.getNumber(), userPetFoodBag.getPetFood());
+                bagPetFoodItems.add(bagPetFoodItem);
+            }
+            return bagPetFoodItems;
+        }
+        return new ArrayList<>();
+    }
+
     @Transactional(readOnly = false)
-    public void delete(UserCropBag userCropBag){
+    public void deleteUserCropBag(UserCropBag userCropBag){
         this.userBagDao.delete(userCropBag);
+    }
+
+    @Transactional(readOnly = false)
+    public void deleteUserPetFoodBag(UserPetFoodBag userPetFoodBag){
+        this.userPetFoodBagDao.delete(userPetFoodBag);
     }
 
 }

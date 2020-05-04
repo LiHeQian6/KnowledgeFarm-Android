@@ -24,15 +24,15 @@ public class CropPhotoAspect {
     @Value("${file.photoUrl}")
     private String photoUrl;
 
-    @Pointcut(value = "execution(* com.knowledge_farm.crop.controller.CropController.*(..))")
+    @Pointcut(value = "execution(* com.knowledge_farm.crop.controller.CropController.initCrop(..))")
     private void crop() {
     }
 
-    @Pointcut(value = "execution(* com.knowledge_farm.user_bag.controller.UserBagController.*(..))")
+    @Pointcut(value = "execution(* com.knowledge_farm.user_bag.controller.UserBagController.initUserBag(..))")
     private void userBag() {
     }
 
-    @Pointcut(value = "execution(* com.knowledge_farm.user_crop.controller.UserCropController.*(..))")
+    @Pointcut(value = "execution(* com.knowledge_farm.user_crop.controller.UserCropController.initUserCrop(..))")
     private void userCrop() {
     }
 
