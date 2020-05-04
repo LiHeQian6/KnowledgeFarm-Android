@@ -110,7 +110,6 @@ public class UserServiceImpl {
         user.setGrade(grade);
         user.setLastReadTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
-        user.setPetFood(new PetFood(user,"狗粮",0));
         //构建UserAuthority
         UserAuthority userAuthority = new UserAuthority();
         userAuthority.setOpenId(openId);
@@ -188,7 +187,6 @@ public class UserServiceImpl {
         user.setGrade(grade);
         user.setLastReadTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
-        user.setPetFood(new PetFood(user,"狗粮",0));
         //构建Land
         Land land = new Land();
         //构建UserCrop
@@ -510,25 +508,25 @@ public class UserServiceImpl {
     @Transactional(readOnly = false)
     public String buyCrop(Integer userId, Integer cropId, Integer number){
         User user = this.userDao.findUserById(userId);
-        Set<UserBag> userBags = user.getUserBags();
+        Set<UserCropBag> userCropBags = user.getUserCropBags();
         Crop crop = this.cropService.findCropById(cropId);
         Integer userMoney = user.getMoney();
         Integer needMoney = crop.getPrice() * number;
         int flag = 0;
         if(userMoney >= needMoney){
-            for(UserBag userBag : userBags){
-                if(userBag.getCrop() == crop){
-                    userBag.setNumber(userBag.getNumber() + number);
+            for(UserCropBag userCropBag : userCropBags){
+                if(userCropBag.getCrop() == crop){
+                    userCropBag.setNumber(userCropBag.getNumber() + number);
                     flag = 1;
                     break;
                 }
             }
             if(flag != 1){
-                UserBag userBag = new UserBag();
-                userBag.setCrop(crop);
-                userBag.setNumber(number);
-                userBag.setUser(user);
-                userBags.add(userBag);
+                UserCropBag userCropBag = new UserCropBag();
+                userCropBag.setCrop(crop);
+                userCropBag.setNumber(number);
+                userCropBag.setUser(user);
+                userCropBags.add(userCropBag);
             }
             user.setMoney(userMoney - needMoney);
             return Result.TRUE;
@@ -570,17 +568,17 @@ public class UserServiceImpl {
      */
     @Transactional(readOnly = false)
     public String buyPetFood(Integer userId,Integer num){
-        User user = findUserById(userId);
-        Set<UserPetHouse> petHouses = user.getPetHouses();
-        int userMoney = user.getMoney();
-        PetFood petFood = user.getPetFood();
-        int petFoodMoney = petFood.getPrice()*num;
-        if(userMoney >= petFoodMoney){
-            petFood.setNum(petFood.getNum()+num);
-            petService.savePetFood(petFood);
-            user.setMoney(userMoney - petFoodMoney);
-            return Result.TRUE;
-        }
+//        User user = findUserById(userId);
+//        Set<UserPetHouse> petHouses = user.getPetHouses();
+//        int userMoney = user.getMoney();
+//        PetFood petFood = user.getPetFood();
+//        int petFoodMoney = petFood.getPrice()*num;
+//        if(userMoney >= petFoodMoney){
+//            petFood.setNum(petFood.getNum()+num);
+//            petService.savePetFood(petFood);
+//            user.setMoney(userMoney - petFoodMoney);
+//            return Result.TRUE;
+//        }
         return Result.NOT_ENOUGH_MONEY;
     }
     /**
@@ -591,16 +589,16 @@ public class UserServiceImpl {
      * @return :java.lang.String
      */
     public String feedPet(Integer userId,Integer petId){
-        User user = findUserById(userId);
-        Pet pet = petService.findPetById(petId);
-        UserPetHouse userPetHouse = petHouseService.findByUser(user,pet);
-        int intelligence = userPetHouse.getIntelligence();
-        int num = user.getPetFood().getNum();
-        if(num>0){
-            user.getPetFood().setNum(num-1);
-            userPetHouse.setIntelligence(intelligence+30);
-            return Result.SUCCEED;
-        }
+//        User user = findUserById(userId);
+//        Pet pet = petService.findPetById(petId);
+//        UserPetHouse userPetHouse = petHouseService.findByUser(user,pet);
+//        int intelligence = userPetHouse.getIntelligence();
+//        int num = user.getPetFood().getNum();
+//        if(num>0){
+//            user.getPetFood().setNum(num-1);
+//            userPetHouse.setIntelligence(intelligence+30);
+//            return Result.SUCCEED;
+//        }
         return "食物吃完啦！";
 
     }
@@ -617,21 +615,21 @@ public class UserServiceImpl {
     public int raiseCrop(Integer userId, Integer cropId, String landNumber){
         User user = this.userDao.findUserById(userId);
         Crop crop = this.cropService.findCropById(cropId);
-        Set<UserBag> userBags = user.getUserBags();
+        Set<UserCropBag> userCropBags = user.getUserCropBags();
         int flag = 0;
         int number = 0;
-        Iterator<UserBag> iterator = userBags.iterator();
+        Iterator<UserCropBag> iterator = userCropBags.iterator();
         while(iterator.hasNext()){
-            UserBag userBag = iterator.next();
-            if(userBag.getCrop() == crop){
+            UserCropBag userCropBag = iterator.next();
+            if(userCropBag.getCrop() == crop){
                 flag = 1;
-                number = userBag.getNumber();
+                number = userCropBag.getNumber();
                 if((number - 1) <= 0){
                     iterator.remove();
-                    userBag.setUser(null);
-                    this.userBagService.delete(userBag);
+                    userCropBag.setUser(null);
+                    this.userBagService.delete(userCropBag);
                 }else{
-                    userBag.setNumber(number - 1);
+                    userCropBag.setNumber(number - 1);
                 }
                 break;
             }

@@ -1,14 +1,11 @@
 package com.knowledge_farm.user_bag.controller;
 
 import com.knowledge_farm.entity.BagCropItem;
-import com.knowledge_farm.entity.Crop;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

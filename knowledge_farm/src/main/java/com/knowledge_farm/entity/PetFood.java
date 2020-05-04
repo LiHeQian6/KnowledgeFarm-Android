@@ -1,52 +1,38 @@
 package com.knowledge_farm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 /**
- * @program: knowledge_farm
- * @description: 宠物饲料
- * @author: 景光赞
- * @create: 2020-05-03 14:21
- **/
+ * @ClassName A
+ * @Description
+ * @Author 张帅华
+ * @Date 2020-05-04 09:14
+ */
 @Entity
 @Table(name = "pet_food")
 public class PetFood {
-    private int id;
-    private User user;
+    private Integer id;
     private String name;
-    private int num;
-    private int price;
+    private String description;
+    private Integer value;
+    private Integer price;
+    private Integer exist;
 
-    public PetFood() {
-    }
-
-    public PetFood(User user, String name, int num) {
-        this.user = user;
-        this.name = name;
-        this.num = num;
+    public PetFood(){
+        this.exist = 1;
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
+    @GeneratedValue(generator="identity")
+    @GenericGenerator(name="identity", strategy = "identity")
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    @OneToOne(mappedBy = "petFood")
-    @org.hibernate.annotations.ForeignKey(name = "none")
-    @JsonIgnore
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getName() {
@@ -57,19 +43,37 @@ public class PetFood {
         this.name = name;
     }
 
-    public int getNum() {
-        return num;
+    public String getDescription() {
+        return description;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getPrice() {
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
+
+    @Column(columnDefinition = "int default 1")
+    public Integer getExist() {
+        return exist;
+    }
+
+    public void setExist(Integer exist) {
+        this.exist = exist;
+    }
+
 }
