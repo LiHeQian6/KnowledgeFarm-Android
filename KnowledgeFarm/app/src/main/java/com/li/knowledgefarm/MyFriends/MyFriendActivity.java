@@ -51,6 +51,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Main.NotifyActivity;
+import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Settings.SettingMessageActivity;
@@ -682,9 +683,8 @@ public class MyFriendActivity extends AppCompatActivity {
                     notify_red.setVisibility(View.GONE);
                     break;
                 case R.id.photo:
-                    intent = new Intent();
-                    intent.setClass(MyFriendActivity.this, SettingMessageActivity.class);
-                    startActivity(intent);
+                    UserMessagePopUp userMessagePopUp = new UserMessagePopUp(getApplicationContext(), user);
+                    userMessagePopUp.showAtLocation(dayTask,Gravity.CENTER,0,0);
                     break;
                 case R.id.task:
                     showDayTaskWindow();

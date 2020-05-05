@@ -1072,6 +1072,11 @@ public class MainActivity extends AppCompatActivity {
         Log.e("高度，宽度",displayHeight/ds.density+","+displayWidth/ds.density);
         bagPopUpWindow.setWidth((int) (displayWidth * 0.40));
         bagPopUpWindow.setHeight((int) (displayHeight * 0.95));
+        if (!isNavigationBarShow()){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                bagPopUpWindow.setIsClippedToScreen(true);
+            }
+        }
         bagPopUpWindow.showAtLocation(bag,Gravity.RIGHT,0,0);
         planting(bagPopUpWindow.getGridView());
     }
