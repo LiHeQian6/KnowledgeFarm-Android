@@ -77,24 +77,32 @@ public class SendNotifyAdapter extends BaseAdapter {
         viewHolder.id.setText("账号："+list.getList().get(position).getTo().getAccount()+"");
         viewHolder.nickName.setText("昵称："+list.getList().get(position).getTo().getNickName());
         //ToDo
-        if(list.getList().get(position).isHaveRead() == 0){
-            viewHolder.result.setText("正在等待回应");
-        }
-        if(list.getList().get(position).isHaveRead() == 2){
-            viewHolder.result.setText("已同意");
-            if(notifyYesId_str.length() == 0){
-                notifyYesId_str += list.getList().get(position).getId();
-            }else{
-                notifyYesId_str += "," + list.getList().get(position).getId();
-            }
-        }
-        if(list.getList().get(position).isHaveRead() == -2){
-            viewHolder.result.setText("已拒绝");
-            if(notifyNoId_str.length() == 0){
-                notifyNoId_str += list.getList().get(position).getId();
-            }else{
-                notifyNoId_str += "," + list.getList().get(position).getId();
-            }
+        switch (list.getList().get(position).isHaveRead()){
+            case 0:
+                viewHolder.result.setText("正在等待回应");
+                break;
+            case 1:
+                viewHolder.result.setText("已同意");
+                break;
+            case -1:
+                viewHolder.result.setText("已拒绝");
+                break;
+            case 2:
+                viewHolder.result.setText("已同意");
+                if(notifyYesId_str.length() == 0){
+                    notifyYesId_str += list.getList().get(position).getId();
+                }else{
+                    notifyYesId_str += "," + list.getList().get(position).getId();
+                }
+                break;
+            case -2:
+                viewHolder.result.setText("已拒绝");
+                if(notifyNoId_str.length() == 0){
+                    notifyNoId_str += list.getList().get(position).getId();
+                }else{
+                    notifyNoId_str += "," + list.getList().get(position).getId();
+                }
+                break;
         }
         if(position == list.getList().size() -1){
             ChangeReadStatus("-1",notifyNoId_str);
