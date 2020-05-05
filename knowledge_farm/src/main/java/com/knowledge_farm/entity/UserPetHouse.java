@@ -27,6 +27,8 @@ public class UserPetHouse {
     private Integer physical;         //体力值
 
     public UserPetHouse() {
+        this.growPeriod = 0;
+        this.ifUsing = 0;
     }
 
     public UserPetHouse(User user, Pet pet) {

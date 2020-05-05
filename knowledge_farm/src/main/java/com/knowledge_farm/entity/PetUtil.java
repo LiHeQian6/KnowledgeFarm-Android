@@ -26,6 +26,15 @@ public class PetUtil {
         this.exist = 1;
     }
 
+    public PetUtil(String name, String description, Integer value, Integer price, PetUtilType petUtilType){
+        this.name = name;
+        this.description = description;
+        this.value = value;
+        this.price = price;
+        this.petUtilType = petUtilType;
+        this.exist = 1;
+    }
+
     @Id
     @GeneratedValue(generator="identity")
     @GenericGenerator(name="identity", strategy = "identity")

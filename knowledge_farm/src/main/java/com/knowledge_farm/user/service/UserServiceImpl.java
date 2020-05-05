@@ -569,7 +569,7 @@ public class UserServiceImpl {
     public String buyPetUtil(Integer userId, Integer petUtilId, Integer number){
         User user = this.userDao.findUserById(userId);
         Set<UserPetUtilBag> userPetUtilBags = user.getUserPetUtilBags();
-        PetUtil petUtil = this.petUtilService.findPetFoodById(petUtilId);
+        PetUtil petUtil = this.petUtilService.findPetUtilById(petUtilId);
         Integer userMoney = user.getMoney();
         Integer needMoney = petUtil.getPrice() * number;
         int flag = 0;

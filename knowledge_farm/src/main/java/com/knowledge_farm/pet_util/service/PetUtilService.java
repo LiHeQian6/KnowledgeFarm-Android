@@ -24,8 +24,8 @@ public class PetUtilService {
         return this.petUtilDao.findAllByExist(1);
     }
 
-    public PetUtil findPetFoodById(Integer id){
-        return this.petUtilDao.findPetFoodById(id);
+    public PetUtil findPetUtilById(Integer id){
+        return this.petUtilDao.findPetUtilById(id);
     }
 
 }

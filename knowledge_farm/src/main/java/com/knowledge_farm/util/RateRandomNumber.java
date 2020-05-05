@@ -96,18 +96,4 @@ public class RateRandomNumber {
         public int percentScopeMax; //百分比转换为[1,100]的数字的最大值
     }
 
-    public static void main(String[] args) {
-        List<Integer> separates = new ArrayList<>();
-        separates.add(10);
-        separates.add(50);
-        List<Integer> percents = new ArrayList<Integer>();
-        percents.add(90);
-        percents.add(9);
-        percents.add(1);
-        for (int i = 0; i < 100; i++) {
-            int number = produceRateRandomNumber(1, 100, separates, percents);
-            System.out.println(number);
-        }
-    }
-
 }
