@@ -26,10 +26,6 @@
             android:name=".Study.Subject.EnglishActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".Settings.UpdatePasswordActivity"
-            android:configChanges="screenSize|orientation"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".Settings.BindingEmailActivity"
             android:configChanges="screenSize|orientation"
             android:screenOrientation="landscape" />

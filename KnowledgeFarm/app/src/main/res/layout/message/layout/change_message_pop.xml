@@ -29,7 +29,7 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="修改信息"
+                    android:text="修改邮箱"
                     android:textSize="30dp"
                     android:id="@+id/show_title"
                     android:textColor="@color/ShopTextColor"/>
@@ -50,40 +50,7 @@
                     android:gravity="center_horizontal"
                     android:imeOptions="flagNoExtractUi"
                     android:id="@+id/new_message"
-                    android:hint="请输入信息"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:id="@+id/new_password_li"
-                    android:visibility="gone">
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="请输入旧密码"
-                        android:imeOptions="flagNoExtractUi"
-                        android:gravity="center_horizontal"
-                        android:inputType="textPassword"
-                        android:id="@+id/old_password"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="请输入新密码"
-                        android:imeOptions="flagNoExtractUi"
-                        android:gravity="center_horizontal"
-                        android:inputType="textPassword"
-                        android:id="@+id/new_password"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/again_password"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="textPassword"
-                        android:gravity="center_horizontal"
-                        android:hint="请确认密码"/>
-                </LinearLayout>
+                    android:hint="请输入邮箱"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -112,34 +79,6 @@
                     android:background="@drawable/buttonbackground"
                     android:text="提交"
                     android:id="@+id/commit_btn"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="3"
-                android:id="@+id/btn_li"
-                android:visibility="gone"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="15dp">
-
-                <Button
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="取消"
-                    android:textSize="20dp"
-                    android:id="@+id/cancel_logout"
-                    android:textColor="@color/ShopTextColor"
-                    android:background="@drawable/buttonbackground"/>
-                <Button
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="确定"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/sure_logout"
-                    android:textColor="@color/ShopTextColor"
-                    android:background="@drawable/buttonbackground"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout

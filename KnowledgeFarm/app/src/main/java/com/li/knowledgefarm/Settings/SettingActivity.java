@@ -251,10 +251,10 @@ public class SettingActivity extends AppCompatActivity {
                     dialog_update_nickName();
                     break;
                 case R.id.btnUpdateGrade:
-                    dialog_update_grade();
+//                    dialog_update_grade();
                     break;
                 case R.id.btnUpdatePassword:
-                    update_password();
+//                    update_password();
                     break;
                 case R.id.btnUpdatePhoto:
                     openPhonePhoto();
@@ -331,50 +331,50 @@ public class SettingActivity extends AppCompatActivity {
      * 弹出修改昵称窗口
      */
     private void dialog_update_nickName(){
-        //管理多个Fragment对象
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //事务(原子性的操作)
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        //创建CustomDialog,添加数据
-        UpdateNickNameDialog customDialog = new UpdateNickNameDialog();
-        //判断是否已经被添加过
-        if(!customDialog.isAdded()){
-            //添加Fragment
-            transaction.add(customDialog,"dialog");
-        }
-        //显示Fragment
-        transaction.show(customDialog);
-        transaction.commit();
+//        //管理多个Fragment对象
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        //事务(原子性的操作)
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        //创建CustomDialog,添加数据
+//        UpdateNickNameDialog customDialog = new UpdateNickNameDialog();
+//        //判断是否已经被添加过
+//        if(!customDialog.isAdded()){
+//            //添加Fragment
+//            transaction.add(customDialog,"dialog");
+//        }
+//        //显示Fragment
+//        transaction.show(customDialog);
+//        transaction.commit();
     }
 
-    /**
-     * 弹出修改年级窗口
-     */
-    private void dialog_update_grade(){
-        //管理多个Fragment对象
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //事务(原子性的操作)
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        //创建CustomDialog,添加数据
-        UpdateGradeDialog customDialog = new UpdateGradeDialog();
-        //判断是否已经被添加过
-        if(!customDialog.isAdded()){
-            //添加Fragment
-            transaction.add(customDialog,"dialog");
-        }
-        //显示Fragment
-        transaction.show(customDialog);
-        transaction.commit();
-    }
+//    /**
+//     * 弹出修改年级窗口
+//     */
+//    private void dialog_update_grade(){
+//        //管理多个Fragment对象
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        //事务(原子性的操作)
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        //创建CustomDialog,添加数据
+//        UpdateGradeDialog customDialog = new UpdateGradeDialog();
+//        //判断是否已经被添加过
+//        if(!customDialog.isAdded()){
+//            //添加Fragment
+//            transaction.add(customDialog,"dialog");
+//        }
+//        //显示Fragment
+//        transaction.show(customDialog);
+//        transaction.commit();
+//    }
 
-    /**
-     * 弹出修改密码界面
-     */
-    private void update_password(){
-        Intent intent = new Intent();
-        intent.setClass(SettingActivity.this,UpdatePasswordActivity.class);
-        startActivity(intent);
-    }
+//    /**
+//     * 弹出修改密码界面
+//     */
+//    private void update_password(){
+//        Intent intent = new Intent();
+//        intent.setClass(SettingActivity.this,UpdatePasswordActivity.class);
+//        startActivity(intent);
+//    }
 
     /**
      * 打开相册
