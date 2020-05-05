@@ -44,7 +44,7 @@ public class User {
     private Set<Notification> sendNotifications = new HashSet<>();
     private Set<Notification> ReceiveNotifications = new HashSet<>();
     private Set<UserPetHouse> petHouses = new HashSet<>();
-    private Set<UserPetFoodBag> userPetFoodBags = new HashSet<>();
+    private Set<UserPetUtilBag> userPetUtilBags = new HashSet<>();
 
     public User(){
         this.level = 1;
@@ -309,12 +309,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
-    public Set<UserPetFoodBag> getUserPetFoodBags() {
-        return userPetFoodBags;
+    public Set<UserPetUtilBag> getUserPetUtilBags() {
+        return userPetUtilBags;
     }
 
-    public void setUserPetFoodBags(Set<UserPetFoodBag> userPetFoodBags) {
-        this.userPetFoodBags = userPetFoodBags;
+    public void setUserPetUtilBags(Set<UserPetUtilBag> userPetUtilBags) {
+        this.userPetUtilBags = userPetUtilBags;
     }
 
 }

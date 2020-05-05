@@ -136,12 +136,14 @@ public class NotifyActivity extends AppCompatActivity {
                     }
                     switch (current_type) {
                         case "1":
+                            MainActivity.notifyStatus.set(0,false);
                             SystemNotifyAdapter listAdapter = new SystemNotifyAdapter(notify_list,R.layout.notify_item_layout,getApplicationContext());
                             listView.setAdapter(listAdapter);
                             OnclickItem();
                             system_notify_red.setVisibility(View.INVISIBLE);
                             break;
                         case "2":
+                            MainActivity.notifyStatus.set(1,false);
                             FriendNotifyAdapter listAdapter1 = new FriendNotifyAdapter(notify_list,R.layout.friend_notify_item,getApplicationContext());
                             listView.setAdapter(listAdapter1);
                             friend_notify_red.setVisibility(View.INVISIBLE);
@@ -318,6 +320,7 @@ public class NotifyActivity extends AppCompatActivity {
                         listView.setVisibility(View.VISIBLE);
                         none_notify.setVisibility(View.GONE);
                     }
+                    MainActivity.notifyStatus.set(2,false);
                     sendNotifyAdapter = new SendNotifyAdapter(notify_list,R.layout.send_notify_item,getApplicationContext());
                     listView.setAdapter(sendNotifyAdapter);
                     send_notify_red.setVisibility(View.INVISIBLE);
@@ -385,7 +388,7 @@ public class NotifyActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.system_btn:
                     current_type = "1";
-                    delete_all_btn.setVisibility(View.VISIBLE);
+                    delete_all_btn.setVisibility(View.INVISIBLE);
                     getNotify("1",1,4);
                     break;
                 case R.id.friend_btn:

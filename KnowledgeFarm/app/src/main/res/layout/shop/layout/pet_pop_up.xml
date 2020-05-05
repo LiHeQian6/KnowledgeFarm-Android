@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shopitem"
+        android:orientation="vertical"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/thisFlower"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/meigui">
+
+                </ImageView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/thisName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="名称："
+                        android:textColor="@color/ShopTextColor">
+
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/thisTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="成熟时间："
+                        android:textSize="20sp"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/ShopTextColor"/>
+
+                    <TextView
+                        android:id="@+id/thisPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="单价："
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/ShopTextColor">
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/imgBtnJian"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/jianhui">
+                    </ImageView>
+
+                    <EditText
+                        android:id="@+id/shopNum"
+                        android:layout_width="60dp"
+                        android:textAlignment="center"
+                        android:layout_height="40dp"
+                        android:background="@null"
+                        android:inputType="number"
+                        android:textSize="20dp"
+                        android:text="1"
+                        android:imeOptions="flagNoExtractUi"
+                        android:textColor="@color/ShopTextColor">
+                    </EditText>
+
+                    <ImageView
+                        android:id="@+id/imgBtnPlus"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/plus">
+                    </ImageView>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="100dp"
+                android:textSize="22sp"
+                android:paddingBottom="10dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/buttonbackground"
+                android:text="取消"/>
+
+            <Button
+                android:id="@+id/buy"
+                android:layout_width="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:textSize="22sp"
+                android:background="@drawable/buttonbackground"
+                android:text="购买"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

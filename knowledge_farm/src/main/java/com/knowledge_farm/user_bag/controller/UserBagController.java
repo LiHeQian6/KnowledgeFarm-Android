@@ -1,7 +1,7 @@
 package com.knowledge_farm.user_bag.controller;
 
 import com.knowledge_farm.entity.BagCropItem;
-import com.knowledge_farm.entity.BagPetFoodItem;
+import com.knowledge_farm.entity.BagPetUtilItem;
 import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -43,16 +43,6 @@ public class UserBagController {
     public List<BagCropItem> initUserCropBag(@RequestParam("userId") Integer userId){
         List<BagCropItem> bagCropItems = this.userBagService.initUserCropBag(userId);
         return bagCropItems;
-    }
-
-    @ApiOperation(value = "查询用户背包中所有饲料", notes = "返回值：List（BagPetFoodItem）")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true)
-    })
-    @GetMapping("/initUserPetFoodBag")
-    public List<BagPetFoodItem> initUserPetFoodBag(@RequestParam("userId") Integer userId){
-        List<BagPetFoodItem> bagPetFoodItems = this.userBagService.initUserPetFoodBag(userId);
-        return bagPetFoodItems;
     }
 
 }

@@ -6,13 +6,13 @@ package com.knowledge_farm.entity;
  * @Author 张帅华
  * @Date 2020-05-04 10:17
  */
-public class BagPetFoodItem {
+public class BagPetUtilItem {
     private Integer number;
-    private PetFood petFood;
+    private PetUtil petUtil;
 
-    public BagPetFoodItem(Integer number, PetFood petFood) {
+    public BagPetUtilItem(Integer number, PetUtil petUtil) {
         this.number = number;
-        this.petFood = petFood;
+        this.petUtil = petUtil;
     }
 
     public Integer getNumber() {
@@ -23,12 +23,12 @@ public class BagPetFoodItem {
         this.number = number;
     }
 
-    public PetFood getPetFood() {
-        return petFood;
+    public PetUtil getPetUtil() {
+        return petUtil;
     }
 
-    public void setPetFood(PetFood petFood) {
-        this.petFood = petFood;
+    public void setPetUtil(PetUtil petUtil) {
+        this.petUtil = petUtil;
     }
 
 }

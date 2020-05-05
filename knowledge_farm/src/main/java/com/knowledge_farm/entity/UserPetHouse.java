@@ -1,8 +1,11 @@
 package com.knowledge_farm.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.knowledge_farm.util.RateRandomNumber;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -24,16 +27,40 @@ public class UserPetHouse {
     private Integer physical;         //体力值
 
     public UserPetHouse() {
+        this.growPeriod = 0;
+        this.ifUsing = 0;
     }
 
     public UserPetHouse(User user, Pet pet) {
         this.user = user;
         this.pet = pet;
-        life = new Random().nextInt(pet.getLife())+30;
-        intelligence = new Random().nextInt(pet.getIntelligence())+30;
-        physical = new Random().nextInt(pet.getPhysical())+30;
         this.growPeriod = 0;
         this.ifUsing = 0;
+        physical = pet.getPhysical();
+
+        //中间数据大概率随机取值life
+        double minLife = 0.7 * pet.getLife();
+        double maxLife = pet.getLife();
+        List<Integer> lifeSeparates = new ArrayList<>();
+        lifeSeparates.add((int) Math.ceil(minLife + 0.2 * (maxLife - minLife)));
+        lifeSeparates.add((int) Math.ceil(maxLife - 0.2 * (maxLife - minLife)));
+        List<Integer> lifePercents = new ArrayList<>();
+        lifePercents.add(10);
+        lifePercents.add(80);
+        lifePercents.add(10);
+        life = RateRandomNumber.produceRateRandomNumber((int) Math.ceil(minLife), (int) Math.ceil(maxLife), lifeSeparates, lifePercents);
+
+        //中间数据大概率随机取值intelligence
+        double minIntelligence = 0.7 * pet.getIntelligence();
+        double maxIntelligence = pet.getIntelligence();
+        List<Integer> intelligenceSeparates = new ArrayList<>();
+        intelligenceSeparates.add((int) Math.ceil(minIntelligence + 0.2 * (maxIntelligence - minIntelligence)));
+        intelligenceSeparates.add((int) Math.ceil(maxLife - 0.2 * (maxLife - minLife)));
+        List<Integer> intelligencePercents = new ArrayList<>();
+        intelligencePercents.add(10);
+        intelligencePercents.add(80);
+        intelligencePercents.add(10);
+        intelligence = RateRandomNumber.produceRateRandomNumber((int) Math.ceil(minIntelligence), (int) Math.ceil(maxIntelligence), intelligenceSeparates, intelligencePercents);
     }
 
     @Id
