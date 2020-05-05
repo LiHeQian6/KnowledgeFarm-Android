@@ -24,6 +24,13 @@ public class Task {
     private User user;
 
     public Task() {
+        this.signIn = 0;
+        this.water = 0;
+        this.fertilize = 0;
+        this.crop = 0;
+        this.harvest = 0;
+        this.helpWater = 0;
+        this.helpFertilize = 0;
     }
 
     public Task(User user) {

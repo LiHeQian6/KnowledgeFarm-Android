@@ -10,4 +10,5 @@ import java.io.Serializable;
 
 public interface UserPetHouseDao extends JpaRepository<UserPetHouse,Integer>, JpaSpecificationExecutor<UserPetHouse>, Serializable {
     UserPetHouse findUserPetHouseByUserAndPet(User user, Pet pet);
+    public UserPetHouse findUserPetHouseById(Integer id);
 }

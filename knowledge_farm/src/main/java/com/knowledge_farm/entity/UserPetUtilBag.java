@@ -11,11 +11,11 @@ import javax.persistence.*;
  * @Date 2020-05-04 09:18
  */
 @Entity
-@Table(name = "user_pet_food_bag")
-public class UserPetFoodBag {
+@Table(name = "user_pet_util_bag")
+public class UserPetUtilBag {
     private Integer id;
     private User user;
-    private PetFood petFood;
+    private PetUtil petUtil;
     private Integer number;
 
     @Id
@@ -40,13 +40,13 @@ public class UserPetFoodBag {
     }
 
     @ManyToOne
-    @JoinColumn(name = "pet_food_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    public PetFood getPetFood() {
-        return petFood;
+    @JoinColumn(name = "pet_util_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    public PetUtil getPetUtil() {
+        return petUtil;
     }
 
-    public void setPetFood(PetFood petFood) {
-        this.petFood = petFood;
+    public void setPetUtil(PetUtil petUtil) {
+        this.petUtil = petUtil;
     }
 
     public Integer getNumber() {

@@ -11,8 +11,8 @@ import javax.persistence.*;
  * @Date 2020-05-04 09:14
  */
 @Entity
-@Table(name = "pet_food")
-public class PetFood {
+@Table(name = "pet_util")
+public class PetUtil {
     private Integer id;
     private String name;
     private String description;
@@ -20,8 +20,18 @@ public class PetFood {
     private Integer value;
     private Integer price;
     private Integer exist;
+    private PetUtilType petUtilType;
 
-    public PetFood(){
+    public PetUtil(){
+        this.exist = 1;
+    }
+
+    public PetUtil(String name, String description, Integer value, Integer price, PetUtilType petUtilType){
+        this.name = name;
+        this.description = description;
+        this.value = value;
+        this.price = price;
+        this.petUtilType = petUtilType;
         this.exist = 1;
     }
 
@@ -83,6 +93,16 @@ public class PetFood {
 
     public void setExist(Integer exist) {
         this.exist = exist;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "pet_util_type_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    public PetUtilType getPetUtilType() {
+        return petUtilType;
+    }
+
+    public void setPetUtilType(PetUtilType petUtilType) {
+        this.petUtilType = petUtilType;
     }
 
 }

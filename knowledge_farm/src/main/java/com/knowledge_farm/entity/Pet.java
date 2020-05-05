@@ -24,10 +24,10 @@ public class Pet {
     private Integer exist;
 
     public Pet() {
+        this.exist = 1;
     }
 
-    public Pet(String name, String description, Integer life, Integer intelligence,
-               Integer physical,Integer price) {
+    public Pet(String name, String description, Integer life, Integer intelligence, Integer physical,Integer price) {
         this.name = name;
         this.description = description;
         this.life = life;

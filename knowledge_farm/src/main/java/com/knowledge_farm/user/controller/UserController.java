@@ -668,18 +668,18 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "购买宠物饲料", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
+    @ApiOperation(value = "购买宠物饲料或工具", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "petFoodId", value = "宠物饲料Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "petUtilId", value = "宠物饲料或工具Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "number", value = "数量", dataType = "int", paramType = "query", required = true)
     })
-    @GetMapping("/buyPetFood")
-    public String buyPetFood(@RequestParam("userId") Integer userId,
-                             @RequestParam("petFoodId") Integer petFoodId,
+    @GetMapping("/buyPetUtil")
+    public String buyPetUtil(@RequestParam("userId") Integer userId,
+                             @RequestParam("petUtilId") Integer petUtilId,
                              @RequestParam("number") Integer number){
         try{
-            return userService.buyPetFood(userId, petFoodId, number);
+            return userService.buyPetUtil(userId, petUtilId, number);
         }catch (Exception e){
             e.printStackTrace();
             return Result.FALSE;
@@ -689,14 +689,14 @@ public class UserController {
     @ApiOperation(value = "喂养宠物", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "petId", value = "宠物Id", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "petFoodId", value = "宠物饲料Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "userPetHouseId", value = "宠物仓库Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "petUtilBagId", value = "宠物饲料或工具背包Id", dataType = "int", paramType = "query", required = true),
     })
     @GetMapping("feedPet")
     public String feedPet(@RequestParam("userId") Integer userId,
-                          @RequestParam("petId") Integer petId,
-                          @RequestParam("petFoodId") Integer petFoodId){
-        return this.userService.feedPet(userId, petId, petFoodId);
+                          @RequestParam("userPetHouseId") Integer userPetHouseId,
+                          @RequestParam("petUtilBagId") Integer petUtilBagId){
+        return this.userService.feedPet(userId, userPetHouseId, petUtilBagId);
     }
 
 }
