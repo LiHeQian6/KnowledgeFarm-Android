@@ -117,7 +117,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("account",user.getAccount());
 
-                    if(tagPwd){
+                    if(rememberPwd.isChecked()){
                         editor.putString("password",pwd.getText().toString());
                     }
                     editor.apply();
@@ -139,10 +139,6 @@ public class LoginByAccountActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login_by_account);
 
-        //设置横屏
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
         FullScreen.NavigationBarStatusBar(LoginByAccountActivity.this,true);
         initView();
         setViewSize();

@@ -76,7 +76,6 @@ public class FriendsPopUpWindow extends PopupWindow {
         super(context);
         this.context = context;
         this.setOutsideTouchable(true);
-//        this.setFocusable(false);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
         this.setAnimationStyle(R.style.pop_animation);
