@@ -15,18 +15,22 @@ import okhttp3.Response;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -263,9 +267,9 @@ public class MainActivity extends AppCompatActivity {
         experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l]);
         List<UserPetHouse> petHouses = LoginActivity.user.getPetHouses();
         if (petHouses.size()!=0) {
-            Glide.with(this).asGif().load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
+            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
         }else
-            Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
+            Glide.with(this).load(R.drawable.dog).into(dog);
     }
 
     /**
@@ -315,6 +319,11 @@ public class MainActivity extends AppCompatActivity {
         displayWidth = ds.widthPixels;
         friendsPopUpWindow.setHeight((int)(displayHeight*0.95));
         friendsPopUpWindow.setWidth((int)(displayWidth*0.40));
+        if (!isNavigationBarShow()){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                friendsPopUpWindow.setIsClippedToScreen(true);
+            }
+        }
         friendsPopUpWindow.showAtLocation(myFriends,Gravity.RIGHT,0,0);
         friendsPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -322,6 +331,34 @@ public class MainActivity extends AppCompatActivity {
                 myFriends.setVisibility(View.VISIBLE);
             }
         });
+
+    }
+
+    /**
+     * @Author li
+     * @param
+     * @return boolean
+     * @Description 虚拟按键是否显示
+     * @Date 15:32 2020/5/5
+     **/
+    public boolean isNavigationBarShow(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            Point realSize = new Point();
+            display.getSize(size);
+            display.getRealSize(realSize);
+            boolean  result  = realSize.y!=size.y;
+            return realSize.y!=size.y;
+        }else {
+            boolean menu = ViewConfiguration.get(this).hasPermanentMenuKey();
+            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            if(menu || back) {
+                return false;
+            }else {
+                return true;
+            }
+        }
     }
 
     /**
