@@ -1,5 +1,6 @@
 package com.li.knowledgefarm.Study.GetSubjectQuestion;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,9 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
+import com.li.knowledgefarm.entity.Math23;
+import com.li.knowledgefarm.entity.Mix;
+import com.li.knowledgefarm.entity.Multiple;
 import com.li.knowledgefarm.entity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
@@ -74,6 +78,19 @@ public class GetMathQuestion extends SubjectInterface {
                             break;
                         case 2:
                             request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/mathOneDown").build();
+                            break;
+                        case 3:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/mathTwoUp").build();
+                            break;
+                        case 4:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/mathTwoDown").build();
+                            break;
+                        case 5:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/mathThreeUp").build();
+                            break;
+                        case 6:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/mathThreeDown").build();
+                            break;
                     }
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {
@@ -104,6 +121,7 @@ public class GetMathQuestion extends SubjectInterface {
      * @Param []
      * @return java.util.List<com.li.knowledgefarm.entity.Question3Num>
      */
+    @SuppressLint("HandlerLeak")
     @Override
     public void getMathHandler(final Intent intent) {
         getMath = new Handler(){
@@ -112,8 +130,25 @@ public class GetMathQuestion extends SubjectInterface {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
                 if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
-                    Type type = new TypeToken<List<Question3Num>>() {
-                    }.getType();
+                    Type type = null;
+                    switch (msg.what){
+                        case 1:
+                            type = new TypeToken<List<Question3Num>>() {
+                            }.getType();
+                            break;
+                        case 2:
+                            type = new TypeToken<List<Math23>>() {
+                            }.getType();
+                            break;
+                        case 3:
+                            type = new TypeToken<List<Multiple>>() {
+                            }.getType();
+                            break;
+                        case 4:
+                            type = new TypeToken<List<Mix>>() {
+                            }.getType();
+                            break;
+                    }
                     list = gson.fromJson(data, type);
                     if(list != null){
                         intent.putExtra("math",(Serializable) list);
