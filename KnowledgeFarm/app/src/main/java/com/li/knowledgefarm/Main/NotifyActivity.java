@@ -203,6 +203,7 @@ public class NotifyActivity extends AppCompatActivity {
         friend_notify_red = findViewById(R.id.friend_notify_red);
         send_notify_red = findViewById(R.id.send_notify_red);
         other_notify_red = findViewById(R.id.other_notify_red);
+        delete_all_btn.setVisibility(View.INVISIBLE);
     }
 
     /**
