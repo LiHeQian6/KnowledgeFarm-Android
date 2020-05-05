@@ -36,8 +36,33 @@ public class FriendNotifyAdapter extends BaseAdapter {
     private FriendsPage<Notification> list;
     private int id;
     private Context context;
-    private Handler resultYesHandler;
-    private Handler resultNoHandler;
+    private Toast toast;
+    private Handler resultNoHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            String result = (String) msg.obj;
+            String tip = "添加成功！";
+            if(!result.equals("") && result.equals("true")){
+                list.getList().remove(msg.what);
+                switch (msg.arg1){
+                    case 0:
+                        tip = "已添加";
+                        break;
+                    case 1:
+                        tip = "已拒绝";
+                        break;
+                }
+                toast = Toast.makeText(context,tip,Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM,0,0);
+                notifyDataSetChanged();
+            }else {
+                toast = Toast.makeText(context,tip,Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM,0,0);
+            }
+            toast.show();
+        }
+    };
 
     public FriendNotifyAdapter(FriendsPage<Notification> list, int id, Context context) {
         this.list = list;
@@ -128,24 +153,14 @@ public class FriendNotifyAdapter extends BaseAdapter {
                         String messages = response.body().string();
                         Message message = Message.obtain();
                         message.obj = messages;
+                        message.what = position;
+                        message.arg1 = 1;
                         resultNoHandler.sendMessage(message);
                     }
                 });
             }
         }.start();
-        resultNoHandler = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String result = (String) msg.obj;
-                if(!result.equals("") && result.equals("true")){
-                    list.getList().remove(position);
-                    notifyDataSetChanged();
-                }else {
-                    Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
+
     }
 
     private void YesForFriend(final int position){
@@ -171,24 +186,13 @@ public class FriendNotifyAdapter extends BaseAdapter {
                         String messages = response.body().string();
                         Message message = Message.obtain();
                         message.obj = messages;
-                        resultYesHandler.sendMessage(message);
+                        message.what = position;
+                        message.arg1 = 0;
+                        resultNoHandler.sendMessage(message);
                     }
                 });
             }
         }.start();
-        resultYesHandler = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String result = (String) msg.obj;
-                if(!result.equals("") && result.equals("true")){
-                    list.getList().remove(position);
-                    notifyDataSetChanged();
-                }else {
-                    Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
     }
 
     private class FriendViewHolder{

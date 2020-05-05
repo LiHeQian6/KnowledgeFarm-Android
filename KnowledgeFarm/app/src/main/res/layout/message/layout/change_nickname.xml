@@ -185,7 +185,7 @@
                                     </LinearLayout>
                                     <Button
                                         android:layout_width="80dp"
-                                        android:layout_height="50dp"
+                                        android:layout_height="40dp"
                                         android:background="@drawable/buttonbackground"
                                         android:text="修改"
                                         android:layout_marginLeft="10dp"
@@ -196,7 +196,7 @@
                                 </RelativeLayout>
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_marginTop="15dp"
+                                    android:layout_marginTop="10dp"
                                     android:layout_height="wrap_content">
                                     <LinearLayout
                                         android:layout_width="wrap_content"
@@ -220,7 +220,7 @@
                                     </LinearLayout>
                                     <Button
                                         android:layout_width="80dp"
-                                        android:layout_height="50dp"
+                                        android:layout_height="40dp"
                                         android:layout_marginLeft="10dp"
                                         android:text="绑定"
                                         android:textSize="20dp"
@@ -231,7 +231,7 @@
                                 <RelativeLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="15dp">
+                                    android:layout_marginTop="10dp">
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -259,13 +259,40 @@
                                     </LinearLayout>
                                     <Button
                                         android:layout_width="80dp"
-                                        android:layout_height="50dp"
+                                        android:layout_height="40dp"
                                         android:layout_marginLeft="10dp"
                                         android:background="@drawable/buttonbackground"
                                         android:layout_toRightOf="@id/bangding_email_li"
                                         android:text="去绑定"
                                         android:id="@+id/btnBindingEmail"
                                         android:textSize="20dp"/>
+                                </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:id="@+id/change_password_li"
+                                        android:layout_centerVertical="true">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="修改密码："
+                                            android:textSize="25dp"
+                                            android:textColor="@color/ShopTextColor"/>
+                                    </LinearLayout>
+                                    <Button
+                                        android:layout_width="80dp"
+                                        android:layout_height="40dp"
+                                        android:layout_marginLeft="10dp"
+                                        android:text="修改"
+                                        android:textSize="20dp"
+                                        android:id="@+id/change_password"
+                                        android:layout_toRightOf="@id/change_password_li"
+                                        android:background="@drawable/buttonbackground"
+                                        android:textColor="@color/ShopTextColor"/>
                                 </RelativeLayout>
                             </LinearLayout>
                         </LinearLayout>
@@ -279,31 +306,20 @@
                     android:orientation="vertical"
                     android:id="@+id/system_setting_li"
                     android:visibility="gone">
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/change_password_li"
-                            android:layout_centerVertical="true">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="修改密码"
-                                android:textSize="25dp"
-                                android:textColor="@color/ShopTextColor"/>
-                        </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
                         <Button
-                            android:layout_width="80dp"
+                            android:layout_width="120dp"
                             android:layout_height="50dp"
-                            android:layout_marginLeft="10dp"
-                            android:text="修改"
+                            android:text="切换账号"
                             android:textSize="20dp"
-                            android:layout_toRightOf="@id/change_password_li"
-                            android:background="@drawable/buttonbackground"
-                            android:textColor="@color/ShopTextColor"/>
-                    </RelativeLayout>
+                            android:id="@+id/btn_logout"
+                            android:textColor="@color/ShopTextColor"
+                            android:background="@drawable/buttonbackground"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

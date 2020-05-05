@@ -244,13 +244,13 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">通知标题</label>
                     <div class="layui-input-block">
-                        <input id="title" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入通知标题" class="layui-input">
+                        <input id="title" type="text" name="title" required lay-verify="title" autocomplete="off" placeholder="请输入通知标题" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">通知内容</label>
                     <div class="layui-input-block">
-                        <textarea id="content" placeholder="请输入通知内容" class="layui-textarea"></textarea>
+                        <textarea id="content" placeholder="请输入通知内容" required class="layui-textarea"></textarea>
                     </div>
                 </div>
                 <div id="extraAll" class="layui-form-item">

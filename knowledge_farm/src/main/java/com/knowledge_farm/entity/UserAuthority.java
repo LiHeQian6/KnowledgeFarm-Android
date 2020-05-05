@@ -20,6 +20,10 @@ public class UserAuthority {
     private String type;
     private Integer exist;
 
+    public UserAuthority(){
+        this.exist = 1;
+    }
+
     @Id
     @GeneratedValue(generator="identity")
     @GenericGenerator(name="identity", strategy="identity")
@@ -59,7 +63,7 @@ public class UserAuthority {
         this.type = type;
     }
 
-    @Column(insertable = false, columnDefinition = "int default 1")
+    @Column(columnDefinition = "int default 1")
     public Integer getExist() {
         return exist;
     }

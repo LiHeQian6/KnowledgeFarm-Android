@@ -641,7 +641,7 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "form", required = true),
-            @ApiImplicitParam(name = "needMoney", value = "开扩土地所需金币", dataType = "int", paramType = "form", required = true),
+            @ApiImplicitParam(name = "needMoney", value = "开扩土地所需金币", dataType = "int", paramType = "form", required = true)
     })
     @PostMapping("/extensionLand")
     public String extensionLand(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber, @RequestParam("needMoney") Integer money){
@@ -652,12 +652,51 @@ public class UserController {
             return Result.FALSE;
         }
     }
-    @GetMapping("/test")
-    public String test(){
-        return userService.buyPet(109,2);    }
+
+    @ApiOperation(value = "购买宠物", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)own：该宠物已拥有，不可再次购买 || (String)notEnoughMoney：钱不够")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "petId", value = "宠物Id", dataType = "int", paramType = "query", required = true)
+    })
     @GetMapping("/buyPet")
-    public String buyPet(@RequestParam("userId")int userId,@RequestParam("petId")int petId){
-        return userService.buyPet(userId,petId);
+    public String buyPet(@RequestParam("userId")Integer userId,@RequestParam("petId")Integer petId){
+        try{
+            return userService.buyPet(userId,petId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+    }
+
+    @ApiOperation(value = "购买宠物饲料或工具", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "petUtilId", value = "宠物饲料或工具Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "number", value = "数量", dataType = "int", paramType = "query", required = true)
+    })
+    @GetMapping("/buyPetUtil")
+    public String buyPetUtil(@RequestParam("userId") Integer userId,
+                             @RequestParam("petUtilId") Integer petUtilId,
+                             @RequestParam("number") Integer number){
+        try{
+            return userService.buyPetUtil(userId, petUtilId, number);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FALSE;
+        }
+    }
+
+    @ApiOperation(value = "喂养宠物", notes = "返回值： (String)true：成功 || (String)false：失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "userPetHouseId", value = "宠物仓库Id", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "petUtilBagId", value = "宠物饲料或工具背包Id", dataType = "int", paramType = "query", required = true),
+    })
+    @GetMapping("feedPet")
+    public String feedPet(@RequestParam("userId") Integer userId,
+                          @RequestParam("userPetHouseId") Integer userPetHouseId,
+                          @RequestParam("petUtilBagId") Integer petUtilBagId){
+        return this.userService.feedPet(userId, userPetHouseId, petUtilBagId);
     }
 
 }

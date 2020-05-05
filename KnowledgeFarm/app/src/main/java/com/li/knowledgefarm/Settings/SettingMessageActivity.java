@@ -90,16 +90,24 @@ public class SettingMessageActivity extends AppCompatActivity {
     private Button change_grade; //修改年级Button
     private Button change_QQ; //绑定QQButton
     private Button change_Email; //绑定邮箱Button
+    private Button change_password;
     private ImageView user_photo; //用户头像
     private User user;
     private EditText email_edit; //邮箱输入框
     private OkHttpClient okHttpClient;
-    private ChangeEmailPopUpWindow popUpWindow;
+    private ChangeEmailPopUpWindow popUpWindow; //修改邮箱弹出框
+    private ChangeNicknamePop nicknamePop; //修改昵称弹出框
+    private ChangePasswordPop   passwordPop; //修改密码弹出框
+    private IfDoPop ifDoPop;//询问弹出框
     private ImageView change_nickname;
     /** 选中的年级*/
     private String newGrade;
     private String[] spin;
     private ImageView returns_message;
+    private Button log_out;
+    private WindowManager wm;
+    private DisplayMetrics ds;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,15 +138,15 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_account.setText("账号："+user.getAccount());
         user_nickName.setText("昵称："+user.getNickName());
         show_grade.setText(DoubleToString(user.getGrade()));
-        if(!(user.getEmail() == null)){
+        if(!("".equals(user.getEmail()))){
             user_Email.setText("已绑定"+user.getEmail());
-            change_Email.setText("修改");
+            change_Email.setText("解绑");
         }else{
             user_Email.setText("未绑定");
             change_Email.setText("去绑定");
         }
         if(!(user.getUserAuthority() == null)){
-
+            change_QQ.setText("解绑");
         }else {
             user_QQ.setText("未绑定");
             change_QQ.setText("去绑定");
@@ -153,6 +161,8 @@ public class SettingMessageActivity extends AppCompatActivity {
         change_Email.setOnClickListener(new CustomerOnclickListener());
         change_nickname.setOnClickListener(new CustomerOnclickListener());
         returns_message.setOnClickListener(new CustomerOnclickListener());
+        change_password.setOnClickListener(new CustomerOnclickListener());
+        log_out.setOnClickListener(new CustomerOnclickListener());
         select_grade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -186,14 +196,19 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_nickName = findViewById(R.id.user_nickname);
         change_Email = findViewById(R.id.btnBindingEmail);
         change_QQ = findViewById(R.id.btnUpdateQQ);
+        change_password = findViewById(R.id.change_password);
         user_QQ = findViewById(R.id.showQQ);
         user_Email = findViewById(R.id.showEmail);
         email_edit = findViewById(R.id.bindingEmail_edit);
         change_nickname = findViewById(R.id.change_nickname);
+        log_out = findViewById(R.id.btn_logout);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
         spin = getResources().getStringArray(R.array.sarry);
         okHttpClient = new OkHttpClient();
         returns_message = findViewById(R.id.returns_message);
+        wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
     }
 
 
@@ -484,15 +499,79 @@ public class SettingMessageActivity extends AppCompatActivity {
         return file;
     }
 
+    /**
+     * @Description 展示绑定邮箱窗口
+     * @Author 孙建旺
+     * @Date 上午10:57 2020/05/05
+     * @Param [type]
+     * @return void
+     */
     private void ShowChangeMessagePop(String type){
         popUpWindow = new ChangeEmailPopUpWindow(this,type);
-        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
         popUpWindow.setHeight((int)(ds.heightPixels*0.7));
         popUpWindow.setWidth((int)(ds.widthPixels*0.5));
         popUpWindow.showAtLocation(change_Email, Gravity.CENTER,0,0);
         popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                ShowUserMessage();
+            }
+        });
+    }
+
+    /**
+     * @Description 展示修改昵称窗口
+     * @Author 孙建旺
+     * @Date 上午10:57 2020/05/05
+     * @Param []
+     * @return void
+     */
+    private void ShowChangeNickNamePop(){
+        nicknamePop = new ChangeNicknamePop(this);
+        nicknamePop.setHeight((int)(ds.heightPixels*0.7));
+        nicknamePop.setWidth((int)(ds.widthPixels*0.5));
+        nicknamePop.showAtLocation(change_Email, Gravity.CENTER,0,0);
+        nicknamePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                ShowUserMessage();
+            }
+        });
+    }
+
+    /**
+     * @Description 展示修改密码窗口
+     * @Author 孙建旺
+     * @Date 上午10:58 2020/05/05
+     * @Param []
+     * @return void
+     */
+    private void ShowChangePasswordPop(){
+        passwordPop = new ChangePasswordPop(this);
+        passwordPop.setHeight((int)(ds.heightPixels*0.7));
+        passwordPop.setWidth((int)(ds.widthPixels*0.5));
+        passwordPop.showAtLocation(change_Email, Gravity.CENTER,0,0);
+        passwordPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                ShowUserMessage();
+            }
+        });
+    }
+
+    /**
+     * @Description 展示询问弹窗
+     * @Author 孙建旺
+     * @Date 上午11:26 2020/05/05
+     * @Param []
+     * @return void
+     */
+    private void ShowIfDoPop(String type){
+        ifDoPop = new IfDoPop(this,type);
+        ifDoPop.setHeight((int)(ds.heightPixels*0.7));
+        ifDoPop.setWidth((int)(ds.widthPixels*0.5));
+        ifDoPop.showAtLocation(change_Email, Gravity.CENTER,0,0);
+        ifDoPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
                 ShowUserMessage();
@@ -600,17 +679,23 @@ public class SettingMessageActivity extends AppCompatActivity {
                     if(change_Email.getText().toString().equals("去绑定")){
                         ShowChangeMessagePop("Email");
                     }else {
-                        ShowChangeMessagePop("Email");
+                        ShowIfDoPop("UnBindEmail");
                     }
                     break;
                 case R.id.btnBindingQQ:
                     bindingQQ();
                     break;
                 case R.id.change_nickname:
-                    ShowChangeMessagePop("NickName");
+                    ShowChangeNickNamePop();
+                    break;
+                case R.id.change_password:
+                    ShowChangePasswordPop();
                     break;
                 case R.id.returns_message:
                     finish();
+                    break;
+                case R.id.btn_logout:
+                    ShowIfDoPop("LogOut");
                     break;
             }
         }

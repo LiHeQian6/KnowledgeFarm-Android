@@ -15,18 +15,22 @@ import okhttp3.Response;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -263,9 +267,9 @@ public class MainActivity extends AppCompatActivity {
         experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l]);
         List<UserPetHouse> petHouses = LoginActivity.user.getPetHouses();
         if (petHouses.size()!=0) {
-            Glide.with(this).asGif().load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
+            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
         }else
-            Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
+            Glide.with(this).load(R.drawable.dog).into(dog);
     }
 
     /**
@@ -315,6 +319,11 @@ public class MainActivity extends AppCompatActivity {
         displayWidth = ds.widthPixels;
         friendsPopUpWindow.setHeight((int)(displayHeight*0.95));
         friendsPopUpWindow.setWidth((int)(displayWidth*0.40));
+        if (!isNavigationBarShow()){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                friendsPopUpWindow.setIsClippedToScreen(true);
+            }
+        }
         friendsPopUpWindow.showAtLocation(myFriends,Gravity.RIGHT,0,0);
         friendsPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -322,6 +331,34 @@ public class MainActivity extends AppCompatActivity {
                 myFriends.setVisibility(View.VISIBLE);
             }
         });
+
+    }
+
+    /**
+     * @Author li
+     * @param
+     * @return boolean
+     * @Description 虚拟按键是否显示
+     * @Date 15:32 2020/5/5
+     **/
+    public boolean isNavigationBarShow(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            Point realSize = new Point();
+            display.getSize(size);
+            display.getRealSize(realSize);
+            boolean  result  = realSize.y!=size.y;
+            return realSize.y!=size.y;
+        }else {
+            boolean menu = ViewConfiguration.get(this).hasPermanentMenuKey();
+            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            if(menu || back) {
+                return false;
+            }else {
+                return true;
+            }
+        }
     }
 
     /**
@@ -533,6 +570,11 @@ public class MainActivity extends AppCompatActivity {
      * 初始化土地
      */
     private void showLand() {
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = (int) (ds.heightPixels/ds.density);
+        displayWidth = (int) (ds.widthPixels/ds.density);
         lands.removeAllViews();
         int flag = 0;
         float x = 0;
@@ -541,12 +583,13 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             final View landGroup = inflater.inflate(R.layout.land_group, null);
             int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    120, getResources().getDisplayMetrics());
+                    displayWidth/6, getResources().getDisplayMetrics());
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    60, getResources().getDisplayMetrics());
-            LAND_WIDTH_2=width/2.0f-12;
-            LAND_HEIGHT_2=height/2.0f-6;
-            landGroup.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+                    displayWidth/12, getResources().getDisplayMetrics());
+            LAND_WIDTH_2=width/2.1f;
+            LAND_HEIGHT_2=height/2.1f;
+            FrameLayout.LayoutParams param = new FrameLayout.LayoutParams(width, height);
+            landGroup.setLayoutParams(param);
             int num = i + 1;
             if ((num - 1) % 3 == 0) {
                 x = ((num - 1) / 3) * LAND_WIDTH_2 + LAND_WIDTH_2 * 2;
@@ -569,7 +612,11 @@ public class MainActivity extends AppCompatActivity {
             if (cropList.get(i) == null) {//cropItem为null表示土地未开垦，crop为null代表未种植，不为null为种植的对应植物，当第一次运行到的时候表示该块土地上是扩建牌
                 if (flag == 0) {
                     plant.setVisibility(View.VISIBLE);
-                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(240, 240);
+                    int w = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                            60, getResources().getDisplayMetrics());
+                    int h = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                            60, getResources().getDisplayMetrics());
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(w, h);
                     params.gravity = Gravity.CENTER;
                     params.topMargin = -90;
                     plant.setLayoutParams(params);
@@ -1021,8 +1068,15 @@ public class MainActivity extends AppCompatActivity {
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
+        Log.e("midu",ds.density+"");
+        Log.e("高度，宽度",displayHeight/ds.density+","+displayWidth/ds.density);
         bagPopUpWindow.setWidth((int) (displayWidth * 0.40));
         bagPopUpWindow.setHeight((int) (displayHeight * 0.95));
+        if (!isNavigationBarShow()){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                bagPopUpWindow.setIsClippedToScreen(true);
+            }
+        }
         bagPopUpWindow.showAtLocation(bag,Gravity.RIGHT,0,0);
         planting(bagPopUpWindow.getGridView());
     }
@@ -1089,15 +1143,14 @@ public class MainActivity extends AppCompatActivity {
         daytask_red =findViewById(R.id.daytask_red);
         dog=findViewById(R.id.dog);
         ViewGroup.MarginLayoutParams params =(ViewGroup.MarginLayoutParams)lands.getLayoutParams();
-        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayHeight = ds.heightPixels;
-        displayWidth = ds.widthPixels;
-        params.topMargin=displayHeight/6;
-        params.leftMargin=displayWidth/100;
-        System.out.println(displayHeight+"  "+displayWidth);
-        lands.setLayoutParams(params);
+        float density = getResources().getDisplayMetrics().density;
+        float displayHeight = getResources().getDisplayMetrics().heightPixels/density;
+        float displayWidth = getResources().getDisplayMetrics().widthPixels/density;
+        if (displayWidth>598){
+            params.topMargin= (int) (displayHeight/2.4f);
+            params.leftMargin=(int)displayWidth/5;
+            lands.setLayoutParams(params);
+        }
     }
 
     /**

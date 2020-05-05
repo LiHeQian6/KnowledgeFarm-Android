@@ -13,17 +13,22 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -46,8 +51,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Main.NotifyActivity;
+import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
+import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
@@ -307,23 +314,36 @@ public class MyFriendActivity extends AppCompatActivity {
         experience.setProgress((int) user.getExperience()-levelExperience[l-1]);
         experienceValue.setText("" + user.getExperience() + "/" + levelExperience[l]);
         List<UserPetHouse> petHouses = user.getPetHouses();
-        if (petHouses.size()!=0)
-            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.mydog).into(dog);
-        Glide.with(this).asGif().load(R.drawable.mydog).into(dog);
+        if (petHouses.size()!=0) {
+            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
+        }else
+            Glide.with(this).load(R.drawable.dog).into(dog);
     }
 
     /**
      * 生成土地
      */
     private void showLand(){
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        displayHeight = (int) (ds.heightPixels/ds.density);
+        displayWidth = (int) (ds.widthPixels/ds.density);
         lands.removeAllViews();
         int flag=0;
         float x=0;
         float y=0;
         for (int i = 0; i <18 ; i++) {
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-            View landGroup = inflater.inflate(R.layout.land_group,null);
-            landGroup.setLayoutParams(new FrameLayout.LayoutParams(480, 240));
+            final View landGroup = inflater.inflate(R.layout.land_group, null);
+            int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    displayWidth/6, getResources().getDisplayMetrics());
+            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    displayWidth/12, getResources().getDisplayMetrics());
+            LAND_WIDTH_2=width/2.1f;
+            LAND_HEIGHT_2=height/2.1f;
+            FrameLayout.LayoutParams param = new FrameLayout.LayoutParams(width, height);
+            landGroup.setLayoutParams(param);
             int num=i+1;
             if ((num-1)%3==0){
                 x=((num-1)/3)*LAND_WIDTH_2+LAND_WIDTH_2*2;
@@ -380,8 +400,6 @@ public class MyFriendActivity extends AppCompatActivity {
                         .fallback(R.drawable.meigui)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
                 land.setImageResource(R.drawable.land);
-                plant.setRotationX(-50);
-                plant.setRotation(-5);
                 UserCropItem crop=cropList.get(i);
                 if (crop!=null){
                     plant.setVisibility(View.VISIBLE);
@@ -390,7 +408,7 @@ public class MyFriendActivity extends AppCompatActivity {
                     //展示植物不同阶段
                     final double status = (crop.getProgress()+0.0) / crop.getCrop().getMatureTime();
                     if(status <0.2){
-                        plant.setTranslationY(40);
+                        plant.setTranslationY(80);
                         plant.setImageResource(R.drawable.seed);
                     }else if (status<0.3){
                         Glide.with(this).load(crop.getCrop().getImg1()).apply(requestOptions).into(plant);
@@ -544,6 +562,7 @@ public class MyFriendActivity extends AppCompatActivity {
         myFriends.setOnClickListener(new MainListener());
         dayTask.setOnClickListener(new MainListener());
         notify.setOnClickListener(new MainListener());
+        photo.setOnClickListener(new MainListener());
     }
 
     private void getViews() {
@@ -588,6 +607,15 @@ public class MyFriendActivity extends AppCompatActivity {
         daytask_red =findViewById(R.id.daytask_red);
         notify = findViewById(R.id.notify_img);
         dog=findViewById(R.id.dog);
+        ViewGroup.MarginLayoutParams params =(ViewGroup.MarginLayoutParams)lands.getLayoutParams();
+        float density = getResources().getDisplayMetrics().density;
+        float displayHeight = getResources().getDisplayMetrics().heightPixels/density;
+        float displayWidth = getResources().getDisplayMetrics().widthPixels/density;
+        if (displayWidth>598){
+            params.topMargin= (int) (displayHeight/2.4f);
+            params.leftMargin=(int)displayWidth/5;
+            lands.setLayoutParams(params);
+        }
     }
     class MainListener implements View.OnClickListener {
 
@@ -653,6 +681,10 @@ public class MyFriendActivity extends AppCompatActivity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.notify_pop_in, 0);
                     notify_red.setVisibility(View.GONE);
+                    break;
+                case R.id.photo:
+                    UserMessagePopUp userMessagePopUp = new UserMessagePopUp(getApplicationContext(), user);
+                    userMessagePopUp.showAtLocation(dayTask,Gravity.CENTER,0,0);
                     break;
                 case R.id.task:
                     showDayTaskWindow();
@@ -755,6 +787,11 @@ public class MyFriendActivity extends AppCompatActivity {
         attrs.height = (int)(displayHeight*0.95);
         friendsPopUpWindow.setHeight((int)(displayHeight*0.95));
         friendsPopUpWindow.setWidth((int)(displayWidth*0.40));
+        if (!isNavigationBarShow()){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                friendsPopUpWindow.setIsClippedToScreen(true);
+            }
+        }
         friendsPopUpWindow.showAtLocation(myFriends,Gravity.RIGHT,0,0);
         friendsPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -762,6 +799,26 @@ public class MyFriendActivity extends AppCompatActivity {
                 myFriends.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public boolean isNavigationBarShow(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            Point realSize = new Point();
+            display.getSize(size);
+            display.getRealSize(realSize);
+            boolean  result  = realSize.y!=size.y;
+            return realSize.y!=size.y;
+        }else {
+            boolean menu = ViewConfiguration.get(this).hasPermanentMenuKey();
+            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            if(menu || back) {
+                return false;
+            }else {
+                return true;
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

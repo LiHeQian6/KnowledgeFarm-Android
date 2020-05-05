@@ -1,11 +1,15 @@
 package com.li.knowledgefarm.Settings;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +24,8 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.Md5Encode;
+import com.tencent.tauth.Tencent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -43,7 +49,6 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
     private EditText vertical;
     private Button get_vertical_btn;
     private Button commit_btn;
-    private LinearLayout get_vertical_li;
     private OkHttpClient okHttpClient;
     /** 异步线程*/
     private GetTestCodeAsyncTask asyncTask;
@@ -79,16 +84,6 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     }else{ //绑定失败
                         Toast.makeText(context,"绑定邮箱失败",Toast.LENGTH_SHORT).show();
                     }
-                case 2:
-                    if(msg.obj.equals("true")){
-                        LoginActivity.user.setNickName(new_message.getText().toString().trim());
-                        Toast toast = Toast.makeText(context,"修改成功！",Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM,0,0);
-                        toast.show();
-                        dismiss();
-                    }else{
-                        Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
-                    }
                     break;
             }
         }
@@ -106,25 +101,6 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                 null, false);
         this.setContentView(contentView);
         getViews(contentView);
-        showTitle();
-    }
-
-    /**
-     * @Description 更改标题
-     * @Author 孙建旺
-     * @Date 下午10:34 2020/04/29
-     * @Param []
-     * @return void
-     */
-    private void showTitle() {
-        if(type.equals("Email")){
-            show_title.setText("绑定邮箱");
-            new_message.setHint("请输入邮箱");
-        }else {
-            show_title.setText("修改昵称");
-            new_message.setHint("请输入新的昵称");
-            get_vertical_li.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void registerListener(){
@@ -145,7 +121,6 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         vertical = view.findViewById(R.id.vertical_edit);
         get_vertical_btn = view.findViewById(R.id.getVertical_btn);
         commit_btn = view.findViewById(R.id.commit_btn);
-        get_vertical_li = view.findViewById(R.id.getVertical_li);
         new_message.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         vertical.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         okHttpClient = new OkHttpClient();
@@ -160,37 +135,6 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         FullScreen.hideBottomUIMenu(view);
         setFocusable(true);
         update();
-    }
-
-    /**
-     * 保存
-     */
-    private void save(){
-        final String nickName = new_message.getText().toString().trim();
-        if(new_message.getText().toString().trim().equals("")){
-            Toast.makeText(context,"您还没有填写昵称呢！",Toast.LENGTH_SHORT).show();
-        }else{
-            new Thread(){
-                @Override
-                public void run() {
-                    FormBody formBody = new FormBody.Builder().add("account", LoginActivity.user.getAccount()).add("nickName",nickName).build();
-                    final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/updateUserNickName").build();
-                    Call call = okHttpClient.newCall(request);
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Log.i("lww","请求失败");
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            String result = response.body().string();
-                            sendMessage(2,response.code(),result);
-                        }
-                    });
-                }
-            }.start();
-        }
     }
 
     private void sendMessage(int arg1,int code,String message){
@@ -300,18 +244,14 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.commit_btn:
-                    if(!type.equals("Email"))
-                        save();
-                    else {
-                        if(!vertical.getText().toString().trim().equals("")){ //验证码不为空
-                            if(vertical.getText().toString().trim().equals(testCode)){ //验证码正确
-                                over();
-                            }else{ //验证码错误
-                                Toast.makeText(context,"验证码输入错误",Toast.LENGTH_SHORT).show();
-                            }
-                        }else{ //验证码为空
-                            Toast.makeText(context,"验证码不能为空",Toast.LENGTH_SHORT).show();
+                    if(!vertical.getText().toString().trim().equals("")){ //验证码不为空
+                        if(vertical.getText().toString().trim().equals(testCode)){ //验证码正确
+                            over();
+                        }else{ //验证码错误
+                            Toast.makeText(context,"验证码输入错误",Toast.LENGTH_SHORT).show();
                         }
+                    }else{ //验证码为空
+                        Toast.makeText(context,"验证码不能为空",Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.getVertical_btn:

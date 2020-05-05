@@ -1,6 +1,6 @@
 package com.knowledge_farm.user_bag.dao;
 
-import com.knowledge_farm.entity.UserBag;
+import com.knowledge_farm.entity.UserCropBag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Author 张帅华
  * @Date 2020-04-10 13:51
  */
-public interface UserBagDao extends JpaRepository<UserBag, Integer> {
+public interface UserBagDao extends JpaRepository<UserCropBag, Integer> {
 }

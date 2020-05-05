@@ -1,14 +1,10 @@
 package com.knowledge_farm.pet.service;
 
 import com.knowledge_farm.entity.Pet;
-import com.knowledge_farm.entity.PetFood;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserPetHouse;
 import com.knowledge_farm.pet.dao.PetDao;
-import com.knowledge_farm.pet.dao.PetFoodDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +25,8 @@ public class PetService {
     private PetDao petDao;
     @Resource
     private UserServiceImpl userService;
-    @Resource
-    private PetFoodDao petFoodDao;
+//    @Resource
+//    private PetFoodDao petFoodDao;
 
     public List<Pet> showAllPetInStore(){
         return petDao.findAllByExist(1);
@@ -61,9 +57,9 @@ public class PetService {
         }
     }
 
-    @Transactional(readOnly = false)
-    public int savePetFood(PetFood petFood){
-        return petFoodDao.saveAndFlush(petFood).getId();
-    }
+//    @Transactional(readOnly = false)
+//    public int savePetFood(PetFood petFood){
+//        return petFoodDao.saveAndFlush(petFood).getId();
+//    }
 
 }

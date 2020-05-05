@@ -37,12 +37,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
+                android:padding="15dp"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <Button
-                        android:layout_width="120dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="系统通知"
                         android:textSize="17dp"
@@ -55,10 +56,10 @@
                         android:visibility="gone"
                         android:id="@+id/system_notify_red"
                         android:layout_width="10dp"
-                        android:layout_toRightOf="@id/system_btn"
+                        android:layout_alignParentRight="true"
                         android:layout_height="10dp"/>
                     <Button
-                        android:layout_width="120dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="好友申请"
                         android:textSize="17dp"
@@ -72,11 +73,11 @@
                         android:visibility="gone"
                         android:id="@+id/friend_notify_red"
                         android:layout_width="10dp"
-                        android:layout_toRightOf="@id/friend_btn"
+                        android:layout_alignParentRight="true"
                         android:layout_below="@+id/system_btn"
                         android:layout_height="10dp"/>
                     <Button
-                        android:layout_width="120dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="添加好友"
                         android:textSize="17dp"
@@ -90,11 +91,11 @@
                         android:visibility="gone"
                         android:id="@+id/send_notify_red"
                         android:layout_width="10dp"
-                        android:layout_toRightOf="@id/add_btn"
+                        android:layout_alignParentRight="true"
                         android:layout_below="@+id/friend_btn"
                         android:layout_height="10dp"/>
                     <Button
-                        android:layout_width="120dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="消息通知"
                         android:textSize="17dp"
@@ -108,7 +109,7 @@
                         android:visibility="gone"
                         android:id="@+id/other_notify_red"
                         android:layout_width="10dp"
-                        android:layout_toRightOf="@id/message_btn"
+                        android:layout_alignParentRight="true"
                         android:layout_below="@+id/add_btn"
                         android:layout_height="10dp"/>
                 </RelativeLayout>

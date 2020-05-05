@@ -160,24 +160,24 @@ public class LoginActivity extends AppCompatActivity {
         FullScreen.NavigationBarStatusBar(LoginActivity.this,true);
         getViews();
         registListener();
-        XXPermissions.with(this)
-            // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
-            //.constantRequest()
-            // 支持请求6.0悬浮窗权限8.0请求安装权限
-            //.permission(Permission.SYSTEM_ALERT_WINDOW, Permission.REQUEST_INSTALL_PACKAGES)
-            // 不指定权限则自动获取清单中的危险权限
-            .request(new OnPermission() {
-
-                @Override
-                public void hasPermission(List<String> granted, boolean all) {
-
-                }
-
-                @Override
-                public void noPermission(List<String> denied, boolean quick) {
-
-                }
-            });
+//        XXPermissions.with(this)
+//            // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+//            //.constantRequest()
+//            // 支持请求6.0悬浮窗权限8.0请求安装权限
+//            //.permission(Permission.SYSTEM_ALERT_WINDOW, Permission.REQUEST_INSTALL_PACKAGES)
+//            // 不指定权限则自动获取清单中的危险权限
+//            .request(new OnPermission() {
+//
+//                @Override
+//                public void hasPermission(List<String> granted, boolean all) {
+//
+//                }
+//
+//                @Override
+//                public void noPermission(List<String> denied, boolean quick) {
+//
+//                }
+//            });
     }
 
     /**
