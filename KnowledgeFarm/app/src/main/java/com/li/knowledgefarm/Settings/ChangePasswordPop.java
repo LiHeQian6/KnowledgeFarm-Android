@@ -36,6 +36,7 @@ public class ChangePasswordPop extends PopupWindow {
     /** 确认新密码输入框 */
     private EditText again_new_password;
     private Button commit_password;
+    private Button cancel_password;
     private OkHttpClient okHttpClient;
     private Handler handler = new Handler(){
         @Override
@@ -98,10 +99,17 @@ public class ChangePasswordPop extends PopupWindow {
         new_password = contentView.findViewById(R.id.new_password);
         again_new_password = contentView.findViewById(R.id.again_password);
         commit_password = contentView.findViewById(R.id.commit_password);
+        cancel_password = contentView.findViewById(R.id.cancel_password);
         commit_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 savePassword();
+            }
+        });
+        cancel_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }

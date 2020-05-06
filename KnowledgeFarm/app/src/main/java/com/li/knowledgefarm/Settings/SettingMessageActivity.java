@@ -127,6 +127,14 @@ public class SettingMessageActivity extends AppCompatActivity {
         ShowUserMessage();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(popUpWindow.isShowing()){
+            return false;
+        }
+        return super.onTouchEvent(event);
+    }
+
     private void ShowUserMessage(){
         user = LoginActivity.user;
         RequestOptions requestOptions = new RequestOptions()
@@ -509,8 +517,8 @@ public class SettingMessageActivity extends AppCompatActivity {
      */
     private void ShowChangeMessagePop(String type){
         popUpWindow = new ChangeEmailPopUpWindow(this,type);
-        popUpWindow.setHeight((int)(ds.heightPixels*0.7));
-        popUpWindow.setWidth((int)(ds.widthPixels*0.5));
+        popUpWindow.setHeight((int)(ds.heightPixels));
+        popUpWindow.setWidth((int)(ds.widthPixels));
         popUpWindow.showAtLocation(change_Email, Gravity.CENTER,0,0);
         popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -531,8 +539,8 @@ public class SettingMessageActivity extends AppCompatActivity {
      */
     private void ShowChangeNickNamePop(){
         nicknamePop = new ChangeNicknamePop(this);
-        nicknamePop.setHeight((int)(ds.heightPixels*0.7));
-        nicknamePop.setWidth((int)(ds.widthPixels*0.5));
+        nicknamePop.setHeight((int)(ds.heightPixels));
+        nicknamePop.setWidth((int)(ds.widthPixels));
         nicknamePop.showAtLocation(change_Email, Gravity.CENTER,0,0);
         nicknamePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -551,8 +559,8 @@ public class SettingMessageActivity extends AppCompatActivity {
      */
     private void ShowChangePasswordPop(){
         passwordPop = new ChangePasswordPop(this);
-        passwordPop.setHeight((int)(ds.heightPixels*0.7));
-        passwordPop.setWidth((int)(ds.widthPixels*0.5));
+        passwordPop.setHeight((int)(ds.heightPixels));
+        passwordPop.setWidth((int)(ds.widthPixels));
         passwordPop.showAtLocation(change_Email, Gravity.CENTER,0,0);
         passwordPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override

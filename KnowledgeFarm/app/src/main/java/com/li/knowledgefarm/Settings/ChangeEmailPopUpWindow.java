@@ -50,6 +50,7 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
     private EditText vertical;
     private Button get_vertical_btn;
     private Button commit_btn;
+    private Button cancel_btn;
     private OkHttpClient okHttpClient;
     /** 异步线程*/
     private GetTestCodeAsyncTask asyncTask;
@@ -103,11 +104,10 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         getViews(contentView);
     }
 
-
-
     private void registerListener(){
         commit_btn.setOnClickListener(new CustomerOnclickListener());
         get_vertical_btn.setOnClickListener(new CustomerOnclickListener());
+        cancel_btn.setOnClickListener(new CustomerOnclickListener());
     }
     
     /**
@@ -123,6 +123,7 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         vertical = view.findViewById(R.id.vertical_edit);
         get_vertical_btn = view.findViewById(R.id.getVertical_btn);
         commit_btn = view.findViewById(R.id.commit_btn);
+        cancel_btn = view.findViewById(R.id.cancel_btn);
         new_message.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         vertical.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         okHttpClient = new OkHttpClient();
@@ -266,6 +267,9 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     }else { //邮箱为空
                         Toast.makeText(context,"邮箱不能为空",Toast.LENGTH_SHORT).show();
                     }
+                    break;
+                case R.id.cancel_btn:
+                    dismiss();
                     break;
             }
         }
