@@ -3,6 +3,7 @@ package com.knowledge_farm.notification.service;
 import com.google.gson.Gson;
 import com.knowledge_farm.entity.Notification;
 import com.knowledge_farm.entity.NotificationType;
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.notification.dao.NotificationDao;
@@ -89,6 +90,10 @@ public class NotificationService {
     public void addUserFriendNotification(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
+        Notification find = this.notificationDao.findNotificationByFromAndTo(userId, account);
+        if(find != null){
+            return;
+        }
         String title = "新朋友";
         String content = friendUser.getNickName() + "请求添加你为好友";
         Map extra = new HashMap<>();

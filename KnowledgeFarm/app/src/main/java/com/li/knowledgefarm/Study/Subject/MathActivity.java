@@ -1,5 +1,6 @@
 package com.li.knowledgefarm.Study.Subject;
 
+import android.text.Layout;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,6 +71,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     private Boolean returnHandlerFinish = false; //返回条件
     private int displayWidth; //屏幕宽度
     private int displayHeight; //屏幕高度
+    private View thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -78,14 +80,29 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
 //        setDensityLand.setDensity(getApplication());
 //        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
         setContentView(R.layout.activity_math);
+        switch (LoginActivity.user.getGrade()){
+            case 1:
+            case 2:
+                thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
+                getViews1();
+                datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
+                break;
+            default:
+        }
         /** 加载视图*/
         getViews();
         setViewSize();
         /** 注册点击事件监听器*/
         registListener();
         FullScreen.NavigationBarStatusBar(MathActivity.this,true);
-        datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
         showQuestion(position);
+    }
+
+    private void getViews1() {
+        question = thisGrade.findViewById(R.id.tvQuestion);
+        answer = thisGrade.findViewById(R.id.tvAnswer);
+        isTrue = thisGrade.findViewById(R.id.isTrue);
+        isFalse = thisGrade.findViewById(R.id.isFalse);
     }
 
     /**
@@ -378,10 +395,8 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         datalist = new ArrayList<>();
         btnPreQuestion = findViewById(R.id.btnPreQuestion);
         btnNextQuestion = findViewById(R.id.btnNextQuestion);
-        question = findViewById(R.id.tvQuestion);
-        answer = findViewById(R.id.tvAnswer);
-        isTrue = findViewById(R.id.isTrue);
-        isFalse = findViewById(R.id.isFalse);
+
+
     }
 
     /**

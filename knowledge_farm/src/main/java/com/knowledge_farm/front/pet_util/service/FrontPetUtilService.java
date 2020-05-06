@@ -26,15 +26,15 @@ public class FrontPetUtilService {
         return this.petUtilDao.findPetUtilById(id);
     }
 
-    public Page<PetUtil> findAllPetUtil(String name, Integer petUtilType, Integer exist, Integer pageNumber, Integer pageSize){
+    public Page<PetUtil> findAllPetUtil(String name, Integer petUtilTypeId, Integer exist, Integer pageNumber, Integer pageSize){
         if(name != null && !name.equals("")){
-            if(petUtilType != null){
-                return this.petUtilDao.findPetUtilByNameAndPetUtilTypeAndExist(name, petUtilType, exist, PageRequest.of(pageNumber - 1, pageSize));
+            if(petUtilTypeId != null && petUtilTypeId != 0){
+                return this.petUtilDao.findPetUtilByNameAndPetUtilTypeAndExist(name, petUtilTypeId, exist, PageRequest.of(pageNumber - 1, pageSize));
             }
             return this.petUtilDao.findPetUtilByNameAndExist(name, exist, PageRequest.of(pageNumber - 1, pageSize));
         }
-        if (petUtilType != null) {
-            return this.petUtilDao.findPetUtilByPetUtilTypeAndExist(petUtilType, exist, PageRequest.of(pageNumber - 1, pageSize));
+        if (petUtilTypeId != null && petUtilTypeId != 0) {
+            return this.petUtilDao.findPetUtilByPetUtilTypeAndExist(petUtilTypeId, exist, PageRequest.of(pageNumber - 1, pageSize));
         }
         return this.petUtilDao.findPetUtilByExist(exist, PageRequest.of(pageNumber - 1, pageSize));
     }

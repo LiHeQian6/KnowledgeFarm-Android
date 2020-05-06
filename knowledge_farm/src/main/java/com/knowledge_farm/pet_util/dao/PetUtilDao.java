@@ -18,11 +18,11 @@ public interface PetUtilDao extends JpaRepository<PetUtil, Integer> {
     public List<PetUtil> findAllByExist(Integer exist);
     public PetUtil findPetUtilById(Integer id);
     @Query("select p from PetUtil p where p.name = ?1 and p.petUtilType.id = ?2 and p.exist = ?3")
-    public Page<PetUtil> findPetUtilByNameAndPetUtilTypeAndExist(String name, Integer petUtilType, Integer exist, Pageable pageable);
+    public Page<PetUtil> findPetUtilByNameAndPetUtilTypeAndExist(String name, Integer petUtilTypeId, Integer exist, Pageable pageable);
     @Query("select p from PetUtil p where p.name = ?1 and p.exist = ?2")
     public Page<PetUtil> findPetUtilByNameAndExist(String name, Integer exist, Pageable pageable);
     @Query("select p from PetUtil p where p.petUtilType.id = ?1 and p.exist = ?2")
-    public Page<PetUtil> findPetUtilByPetUtilTypeAndExist(Integer petUtilType, Integer exist, Pageable pageable);
+    public Page<PetUtil> findPetUtilByPetUtilTypeAndExist(Integer petUtilTypeId, Integer exist, Pageable pageable);
     @Query("select p from PetUtil p where p.exist = ?1")
     public Page<PetUtil> findPetUtilByExist(Integer exist, Pageable pageable);
 }

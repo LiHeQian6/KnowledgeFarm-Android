@@ -75,6 +75,18 @@ public class GetEnglishQuestion extends SubjectInterface {
                         case 2:
                             request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishOneDown").build();
                             break;
+                        case 3:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishTwoUp").build();
+                            break;
+                        case 4:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishTwoDown").build();
+                            break;
+                        case 5:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishThreeUp").build();
+                            break;
+                        case 6:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishThreeDown").build();
+                            break;
                     }
                     Call call = okHttpClient.newCall(request);
                     call.enqueue(new Callback() {
