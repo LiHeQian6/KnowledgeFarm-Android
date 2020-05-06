@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -518,6 +519,8 @@ public class SettingMessageActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     /**
      * @Description 展示修改昵称窗口

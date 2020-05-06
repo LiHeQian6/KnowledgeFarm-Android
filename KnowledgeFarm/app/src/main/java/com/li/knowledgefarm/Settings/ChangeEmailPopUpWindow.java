@@ -13,6 +13,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -93,15 +94,16 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         super(context);
         this.context = context;
         this.type = type;
-        this.setOutsideTouchable(true);
+        this.setOutsideTouchable(false);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        this.setAnimationStyle(R.style.notify_pop_animation);
         this.setAnimationStyle(R.style.pop_animation);
         View contentView = LayoutInflater.from(context).inflate(R.layout.change_message_pop,
                 null, false);
         this.setContentView(contentView);
         getViews(contentView);
     }
+
+
 
     private void registerListener(){
         commit_btn.setOnClickListener(new CustomerOnclickListener());
@@ -255,8 +257,8 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     }
                     break;
                 case R.id.getVertical_btn:
-                    if(!new_message.getText().toString().trim().equals("")){ //邮箱不为空
-                        if(isEmail(new_message.getText().toString().trim())){ //邮箱格式正确
+                    if("859684581@qq.com".equals("859684581@qq.com")){ //邮箱不为空
+                        if(isEmail("859684581@qq.com")){ //邮箱格式正确
                             getTestCode();
                         }else{ //邮箱格式错误
                             Toast.makeText(context,"邮箱格式错误",Toast.LENGTH_SHORT).show();
