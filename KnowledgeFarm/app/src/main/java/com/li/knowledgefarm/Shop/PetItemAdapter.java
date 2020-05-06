@@ -63,7 +63,7 @@ public class PetItemAdapter extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(viewHolder.imageView);
         viewHolder.name.setText(list.get(position).getName());
-        viewHolder.price.setText(list.get(position).getOwn() == 0 ? list.get(position).getPrice() + "金币" : "已拥有");
+        viewHolder.price.setText(list.get(position).getOwn() == 0 ? list.get(position).getPrice() + "金币" : list.get(position).getPrice() + "金币");
         if(!MyFragment.mIsScroll) {
             notifyDataSetChanged();
         }

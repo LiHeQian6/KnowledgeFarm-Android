@@ -471,7 +471,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
 
     //加载图片
     public boolean isConnByHttp(){
-        boolean isConn = false;
+        boolean isConn = true;
         URL url;
         HttpURLConnection conn = null;
         try {

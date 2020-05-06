@@ -11,6 +11,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -56,13 +57,14 @@ public class SystemNotifyAdapter extends BaseAdapter {
             systemViewHolder.title = convertView.findViewById(R.id.notify_title);
             systemViewHolder.content = convertView.findViewById(R.id.notify_content);
             systemViewHolder.time = convertView.findViewById(R.id.notify_time);
+            systemViewHolder.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             convertView.setTag(systemViewHolder);
         }else {
             systemViewHolder = (SystemViewHolder) convertView.getTag();
         }
         systemViewHolder.title.setText(list.getList().get(position).getTitle());
         systemViewHolder.content.setText(list.getList().get(position).getContent());
-        systemViewHolder.time.setText(list.getList().get(position).getCreateTime().toString());
+        systemViewHolder.time.setText(systemViewHolder.dateFormat.format(list.getList().get(position).getCreateTime()));
         return convertView;
     }
 
@@ -70,5 +72,6 @@ public class SystemNotifyAdapter extends BaseAdapter {
         private TextView title;
         private TextView content;
         private TextView time;
+        private SimpleDateFormat dateFormat;
     }
 }

@@ -19,6 +19,7 @@ import com.li.knowledgefarm.entity.Notification;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import androidx.annotation.NonNull;
 import okhttp3.Call;
@@ -105,6 +106,6 @@ public class NotifyPopUpWindow extends PopupWindow {
     private void setText(){
         not_title.setText(notification.getTitle());
         not_content.setText("内容："+notification.getContent());
-        not_time.setText(notification.getCreateTime().toString());
+        not_time.setText(new SimpleDateFormat("yyyy-MM-dd").format(notification.getCreateTime()));
     }
 }
