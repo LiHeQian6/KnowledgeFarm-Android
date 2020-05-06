@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Main;
+package com.li.knowledgefarm.notify;
 
 import android.content.Context;
 import android.view.View;
