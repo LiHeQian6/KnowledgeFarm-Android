@@ -604,11 +604,7 @@ public class UserServiceImpl {
     @Transactional(readOnly = false)
     public String feedPet(Integer userId, Integer userPetHouseId, Integer petUtilBagId){
         UserPetUtilBag userPetUtilBag = this.userPetHouseService.findUserPetUtilBagById(petUtilBagId);
-        List<PetUtilType> petUtilTypeList = this.petUtilTypeService.findAll();
         PetUtilType petUtilType = userPetUtilBag.getPetUtil().getPetUtilType();
-        if(!petUtilTypeList.contains(petUtilType)){
-            return Result.FALSE;
-        }
 
         User user = this.userDao.findUserById(userId);
         Set<UserPetUtilBag> userPetUtilBagSet = user.getUserPetUtilBags();

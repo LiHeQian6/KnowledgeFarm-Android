@@ -179,20 +179,20 @@
 					<li class="list" >
 						<a href="javascript:;">
 							<i class="iconfont">&#xe6a3;</i>
-							管理员管理
+							宠物道具管理
 							<i class="iconfont nav_right">&#xe697;</i>
 						</a>
-						<ul id="initAdminManager" class="sub-menu">
-							<li id="initAdminManager1">
-								<a href="${ctx}/admin/findAdminPage?exist=1">
+						<ul id="initPetUtilManager" class="sub-menu">
+							<li id="initPetUtilManager1">
+								<a href="${ctx}/admin/petUtil/findPetUtilPage?exist=1">
 									<i class="iconfont">&#xe6a7;</i>
-									管理员列表
+									宠物道具列表
 								</a>
 							</li>
-							<li id="initAdminManager2">
-								<a href="${ctx}/admin/findAdminPage?exist=0">
+							<li id="initPetUtilManager2">
+								<a href="${ctx}/admin/petUtil/findPetUtilPage?exist=0">
 									<i class="iconfont">&#xe6a7;</i>
-									管理员删除
+									宠物道具删除
 								</a>
 							</li>
 						</ul>
@@ -229,6 +229,27 @@
 								<a href="${ctx}/admin/notification/toNotificationCustomMessage">
 									<i class="iconfont">&#xe6a7;</i>
 									自定义消息
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="list" >
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
+							管理员管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initAdminManager" class="sub-menu">
+							<li id="initAdminManager1">
+								<a href="${ctx}/admin/findAdminPage?exist=1">
+									<i class="iconfont">&#xe6a7;</i>
+									管理员列表
+								</a>
+							</li>
+							<li id="initAdminManager2">
+								<a href="${ctx}/admin/findAdminPage?exist=0">
+									<i class="iconfont">&#xe6a7;</i>
+									管理员删除
 								</a>
 							</li>
 						</ul>

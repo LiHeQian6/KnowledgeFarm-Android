@@ -28,4 +28,8 @@ public class PetUtilTypeService {
         return this.petUtilTypeDao.findPetUtilTypeById(id);
     }
 
+    public PetUtilType findPetUtilTypeByName(String name){
+        return this.petUtilTypeDao.findPetUtilTypeByName(name);
+    }
+
 }

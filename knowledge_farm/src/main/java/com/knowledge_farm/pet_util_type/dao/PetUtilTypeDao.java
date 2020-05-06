@@ -11,4 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface PetUtilTypeDao extends JpaRepository<PetUtilType, Integer> {
     public PetUtilType findPetUtilTypeById(Integer id);
+    public PetUtilType findPetUtilTypeByName(String name);
 }
