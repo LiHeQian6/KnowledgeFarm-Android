@@ -58,10 +58,9 @@ public class PetItemAdapter extends BaseAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
         }
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.loading)
+                .placeholder(R.drawable.dog)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(context).load(context.getResources().getString(R.string.URL)+"/photo/"+list.get(position).getImg1()).apply(requestOptions).into(viewHolder.imageView);
-        Log.e("TAG",context.getResources().getString(R.string.URL)+"/"+list.get(position).getImg1());
+        Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(viewHolder.imageView);
         viewHolder.name.setText(list.get(position).getName());
         viewHolder.price.setText(list.get(position).getPrice() + "金币");
         if(!ShopActivity.mIsScroll) {

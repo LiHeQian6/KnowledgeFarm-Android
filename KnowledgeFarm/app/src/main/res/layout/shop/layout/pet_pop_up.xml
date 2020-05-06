@@ -8,115 +8,175 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"/>
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/shopitem"
         android:orientation="vertical"
+        android:layout_weight="1"
         android:gravity="center">
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="7">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/thisFlower"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:src="@drawable/meigui">
-
-                </ImageView>
-
-            </LinearLayout>
-
+                android:layout_height="wrap_content"
+                android:text="宠物名称"
+                android:textSize="25dp"
+                android:textColor="@color/ShopTextColor"
+                android:id="@+id/pet_name"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:id="@+id/this_pet_image"
+                    android:src="@drawable/dog"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="2">
                     <TextView
-                        android:id="@+id/thisName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="名称："
-                        android:textColor="@color/ShopTextColor">
-
-                    </TextView>
-
-                    <TextView
-                        android:id="@+id/thisTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="成熟时间："
-                        android:textSize="20sp"
+                        android:text="价格"
+                        android:textSize="17dp"
+                        android:id="@+id/this_pet_price"
                         android:layout_marginTop="10dp"
                         android:textColor="@color/ShopTextColor"/>
-
                     <TextView
-                        android:id="@+id/thisPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="单价："
+                        android:text="描述:"
+                        android:textSize="17dp"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/ShopTextColor">
-
-                    </TextView>
+                        android:textColor="@color/ShopTextColor"/>
+                    <ScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="描述"
+                            android:textSize="17dp"
+                            android:id="@+id/this_pet_description"
+                            android:textColor="@color/ShopTextColor"/>
+                    </ScrollView>
                 </LinearLayout>
-
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
-
-                    <ImageView
-                        android:id="@+id/imgBtnJian"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/jianhui">
-                    </ImageView>
-
-                    <EditText
-                        android:id="@+id/shopNum"
-                        android:layout_width="60dp"
-                        android:textAlignment="center"
-                        android:layout_height="40dp"
-                        android:background="@null"
-                        android:inputType="number"
-                        android:textSize="20dp"
-                        android:text="1"
-                        android:imeOptions="flagNoExtractUi"
-                        android:textColor="@color/ShopTextColor">
-                    </EditText>
-
-                    <ImageView
-                        android:id="@+id/imgBtnPlus"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/plus">
-                    </ImageView>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+                        <TextView
+                            android:text="智力值："
+                            android:textColor="@color/ShopTextColor"
+                            android:textSize="17dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <RelativeLayout
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:text="50"
+                                android:id="@+id/pet_intelligence_value"
+                                android:gravity="center"
+                                android:textSize="17dp"
+                                android:textColor="@color/blackTextColor"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"/>
+                        </RelativeLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+                        <TextView
+                            android:text="生命值："
+                            android:textSize="17dp"
+                            android:textColor="@color/ShopTextColor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <RelativeLayout
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:text="100"
+                                android:gravity="center"
+                                android:textSize="17dp"
+                                android:id="@+id/pet_life_value"
+                                android:textColor="@color/blackTextColor"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"/>
+                        </RelativeLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+                        <TextView
+                            android:text="体力值："
+                            android:textSize="17dp"
+                            android:textColor="@color/ShopTextColor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <RelativeLayout
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:text="50/100"
+                                android:gravity="center"
+                                android:textSize="17dp"
+                                android:id="@+id/pet_physical_value"
+                                android:textColor="@color/blackTextColor"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"/>
+                        </RelativeLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
             android:gravity="center">
 
             <Button
-                android:id="@+id/btnCancel"
+                android:id="@+id/pet_btnCancel"
                 android:layout_width="100dp"
                 android:textSize="22sp"
                 android:paddingBottom="10dp"
@@ -125,7 +185,7 @@
                 android:text="取消"/>
 
             <Button
-                android:id="@+id/buy"
+                android:id="@+id/buy_pet"
                 android:layout_width="100dp"
                 android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content"
@@ -136,4 +196,8 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"/>
 </LinearLayout>
