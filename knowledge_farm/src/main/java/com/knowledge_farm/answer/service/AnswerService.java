@@ -224,7 +224,14 @@ public class AnswerService {
             String signal = random.nextBoolean()?"×":"÷";
             int doubleNum = random.nextInt(390)+10;
             int singleNum = random.nextInt(8)+2;
-            list.add(new Multiple(doubleNum,signal,singleNum,doubleNum*singleNum));
+            int num = 0;
+            if(signal.equals("×")){
+                num = doubleNum*singleNum;
+            }else {
+                num = doubleNum;
+                doubleNum = doubleNum*singleNum;
+            }
+            list.add(new Multiple(doubleNum,signal,singleNum,num));
         }
         return list;
     }

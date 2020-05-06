@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Study.GetSubjectQuestion.GetChineseQuestion;
 import com.li.knowledgefarm.Study.GetSubjectQuestion.GetEnglishQuestion;
 import com.li.knowledgefarm.Study.GetSubjectQuestion.GetMathQuestion;

@@ -5,8 +5,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:gravity="center"
-        android:background="@color/colorPrimary">
+        android:gravity="center">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,8 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/send_nickname"
+                android:textColor="@color/blackTextColor"
                 android:text="小完能"
-                android:textColor="@color/ShopTextColor"
                 android:textSize="20dp"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -36,7 +35,7 @@
                 android:layout_marginTop="10dp"
                 android:id="@+id/send_id"
                 android:text="Id:123456"
-                android:textColor="@color/ShopTextColor"
+                android:textColor="@color/blackTextColor"
                 android:textSize="20dp"/>
         </LinearLayout>
         <LinearLayout
@@ -49,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/send_result"
                 android:text="已添加"
-                android:textColor="@color/ShopTextColor"
+                android:textColor="@color/blackTextColor"
                 android:textSize="25dp">
             </TextView>
         </LinearLayout>
