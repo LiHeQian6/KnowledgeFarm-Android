@@ -24,4 +24,9 @@
         <item name="android:activityOpenEnterAnimation">@anim/notify_pop_in</item>
         <item name="android:activityCloseExitAnimation">@anim/notify_pop_out</item>
     </style>
+    
+    <style name="TabTextSize">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/ShopTextColor</item>
+    </style>
 </resources>

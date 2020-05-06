@@ -68,7 +68,7 @@ public class ShopItemAdapter extends BaseAdapter {
             ShopItemBean bean = list.get(position);
             holder.name.setText(bean.getName());
             holder.price.setText(bean.getPrice() + "金币");
-        if(!ShopActivity.mIsScroll) {
+        if(!MyFragment.mIsScroll) {
             notifyDataSetChanged();
         }
         return convertView;

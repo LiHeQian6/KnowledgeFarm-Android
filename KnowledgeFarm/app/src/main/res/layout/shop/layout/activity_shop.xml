@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/shopbackground"
     android:orientation="vertical"
     tools:context=".Shop.ShopActivity">
@@ -22,6 +23,18 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/returns"/>
+
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tab_layout"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/goBack"
+                app:tabTextAppearance="@style/TabTextSize"
+                app:tabIndicatorColor="@color/ShopTextColor">
+
+
+            </com.google.android.material.tabs.TabLayout>
         </RelativeLayout>
 
     </RelativeLayout>

@@ -63,7 +63,7 @@ public class PetItemAdapter extends BaseAdapter {
         Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(viewHolder.imageView);
         viewHolder.name.setText(list.get(position).getName());
         viewHolder.price.setText(list.get(position).getPrice() + "金币");
-        if(!ShopActivity.mIsScroll) {
+        if(!MyFragment.mIsScroll) {
             notifyDataSetChanged();
         }
         return convertView;

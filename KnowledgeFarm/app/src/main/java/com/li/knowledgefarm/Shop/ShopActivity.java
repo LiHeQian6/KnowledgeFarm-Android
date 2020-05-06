@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
@@ -69,6 +70,7 @@ public class ShopActivity extends AppCompatActivity {
     private List<ShopItemBean> shopList;
     private List<Pet> pet_list;
     private Map<String,GridView> gridViewList;
+    private Map<String,List> itemList;
     private GridView plant_gridView;
     private GridView pet_gridView;
     private ViewPager viewPager;
@@ -86,10 +88,11 @@ public class ShopActivity extends AppCompatActivity {
     private int displayWidth;
     private int displayHeight;
     private Toast toast;
-    private PagerViewAdapter adapter;
+    private MyFragmentPagerAdapter adapter;
     private WindowManager wm;
     private DisplayMetrics ds;
     private PetItemPopUpWindow petItemPopUpWindow;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +112,7 @@ public class ShopActivity extends AppCompatActivity {
                             }
                                     .getType();
                             shopList = gson.fromJson(message, type);
-                            setAdapter();
-                            registerItemListener();
+                            itemList.put("plant",shopList);
                             gridViewList.put("plant",plant_gridView);
                             if(shopList.size() != 0 && pet_list.size() != 0){
                                 setViewPagerAdapter();
@@ -125,8 +127,7 @@ public class ShopActivity extends AppCompatActivity {
                             Type type = new TypeToken<List<Pet>>() {
                             }.getType();
                             pet_list = gson.fromJson(pet_string, type);
-                            setPetAdapter();
-                            registerPetItemOnclick();
+                            itemList.put("pet",pet_list);
                             gridViewList.put("pet",pet_gridView);
                             if(shopList.size() != 0 && pet_list.size() != 0){
                                 setViewPagerAdapter();
@@ -156,13 +157,14 @@ public class ShopActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private void setViewPagerAdapter(){
-        adapter = new PagerViewAdapter(gridViewList,this);
-        Log.e("TAG",gridViewList.toString());
+    private void setViewPagerAdapter() {
+        adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),itemList);
         viewPager.setAdapter(adapter);
+        tabLayout.addTab(tabLayout.newTab().setText("植物"));
+        tabLayout.addTab(tabLayout.newTab().setText("宠物"));
+        tabLayout.setupWithViewPager(viewPager);
         adapter.notifyDataSetChanged();
     }
-
     /**
      * @Description 设置控件适配屏幕
      * @Auther 孙建旺
@@ -183,292 +185,6 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     /**
-     * @Description 设置加减数量选择器
-     * @Auther 孙建旺
-     * @Date 下午 6:56 2019/12/07
-     * @Param []
-     * @return void
-     */
-    private void setShopNumber(){
-        shopNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @SuppressLint("ResourceType")
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) >= 1)
-                        imgBtnJian.setImageDrawable(getDrawable(R.drawable.jian));
-                    if (Integer.parseInt(shopNumber.getText().toString()) <= 999)
-                        imgBtnPlus.setImageDrawable(getDrawable(R.drawable.plus));
-                }
-                if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) <= 0)
-                        shopNumber.setText(1+"");
-                    if (Integer.parseInt(shopNumber.getText().toString()) > 999)
-                        shopNumber.setText(999+"");
-                }
-            }
-        });
-
-        imgBtnJian.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) >= 2) {
-                        int num = Integer.parseInt(shopNumber.getText().toString()) - 1;
-                        shopNumber.setText(num+"");
-                    }
-                }
-            }
-        });
-
-        imgBtnPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) < 999) {
-                        int num = Integer.parseInt(shopNumber.getText().toString()) + 1;
-                        shopNumber.setText(num+"");
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * @Description 绑定宠物视图和数据
-     * @Author 孙建旺
-     * @Date 下午4:15 2020/05/01
-     * @Param []
-     * @return void
-     */
-    private void setPetAdapter() {
-        PetItemAdapter itemAdapter = new PetItemAdapter(this,R.layout.shopitem_girdview,pet_list);
-        pet_gridView.setAdapter(itemAdapter);
-    }
-
-    /**
-     * @Description 绑定视图和数据
-     * @Auther 孙建旺
-     * @Date 下午 12:07 2019/12/07
-     * @Param []
-     * @return void
-     */
-    private void setAdapter() {
-        final ShopItemAdapter itemAdapter = new ShopItemAdapter(this,shopList,R.layout.shopitem_girdview);
-        plant_gridView.setAdapter(itemAdapter);
-    }
-
-    /**
-     * @Description 注册植物GridView Item监听器
-     * @Author 孙建旺
-     * @Date 下午4:12 2020/05/01
-     * @Param []
-     * @return void
-     */
-    private void registerItemListener(){
-        plant_gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                    return;
-                }
-                lastClickTime = System.currentTimeMillis();
-                showSingleAlertDialog(position);
-            }
-        });
-        plant_gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
-                    mIsScroll = false;
-                }else{
-                    mIsScroll = true;
-                }
-            }
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
-    }
-
-    /**
-     * @Description 注册宠物GridView Item点击事件监听器
-     * @Author 孙建旺
-     * @Date 下午3:24 2020/05/06
-     * @Param []
-     * @return void
-     */
-    private void registerPetItemOnclick(){
-        pet_gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
-                    return;
-                }
-                lastClickTime = System.currentTimeMillis();
-                ShowSinglePetPopUp(position);
-            }
-        });
-        pet_gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
-                    mIsScroll = false;
-                }else{
-                    mIsScroll = true;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
-    }
-
-    private void ShowSinglePetPopUp(final int position){
-        petItemPopUpWindow = new PetItemPopUpWindow(this,pet_list.get(position));
-        petItemPopUpWindow.setHeight((int)(ds.heightPixels));
-        petItemPopUpWindow.setWidth((int)(ds.widthPixels*0.6));
-        petItemPopUpWindow.showAtLocation(pet_gridView, Gravity.CENTER,0,0);
-    }
-
-    /**
-     * @Description  点击植物弹出框
-     * @Auther 孙建旺
-     * @Date 下午 5:04 2019/12/07
-     * @Param [position]
-     * @return void
-     */
-    @SuppressLint("ResourceType")
-    private void showSingleAlertDialog(final int position){
-        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,R.style.dialog_soft_input);
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.shop_dialog, null);
-        Button button = layout.findViewById(R.id.buy);
-        Button cancel = layout.findViewById(R.id.btnCancel);
-        TextView thisName = layout.findViewById(R.id.thisName);
-        TextView thisPrice = layout.findViewById(R.id.thisPrice);
-        TextView thisTime = layout.findViewById(R.id.thisTime);
-        ImageView thisFlower = layout.findViewById(R.id.thisFlower);
-        imgBtnJian = layout.findViewById(R.id.imgBtnJian);
-        imgBtnPlus = layout.findViewById(R.id.imgBtnPlus);
-        shopNumber = layout.findViewById(R.id.shopNum);
-        setShopNumber();
-        shopNumber.setText("1");
-        alertBuilder.setView(layout);
-        thisName.setText("名称："+shopList.get(position).getName());
-        thisPrice.setText("单价："+shopList.get(position).getPrice()+"");
-        thisTime.setText("成熟时间："+shopList.get(position).getMatureTime()+"");
-        RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.huancun2)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(alertBuilder.getContext()).load(shopList.get(position).getImg4()).apply(requestOptions).into(thisFlower);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(shopNumber.getText().toString().equals("")){
-                    Toast.makeText(getBaseContext(),"购买数量不能为空哦！",Toast.LENGTH_SHORT).show();
-                }else{
-                    buyFlowers(
-                            LoginActivity.user.getId(),
-                            shopList.get(position).getId(),
-                            Integer.parseInt(shopNumber.getText().toString().trim())
-                    );
-                }
-
-            }
-        });
-        doAfterAdd = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String addCallBack = (String)msg.obj;
-                if(addCallBack.equals("true")){
-                    int newMoney = LoginActivity.user.getMoney() - Integer.parseInt(shopNumber.getText().toString().trim())*shopList.get(position).getPrice();
-                    LoginActivity.user.setMoney(newMoney);
-                    if(toast != null) {
-                        toast.cancel();
-                        toast = Toast.makeText(alertBuilder.getContext(), "购买成功！", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }else{
-                        toast = Toast.makeText(alertBuilder.getContext(), "购买成功！", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                    alertDialog.dismiss();
-                }else if(addCallBack.equals("notEnoughMoney")){
-                    Toast toast = Toast.makeText(alertBuilder.getContext(),"你的钱不够了哦！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }else{
-                    Toast toast = Toast.makeText(alertBuilder.getContext(),"添加失败！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog = alertBuilder.create();
-        alertDialog.show();
-        WindowManager.LayoutParams attrs = alertDialog.getWindow().getAttributes();
-        attrs.gravity = Gravity.CENTER;
-        final float scale = this.getResources().getDisplayMetrics().density;
-        attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(300*scale+0.5f);
-        Window dialogWindow = alertDialog.getWindow();
-        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.getWindow().setAttributes(attrs);
-    }
-
-    /**
-     * @Description 上传购买种子信息
-     * @Auther 孙建旺
-     * @Date 下午 3:08 2019/12/09
-     * @Param []
-     * @return void
-     */
-    private void buyFlowers(final int userID, final int cropId, final int num){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/buyCrop?userId="+userID+"&cropId="+cropId+"&number="+num).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        String addCallback = "Fail";
-                        Message message = Message.obtain();
-                        message.obj = addCallback;
-                        doAfterAdd.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        String addCallback = response.body().string();
-                        Message message = Message.obtain();
-                        message.obj = addCallback;
-                        doAfterAdd.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-    }
-
-    /**
      * @Description 获取控件ID及初始化
      * @Auther 孙建旺
      * @Date 上午 11:50 2019/12/07
@@ -481,11 +197,13 @@ public class ShopActivity extends AppCompatActivity {
         shopList = new ArrayList<>();
         pet_list = new ArrayList<>();
 //        gridView = findViewById(R.id.gird_view);
+        tabLayout = findViewById(R.id.tab_layout);
         imageView = findViewById(R.id.goBack);
         viewPager = findViewById(R.id.pager_view);
         pet_gridView = View.inflate(this,R.layout.pet_gridview_layout,null).findViewById(R.id.pet_gird_view);
         plant_gridView = View.inflate(this,R.layout.plant_gridview_layout,null).findViewById(R.id.plant_gird_view);
         gridViewList = new HashMap<>();
+        itemList = new HashMap<>();
         wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
         ds = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(ds);

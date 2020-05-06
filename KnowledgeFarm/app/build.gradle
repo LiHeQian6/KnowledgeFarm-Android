@@ -73,5 +73,6 @@ dependencies {
     implementation 'cn.jiguang.sdk:jpush:3.6.0'  // 此处以JPush 3.6.0 版本为例。
     implementation 'cn.jiguang.sdk:jcore:2.3.4'
     implementation 'com.hjq:xxpermissions:6.2'
+    implementation 'com.android.support:design:29.0.0'
 //    implementation 'androidx.cardview:cardview:1.0.0'
 }
