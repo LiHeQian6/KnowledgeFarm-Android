@@ -164,9 +164,11 @@ public class FrontUserController {
     public String addUser(@RequestParam("nickName") String nickName,
                           @RequestParam("password") String password,
                           @RequestParam("email") String email,
-                          @RequestParam("grade") Integer grade) {
+                          @RequestParam("grade") Integer grade,
+                          HttpServletRequest request) {
         try {
-            this.frontUserService.addUser(nickName, password, email, grade);
+            String account = this.frontUserService.addUser(nickName, password, email, grade);
+            request.setAttribute("account", account);
             return Result.SUCCEED;
         } catch (Exception e) {
             e.printStackTrace();

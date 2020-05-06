@@ -32,7 +32,7 @@ public class MyMvcConfig {
         WebMvcConfigurerAdapter adapter = new WebMvcConfigurerAdapter() {
             @Override
             public void addViewControllers(ViewControllerRegistry registry) {
-                registry.addViewController("/").setViewName("login");
+//                registry.addViewController("/").setViewName("login");
             }
 
             //注册拦截器
@@ -41,8 +41,8 @@ public class MyMvcConfig {
                 //super.addInterceptors(registry);
                 //静态资源：*.css,*.js
                 //StringBoot已经做好了静态资源映射
-                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/admin/**")
-                        .excludePathPatterns("/admin/login");
+                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/", "/admin/**")
+                        .excludePathPatterns("/admin/toLogin", "/admin/login");
             }
 
             //磁盘资源映射

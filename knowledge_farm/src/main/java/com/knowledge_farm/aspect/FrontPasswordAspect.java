@@ -1,5 +1,6 @@
 package com.knowledge_farm.aspect;
 
+import com.knowledge_farm.entity.Admin;
 import com.knowledge_farm.entity.Land;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.util.PageUtil;
@@ -12,16 +13,20 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
- * @ClassName UserPasswordAndPhotoAspect
+ * @ClassName FrontAdminPasswordAspect
  * @Description
  * @Author 张帅华
- * @Date 2020-04-24 08:45
+ * @Date 2020-04-24 09:06
  */
 @Component
 @Aspect
-public class FrontUserPasswordAspect {
+public class FrontPasswordAspect {
+    @Pointcut(value = "execution(* com.knowledge_farm.front.admin.controller.AdminController.*(..))")
+    private void admin() {
+    }
 
     @Pointcut(value = "execution(* com.knowledge_farm.front.user.controller.FrontUserController.*(..))")
     private void user() {
@@ -29,6 +34,33 @@ public class FrontUserPasswordAspect {
 
     @Pointcut(value = "execution(* com.knowledge_farm.front.land.controller.LandController.*(..))")
     private void land() {
+    }
+
+    @AfterReturning(pointcut = "admin()", returning="result")
+    public void admin(JoinPoint joinPoint, Object result) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        HttpSession session = request.getSession();
+
+        Admin adminInfo = (Admin) request.getAttribute("adminInfo");
+        if(adminInfo != null){
+            adminInfo.setPassword("");
+            request.setAttribute("adminInfo", adminInfo);
+        }
+
+        Admin admin = (Admin) session.getAttribute("admin");
+        if(admin != null){
+            admin.setPassword("");
+            session.setAttribute("admin", admin);
+        }
+
+        PageUtil<Admin> pageUtil = (PageUtil<Admin>) request.getAttribute("adminPage");
+        if(pageUtil != null){
+            for(Admin admin1 : pageUtil.getList()){
+                admin1.setPassword("");
+            }
+            request.setAttribute("adminPage", pageUtil);
+        }
     }
 
     @AfterReturning(pointcut = "user()", returning="result")

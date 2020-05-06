@@ -5,15 +5,24 @@ import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.admin.service.AdminServiceImpl;
 import com.knowledge_farm.util.Md5Encode;
 import com.knowledge_farm.util.PageUtil;
+import com.knowledge_farm.util.RandomUtil;
 import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +36,28 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    @Value("${file.loginTestCodePhotoFileLocation}")
+    private String loginTestCodePhotoFileLocation;
+    @Value("${file.loginTestCodePhotoFolderName}")
+    private String loginTestCodePhotoFolderName;
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private AdminServiceImpl adminService;
 
-    @GetMapping("/gotoIndex")
-    public String gotoIndex(){
+    @GetMapping("toLogin")
+    public String toLogin(HttpSession session){
+        try {
+            generateTestCodePhoto(session);
+        }catch(IOException e){
+            e.printStackTrace();
+            logger.info("验证码图片生成失败");
+        }
+        return "login";
+    }
+
+    @GetMapping("/toIndex")
+    public String toIndex(){
         return "index";
     }
 
@@ -45,7 +70,6 @@ public class AdminController {
     public String toEdit(@RequestParam("id") Integer id, HttpServletRequest request){
         Admin admin = this.adminService.findById(id);
         if(admin != null){
-//            admin.setPassword("");
             request.setAttribute("adminInfo", admin);
         }
         return "admin-edit";
@@ -55,42 +79,69 @@ public class AdminController {
     public String toPassword(@RequestParam("id") Integer id, HttpServletRequest request){
         Admin admin = this.adminService.findById(id);
         if(admin != null){
-//            admin.setPassword("");
             request.setAttribute("adminInfo", admin);
         }
         return "admin-password";
     }
 
-    /**
-     * @Author 张帅华
-     * @Description 管理员注销登录
-     * @Date 21:37 2020/4/8 0008
-     * @Param [session]
-     * @return java.lang.String
-     **/
     @GetMapping("/logout")
     private String logout(HttpSession session){
         session.removeAttribute("admin");
-        return "login";
+        return "redirect:toLogin";
     }
 
-    /**
-     * @Author 张帅华
-     * @Description 管理员登录
-     * @Date 21:37 2020/4/8 0008
-     * @Param [account, password, session]
-     * @return java.lang.String
-     **/
+    @RequestMapping("/changeTestCode")
+    @ResponseBody
+    public String changeTestCode(HttpSession session){
+        String testCodeOld = (String) session.getAttribute("testCode");
+        String testCodeImageLocationOld = (String) session.getAttribute("testCodeImageLocation");
+        if(testCodeOld != null){
+            File file = new File(testCodeImageLocationOld);
+            if(file.exists()){
+                file.delete();
+            }
+        }
+        try {
+            return generateTestCodePhoto(session);
+        }catch(IOException e){
+            e.printStackTrace();
+            logger.info("验证码图片生成失败");
+            return Result.FAIL;
+        }
+    }
+
     @PostMapping("/login")
     @ResponseBody
-    public String login(@RequestParam("account") String account, @RequestParam("password") String password, HttpSession session){
-        Object obj = this.adminService.login(account, password);
-        if(obj instanceof Admin){
-            Admin admin = (Admin) obj;
-            session.setAttribute("admin", admin);
-            obj = Result.SUCCEED;
+    public String login(@RequestParam("account") String account,
+                        @RequestParam("password") String password,
+                        @RequestParam("testCode") String testCode,
+                        HttpSession session){
+        String trueTestCode = (String) session.getAttribute("testCode");
+        String testCodeImageLocation = (String) session.getAttribute("testCodeImageLocation");
+        String realTestCode = "";
+        for(int i = 0;i < testCode.length();i++){
+            realTestCode = realTestCode + " " + testCode.charAt(i);
         }
-        return (String) obj;
+        if(trueTestCode != null){
+            if(trueTestCode.equals(realTestCode)){
+                File file = new File(testCodeImageLocation);
+                if(file.exists()){
+                    file.delete();
+                }
+                session.removeAttribute("testCode");
+                session.removeAttribute("testCodeImageLocation");
+                session.removeAttribute("testCodeImage");
+
+                Object obj = this.adminService.login(account, password);
+                if(obj instanceof Admin){
+                    Admin admin = (Admin) obj;
+                    session.setAttribute("admin", admin);
+                    obj = Result.SUCCEED;
+                }
+                return (String) obj;
+            }
+        }
+        return Result.FALSE;
     }
 
     /**
@@ -221,6 +272,7 @@ public class AdminController {
         if(this.adminService.findByAccountAndExist(account, null) == null){
             Admin admin = new Admin();
             admin.setAccount(account);
+            admin.setPassword(password);
             try {
                 this.adminService.add(admin);
                 return Result.SUCCEED;
@@ -271,6 +323,45 @@ public class AdminController {
             e.printStackTrace();
             return Result.FAIL;
         }
+    }
+
+    public String generateTestCodePhoto(HttpSession session) throws IOException {
+        //获得随机数
+        String code = "";
+        for(int i = 0;i < 4;i++) {
+            code = code + " " + (int)(10*Math.random());//要传入session的验证码值
+        }
+        //创建验证码图片
+        BufferedImage buffer = new BufferedImage(50, 20, BufferedImage.TYPE_INT_RGB);
+        Graphics graphics = buffer.getGraphics();
+        Color c = new Color(0,128,128);
+        graphics.fillRect(0, 0, 50, 20);
+        graphics.setColor(c);
+        graphics.drawString(code,5,15);
+        //保存文件
+        String fileName = "";
+        do{
+            fileName = "";
+            fileName = RandomUtil.generateAccount() + ".png";
+        }while (isHavingFileName(fileName));
+        String testCodeImageLocation = loginTestCodePhotoFileLocation + "/" + fileName;
+        String testCodeImage = loginTestCodePhotoFolderName + "/" + fileName;
+        ImageIO.write(buffer,"png", new File(testCodeImageLocation));
+        graphics.dispose();
+        session.setAttribute("testCode", code);
+        session.setAttribute("testCodeImageLocation", testCodeImageLocation);
+        session.setAttribute("testCodeImage", testCodeImage);
+        return testCodeImage;
+    }
+
+    public boolean isHavingFileName(String fileName){
+        File file = new File(loginTestCodePhotoFileLocation);
+        for(File file1 : file.listFiles()){
+            if(file1.getName().equals(fileName)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

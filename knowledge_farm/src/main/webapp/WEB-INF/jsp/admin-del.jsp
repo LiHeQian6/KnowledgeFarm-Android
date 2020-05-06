@@ -85,7 +85,7 @@
     <!-- 顶部开始 -->
 <%--    	<%@ include file="/layout/header.jsp"%>--%>
 	<div class="container">
-		<div class="logo"><a href="${ctx}/admin/gotoIndex">知识农场后台管理系统</a></div>
+		<div class="logo"><a href="${ctx}/admin/toIndex">知识农场后台管理系统</a></div>
 		<div class="open-nav"><i class="iconfont">&#xe699;</i></div>
 		<ul class="layui-nav right" lay-filter="">
 			<li class="layui-nav-item">
@@ -106,7 +106,7 @@
 			<div id="side-nav">
 				<ul id="nav">
 					<li class="list" current>
-						<a href="${ctx}/admin/gotoIndex">
+						<a href="${ctx}/admin/toIndex">
 							<i class="iconfont">&#xe761;</i>
 							欢迎页面
 							<i class="iconfont nav_right">&#xe697;</i>

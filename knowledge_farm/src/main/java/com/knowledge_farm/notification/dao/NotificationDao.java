@@ -29,7 +29,7 @@ public interface NotificationDao extends JpaRepository<Notification, Integer> {
 
     @Query("select n " +
             "from Notification n " +
-            "where (n.to.id = ?1 or n.to.id is null) and n.notificationType.id = ?2")
+            "where (n.to.id = ?1 or n.to.id is null) and n.createTime >= (select u.registerTime from User u where u.id = ?1) and n.notificationType.id = ?2")
     public Page<Notification> findReceivedSystemNotificationByNotificationType(Integer userId, Integer typeId, Pageable pageable);
 
     @Query("select n " +
