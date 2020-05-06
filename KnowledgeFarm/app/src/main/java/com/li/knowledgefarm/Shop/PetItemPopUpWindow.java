@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.Pet;
 
@@ -43,10 +46,34 @@ public class PetItemPopUpWindow extends PopupWindow {
     private Button cancel;//取消按钮
     private Button buy_pet;//购买按钮
     private OkHttpClient okHttpClient;
+    private Toast toast;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+            String result = "网络出了点问题";
+            if(msg.what == 200) {
+                switch ((String) msg.obj) {
+                    case "true":
+                        result = "购买成功！";
+                        break;
+                    case "false":
+                        result = "服务器开小差了";
+                        break;
+                    case "own":
+                        result = "你已经有这个宠物啦！";
+                        break;
+                    case "notEnoughMoney":
+                        result = "你的钱不够啦！";
+                        break;
+                }
+            }
+            toast = Toast.makeText(context,result,Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM,0,0);
+            toast.show();
+            if(result.equals("true")){
+                dismiss();
+            }
         }
     };
 
@@ -117,7 +144,7 @@ public class PetItemPopUpWindow extends PopupWindow {
         buy_pet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //BuyThisPet();
+                BuyThisPet();
             }
         });
     }
@@ -134,7 +161,8 @@ public class PetItemPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url("").build();
+                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/user/buyPet?userId="
+                        + LoginActivity.user.getId() + "&petId=" + pet.getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -147,7 +175,7 @@ public class PetItemPopUpWindow extends PopupWindow {
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         message.what = response.code();
-
+                        handler.sendMessage(message);
                     }
                 });
             }
