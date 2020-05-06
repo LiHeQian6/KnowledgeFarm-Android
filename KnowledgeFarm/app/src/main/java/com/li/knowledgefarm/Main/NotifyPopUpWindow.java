@@ -44,8 +44,8 @@ public class NotifyPopUpWindow extends PopupWindow {
         this.notification = notification;
         this.setHeight(800);
         this.setWidth(1200);
-        this.setOutsideTouchable(true);
-        this.setFocusable(false);
+        this.setOutsideTouchable(false);
+        this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
         final View contentView = LayoutInflater.from(context).inflate(R.layout.notify_message_pop,

@@ -2,8 +2,6 @@ package com.li.knowledgefarm.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -15,9 +13,6 @@ import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,17 +21,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.hjq.permissions.OnPermission;
-import com.hjq.permissions.Permission;
-import com.hjq.permissions.XXPermissions;
-import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.FullScreen;
@@ -57,7 +47,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.List;
 
 import com.li.knowledgefarm.R;
 
@@ -154,7 +143,6 @@ public class LoginActivity extends AppCompatActivity {
         setDensityLand.setOrientation(this, AppUtil.HEIGHT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         user = null;
         autoLogin();
         FullScreen.NavigationBarStatusBar(LoginActivity.this,true);

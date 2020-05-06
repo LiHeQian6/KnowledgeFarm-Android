@@ -1120,6 +1120,8 @@ public class MainActivity extends AppCompatActivity {
         shop = findViewById(R.id.shop);
         pet = findViewById(R.id.pet);
         setting = findViewById(R.id.setting);
+        LinearLayout layout3=findViewById(R.id.settingbox);
+        layout3.setVisibility(View.GONE);
         photo = findViewById(R.id.photo);
         nickName = findViewById(R.id.nickName);
         level = findViewById(R.id.level);
@@ -1298,13 +1300,13 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.pet:
                     petPopUpWindow = new PetPopUpWindow(getApplicationContext());
-                    petPopUpWindow.showAtLocation(dayTask, Gravity.CENTER, 0, 0);
+                    petPopUpWindow.showAtLocation(pet, Gravity.CENTER, 0, 0);
                     break;
-                case R.id.setting:
-                    intent = new Intent();
-                    intent.setClass(MainActivity.this, SettingActivity.class);
-                    startActivity(intent);
-                    break;
+//                case R.id.setting:
+//                    intent = new Intent();
+//                    intent.setClass(MainActivity.this, SettingActivity.class);
+//                    startActivity(intent);
+//                    break;
                 case R.id.friends:
                     if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
                         return;
