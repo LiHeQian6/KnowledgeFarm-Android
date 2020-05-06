@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Login.StartActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Settings.ChangePasswordPop;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.ShopItemBean;
@@ -85,6 +87,9 @@ public class ShopActivity extends AppCompatActivity {
     private int displayHeight;
     private Toast toast;
     private PagerViewAdapter adapter;
+    private WindowManager wm;
+    private DisplayMetrics ds;
+    private PetItemPopUpWindow petItemPopUpWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +110,7 @@ public class ShopActivity extends AppCompatActivity {
                                     .getType();
                             shopList = gson.fromJson(message, type);
                             setAdapter();
-                            registerItemListener(plant_gridView);
+                            registerItemListener();
                             gridViewList.put("plant",plant_gridView);
                             if(shopList.size() != 0 && pet_list.size() != 0){
                                 setViewPagerAdapter();
@@ -121,7 +126,7 @@ public class ShopActivity extends AppCompatActivity {
                             }.getType();
                             pet_list = gson.fromJson(pet_string, type);
                             setPetAdapter();
-                            registerItemListener(pet_gridView);
+                            registerPetItemOnclick();
                             gridViewList.put("pet",pet_gridView);
                             if(shopList.size() != 0 && pet_list.size() != 0){
                                 setViewPagerAdapter();
@@ -263,14 +268,14 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     /**
-     * @Description 注册GirdView Item监听器
+     * @Description 注册植物GridView Item监听器
      * @Author 孙建旺
      * @Date 下午4:12 2020/05/01
      * @Param []
      * @return void
      */
-    private void registerItemListener(GridView gridView){
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void registerItemListener(){
+        plant_gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
@@ -280,7 +285,7 @@ public class ShopActivity extends AppCompatActivity {
                 showSingleAlertDialog(position);
             }
         });
-        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        plant_gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
@@ -297,7 +302,49 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     /**
-     * @Description  点击商品弹出框
+     * @Description 注册宠物GridView Item点击事件监听器
+     * @Author 孙建旺
+     * @Date 下午3:24 2020/05/06
+     * @Param []
+     * @return void
+     */
+    private void registerPetItemOnclick(){
+        pet_gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                    return;
+                }
+                lastClickTime = System.currentTimeMillis();
+                ShowSinglePetPopUp(position);
+            }
+        });
+        pet_gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
+                    mIsScroll = false;
+                }else{
+                    mIsScroll = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+    }
+
+    private void ShowSinglePetPopUp(final int position){
+        petItemPopUpWindow = new PetItemPopUpWindow(this,pet_list.get(position));
+        petItemPopUpWindow.setHeight((int)(ds.heightPixels));
+        petItemPopUpWindow.setWidth((int)(ds.widthPixels*0.6));
+        petItemPopUpWindow.showAtLocation(pet_gridView, Gravity.CENTER,0,0);
+    }
+
+    /**
+     * @Description  点击植物弹出框
      * @Auther 孙建旺
      * @Date 下午 5:04 2019/12/07
      * @Param [position]
@@ -439,6 +486,9 @@ public class ShopActivity extends AppCompatActivity {
         pet_gridView = View.inflate(this,R.layout.pet_gridview_layout,null).findViewById(R.id.pet_gird_view);
         plant_gridView = View.inflate(this,R.layout.plant_gridview_layout,null).findViewById(R.id.plant_gird_view);
         gridViewList = new HashMap<>();
+        wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
     }
 
     /**
