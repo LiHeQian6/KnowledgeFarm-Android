@@ -3,87 +3,129 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="6"/>
+            android:layout_weight="3"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改邮箱"
-                    android:textSize="30dp"
-                    android:id="@+id/show_title"
-                    android:textColor="@color/ShopTextColor"/>
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_weight="5"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
                 android:orientation="vertical"
-                android:layout_weight="3"
-                android:id="@+id/input_li"
-                android:visibility="visible"
-                android:gravity="center_horizontal">
-                <EditText
+                android:gravity="center"
+                android:background="@drawable/logindialogbac">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="15dp"
-                    android:gravity="center_horizontal"
-                    android:imeOptions="flagNoExtractUi"
-                    android:id="@+id/new_message"
-                    android:hint="请输入邮箱"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:visibility="visible"
-                    android:id="@+id/getVertical_li"
-                    android:gravity="center">
-                    <EditText
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/vertical_edit"
-                        android:imeOptions="flagNoExtractUi"
-                        android:hint="请输入验证码"/>
-                    <Button
-                        android:layout_width="100dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="10dp"
-                        android:text="获取验证码"
-                        android:id="@+id/getVertical_btn"
-                        android:background="@drawable/buttonbackground"/>
+                        android:layout_marginTop="10dp"
+                        android:text="修改邮箱"
+                        android:textSize="30dp"
+                        android:id="@+id/show_title"
+                        android:textColor="@color/ShopTextColor"/>
                 </LinearLayout>
-                <Button
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/buttonbackground"
-                    android:text="提交"
-                    android:id="@+id/commit_btn"/>
+                    android:orientation="vertical"
+                    android:layout_weight="3"
+                    android:id="@+id/input_li"
+                    android:visibility="visible"
+                    android:gravity="center_horizontal">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:gravity="center_horizontal"
+                        android:imeOptions="flagNoExtractUi"
+                        android:id="@+id/new_message"
+                        android:hint="请输入邮箱"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:visibility="visible"
+                        android:id="@+id/getVertical_li"
+                        android:gravity="center">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right">
+                            <EditText
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/vertical_edit"
+                                android:imeOptions="flagNoExtractUi"
+                                android:hint="请输入验证码"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="获取验证码"
+                                android:gravity="center"
+                                android:id="@+id/getVertical_btn"
+                                android:background="@null"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal">
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/buy"
+                            android:text="取消"
+                            android:id="@+id/cancel_btn"/>
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/buy"
+                            android:text="提交"
+                            android:id="@+id/commit_btn"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="5"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="6"/>
+            android:layout_weight="3"/>
     </LinearLayout>
 </LinearLayout>

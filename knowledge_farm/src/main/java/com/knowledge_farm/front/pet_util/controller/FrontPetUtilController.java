@@ -29,7 +29,7 @@ import java.util.List;
  * @Date 2020-05-05 09:42
  */
 @Controller
-@RequestMapping("/admin/petutil")
+@RequestMapping("/admin/petUtil")
 public class FrontPetUtilController {
     @Resource
     private FrontPetUtilService frontPetUtilService;
@@ -62,15 +62,17 @@ public class FrontPetUtilController {
 
     @GetMapping("/findPetUtilPage")
     public String findPetUtilPage(@RequestParam(value = "name", required = false) String name,
-                               @RequestParam(value = "petUtilType", required = false) Integer petUtilType,
+                               @RequestParam(value = "petUtilTypeId", required = false) Integer petUtilTypeId,
                                @RequestParam("exist") Integer exist,
                                @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
                                Model model){
-        Page<PetUtil> page = this.frontPetUtilService.findAllPetUtil(name, petUtilType, exist, pageNumber, pageSize);
+        Page<PetUtil> page = this.frontPetUtilService.findAllPetUtil(name, petUtilTypeId, exist, pageNumber, pageSize);
         PageUtil<PetUtil> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
         pageUtil.setList(page.getContent());
+        List<PetUtilType> petUtilTypeList = this.petUtilTypeService.findAll();
+        model.addAttribute("petUtilTypes", petUtilTypeList);
         model.addAttribute("petUtilPage", pageUtil);
         if(exist == 1){
             return "pet-util-list";
@@ -154,7 +156,7 @@ public class FrontPetUtilController {
                               @RequestParam("description") String description,
                               @RequestParam("price") Integer price,
                               @RequestParam("value") Integer value,
-                              @RequestParam("petUtilType") Integer type,
+                              @RequestParam("petUtilTypeId") Integer type,
                               @RequestParam("upload") MultipartFile file){
         if(file.getOriginalFilename().equals("")){
             return Result.NULL;
@@ -186,20 +188,22 @@ public class FrontPetUtilController {
                                 @RequestParam("description") String description,
                                 @RequestParam("price") Integer price,
                                 @RequestParam("value") Integer value,
-                                @RequestParam("petUtilType") Integer type,
+                                @RequestParam("petUtilTypeId") Integer type,
                                 @RequestParam("upload") MultipartFile file){
         try {
             PetUtil petUtil = this.frontPetUtilService.findPetUtilById(id);
             PetUtilType petUtilType = this.petUtilTypeService.findPetUtilTypeById(type);
-            File file1 = new File(this.petUtilPhotoFileLocation + "/" + petUtil.getImg());
-            if (file1.exists()) {
-                file1.delete();
+            if(!file.getOriginalFilename().equals("")){
+                File file1 = new File(this.petUtilPhotoFileLocation + "/" + petUtil.getImg());
+                if (file1.exists()) {
+                    file1.delete();
+                }
+                String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+                FileCopyUtils.copy(file.getBytes(), new File(this.petUtilPhotoFileLocation, fileName));
+                petUtil.setImg(this.petUtilPhotoFolderName + "/" + fileName);
             }
-            String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
-            FileCopyUtils.copy(file.getBytes(), new File(this.petUtilPhotoFileLocation, fileName));
             petUtil.setName(name);
             petUtil.setDescription(description);
-            petUtil.setImg(this.petUtilPhotoFolderName + "/" + fileName);
             petUtil.setPrice(price);
             petUtil.setValue(value);
             petUtil.setPetUtilType(petUtilType);

@@ -33,6 +33,7 @@ public class ChangeNicknamePop extends PopupWindow {
     private Context context;
     private EditText new_nickname;//昵称输入框
     private Button commit_nickname;//提交按钮
+    private Button cancel_nickname;
     private OkHttpClient okHttpClient;
     private Handler handler = new Handler(){
         @Override
@@ -121,11 +122,18 @@ public class ChangeNicknamePop extends PopupWindow {
         new_nickname = contentView.findViewById(R.id.new_nickname);
         new_nickname.setText(LoginActivity.user.getNickName());
         commit_nickname = contentView.findViewById(R.id.commit_nickname);
+        cancel_nickname = contentView.findViewById(R.id.cancel_nickname);
         okHttpClient = new OkHttpClient();
         commit_nickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 save();
+            }
+        });
+        cancel_nickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }
