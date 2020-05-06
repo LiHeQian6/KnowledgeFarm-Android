@@ -653,7 +653,7 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "购买宠物", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)own：该宠物已拥有，不可再次购买 || (String)notEnoughMoney：钱不够")
+    @ApiOperation(value = "购买宠物", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "petId", value = "宠物Id", dataType = "int", paramType = "query", required = true)

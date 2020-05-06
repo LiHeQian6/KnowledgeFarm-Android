@@ -1,6 +1,7 @@
 package com.knowledge_farm.pet.controller;
 
 import com.knowledge_farm.entity.Pet;
+import com.knowledge_farm.entity.PetVO;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.pet.service.PetService;
 import io.swagger.annotations.Api;
@@ -39,8 +40,8 @@ public class PetController {
      */
     @ApiOperation(value = "商店展示所有宠物", notes = "返回值：List（Pet）")
     @GetMapping("/showInStore")
-    public List<Pet> showInStore(){
-        return petService.showAllPetInStore();
+    public List<PetVO> showInStore(@RequestParam("userId") Integer userId){
+        return petService.showAllPetInStore(userId);
     }
 
     @ApiOperation(value = "切换使用的宠物", notes = "返回值：(String)true || (String)false")

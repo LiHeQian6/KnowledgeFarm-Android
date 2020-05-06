@@ -1,6 +1,7 @@
 package com.knowledge_farm.pet.service;
 
 import com.knowledge_farm.entity.Pet;
+import com.knowledge_farm.entity.PetVO;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserPetHouse;
 import com.knowledge_farm.pet.dao.PetDao;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,8 +30,28 @@ public class PetService {
 //    @Resource
 //    private PetFoodDao petFoodDao;
 
-    public List<Pet> showAllPetInStore(){
-        return petDao.findAllByExist(1);
+    @Transactional(readOnly = false)
+    public List<PetVO> showAllPetInStore(Integer userId){
+        User user = userService.findUserById(userId);
+        List<Pet> list0 =  petDao.findAllByExist(1);
+        List<PetVO> petVOS = new ArrayList<>();
+        for(int i = 0;i<list0.size();i++){
+            petVOS.add(i,new PetVO(list0.get(i)));
+        }
+        Set<UserPetHouse> petHouses = user.getPetHouses();
+        System.out.println(petHouses.toString());
+        for(int j = 0;j<petVOS.size();j++){
+            for(UserPetHouse petHouse : petHouses){
+                if(petVOS.get(j).getId().equals(petHouse.getPet().getId())){
+                    System.out.println(petVOS.get(j));
+                    System.out.println(new PetVO(petHouse.getPet()));
+                    petVOS.get(j).setOwn(1);
+                }else {
+                    petVOS.get(j).setOwn(0);
+                }
+            }
+        }
+        return petVOS;
     }
 
     public Pet findPetById(int petId){

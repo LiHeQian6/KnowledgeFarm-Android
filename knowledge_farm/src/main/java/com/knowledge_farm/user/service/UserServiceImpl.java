@@ -553,11 +553,6 @@ public class UserServiceImpl {
         int userMoney = user.getMoney();
         int petMoney = pet.getPrice();
         if(userMoney >= petMoney){
-            for(UserPetHouse petHouse : petHouses){
-                if(petHouse.getPet() == pet){
-                    return Result.OWN;
-                }
-            }
             petHouses.add(new UserPetHouse(user,pet));
             user.setMoney(userMoney - petMoney);
             return Result.TRUE;
