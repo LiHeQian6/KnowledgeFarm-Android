@@ -30,6 +30,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.Pet;
+import com.li.knowledgefarm.entity.PetVO;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +53,7 @@ public class MyFragment extends Fragment {
 
     private GridView gridView;
     private List<ShopItemBean> shopList;
-    private List<Pet> pet_list;
+    private List<PetVO> pet_list;
     public static final String SHOP = "POSITION";
     private ShopItemAdapter adapter;
     private PetItemAdapter petItemAdapter;
@@ -87,7 +88,7 @@ public class MyFragment extends Fragment {
                 gridView.setAdapter(adapter);
                 break;
             case 2:
-                pet_list = (List<Pet>)bundle.getSerializable("pet");
+                pet_list = (List<PetVO>)bundle.getSerializable("pet");
                 petItemAdapter = new PetItemAdapter(getContext(),R.layout.shopitem_girdview,pet_list);
                 gridView.setAdapter(petItemAdapter);
                 break;
@@ -127,6 +128,13 @@ public class MyFragment extends Fragment {
         return view;
     }
 
+    /**
+     * @Description 初始化
+     * @Author 孙建旺
+     * @Date 下午9:08 2020/05/06
+     * @Param []
+     * @return void
+     */
     private void getViews() {
         okHttpClient = new OkHttpClient();
         wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);

@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.Pet;
+import com.li.knowledgefarm.entity.PetVO;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
 import java.util.List;
@@ -21,9 +22,9 @@ public class PetItemAdapter extends BaseAdapter {
 
     private Context context;
     private int id;
-    private List<Pet> list;
+    private List<PetVO> list;
 
-    public PetItemAdapter(Context context, int id, List<Pet> list) {
+    public PetItemAdapter(Context context, int id, List<PetVO> list) {
         this.context = context;
         this.id = id;
         this.list = list;
@@ -62,7 +63,7 @@ public class PetItemAdapter extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(list.get(position).getImg1()).apply(requestOptions).into(viewHolder.imageView);
         viewHolder.name.setText(list.get(position).getName());
-        viewHolder.price.setText(list.get(position).getPrice() + "金币");
+        viewHolder.price.setText(list.get(position).getOwn() == 0 ? list.get(position).getPrice() + "金币" : "已拥有");
         if(!MyFragment.mIsScroll) {
             notifyDataSetChanged();
         }

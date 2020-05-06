@@ -40,6 +40,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.ChangePasswordPop;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.Pet;
+import com.li.knowledgefarm.entity.PetVO;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +69,7 @@ public class ShopActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private Gson gson;
     private List<ShopItemBean> shopList;
-    private List<Pet> pet_list;
+    private List<PetVO> pet_list;
     private Map<String,GridView> gridViewList;
     private Map<String,List> itemList;
     private GridView plant_gridView;
@@ -124,7 +125,7 @@ public class ShopActivity extends AppCompatActivity {
                     case 2:
                         String pet_string = (String)msg.obj;
                         if(!pet_string.equals("") && msg.arg1 == 200) {
-                            Type type = new TypeToken<List<Pet>>() {
+                            Type type = new TypeToken<List<PetVO>>() {
                             }.getType();
                             pet_list = gson.fromJson(pet_string, type);
                             itemList.put("pet",pet_list);
@@ -221,7 +222,7 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/showInStore").build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/showInStore?userId="+LoginActivity.user.getId()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override

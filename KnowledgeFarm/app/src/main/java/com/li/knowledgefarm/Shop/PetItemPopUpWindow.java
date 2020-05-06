@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.Pet;
+import com.li.knowledgefarm.entity.PetVO;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +36,7 @@ import okhttp3.Response;
 
 public class PetItemPopUpWindow extends PopupWindow {
     private Context context;
-    private Pet pet;
+    private PetVO pet;
     private TextView pet_name;//宠物名称
     private ImageView pet_image;//宠物图片
     private TextView pet_price;//宠物价格
@@ -77,7 +78,7 @@ public class PetItemPopUpWindow extends PopupWindow {
         }
     };
 
-    public PetItemPopUpWindow(Context context, Pet pet) {
+    public PetItemPopUpWindow(Context context, PetVO pet) {
         super(context);
         this.context = context;
         this.pet = pet;
@@ -115,6 +116,10 @@ public class PetItemPopUpWindow extends PopupWindow {
         pet_intelligence.setText((int)(pet.getIntelligence()*0.7)+"-"+pet.getIntelligence());
         pet_life.setText((int)(pet.getLife()*0.7)+"-"+pet.getLife());
         physical_value.setText(pet.getPhysical()+"");
+        if(pet.getOwn() != 0){
+            buy_pet.setText("已拥有");
+            buy_pet.setClickable(false);
+        }
     }
 
     /**
