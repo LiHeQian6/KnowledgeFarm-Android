@@ -46,7 +46,7 @@
                     layer.msg('验证码更换失败');
                 }else{
                     console.log('data' + data);
-                    <%--$("#testCodeImage").attr("src","${ctx}/photo/" + data);--%>
+                    $("#testCodeImage").attr("src","${ctx}/photo/" + data);
                 }
             });
         }

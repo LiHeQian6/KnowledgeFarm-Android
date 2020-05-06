@@ -48,6 +48,7 @@ public class AdminController {
     @GetMapping("toLogin")
     public String toLogin(HttpSession session){
         try {
+            logger.info("文件目录：" + loginTestCodePhotoFileLocation);
             generateTestCodePhoto(session);
         }catch(IOException e){
             e.printStackTrace();
