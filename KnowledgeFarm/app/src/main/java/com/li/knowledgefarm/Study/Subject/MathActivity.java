@@ -85,10 +85,9 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
             case 2:
                 thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
                 getViews1();
+                datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
                 break;
             default:
-                thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
-                getViews1();
         }
         /** 加载视图*/
         getViews();
@@ -96,7 +95,6 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         /** 注册点击事件监听器*/
         registListener();
         FullScreen.NavigationBarStatusBar(MathActivity.this,true);
-        datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
         showQuestion(position);
     }
 
