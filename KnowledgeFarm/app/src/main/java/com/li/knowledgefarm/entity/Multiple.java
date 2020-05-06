@@ -1,12 +1,14 @@
 package com.li.knowledgefarm.entity;
 
+import java.io.Serializable;
+
 /**
  * @program: knowledge_farm
  * @description: 九九乘法
  * @author: 景光赞
  * @create: 2020-04-30 17:37
  **/
-public class Multiple {
+public class Multiple implements Serializable {
     private int num1;
     private String signal;
     private int num2;

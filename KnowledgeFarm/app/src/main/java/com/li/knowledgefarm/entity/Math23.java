@@ -1,6 +1,8 @@
 package com.li.knowledgefarm.entity;
 
 
+import java.io.Serializable;
+
 /**
  * @program: knowledge_farm
  * @description: 数学23年级
@@ -8,7 +10,7 @@ package com.li.knowledgefarm.entity;
  * @create: 2020-04-20 17:11
  **/
 
-public class Math23 {
+public class Math23 implements Serializable {
     private int id;
     private String question;
     private String answer;

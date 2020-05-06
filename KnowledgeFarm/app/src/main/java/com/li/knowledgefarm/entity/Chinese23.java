@@ -1,12 +1,14 @@
 package com.li.knowledgefarm.entity;
 
+import java.io.Serializable;
+
 /**
  * @program: knowledge_farm
  * @description: 语文23年级
  * @author: 景光赞
  * @create: 2020-04-20 17:11
  **/
-public class Chinese23 {
+public class Chinese23 implements Serializable {
     private int id;
     private String word;
     private String pinYin;

@@ -23,7 +23,7 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_centerHorizontal="true"
-                layout="@layout/math_grade_two"/>
+                layout="@layout/math_grade_one"/>
 
         <LinearLayout
             android:layout_width="match_parent"

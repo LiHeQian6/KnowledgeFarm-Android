@@ -1,12 +1,14 @@
 package com.li.knowledgefarm.entity;
 
+import java.io.Serializable;
+
 /**
  * @program: knowledge_farm
  * @description: 四则混合运算
  * @author: 景光赞
  * @create: 2020-05-01 15:39
  **/
-public class Mix {
+public class Mix implements Serializable {
     private int num1;
     private String signal1;
     private int num2;

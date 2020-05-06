@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -98,6 +99,7 @@ public class GetMathQuestion extends SubjectInterface {
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             Message message = Message.obtain();
                             message.obj = "Fail";
+                            message.what = 0;
                             getMath.sendMessage(message);
                         }
 
@@ -106,6 +108,22 @@ public class GetMathQuestion extends SubjectInterface {
                             Message message = Message.obtain();
                             message.obj = response.body().string();
                             message.arg1 = response.code();
+                            switch (LoginActivity.user.getGrade()) {
+                                case 1:
+                                case 2:
+                                    message.what = 1;
+                                    break;
+                                case 3:
+                                case 4:
+                                    message.what = 2;
+                                    break;
+                                case 5:
+                                case 6:
+                                    message.what = 3;
+                                    break;
+                                default:
+                                    message.what = 1;
+                            }
                             getMath.sendMessage(message);
                         }
                     });
@@ -150,6 +168,7 @@ public class GetMathQuestion extends SubjectInterface {
                             break;
                     }
                     list = gson.fromJson(data, type);
+                    Log.i("jing",list.toString());
                     if(list != null){
                         intent.putExtra("math",(Serializable) list);
                         context.startActivity(intent);
