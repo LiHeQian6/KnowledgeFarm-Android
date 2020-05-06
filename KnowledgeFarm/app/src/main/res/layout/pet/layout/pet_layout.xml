@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="20dp"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/shopitem"
+    android:theme="@style/customApp"
     android:layout_height="match_parent">
     <ListView
         android:id="@+id/pet_list"
         android:scrollbars="none"
         android:divider="@null"
-        android:layout_width="100dp"
+        android:layout_width="50dp"
         android:layout_height="match_parent"/>
 <!--    <com.li.knowledgefarm.view.HorizontalListView-->
 <!--        android:layout_weight="1"-->
@@ -18,12 +19,18 @@
 <!--        android:id="@+id/pet"-->
 <!--        android:layout_height="match_parent"/>-->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_margin="10dp"
-        android:layout_weight="1"
         android:id="@+id/pet_detail"
-        android:background="@color/ShopTextColor"
+        android:orientation="vertical"
         android:layout_height="wrap_content">
+            <TextView
+                android:text="宠物"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:textColor="@color/blackTextColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:orientation="horizontal"
                 android:gravity="center"
@@ -57,22 +64,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <LinearLayout
-                        android:layout_gravity="center"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView
                                 android:text="名称："
+                                android:textSize="20sp"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <TextView
                                 android:text="小哈"
                                 android:id="@+id/name"
+                                android:textSize="20sp"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -81,13 +91,17 @@
                             android:layout_height="wrap_content">
                             <TextView
                                 android:text="阶段："
+                                android:textSize="20sp"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <TextView
                                 android:text="幼年期"
+                                android:textSize="20sp"
                                 android:id="@+id/growth"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -96,12 +110,16 @@
                             android:layout_height="wrap_content">
                             <TextView
                                 android:text="描述："
+                                android:textSize="20sp"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <TextView
                                 android:text="这是一段非常宇宙无敌吊炸天的高端描述"
+                                android:textSize="20sp"
                                 android:id="@+id/description"
                                 android:gravity="center"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"/>
@@ -111,6 +129,8 @@
                             android:layout_height="wrap_content">
                             <TextView
                                 android:text="智力值："
+                                android:textSize="20sp"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <RelativeLayout
@@ -120,6 +140,7 @@
                                 android:layout_height="wrap_content">
                                 <TextView
                                     android:text="50"
+                                    android:textSize="20sp"
                                     android:id="@+id/intelligence_value"
                                     android:gravity="center"
                                     android:textColor="@color/blackTextColor"
@@ -132,6 +153,8 @@
                             android:layout_height="wrap_content">
                             <TextView
                                 android:text="生命值："
+                                android:textSize="20sp"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <RelativeLayout
@@ -141,6 +164,7 @@
                                 android:layout_height="wrap_content">
                                 <TextView
                                     android:text="100"
+                                    android:textSize="20sp"
                                     android:gravity="center"
                                     android:id="@+id/life_value"
                                     android:textColor="@color/blackTextColor"
@@ -153,6 +177,8 @@
                             android:layout_height="wrap_content">
                             <TextView
                                 android:text="体力值："
+                                android:textSize="20sp"
+                                android:textColor="@color/blackTextColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <RelativeLayout
@@ -184,6 +210,7 @@
                             <Button
                                 android:text="使用"
                                 android:id="@+id/use"
+                                android:background="@drawable/buttonbackground"
                                 android:layout_gravity="center"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
