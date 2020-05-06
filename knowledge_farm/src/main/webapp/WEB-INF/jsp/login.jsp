@@ -21,20 +21,35 @@
     	function adminLogin(){
     		var account = $("#account").val();
     		var password = $("#password").val();
+            var testCode = $("#testCode").val();
     		if(account == "" || password == ""){
     			layer.msg('输入框不能为空');
     		}else{
-	    		$.post("${ctx}/admin/login",{"account":account,"password":password},function(data){
+	    		$.post("${ctx}/admin/login",{"account":account,"password":password,"testCode":testCode},function(data){
 	    			if(data == "succeed"){
-	    				window.location.href="${ctx}/admin/gotoIndex";
+	    				window.location.href="${ctx}/admin/toIndex";
 	    			}else if(data == "fail"){
 	    				layer.msg('账号或密码错误');
 	    			}else if(data == "notUser"){
 	    				layer.msg('该管理员账号不可用');
-	    			}
+	    			}else if(data == "false"){
+                        layer.msg('验证码输入错误');
+                    }
 	    		}) 
     		}
     	}
+
+    	//点击更换验证码
+        function changeTestCode(){
+            $.post("${ctx}/admin/changeTestCode",{"test":"1"},function(data){
+                if(data == "fail"){
+                    layer.msg('验证码更换失败');
+                }else{
+                    console.log('data' + data);
+                    <%--$("#testCodeImage").attr("src","${ctx}/photo/" + data);--%>
+                }
+            });
+        }
     </script>
     
 </head>
@@ -57,8 +72,18 @@
                 	<input id="password" type="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="form-actions" style="margin-top:60px;">
-                <button class="btn btn-warning pull-right" lay-submit lay-filter="login" type="submit">登陆</button> 
+            <label class="login-title" for="password">验证码</label>
+            <div class="layui-form-item">
+                <div class="layui-form-inline" style="width: 100%;">
+                    <label class="layui-form-label login-form"><i class="iconfont">&#xe82b;</i></label>
+                    <div class="layui-input-inline">
+                        <input id="testCode" type="text" name="testCode" lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input">
+                    </div>
+                    <a href="javascript:changeTestCode()"><img id="testCodeImage" src="${ctx}/photo/${testCodeImage}" style="width: 50px;height: 35px;"></a>
+                </div>
+            </div>
+            <div class="form-actions" style="margin-top:45px;">
+                <button class="btn btn-warning pull-right" lay-submit lay-filter="login" type="submit">登陆</button>
             </div>
         </form>
     </div>

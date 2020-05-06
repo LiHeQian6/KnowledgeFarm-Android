@@ -146,7 +146,7 @@ public class UserController {
             @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/registAccount")
-    public Object registAccount(@RequestParam("nickName") String nickName,
+    public Object registerAccount(@RequestParam("nickName") String nickName,
                                 @RequestParam("grade") Integer grade,
                                 @RequestParam(value = "email", defaultValue = "") String email,
                                 @RequestParam("password") String password){

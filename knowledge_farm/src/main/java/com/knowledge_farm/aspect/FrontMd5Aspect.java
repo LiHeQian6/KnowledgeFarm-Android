@@ -34,8 +34,12 @@ public class FrontMd5Aspect {
     private void adminUpdatePassword() {
     }
 
+    @Pointcut(value = "execution(* com.knowledge_farm.front.user.controller.FrontUserController.addUser(..))")
+    private void userAddPassword() {
+    }
+
     @Pointcut(value = "execution(* com.knowledge_farm.front.user.controller.FrontUserController.updateUserPassword(..))")
-    private void userPassword() {
+    private void userUpdatePassword() {
     }
 
     @Around(value = "adminLoginPassword()")
@@ -78,8 +82,21 @@ public class FrontMd5Aspect {
         return result;
     }
 
-    @Around(value = "userPassword()")
-    public Object userPasswordToMd5(ProceedingJoinPoint joinPoint) {
+    @Around(value = "userAddPassword()")
+    public Object userAddPassword(ProceedingJoinPoint joinPoint) {
+        Object[] args = joinPoint.getArgs();
+        args[1] = Md5Encode.getMD5(args[1].toString().getBytes());
+        Object result = null;
+        try {
+            result = joinPoint.proceed(args);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Around(value = "userUpdatePassword()")
+    public Object userUpdatePassword(ProceedingJoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         args[1] = Md5Encode.getMD5(args[1].toString().getBytes());
         Object result = null;

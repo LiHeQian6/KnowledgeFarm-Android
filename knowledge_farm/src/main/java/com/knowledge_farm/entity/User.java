@@ -36,6 +36,7 @@ public class User {
     private Integer online;
     private Integer exist;
     private Date lastReadTime;
+    private Date registerTime;
     private Land land;
     private UserAuthority userAuthority;
     private Set<UserCropBag> userCropBags = new HashSet<>();
@@ -218,6 +219,15 @@ public class User {
 
     public void setLastReadTime(Date lastReadTime) {
         this.lastReadTime = lastReadTime;
+    }
+
+    @Column(name = "register_time")
+    public Date getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(Date registerTime) {
+        this.registerTime = registerTime;
     }
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

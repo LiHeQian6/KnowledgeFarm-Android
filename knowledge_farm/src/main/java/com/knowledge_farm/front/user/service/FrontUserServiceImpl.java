@@ -78,7 +78,7 @@ public class FrontUserServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public void addUser(String nickName, String password, String email, Integer grade) {
+    public String addUser(String nickName, String password, String email, Integer grade) {
         //生成账号
         String account = "";
         do {
@@ -94,6 +94,7 @@ public class FrontUserServiceImpl {
         user.setEmail(email);
         user.setGrade(grade);
         user.setLastReadTime(new Date());
+        user.setRegisterTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建Land
         Land land = new Land();
@@ -115,6 +116,7 @@ public class FrontUserServiceImpl {
         user.getPetHouses().add(petHouse);
         this.userDao.save(user);
         entityManager.clear();
+        return account;
     }
 
     public User findUserById(Integer id) {

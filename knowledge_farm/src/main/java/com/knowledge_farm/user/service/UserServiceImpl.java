@@ -113,6 +113,7 @@ public class UserServiceImpl {
         user.setEmail(email);
         user.setGrade(grade);
         user.setLastReadTime(new Date());
+        user.setRegisterTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建UserAuthority
         UserAuthority userAuthority = new UserAuthority();
@@ -190,6 +191,7 @@ public class UserServiceImpl {
         user.setEmail(email);
         user.setGrade(grade);
         user.setLastReadTime(new Date());
+        user.setRegisterTime(new Date());
         user.setTask(new com.knowledge_farm.entity.Task(user));
         //构建Land
         Land land = new Land();

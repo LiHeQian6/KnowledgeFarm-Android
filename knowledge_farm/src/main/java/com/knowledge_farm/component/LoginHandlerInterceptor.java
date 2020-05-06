@@ -4,19 +4,20 @@ import com.knowledge_farm.entity.Admin;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class LoginHandlerInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Admin admin = (Admin) request.getSession().getAttribute("admin");
+        HttpSession session = request.getSession();
+        Admin admin = (Admin) session.getAttribute("admin");
         if(admin == null) {
-            System.out.println("空");
-            request.getRequestDispatcher("/").forward(request, response);
+            request.getRequestDispatcher("/admin/toLogin").forward(request, response);
             return false;
         }
-        System.out.println("不空");
         return true;
     }
 
