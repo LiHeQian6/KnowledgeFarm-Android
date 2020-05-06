@@ -136,4 +136,17 @@ public class UserPetHouse {
         this.physical = physical;
     }
 
+    @Override
+    public String toString() {
+        return "UserPetHouse{" +
+                "id=" + id +
+                ", user=" + user +
+                ", pet=" + pet +
+                ", ifUsing=" + ifUsing +
+                ", growPeriod=" + growPeriod +
+                ", life=" + life +
+                ", intelligence=" + intelligence +
+                ", physical=" + physical +
+                '}';
+    }
 }
