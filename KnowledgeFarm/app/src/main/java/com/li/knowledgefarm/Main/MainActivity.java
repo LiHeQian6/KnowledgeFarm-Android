@@ -51,19 +51,21 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.li.knowledgefarm.Main.bgsound.BgSoundService;
 import com.li.knowledgefarm.MyFriends.FriendsPopUpWindow;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.bag.BagPopUpWindow;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserCropItem;
 import com.li.knowledgefarm.entity.UserPetHouse;
+import com.li.knowledgefarm.notify.NotifyActivity;
 import com.li.knowledgefarm.pet.PetPopUpWindow;
 
 import org.greenrobot.eventbus.EventBus;
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
     private FriendsPopUpWindow friendsPopUpWindow;
     private PetPopUpWindow petPopUpWindow;
     private ImageView dog;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +171,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // 启动服务播放背景音乐
+//        intent = new Intent(MainActivity.this, BgSoundService.class);
+//        String action = BgSoundService.ACTION_MUSIC;
+//        // 设置action
+//        intent.setAction(action);
+//        startService(intent);
         getUserInfo();
         showUserInfo();
     }
@@ -1301,6 +1310,12 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.pet:
                     petPopUpWindow = new PetPopUpWindow(getApplicationContext());
                     petPopUpWindow.showAtLocation(pet, Gravity.CENTER, 0, 0);
+                    petPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            getUserInfo();
+                        }
+                    });
                     break;
 //                case R.id.setting:
 //                    intent = new Intent();

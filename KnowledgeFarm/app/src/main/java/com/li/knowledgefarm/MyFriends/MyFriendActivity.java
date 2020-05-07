@@ -3,7 +3,6 @@ package com.li.knowledgefarm.MyFriends;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -11,7 +10,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
@@ -32,15 +30,12 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -50,11 +45,11 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
-import com.li.knowledgefarm.Main.NotifyActivity;
+import com.li.knowledgefarm.Main.bgsound.BgSoundService;
+import com.li.knowledgefarm.notify.NotifyActivity;
 import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingActivity;
-import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
@@ -133,6 +128,7 @@ public class MyFriendActivity extends AppCompatActivity {
     private Handler new_notification;
     private ImageView notify;
     private ImageView dog;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +184,11 @@ public class MyFriendActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+//        intent = new Intent(MyFriendActivity.this, BgSoundService.class);
+////        String action = BgSoundService.ACTION_MUSIC;
+////        // 设置action
+////        intent.setAction(action);
+////        startService(intent);
         getUserInfo();
         showUserInfo();
     }

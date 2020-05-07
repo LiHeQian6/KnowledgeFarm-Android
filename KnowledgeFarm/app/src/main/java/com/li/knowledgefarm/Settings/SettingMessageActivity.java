@@ -129,7 +129,7 @@ public class SettingMessageActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(popUpWindow.isShowing()){
+        if(null!=popUpWindow&&popUpWindow.isShowing()){
             return false;
         }
         return super.onTouchEvent(event);

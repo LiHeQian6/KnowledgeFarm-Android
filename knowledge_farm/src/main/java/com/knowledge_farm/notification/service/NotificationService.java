@@ -1,10 +1,7 @@
 package com.knowledge_farm.notification.service;
 
 import com.google.gson.Gson;
-import com.knowledge_farm.entity.Notification;
-import com.knowledge_farm.entity.NotificationType;
-import com.knowledge_farm.entity.Result;
-import com.knowledge_farm.entity.User;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.notification.dao.NotificationDao;
 import com.knowledge_farm.notification_type.service.NotificationTypeService;
@@ -35,8 +32,6 @@ public class NotificationService {
     private UserServiceImpl userService;
     @Resource
     private NotificationTypeService notificationTypeService;
-    @Resource
-    private JpushService jpushService;
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional(readOnly = false)
@@ -57,15 +52,13 @@ public class NotificationService {
 
     public List<Boolean> isHavingNewNotification(Integer userId){
         User user = this.userService.findUserById(userId);
-        if(user.getTask().getSignIn()==0){
-            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }
         List<Boolean> isHavingRead = new ArrayList<>();
-        for(int i = 0;i < 4;i++){
+        for(int i = 0;i < 5;i++){
             isHavingRead.add(false);
         }
+
         List<Notification> notifications = this.notificationDao.isHavingNewNotification(userId);
-        logger.info("新消息个数"  + notifications.size());
+        logger.info("新Notification消息个数"  + notifications.size());
         for(Notification notification : notifications){
             switch (notification.getNotificationType().getId()){
                 case 1:
@@ -82,6 +75,11 @@ public class NotificationService {
                     isHavingRead.set(3, true);
                     break;
             }
+        }
+
+        Task task = user.getTask();
+        if(task.getSignIn() == 0 || task.getWater() == 1 || task.getFertilize() == 1 || task.getCrop() == 1 || task.getHarvest() == 1 || task.getHelpWater() == 1 || task.getHelpFertilize() == 1){
+            isHavingRead.set(4, true);
         }
         return isHavingRead;
     }

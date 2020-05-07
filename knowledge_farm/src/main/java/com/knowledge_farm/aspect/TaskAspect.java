@@ -50,7 +50,15 @@ public class TaskAspect {
         }
         User user = userService.findUserById((Integer) args[0]);
         Task task = user.getTask();
-        int value = (int) result;
+
+        Integer value = 0;
+        if(result instanceof String){
+            if(result == Result.FALSE){
+                value = -1;
+            }
+        }else if(result instanceof Integer){
+            value = (Integer) result;
+        }
         if (description.equals("water")&&task.getWater()==0 && -1!= value){
             taskService.finishTask(user,"water");
             jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());

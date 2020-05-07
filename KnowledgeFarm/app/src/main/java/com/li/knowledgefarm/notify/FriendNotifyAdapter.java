@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.Main;
+package com.li.knowledgefarm.notify;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;

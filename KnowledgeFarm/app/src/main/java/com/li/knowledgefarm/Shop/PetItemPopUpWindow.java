@@ -57,6 +57,7 @@ public class PetItemPopUpWindow extends PopupWindow {
                 switch ((String) msg.obj) {
                     case "true":
                         result = "购买成功！";
+                        dismiss();
                         break;
                     case "false":
                         result = "服务器开小差了";

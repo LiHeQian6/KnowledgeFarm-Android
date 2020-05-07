@@ -46,7 +46,7 @@
                     layer.msg('验证码更换失败');
                 }else{
                     console.log('data' + data);
-                    <%--$("#testCodeImage").attr("src","${ctx}/photo/" + data);--%>
+                    $("#testCodeImage").attr("src","${ctx}/photo/" + data);
                 }
             });
         }
@@ -79,7 +79,7 @@
                     <div class="layui-input-inline">
                         <input id="testCode" type="text" name="testCode" lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input">
                     </div>
-                    <a href="javascript:changeTestCode()"><img id="testCodeImage" src="${ctx}/photo/${testCodeImage}" style="width: 50px;height: 35px;"></a>
+                    <a href="javascript:changeTestCode()"><img id="testCodeImage" src="${ctx}/photo/${testCodeImage}" style="width: 53px;height: 35px;"></a>
                 </div>
             </div>
             <div class="form-actions" style="margin-top:45px;">
