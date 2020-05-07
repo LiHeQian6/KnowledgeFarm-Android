@@ -27,6 +27,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
                 android:src="@drawable/duigou"
                 android:visibility="gone"/>
     </LinearLayout>
@@ -37,7 +38,7 @@
             android:layout_centerVertical="true">
 
         <TextView
-        android:id="@+id/isFalse"
+                android:id="@+id/isFalse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="你还差一点就答对了哦！"

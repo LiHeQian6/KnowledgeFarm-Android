@@ -71,7 +71,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     private Boolean returnHandlerFinish = false; //返回条件
     private int displayWidth; //屏幕宽度
     private int displayHeight; //屏幕高度
-    private View thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
+    private View thisGrade;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -80,18 +80,17 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
 //        setDensityLand.setDensity(getApplication());
 //        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
         setContentView(R.layout.activity_math);
-        switch (LoginActivity.user.getGrade()){
-            case 1:
-            case 2:
-                thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
-                getViews1();
-                datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
-                break;
-            default:
-        }
+//        thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
         /** 加载视图*/
         getViews();
         setViewSize();
+        if(LoginActivity.user.getGrade() == 1 || LoginActivity.user.getGrade() == 2){
+            thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
+            getViews1();
+            datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
+        }else if(LoginActivity.user.getGrade() ==2 || LoginActivity.user.getGrade() == 3){
+
+        }
         /** 注册点击事件监听器*/
         registListener();
         FullScreen.NavigationBarStatusBar(MathActivity.this,true);
@@ -99,10 +98,10 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     }
 
     private void getViews1() {
-        question = thisGrade.findViewById(R.id.tvQuestion);
-        answer = thisGrade.findViewById(R.id.tvAnswer);
-        isTrue = thisGrade.findViewById(R.id.isTrue);
-        isFalse = thisGrade.findViewById(R.id.isFalse);
+        question = findViewById(R.id.tvQuestion);
+        answer = findViewById(R.id.tvAnswer);
+        isTrue = findViewById(R.id.isTrue);
+        isFalse = findViewById(R.id.isFalse);
     }
 
     /**
@@ -134,7 +133,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         btnNext.setTextSize((int)(displayWidth*0.015));
         btnNext.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-        RelativeLayout.LayoutParams params_question = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(displayHeight*0.2));
+        RelativeLayout.LayoutParams params_question = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(displayHeight*0.3));
         params_question.addRule(RelativeLayout.CENTER_HORIZONTAL);
         params_question.bottomMargin = (int)(displayHeight*0.2);
         question.setLayoutParams(params_question);
