@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"/>
         <RadioButton
             android:layout_width="wrap_content"
-            android:text="所有人"
+            android:text="推荐好友"
             android:id="@+id/all"
             android:textSize="12sp"
             android:layout_height="wrap_content"/>

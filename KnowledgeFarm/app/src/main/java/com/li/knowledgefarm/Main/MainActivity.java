@@ -1310,6 +1310,12 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.pet:
                     petPopUpWindow = new PetPopUpWindow(getApplicationContext());
                     petPopUpWindow.showAtLocation(pet, Gravity.CENTER, 0, 0);
+                    petPopUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            getUserInfo();
+                        }
+                    });
                     break;
 //                case R.id.setting:
 //                    intent = new Intent();
