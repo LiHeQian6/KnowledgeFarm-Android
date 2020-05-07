@@ -519,7 +519,7 @@ public class UserController {
     @GetMapping("/waterCrop")
     public String waterCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber, HttpServletRequest request){
         try {
-            int result = this.userService.waterCrop(userId, landNumber);
+            Integer result = this.userService.waterCrop(userId, landNumber);
             switch (result){
                 case -1:
                     return Result.FALSE;
@@ -596,7 +596,7 @@ public class UserController {
     @GetMapping("/raiseCrop")
     public String raiseCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("landNumber") String landNumber, HttpServletRequest request){
         try {
-            int result = this.userService.raiseCrop(userId, cropId, landNumber);
+            Integer result = this.userService.raiseCrop(userId, cropId, landNumber);
             if(result != -1){
                 request.setAttribute("StartUserCropGrowJob", new Integer[]{userId, result, Integer.parseInt(landNumber.substring(4))});
                 return Result.TRUE;

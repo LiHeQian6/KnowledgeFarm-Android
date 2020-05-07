@@ -152,7 +152,7 @@ public class UserFriendController {
                                  @RequestParam("landNumber") String landNumber,
                                  HttpServletRequest request){
         try {
-            int result = this.userFriendService.waterForFriend(userId, friendId, landNumber);
+            Integer result = this.userFriendService.waterForFriend(userId, friendId, landNumber);
             switch (result){
                 case -1:
                     return Result.FALSE;
@@ -194,7 +194,7 @@ public class UserFriendController {
     public String waterForFriend2(
                                  HttpServletRequest request){
         try {
-            int result = this.userFriendService.waterForFriend(109, 124, "land1");
+            Integer result = this.userFriendService.waterForFriend(109, 124, "land1");
             switch (result){
                 case -1:
                     return Result.FALSE;

@@ -435,7 +435,7 @@ public class UserServiceImpl {
      **/
     @Task(description = "water")
     @Transactional(readOnly = false)
-    public int waterCrop(Integer userId, String landNumber) {
+    public Integer waterCrop(Integer userId, String landNumber) {
         User user = this.userDao.findUserById(userId);
         Land land = user.getLand();
         UserCrop userCrop = this.userCropService.findUserCropByLand(land, landNumber);
@@ -493,13 +493,9 @@ public class UserServiceImpl {
                         userCrop.setProgress(progress + 10);
                     }
                     user.setFertilizer(user.getFertilizer() - 1);
-                }else{
-                    return Result.FALSE;
+                    return Result.TRUE;
                 }
-            }else{
-                return Result.FALSE;
             }
-            return Result.TRUE;
         }
         return Result.FALSE;
     }
@@ -662,7 +658,7 @@ public class UserServiceImpl {
      **/
     @Task(description = "crop")
     @Transactional(readOnly = false)
-    public int raiseCrop(Integer userId, Integer cropId, String landNumber){
+    public Integer raiseCrop(Integer userId, Integer cropId, String landNumber){
         User user = this.userDao.findUserById(userId);
         Crop crop = this.cropService.findCropById(cropId);
         Set<UserCropBag> userCropBags = user.getUserCropBags();

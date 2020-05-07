@@ -88,7 +88,7 @@ public class UserFriendServiceImpl {
 
     @Task(description = "help_water")
     @Transactional(readOnly = false)
-    public int waterForFriend(Integer userId, Integer friendId, String landNumber){
+    public Integer waterForFriend(Integer userId, Integer friendId, String landNumber){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserById(friendId);
         Land land = friendUser.getLand();
@@ -144,11 +144,7 @@ public class UserFriendServiceImpl {
                     user.setFertilizer(user.getFertilizer() - 1);
                     user.setMoney(user.getMoney() + 20);
                     return Result.TRUE;
-                }else{
-                    return Result.FALSE;
                 }
-            }else{
-                return Result.FALSE;
             }
         }
         return Result.FALSE;
