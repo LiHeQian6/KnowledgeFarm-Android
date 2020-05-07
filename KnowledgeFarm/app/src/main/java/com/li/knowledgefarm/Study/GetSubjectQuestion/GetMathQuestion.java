@@ -108,22 +108,7 @@ public class GetMathQuestion extends SubjectInterface {
                             Message message = Message.obtain();
                             message.obj = response.body().string();
                             message.arg1 = response.code();
-                            switch (LoginActivity.user.getGrade()) {
-                                case 1:
-                                case 2:
-                                    message.what = 1;
-                                    break;
-                                case 3:
-                                case 4:
-                                    message.what = 2;
-                                    break;
-                                case 5:
-                                case 6:
-                                    message.what = 3;
-                                    break;
-                                default:
-                                    message.what = 1;
-                            }
+                            message.what = LoginActivity.user.getGrade();
                             getMath.sendMessage(message);
                         }
                     });
@@ -149,23 +134,12 @@ public class GetMathQuestion extends SubjectInterface {
                 String data = (String)msg.obj;
                 if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
                     Type type = null;
-                    switch (msg.what){
-                        case 1:
-                            type = new TypeToken<List<Question3Num>>() {
-                            }.getType();
-                            break;
-                        case 2:
-                            type = new TypeToken<List<Math23>>() {
-                            }.getType();
-                            break;
-                        case 3:
-                            type = new TypeToken<List<Multiple>>() {
-                            }.getType();
-                            break;
-                        case 4:
-                            type = new TypeToken<List<Mix>>() {
-                            }.getType();
-                            break;
+                    if(msg.what == 1 || msg.what ==2){
+                        type = new TypeToken<List<Question3Num>>() {
+                        }.getType();
+                    }else if(msg.what == 3 || msg.what == 3){
+                        type = new TypeToken<List<Math23>>() {
+                        }.getType();
                     }
                     list = gson.fromJson(data, type);
                     Log.i("jing",list.toString());
