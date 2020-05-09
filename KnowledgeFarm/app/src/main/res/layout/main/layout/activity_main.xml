@@ -37,7 +37,8 @@
                 android:layout_height="300dp"/>
             <FrameLayout
                 android:id="@+id/lands"
-                android:layout_marginTop="3dp"
+                android:translationY="-40dp"
+                android:translationX="-30dp"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:scaleY="0.8"
