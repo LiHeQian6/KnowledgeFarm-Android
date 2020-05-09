@@ -30,6 +30,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.Pet;
+import com.li.knowledgefarm.entity.PetUtil;
 import com.li.knowledgefarm.entity.PetVO;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
@@ -54,9 +55,11 @@ public class MyFragment extends Fragment {
     private GridView gridView;
     private List<ShopItemBean> shopList;
     private List<PetVO> pet_list;
+    private List<PetUtil> petUtils;
     public static final String SHOP = "POSITION";
-    private ShopItemAdapter adapter;
-    private PetItemAdapter petItemAdapter;
+    private ShopItemAdapter adapter; //植物展示Adapter
+    private PetItemAdapter petItemAdapter; //宠物展示Adapter
+    private PetUtilsAdapter petUtilsAdapter; //道具展示Adapter
     public static Boolean mIsScroll = false;
     private long lastClickTime = 0L;
     // 两次点击间隔不能少于1000ms
@@ -69,6 +72,7 @@ public class MyFragment extends Fragment {
     private OkHttpClient okHttpClient;
     private Handler doAfterAdd;
     private PetItemPopUpWindow petItemPopUpWindow;
+    private UtilItemPopUp utilItemPopUp;
     private WindowManager wm;
     private DisplayMetrics ds;
     private int data;
@@ -92,6 +96,11 @@ public class MyFragment extends Fragment {
                 petItemAdapter = new PetItemAdapter(getContext(),R.layout.shopitem_girdview,pet_list);
                 gridView.setAdapter(petItemAdapter);
                 break;
+            case 3:
+                petUtils = (List<PetUtil>)bundle.getSerializable("utils");
+                petUtilsAdapter = new PetUtilsAdapter(petUtils,getContext(),R.layout.shopitem_girdview);
+                gridView.setAdapter(petUtilsAdapter);
+                break;
         }
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -106,6 +115,9 @@ public class MyFragment extends Fragment {
                         break;
                     case 2:
                         ShowSinglePetPopUp(position);
+                        break;
+                    case 3:
+                        ShowSingleUtilPopUp(position);
                         break;
                 }
             }
@@ -126,6 +138,20 @@ public class MyFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    /**
+     * @Description 点击道具弹出框
+     * @Author 孙建旺
+     * @Date 上午10:37 2020/05/09
+     * @Param [position]
+     * @return void
+     */
+    private void ShowSingleUtilPopUp(int position) {
+        utilItemPopUp = new UtilItemPopUp(getContext(),petUtils.get(position));
+        utilItemPopUp.setHeight((int)(ds.heightPixels));
+        utilItemPopUp.setWidth((int)(ds.widthPixels*0.6));
+        utilItemPopUp.showAtLocation(gridView, Gravity.CENTER,0,0);
     }
 
     /**

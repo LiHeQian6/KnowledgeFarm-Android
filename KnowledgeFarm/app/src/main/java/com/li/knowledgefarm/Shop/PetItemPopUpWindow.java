@@ -57,7 +57,6 @@ public class PetItemPopUpWindow extends PopupWindow {
                 switch ((String) msg.obj) {
                     case "true":
                         result = "购买成功！";
-                        dismiss();
                         break;
                     case "false":
                         result = "服务器开小差了";
@@ -83,7 +82,7 @@ public class PetItemPopUpWindow extends PopupWindow {
         super(context);
         this.context = context;
         this.pet = pet;
-        this.setOutsideTouchable(true);
+        this.setOutsideTouchable(false);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
         View contentView = LayoutInflater.from(context).inflate(R.layout.pet_pop_up,

@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private Map<String, List> itemList;
-    private String[] tab = {"植物","宠物"};
+    private String[] tab = {"植物","宠物","道具"};
 
     public MyFragmentPagerAdapter(@NonNull FragmentManager fm,Map<String, List> itemList) {
         super(fm);
@@ -33,6 +33,9 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
                 break;
             case 1:
                 bundle.putSerializable("pet", (Serializable) itemList.get("pet"));
+                break;
+            case 2:
+                bundle.putSerializable("utils",(Serializable) itemList.get("utils"));
                 break;
         }
         bundle.putInt(MyFragment.SHOP,position+1);

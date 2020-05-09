@@ -88,7 +88,7 @@
                         <EditText
                             android:id="@+id/shopNum"
                             android:layout_width="60dp"
-                            android:textAlignment="center"
+                            android:gravity="center"
                             android:layout_height="40dp"
                             android:background="@null"
                             android:inputType="number"
