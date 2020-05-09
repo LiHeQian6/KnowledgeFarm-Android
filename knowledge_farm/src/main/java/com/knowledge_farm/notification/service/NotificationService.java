@@ -37,9 +37,16 @@ public class NotificationService {
     @Transactional(readOnly = false)
     public Page<Notification> findReceivedByNotificationType(Integer userId, Integer typeId, Integer pageNumber, Integer pageSize){
         if(typeId == 1){
+            Page<Notification> page = this.notificationDao.findReceivedSystemNotificationByNotificationType(userId, 1, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
             User user = this.userService.findUserById(userId);
+            for(Notification notification : page.getContent()){
+                if(notification.getTo() == user && notification.getHaveRead() == 0){
+                    notification.setHaveRead(1);
+                }
+            }
+
             user.setLastReadTime(new Date());
-            return this.notificationDao.findReceivedSystemNotificationByNotificationType(userId, 1, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
+            return page;
         }else if(typeId == 2){
             return this.notificationDao.findReceivedAddFriendNotification(userId, 2, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
         }
