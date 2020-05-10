@@ -26,6 +26,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.tencent.tauth.Tencent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -101,6 +102,7 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         View contentView = LayoutInflater.from(context).inflate(R.layout.change_message_pop,
                 null, false);
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
     }
 
@@ -126,7 +128,6 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         cancel_btn = view.findViewById(R.id.cancel_btn);
         new_message.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         vertical.setLayerType(View.LAYER_TYPE_HARDWARE,null);
-        okHttpClient = new OkHttpClient();
         registerListener();
     }
 

@@ -29,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.PetUtil;
@@ -85,6 +86,7 @@ public class MyFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getViews();
+        okHttpClient = OkHttpUtils.getInstance(getContext());
         View view = inflater.inflate(R.layout.plant_gridview_layout,container,false);
         gridView = view.findViewById(R.id.plant_gird_view);
         Bundle bundle = getArguments();
@@ -193,8 +195,6 @@ public class MyFragment extends Fragment {
      * @return void
      */
     private void getViews() {
-
-        okHttpClient = new OkHttpClient();
         wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
         ds = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(ds);

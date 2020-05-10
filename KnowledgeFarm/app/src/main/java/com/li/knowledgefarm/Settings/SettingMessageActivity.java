@@ -32,6 +32,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -114,6 +115,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.change_nickname);
+        okHttpClient = OkHttpUtils.getInstance(this);
         FullScreen.NavigationBarStatusBar(SettingMessageActivity.this,true);
         getViews();
         registListener();
@@ -213,7 +215,6 @@ public class SettingMessageActivity extends AppCompatActivity {
         log_out = findViewById(R.id.btn_logout);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
         spin = getResources().getStringArray(R.array.sarry);
-        okHttpClient = new OkHttpClient();
         returns_message = findViewById(R.id.returns_message);
         wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
         ds = new DisplayMetrics();

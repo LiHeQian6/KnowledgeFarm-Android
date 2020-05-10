@@ -14,6 +14,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.Notification;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,7 @@ public class NotifyPopUpWindow extends PopupWindow {
     private TextView not_content;
     private TextView not_time;
     private Handler if_delete_handler;
-
+    private OkHttpClient okHttpClient;
 
 
     public NotifyPopUpWindow(final Context context,Notification notification) {
@@ -52,6 +53,7 @@ public class NotifyPopUpWindow extends PopupWindow {
         final View contentView = LayoutInflater.from(context).inflate(R.layout.notify_message_pop,
                 null, false);
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
         setText();
     }
@@ -76,7 +78,7 @@ public class NotifyPopUpWindow extends PopupWindow {
                 super.run();
                 final Request request = new Request.Builder()
                         .url("").build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.tencent.tauth.Tencent;
 
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class IfDoPop extends PopupWindow {
         View contentView = LayoutInflater.from(context).inflate(R.layout.if_exit,
                 null, false);
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
         showType();
     }
@@ -93,7 +95,6 @@ public class IfDoPop extends PopupWindow {
         show_text  = contentView.findViewById(R.id.request);
         cancel = contentView.findViewById(R.id.cancel_btn);
         sure = contentView.findViewById(R.id.sure_btn);
-        okHttpClient = new OkHttpClient();
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -46,6 +46,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Main.bgsound.BgSoundService;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.notify.NotifyActivity;
 import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
@@ -136,7 +137,7 @@ public class MyFriendActivity extends AppCompatActivity {
         FullScreen.NavigationBarStatusBar(MyFriendActivity.this,true);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
-        okHttpClient = new OkHttpClient();
+        okHttpClient = OkHttpUtils.getInstance(this);
         gson = new Gson();
         dataList = new ArrayList<>();
         user= (User) getIntent().getSerializableExtra("friend");
@@ -612,10 +613,17 @@ public class MyFriendActivity extends AppCompatActivity {
         float density = getResources().getDisplayMetrics().density;
         float displayHeight = getResources().getDisplayMetrics().heightPixels/density;
         float displayWidth = getResources().getDisplayMetrics().widthPixels/density;
-        if (displayWidth>598){
+        if (displayWidth>640){
             params.topMargin= (int) (displayHeight/2.4f);
             params.leftMargin=(int)displayWidth/5;
             lands.setLayoutParams(params);
+//            land_background.setLayoutParams(params);
+        }else {
+            int top = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    displayWidth/8, getResources().getDisplayMetrics());
+            params.topMargin= top;
+            lands.setLayoutParams(params);
+//            land_background.setLayoutParams(params);
         }
     }
     class MainListener implements View.OnClickListener {
@@ -733,7 +741,7 @@ public class MyFriendActivity extends AppCompatActivity {
                 super.run();
                 Request request = new Request.Builder()
                         .url(getResources().getString(R.string.URL)+"/notification/isHavingNewNotification?userId="+LoginActivity.user.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

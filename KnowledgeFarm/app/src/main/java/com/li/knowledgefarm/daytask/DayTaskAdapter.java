@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Task;
@@ -38,6 +39,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 class DayTaskAdapter extends BaseAdapter {
+    private final OkHttpClient okHttpClient;
     private List<TaskItem> list;
     private int id;
     private Context context;
@@ -47,6 +49,7 @@ class DayTaskAdapter extends BaseAdapter {
         this.list = list;
         this.id = id;
         this.context = context;
+        okHttpClient = OkHttpUtils.getInstance(context);
     }
 
     @Override
@@ -174,7 +177,7 @@ class DayTaskAdapter extends BaseAdapter {
                 String name = HumpToUnderline(taskName);
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/task/getReward2?taskName="+ name +"&userId="+LoginActivity.user.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 
 import java.io.IOException;
 
@@ -60,6 +61,7 @@ public class ChangeNicknamePop extends PopupWindow {
         View contentView = LayoutInflater.from(context).inflate(R.layout.update_nickname,
                 null, false);
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
     }
 
@@ -123,7 +125,6 @@ public class ChangeNicknamePop extends PopupWindow {
         new_nickname.setText(LoginActivity.user.getNickName());
         commit_nickname = contentView.findViewById(R.id.commit_nickname);
         cancel_nickname = contentView.findViewById(R.id.cancel_nickname);
-        okHttpClient = new OkHttpClient();
         commit_nickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

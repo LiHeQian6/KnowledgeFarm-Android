@@ -20,6 +20,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
@@ -66,11 +67,13 @@ public class NotifyActivity extends AppCompatActivity {
     private ImageView friend_notify_red;
     private ImageView send_notify_red;
     private ImageView other_notify_red;
+    private OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify_layout);
+        okHttpClient = OkHttpUtils.getInstance(this);
         getViews();
         showRed();
         registListener();
@@ -240,7 +243,7 @@ public class NotifyActivity extends AppCompatActivity {
                 Request request = new Request.Builder()
                         .post(formBody)
                         .url(getResources().getString(R.string.URL)+"/notification/findReceivedNotificationByType").build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -281,7 +284,7 @@ public class NotifyActivity extends AppCompatActivity {
                 Request request = new Request.Builder()
                         .post(formBody)
                         .url(getResources().getString(R.string.URL)+"/notification/findSendNotificationByType").build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -342,7 +345,7 @@ public class NotifyActivity extends AppCompatActivity {
                 super.run();
                 Request request = new Request.Builder()
                         .url(getResources().getString(R.string.URL)+"/notification/deleteNotificationByType?typeId="+type+"&userId="+userId).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

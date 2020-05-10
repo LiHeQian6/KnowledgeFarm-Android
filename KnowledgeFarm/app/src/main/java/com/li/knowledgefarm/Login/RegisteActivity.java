@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.dialog.SpinnerAdapter;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 
 import org.greenrobot.eventbus.EventBus;
@@ -79,11 +80,13 @@ public class RegisteActivity extends AppCompatActivity {
             }
         }
     };
+    private OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registe);
+        okHttpClient = OkHttpUtils.getInstance(this);
         getViews();
         setViewSize();
         FullScreen.NavigationBarStatusBar(RegisteActivity.this,true);
@@ -199,7 +202,7 @@ public class RegisteActivity extends AppCompatActivity {
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/registAccount").build();
         //Call
-        Call call = new OkHttpClient().newCall(request);
+        Call call = okHttpClient.newCall(request);
         //异步请求
         call.enqueue(new Callback() {
             @Override

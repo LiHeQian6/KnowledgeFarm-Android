@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
@@ -28,6 +29,7 @@ import okhttp3.Response;
 
 public class SendNotifyAdapter extends BaseAdapter {
 
+    private final OkHttpClient okHttpClient;
     private FriendsPage<Notification> list;
     private int id;
     private Context context;
@@ -38,6 +40,7 @@ public class SendNotifyAdapter extends BaseAdapter {
         this.list = list;
         this.id = id;
         this.context = context;
+        okHttpClient = OkHttpUtils.getInstance(context);
     }
 
     @Override
@@ -118,7 +121,7 @@ public class SendNotifyAdapter extends BaseAdapter {
                 super.run();
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/notification/editNotificationReadStatus?haveRead="+if_read+"&ids="+ids).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

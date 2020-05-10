@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.PetVO;
@@ -93,6 +94,7 @@ public class PetItemPopUpWindow extends PopupWindow {
         View contentView = LayoutInflater.from(context).inflate(R.layout.pet_pop_up,
                 null, false);
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
         showMessage();
     }
@@ -144,7 +146,6 @@ public class PetItemPopUpWindow extends PopupWindow {
         physical_value = contentView.findViewById(R.id.pet_physical_value);
         cancel = contentView.findViewById(R.id.pet_btnCancel);
         buy_pet = contentView.findViewById(R.id.buy_pet);
-        okHttpClient = new OkHttpClient();
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +174,7 @@ public class PetItemPopUpWindow extends PopupWindow {
                 super.run();
                 Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/user/buyPet?userId="
                         + LoginActivity.user.getId() + "&petId=" + pet.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

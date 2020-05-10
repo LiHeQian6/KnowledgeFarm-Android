@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -136,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
     };
     private String Nickname;
     private String Path;
+    private OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         setDensityLand.setOrientation(this, AppUtil.HEIGHT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        okHttpClient = OkHttpUtils.getInstance(this);
         user = null;
         autoLogin();
         FullScreen.NavigationBarStatusBar(LoginActivity.this,true);
@@ -415,7 +418,7 @@ public class LoginActivity extends AppCompatActivity {
                         .url(urlPath)
                         .post(body)
                         .build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -461,7 +464,7 @@ public class LoginActivity extends AppCompatActivity {
                         .url(urlPath)
                         .post(body)
                         .build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call =okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {

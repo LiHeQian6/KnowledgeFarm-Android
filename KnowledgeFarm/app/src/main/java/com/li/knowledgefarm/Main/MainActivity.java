@@ -51,6 +51,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.li.knowledgefarm.Login.LoginByAccountActivity;
 import com.li.knowledgefarm.Main.bgsound.BgSoundService;
 import com.li.knowledgefarm.MyFriends.FriendsPopUpWindow;
 import com.li.knowledgefarm.R;
@@ -58,6 +59,7 @@ import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.bag.BagPopUpWindow;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.DoTaskBean;
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar experience;
     private TextView experienceValue;
     private FrameLayout lands;
+    private FrameLayout land_background;
     private BagPopUpWindow bagPopUpWindow;
     private Dialog ifExtention;
     private OkHttpClient okHttpClient;
@@ -146,13 +149,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FullScreen.NavigationBarStatusBar(MainActivity.this,true);
         setContentView(R.layout.activity_main);
-        okHttpClient = new OkHttpClient();
+        okHttpClient = OkHttpUtils.getInstance(this);
         gson = new Gson();
         getViews();
         addListener();
         getCrop();
         JPushInterface.setAlias(this,1, LoginActivity.user.getAccount());
-        haveNewNotifications();
     }
 
     @Override
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
 //        startService(intent);
         getUserInfo();
         showUserInfo();
+        haveNewNotifications();
     }
 
     /**
@@ -192,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 Request request = new Request.Builder()
                         .url(getResources().getString(R.string.URL) + "/user/findUserInfoByUserId?userId=" + LoginActivity.user.getId())
                         .build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -582,6 +585,8 @@ public class MainActivity extends AppCompatActivity {
                     displayWidth/12, getResources().getDisplayMetrics());
             LAND_WIDTH_2=width/2.1f;
             LAND_HEIGHT_2=height/2.1f;
+            land_background.setTranslationX(-LAND_WIDTH_2*1.2f);
+            land_background.getLayoutParams().width= (int) (LAND_WIDTH_2*12);
             FrameLayout.LayoutParams param = new FrameLayout.LayoutParams(width, height);
             landGroup.setLayoutParams(param);
             int num = i + 1;
@@ -1122,6 +1127,7 @@ public class MainActivity extends AppCompatActivity {
         money = findViewById(R.id.money);
         account = findViewById(R.id.account);
         lands = findViewById(R.id.lands);
+        land_background = findViewById(R.id.land_background);
         experience = findViewById(R.id.experience);
         experienceValue = findViewById(R.id.experienceValue);
         xzw = findViewById(R.id.xzw);
@@ -1142,10 +1148,18 @@ public class MainActivity extends AppCompatActivity {
         float density = getResources().getDisplayMetrics().density;
         float displayHeight = getResources().getDisplayMetrics().heightPixels/density;
         float displayWidth = getResources().getDisplayMetrics().widthPixels/density;
-        if (displayWidth>598){
+        System.out.println("width "+displayWidth+"height "+displayHeight);
+        if (displayWidth>640){
             params.topMargin= (int) (displayHeight/2.4f);
             params.leftMargin=(int)displayWidth/5;
             lands.setLayoutParams(params);
+            land_background.setLayoutParams(params);
+        }else {
+            int top = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    displayWidth/8, getResources().getDisplayMetrics());
+            params.topMargin= top;
+            lands.setLayoutParams(params);
+            land_background.setLayoutParams(params);
         }
     }
 
@@ -1187,7 +1201,7 @@ public class MainActivity extends AppCompatActivity {
                 super.run();
                 Request request = new Request.Builder()
                         .url(getResources().getString(R.string.URL)+"/notification/isHavingNewNotification?userId="+LoginActivity.user.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call =okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -1216,8 +1230,11 @@ public class MainActivity extends AppCompatActivity {
                 if (!message.equals("Fail")){
                     Type type = new TypeToken<List<Boolean>>(){}.getType();
                     notifyStatus= gson.fromJson(message,type);
-                    if (notifyStatus.contains(true)){
+                    if (notifyStatus.subList(0,3).contains(true)){
                         notify_red.setVisibility(View.VISIBLE);
+                    }
+                    if(notifyStatus.get(4)){
+                        daytask_red.setVisibility(View.VISIBLE);
                     }
                 }else {
                     Toast.makeText(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();

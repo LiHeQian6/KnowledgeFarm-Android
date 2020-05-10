@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -109,6 +110,7 @@ public class FindPassword extends AppCompatActivity {
             }
         }
     };
+    private OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +118,9 @@ public class FindPassword extends AppCompatActivity {
         setContentView(R.layout.activity_find_password);
         //设置横屏
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
-
+        okHttpClient = OkHttpUtils.getInstance(this);
         FullScreen.NavigationBarStatusBar(FindPassword.this,true);
         getViews();
         registListener();
@@ -265,7 +267,7 @@ public class FindPassword extends AppCompatActivity {
                 .build();
         Request request = new Request.Builder().post(formBody).url(s).build();
         //Call
-        Call call = new OkHttpClient().newCall(request);
+        Call call = okHttpClient.newCall(request);
         //异步请求
         call.enqueue(new Callback() {
             @Override

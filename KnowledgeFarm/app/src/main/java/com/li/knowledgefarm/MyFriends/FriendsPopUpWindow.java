@@ -37,6 +37,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 
@@ -88,6 +89,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                 null, false);
 
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
 //        setText();
         registListener();
@@ -195,7 +197,6 @@ public class FriendsPopUpWindow extends PopupWindow {
         search=view.findViewById(R.id.search);
         per = view.findViewById(R.id.pre);
         next = view.findViewById(R.id.next);
-        okHttpClient = new OkHttpClient();
         now = view.findViewById(R.id.now);
         gson = new Gson();
     }

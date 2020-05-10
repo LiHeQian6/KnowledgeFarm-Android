@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.User;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -83,14 +84,16 @@ public class QQFirstActivity extends AppCompatActivity {
     private String config;
     private String Nickname;
     private String Path;
+    private OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_qqpwd);
+        okHttpClient = OkHttpUtils.getInstance(this);
         //设置横屏
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
         FullScreen.NavigationBarStatusBar(QQFirstActivity.this,true);
         Intent intent = getIntent();
@@ -136,7 +139,7 @@ public class QQFirstActivity extends AppCompatActivity {
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/addQQUser").build();
         //Call
-        Call call = new OkHttpClient().newCall(request);
+        Call call = okHttpClient.newCall(request);
         //异步请求
         call.enqueue(new Callback() {
             @Override

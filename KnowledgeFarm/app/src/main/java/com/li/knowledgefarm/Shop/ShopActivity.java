@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.PetUtil;
 import com.li.knowledgefarm.entity.PetVO;
 import com.li.knowledgefarm.entity.ShopItemBean;
@@ -69,7 +70,7 @@ public class ShopActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
-
+        okHttpClient = OkHttpUtils.getInstance(this);
         getViews();
         messages = new Handler(){
             @Override
@@ -174,7 +175,6 @@ public class ShopActivity extends AppCompatActivity {
      * @return void
      */
     private void getViews() {
-        okHttpClient = new OkHttpClient();
         gson = new Gson();
         shopList = new ArrayList<>();
         pet_list = new ArrayList<>();

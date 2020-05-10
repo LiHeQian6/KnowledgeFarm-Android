@@ -18,6 +18,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.Task;
 import com.li.knowledgefarm.entity.TaskItem;
 
@@ -45,6 +46,7 @@ import okhttp3.Response;
  * @Date 10:49 2020/4/22
  **/
 public class DayTaskPopUpWindow extends PopupWindow {
+    private OkHttpClient okHttpClient;
     private ListView task;
     private Context context;
     private Gson gson;
@@ -55,6 +57,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
     public DayTaskPopUpWindow(Context context) {
         super(context);
         this.context = context;
+        okHttpClient = OkHttpUtils.getInstance(context);
         Init();
         getDayTask();
     }
@@ -119,7 +122,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
                 super.run();
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/task/getTask2?userId="+LoginActivity.user.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

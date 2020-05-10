@@ -50,9 +50,8 @@ android {
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://maven.google.com'
-    }
+    maven { url 'https://maven.google.com' }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -62,7 +61,7 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation files('libs\\open_sdk_r6137_lite.jar')
+    implementation files('libs/open_sdk_r6137_lite.jar')
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.squareup.okhttp3:okhttp:4.2.2'
     implementation 'com.google.code.gson:gson:2.8.5'
@@ -75,4 +74,5 @@ dependencies {
     implementation 'com.hjq:xxpermissions:6.2'
     implementation 'com.android.support:design:29.0.0'
 //    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 }
