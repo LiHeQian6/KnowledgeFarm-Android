@@ -60,20 +60,23 @@ public class SubjectListActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.iv_math:
-                    Intent intent = new Intent();
-                    intent.setClass(SubjectListActivity.this, MathActivity.class);
-                    GetMathQuestion getMathQuestion = new GetMathQuestion(SubjectListActivity.this,intent);
-                    getMathQuestion.getQuestion();
+//                    Intent intent = new Intent();
+//                    intent.setClass(SubjectListActivity.this, MathActivity.class);
+//                    GetMathQuestion getMathQuestion = new GetMathQuestion(SubjectListActivity.this,intent);
+//                    getMathQuestion.getQuestion();
+                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.iv_english:
-                    Intent intent1 = new Intent(SubjectListActivity.this, EnglishActivity.class);
-                    GetEnglishQuestion getEnglishQuestion = new GetEnglishQuestion(SubjectListActivity.this,intent1);
-                    getEnglishQuestion.getQuestion();
+//                    Intent intent1 = new Intent(SubjectListActivity.this, EnglishActivity.class);
+//                    GetEnglishQuestion getEnglishQuestion = new GetEnglishQuestion(SubjectListActivity.this,intent1);
+//                    getEnglishQuestion.getQuestion();
+                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.chinese:
-                    Intent intent2 = new Intent(SubjectListActivity.this, ChineseActivity.class);
-                    GetChineseQuestion getChineseQuestion = new GetChineseQuestion(SubjectListActivity.this,intent2);
-                    getChineseQuestion.getQuestion();
+//                    Intent intent2 = new Intent(SubjectListActivity.this, ChineseActivity.class);
+//                    GetChineseQuestion getChineseQuestion = new GetChineseQuestion(SubjectListActivity.this,intent2);
+//                    getChineseQuestion.getQuestion();
+                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
                     break;
             }
         }

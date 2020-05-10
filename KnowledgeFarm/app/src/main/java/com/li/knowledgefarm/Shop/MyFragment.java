@@ -29,11 +29,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.PetUtil;
 import com.li.knowledgefarm.entity.PetVO;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -140,6 +144,33 @@ public class MyFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * @Description 更新商店展示
+     * @Author 孙建旺
+     * @Date 上午10:19 2020/05/10
+     * @Param [eventBean]
+     * @return void
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void UpdatePet(EventBean eventBean){
+        int pos = pet_list.indexOf(eventBean.getPetVO());
+        this.pet_list.get(pos).setOwn(1);
+        petItemAdapter.notifyDataSetChanged();
+    }
+
     /**
      * @Description 点击道具弹出框
      * @Author 孙建旺
@@ -162,6 +193,7 @@ public class MyFragment extends Fragment {
      * @return void
      */
     private void getViews() {
+
         okHttpClient = new OkHttpClient();
         wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
         ds = new DisplayMetrics();

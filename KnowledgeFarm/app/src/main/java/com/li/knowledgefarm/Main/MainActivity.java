@@ -238,21 +238,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @Description 展示用户信息与设置
-     * @Author 孙建旺
-     * @Date 下午3:34 2020/04/20
-     * @Param []
-     * @return void
-     */
-//    private void showUserMessage(){
-//        userMessagePopUp = new UserMessagePopUp(this,MainActivity.this);
-//        WindowManager.LayoutParams lp = getWindow().getAttributes();
-//        lp.alpha = (float) 0.5;
-//        this.getWindow().setAttributes(lp);
-//        userMessagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
-//    }
-
-    /**
      * 展示用户信息
      */
     private void showUserInfo() {
