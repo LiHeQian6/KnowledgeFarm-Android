@@ -44,7 +44,6 @@ public class NotificationService {
                     notification.setHaveRead(1);
                 }
             }
-
             user.setLastReadTime(new Date());
             return page;
         }else if(typeId == 2){
@@ -205,8 +204,13 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = false)
-    public void editNotificationReadStatus(List<Integer> idList, Integer haveRead){
-        List<Notification> notifications = this.notificationDao.findAllById(idList);
+    public void editNotificationReadStatus(List<Integer> idList, Integer userId, Integer haveRead, Integer typeId, Integer flag){
+        List<Notification> notifications = null;
+        if(flag == 0){
+            notifications = this.notificationDao.findNotificationListByFromAndTo(idList, userId, typeId);
+        }else{
+            notifications = this.notificationDao.findNotificationListByFromAndTo2(userId, idList, typeId);
+        }
         for(Notification notification : notifications){
             notification.setHaveRead(haveRead);
         }

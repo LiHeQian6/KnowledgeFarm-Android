@@ -51,4 +51,10 @@ public interface NotificationDao extends JpaRepository<Notification, Integer> {
 
     @Query("select n from Notification n where n.from.id = ?1 and n.to.account = ?2 and n.haveRead = 0 and n.notificationType.id = 2")
     public Notification findNotificationByFromAndTo(Integer userFromId, String account);
+
+    @Query("select n from Notification n where n.from.id in ?1 and n.to.id = ?2 and n.notificationType.id = ?3")
+    public List<Notification> findNotificationListByFromAndTo(List<Integer> idList, Integer id, Integer typeId);
+
+    @Query("select n from Notification n where n.from.id = ?1 and n.to.id in ?2 and n.notificationType.id = ?3")
+    public List<Notification> findNotificationListByFromAndTo2(Integer id, List<Integer> idList, Integer typeId);
 }

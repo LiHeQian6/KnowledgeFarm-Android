@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,23 +31,24 @@ public class UserPetHouseController {
     private UserPetHouseService userPetHouseService;
 
     @ApiOperation(value = "查看宠物仓库", notes = "返回值：List（UserPetHouse）")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true)
-    })
     @GetMapping("/showUserPetHouse")
-    public List<UserPetHouse> showUserPetHouse(@RequestParam("userId") Integer userId){
-        return this.userPetHouseService.showUserPet(userId);
+    public List<UserPetHouse> showUserPetHouse(HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null) {
+            return this.userPetHouseService.showUserPet(userId);
+        }
+        return new ArrayList<>();
     }
 
-    @ApiOperation(value = "查询仓库中所有饲料或工具", notes = "返回值：List（BagPetUtilItem）")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "petUtilTypeId", value = "宠物工具类型", dataType = "int", paramType = "query", required = true)
-    })
+    @ApiOperation(value = "查询仓库中所有道具", notes = "返回值：List（BagPetUtilItem）")
     @GetMapping("/initUserPetUtilBag")
-    public List<BagPetUtilItem> initUserPetUtilBag(@RequestParam("userId") Integer userId, @RequestParam("petUtilTypeId") Integer petUtilTypeId){
-        List<BagPetUtilItem> bagPetUtilItems = this.userPetHouseService.initUserPetUtilBag(userId);
-        return bagPetUtilItems;
+    public List<BagPetUtilItem> initUserPetUtilBag(HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null) {
+            List<BagPetUtilItem> bagPetUtilItems = this.userPetHouseService.initUserPetUtilBag(userId);
+            return bagPetUtilItems;
+        }
+        return new ArrayList<>();
     }
 
 }

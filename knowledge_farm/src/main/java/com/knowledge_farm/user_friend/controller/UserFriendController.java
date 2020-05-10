@@ -1,6 +1,5 @@
 package com.knowledge_farm.user_friend.controller;
 
-import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.notification.service.NotificationService;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 
 /**
  * @ClassName UserFriendController
@@ -34,8 +35,6 @@ public class UserFriendController {
     private UserFriendServiceImpl userFriendService;
     @Resource
     private NotificationService notificationService;
-    @Value("${file.photoUrl}")
-    private String photoUrl;
 
     /**
      * @Author 张帅华
@@ -46,20 +45,25 @@ public class UserFriendController {
      **/
     @ApiOperation(value = "查询用户的好友列表", notes = "返回值：Page（User）")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "account", value = "查询的账号", dataType = "String", paramType = "query", required = false),
             @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "query", defaultValue = "1"),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "query", defaultValue = "4")
     })
     @GetMapping("/findUserFriend")
-    public PageUtil<User> findUserFriend(@RequestParam("userId") Integer userId,
-                                         @RequestParam(value = "account", required = false) String account,
+    public PageUtil<User> findUserFriend(@RequestParam(value = "account", required = false) String account,
                                          @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                         @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize){
-        Page<User> page = this.userFriendService.findUserFriendPageByAccount(userId, account, pageNumber, pageSize);
+                                         @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+                                         HttpSession session){
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
-        pageUtil.setTotalCount((int) page.getTotalElements());
-        pageUtil.setList(page.getContent());
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null) {
+            Page<User> page = this.userFriendService.findUserFriendPageByAccount(userId, account, pageNumber, pageSize);
+            pageUtil.setTotalCount((int) page.getTotalElements());
+            pageUtil.setList(page.getContent());
+            return pageUtil;
+        }
+        pageUtil.setTotalCount(0);
+        pageUtil.setList(new ArrayList<>());
         return pageUtil;
     }
 
@@ -72,144 +76,131 @@ public class UserFriendController {
      **/
     @ApiOperation(value = "查询所有人", notes = "返回值：Page（User）")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "account", value = "查询的账号", dataType = "String", paramType = "query", required = false),
             @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "query", defaultValue = "1"),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", dataType = "int", paramType = "query", defaultValue = "4")
     })
     @GetMapping("/findAllUser")
-    public PageUtil<User> findAllUser(@RequestParam("userId") Integer userId,
-                                      @RequestParam(value = "account", required = false) String account,
+    public PageUtil<User> findAllUser(@RequestParam(value = "account", required = false) String account,
                                       @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                      @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize) {
-        Page<User> page = this.userFriendService.findAllUserByAccount(userId, account, pageNumber, pageSize);
+                                      @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+                                      HttpSession session) {
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
-        pageUtil.setTotalCount((int) page.getTotalElements());
-        pageUtil.setList(page.getContent());
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null) {
+            Page<User> page = this.userFriendService.findAllUserByAccount(userId, account, pageNumber, pageSize);
+            pageUtil.setTotalCount((int) page.getTotalElements());
+            pageUtil.setList(page.getContent());
+            return pageUtil;
+        }
+        pageUtil.setTotalCount(0);
+        pageUtil.setList(new ArrayList<>());
         return pageUtil;
     }
 
     @ApiOperation(value = "添加好友", notes = "返回值：(String)true || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "sendAccount", value = "发送方用户账号", dataType = "String", paramType = "query", required = true),
-            @ApiImplicitParam(name = "account", value = "要添加好友的账号", dataType = "String", paramType = "query", required = true),
-            @ApiImplicitParam(name = "notificationId", value = "申请添加好友的消息Id", dataType = "int", paramType = "query", required = true)
+            @ApiImplicitParam(name = "sendAccount", value = "发送方用户账号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/addUserFriend")
-    public String addUserFriend(@RequestParam("sendAccount") String sendAccount,
-                                @RequestParam("account") String account,
-                                @RequestParam("notificationId") Integer notificationId){
+    public String addUserFriend(@RequestParam("sendAccount") String sendAccount, HttpSession session){
         try {
-            this.userFriendService.addUserFriend(sendAccount, account, notificationId);
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userFriendService.addUserFriend(sendAccount, userId);
+                return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     @ApiOperation(value = "拒绝添加好友的申请", notes = "返回值：(String)true || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "发送方用户账号", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "notificationId", value = "拒绝添加好友的消息Id", dataType = "int", paramType = "query", required = true)
+            @ApiImplicitParam(name = "account", value = "发送方用户账号", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/refuseUserFriend")
-    public String refuseUserFriend(@RequestParam("account") String account, @RequestParam("notificationId") Integer notificationId){
+    public String refuseUserFriend(@RequestParam("account") String account, HttpSession session){
         try {
-            this.userFriendService.refuseUserFriend(notificationId);
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userFriendService.refuseUserFriend(account, userId);
+                return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     @ApiOperation(value = "删除好友", notes = "返回值：(String)true || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "account", value = "要删除好友的账号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/deleteUserFriend")
-    public String deleteUserFriend(@RequestParam("userId") Integer userId, @RequestParam("account") String account){
+    public String deleteUserFriend(@RequestParam("account") String account, HttpSession session){
         try {
-            this.userFriendService.deleteUserFriend(userId, account);
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userFriendService.deleteUserFriend(userId, account);
+                return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     @ApiOperation(value = "给好友浇水", notes = "返回值：(String)true || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "friendId", value = "好友Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "landNumber", value = "要浇水的土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/waterForFriend")
-    public String waterForFriend(@RequestParam("userId") Integer userId,
-                                 @RequestParam("friendId") Integer friendId,
+    public String waterForFriend(@RequestParam("friendId") Integer friendId,
                                  @RequestParam("landNumber") String landNumber,
-                                 HttpServletRequest request){
+                                 HttpServletRequest request,
+                                 HttpSession session){
         try {
-            Integer result = this.userFriendService.waterForFriend(userId, friendId, landNumber);
-            switch (result){
-                case -1:
-                    return Result.FALSE;
-                case 0:
-                    this.notificationService.addWaterForFriendNotification(userId, friendId);
-                    return Result.TRUE;
-                default:
-                    request.setAttribute("StartUserCropGrowJob", new Integer[]{friendId, result, Integer.parseInt(landNumber.substring(4))});
-                    this.notificationService.addWaterForFriendNotification(userId, friendId);
-                    return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                Integer result = this.userFriendService.waterForFriend(userId, friendId, landNumber);
+                switch (result) {
+                    case -1:
+                        return Result.FALSE;
+                    case 0:
+                        return Result.TRUE;
+                    default:
+                        request.setAttribute("StartUserCropGrowJob", new Integer[]{friendId, result, Integer.parseInt(landNumber.substring(4))});
+                        return Result.TRUE;
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     @ApiOperation(value = "给好友施肥", notes = "返回值：(String)true || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "friendId", value = "好友Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "landNumber", value = "要施肥的土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("fertilizerForFriend")
-    public String fertilizerForFriend(@RequestParam("userId") Integer userId,
-                                      @RequestParam("friendId") Integer friendId,
-                                      @RequestParam("landNumber") String landNumber){
+    public String fertilizerForFriend(@RequestParam("friendId") Integer friendId,
+                                      @RequestParam("landNumber") String landNumber,
+                                      HttpSession session){
         try {
-            String result = this.userFriendService.fertilizerForFriend(userId, friendId, landNumber);
-            this.notificationService.addFertilizerForFriendNotification(userId, friendId);
-            return result;
-        }catch (Exception e){
-            e.printStackTrace();
-            return Result.FALSE;
-        }
-    }
-
-    @GetMapping("/test")
-    public String waterForFriend2(
-                                 HttpServletRequest request){
-        try {
-            Integer result = this.userFriendService.waterForFriend(109, 124, "land1");
-            switch (result){
-                case -1:
-                    return Result.FALSE;
-                case 0:
-                    this.notificationService.addWaterForFriendNotification(109, 124);
-                    return Result.TRUE;
-                default:
-                    request.setAttribute("StartUserCropGrowJob", new Integer[]{124, result, Integer.parseInt("land1".substring(4))});
-                    this.notificationService.addWaterForFriendNotification(109, 124);
-                    return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                String result = this.userFriendService.fertilizerForFriend(userId, friendId, landNumber);
+                return result;
             }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
 }

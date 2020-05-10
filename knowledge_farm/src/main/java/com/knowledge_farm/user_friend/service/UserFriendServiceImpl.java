@@ -49,9 +49,9 @@ public class UserFriendServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public void addUserFriend(String sendAccount, String account, Integer notificationId){
+    public void addUserFriend(String sendAccount, Integer userId){
         User user = this.userService.findUserByAccount(sendAccount);
-        User friendUser = this.userService.findUserByAccount(account);
+        User friendUser = this.userService.findUserById(userId);
 
         UserFriend userFriend = new UserFriend();
         userFriend.setUser(user);
@@ -67,15 +67,16 @@ public class UserFriendServiceImpl {
         this.userFriendDao.saveAll(friends);
 
         List<Integer> idList = new ArrayList<>();
-        idList.add(notificationId);
-        this.notificationService.editNotificationReadStatus(idList, 2);
+        idList.add(user.getId());
+        this.notificationService.editNotificationReadStatus(idList, userId, 2, 2, 0);
     }
 
     @Transactional(readOnly = false)
-    public void refuseUserFriend(Integer notificationId){
+    public void refuseUserFriend(String sendAccount, Integer userId){
+        User user = this.userService.findUserByAccount(sendAccount);
         List<Integer> idList = new ArrayList<>();
-        idList.add(notificationId);
-        this.notificationService.editNotificationReadStatus(idList, -2);
+        idList.add(user.getId());
+        this.notificationService.editNotificationReadStatus(idList, userId, -2, 2, 0);
     }
 
     @Transactional(readOnly = false)
@@ -106,19 +107,17 @@ public class UserFriendServiceImpl {
                     userCrop.setProgress(progress + 5);
                 }
                 user.setWater(user.getWater() - 1);
-            }else{
-                return -1;
+                user.setMoney(user.getMoney() + 10);
+                //修改作物干枯湿润状态
+                if(userCrop.getStatus() == 0){
+                    userCrop.setStatus(1);
+                    return userCrop.getId();
+                }
+                this.notificationService.addWaterForFriendNotification(userId, friendId);
+                return 0;
             }
-        }else{
-            return -1;
         }
-        user.setMoney(user.getMoney() + 10);
-        //修改作物干枯湿润状态
-        if(userCrop.getStatus() == 0){
-            userCrop.setStatus(1);
-            return userCrop.getId();
-        }
-        return 0;
+        return -1;
     }
 
     @Task(description = "help_fertilize")
@@ -143,6 +142,7 @@ public class UserFriendServiceImpl {
                     }
                     user.setFertilizer(user.getFertilizer() - 1);
                     user.setMoney(user.getMoney() + 20);
+                    this.notificationService.addFertilizerForFriendNotification(userId, friendId);
                     return Result.TRUE;
                 }
             }

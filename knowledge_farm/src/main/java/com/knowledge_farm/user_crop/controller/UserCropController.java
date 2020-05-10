@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,8 +29,6 @@ import java.util.List;
 public class UserCropController {
     @Resource
     private UserCropServiceImpl userCropService;
-    @Value("${file.photoUrl}")
-    private String photoUrl;
 
     /**
      * @Author 张帅华
@@ -38,13 +38,14 @@ public class UserCropController {
      * @return java.util.List<com.atguigu.farm.entity.UserCrop>
      **/
     @ApiOperation(value = "查询用户种植作物", notes = "返回值：List（UserCrop）")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true)
-    })
     @GetMapping("/initUserCrop")
-    public List<UserCrop> initUserCrop(@RequestParam("userId") Integer userId){
-        List<UserCrop> userCrops = this.userCropService.initUserCrop(userId);
-        return userCrops;
+    public List<UserCrop> initUserCrop(HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null) {
+            List<UserCrop> userCrops = this.userCropService.initUserCrop(userId);
+            return userCrops;
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -56,17 +57,19 @@ public class UserCropController {
      **/
     @ApiOperation(value = "查看作物进度", notes = "返回值：(String)作物进度 || -1：用户不存在")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/getCropProgress")
-    public String getCropProgress(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber ){
+    public String getCropProgress(@RequestParam("landNumber") String landNumber, HttpSession session){
         try {
-            return "" + this.userCropService.getCropProgress(userId, landNumber);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return "" + this.userCropService.getCropProgress(userId, landNumber);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return "-1";
         }
+        return "-1";
     }
 
 }

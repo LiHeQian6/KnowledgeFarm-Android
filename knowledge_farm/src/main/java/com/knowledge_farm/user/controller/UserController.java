@@ -1,6 +1,5 @@
 package com.knowledge_farm.user.controller;
 
-import com.knowledge_farm.annotation.Task;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.user.service.UserServiceImpl;
@@ -59,9 +58,9 @@ public class UserController {
     @PostMapping("/loginByOpenId")
     public Object loginByOpenId(@RequestParam("openId") String openId, HttpSession session){
         Object obj = this.userService.loginByOpenId(openId);
-//        if(obj instanceof User){
-//            if()
-//        }
+        if(obj instanceof User){
+            session.setAttribute("userId", ((User) obj).getId());
+        }
         return obj;
     }
 
@@ -73,14 +72,15 @@ public class UserController {
      * @return java.lang.String
      **/
     @ApiOperation(value = "根据id查询用户信息", notes = "返回值：User")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "userId", dataType = "int", paramType = "query", required = true)
-    })
     @GetMapping("/findUserInfoByUserId")
-    public Object findUserInfoByUserId(@RequestParam("userId") Integer userId){
-        User user = this.userService.findUserById(userId);
-        if(user != null){
-            return user;
+    public Object findUserInfoByUserId(HttpSession session){
+        //User user = this.userService.findUserById(userId);
+        Integer id = (Integer) session.getAttribute("userId");
+        if(id != null){
+            User user = this.userService.findUserById(id);
+            if(user != null){
+                return user;
+            }
         }
         return "{}";
     }
@@ -130,8 +130,13 @@ public class UserController {
             @ApiImplicitParam(name = "password", value = "面膜", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/loginByAccount")
-    public Object loginByAccount(@RequestParam("account") String account, @RequestParam("password") String password){
+    public Object loginByAccount(@RequestParam("account") String account,
+                                 @RequestParam("password") String password,
+                                 HttpSession session){
         Object obj = this.userService.loginByAccount(account, password);
+        if(obj instanceof User){
+            session.setAttribute("userId", ((User) obj).getId());
+        }
         return obj;
     }
 
@@ -172,12 +177,16 @@ public class UserController {
      **/
     @ApiOperation(value = "发送验证码用于找回密码，并返回验证码", notes = "返回值：(String)验证码 || (String)fail：发送失败 || EmailError：邮箱错误 || notBindingEmail：未绑定邮箱 || notExistAccount：不存在该账号")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/sendTestCodePassword")
-    public String sendTestCodePassword(@RequestParam("account") String account, @RequestParam("email") String email){
-        return this.userService.sendTestCodePassword(account,email);
+    public String sendTestCodePassword(@RequestParam("email") String email,
+                                       HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null){
+            return this.userService.sendTestCodePassword(userId, email);
+        }
+        return Result.NOT_EXIST_ACCOUNT;
     }
     
     /**
@@ -189,18 +198,21 @@ public class UserController {
      **/
     @ApiOperation(value = "找回密码（重新给账号设置密码）", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/resetUserPassword")
-    public String resetUserPassword(@RequestParam("account") String account, @RequestParam("password") String password){
+    public String resetUserPassword(@RequestParam("password") String password,
+                                    HttpSession session){
         try {
-            this.userService.editPasswordByAccount(account, password);
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userService.editPasswordById(userId, password);
+                return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -212,19 +224,21 @@ public class UserController {
      **/
     @ApiOperation(value = "修改用户昵称", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "nickName", value = "昵称", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/updateUserNickName")
-    public String updateUserNickName(@RequestParam("account") String account,
-                                     @RequestParam("nickName") String nickName){
+    public String updateUserNickName(@RequestParam("nickName") String nickName,
+                                     HttpSession session){
         try {
-            this.userService.editNickNameByAccount(account, nickName);
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userService.editNickNameById(userId, nickName);
+                return Result.TRUE;
+            }
         }catch (Exception e){
-            e.printStackTrace();
-            return Result.FALSE;
+            e.printStackTrace();;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -236,19 +250,21 @@ public class UserController {
      **/
     @ApiOperation(value = "修改用户年级", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "grade", value = "年级", dataType = "int", paramType = "form", required = true)
     })
-    @PostMapping("/updateUserGrade")
-    public String updateUserGrade(@RequestParam("account") String account,
-                                  @RequestParam("grade") Integer grade){
+        @PostMapping("/updateUserGrade")
+    public String updateUserGrade(@RequestParam("grade") Integer grade,
+                                  HttpSession session){
         try {
-            this.userService.editGradeByAccount(account, grade);
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userService.editGradeById(userId, grade);
+                return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -260,25 +276,27 @@ public class UserController {
      **/
     @ApiOperation(value = "修改用户密码", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)PasswordError：旧密码错误")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "oldPassword", value = "旧密码", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "newPassword", value = "新密码", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/updateUserPassword")
-    public String updateUserPassword(@RequestParam("account") String account,
-                                     @RequestParam("oldPassword") String oldPassword,
-                                     @RequestParam("newPassword") String newPassword){
-        User user = this.userService.findUserByAccount(account);
+    public String updateUserPassword(@RequestParam("oldPassword") String oldPassword,
+                                     @RequestParam("newPassword") String newPassword,
+                                     HttpSession session){
         try {
-            if(user.getPassword().equals(oldPassword)){
-                this.userService.editPasswordByAccount(account, newPassword);
-                return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                User user = this.userService.findUserById(userId);
+                if (user.getPassword().equals(oldPassword)) {
+                    this.userService.editPasswordById(userId, newPassword);
+                    return Result.TRUE;
+                }
+                return Result.PASSWORD_ERROR;
             }
-            return Result.PASSWORD_ERROR;
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -291,35 +309,39 @@ public class UserController {
     @ApiOperation(value = "修改用户头像", notes = "返回值： (String)photo：头像 || (String)false：失败 || (String)null：图片为空")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "upload", value = "图片", dataType = "MultipartFile", paramType = "form", required = true),
-            @ApiImplicitParam(name = "id", value = "用户Id", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "photo", value = "头像", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/updatePhoto")
     public String updatePhoto(@RequestParam("upload") MultipartFile file,
-                              @RequestParam("id") Integer id,
-                              @RequestParam("photo") String photo) throws IOException {
-        if(!file.getOriginalFilename().equals("")){
-            String defaultFileName = this.userPhotoFolderName + "/" + this.userDefaultFileName;
-            photo = photo.substring((this.photoUrl).length());//URLDecoder.decode(photo).
-            if(!photo.equals(defaultFileName)){
-                File file1 = new File(this.photoLocation + "/" + photo);
-                if(file1.exists()){
-                    file1.delete();
+                              @RequestParam("photo") String photo,
+                              HttpSession session) throws IOException {
+        Integer id = (Integer) session.getAttribute("userId");
+        if(id != null) {
+            if (!file.getOriginalFilename().equals("")) {
+                String defaultFileName = this.userPhotoFolderName + "/" + this.userDefaultFileName;
+                photo = photo.substring((this.photoUrl).length());//URLDecoder.decode(photo).
+                if (!photo.equals(defaultFileName)) {
+                    File file1 = new File(this.photoLocation + "/" + photo);
+                    if (file1.exists()) {
+                        file1.delete();
+                    }
+                }
+                String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+                FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
+                photo = this.userPhotoFolderName + "/" + photoName;
+                try {
+                    this.userService.editPhotoById(id, photo);
+                    return photo;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return Result.FALSE;
                 }
             }
-            String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
-            FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
-            photo = this.userPhotoFolderName + "/" + photoName;
-            try {
-                this.userService.editPhotoById(id, photo);
-                return photo;
-            }catch (Exception e){
-                e.printStackTrace();
-                return Result.FALSE;
-            }
+            return Result.NULL;
         }
-        return Result.NULL;
+        return Result.FALSE;
     }
+
     /**
      * @Author 张帅华
      * @Description 验证是否已经绑定QQ
@@ -328,17 +350,17 @@ public class UserController {
      * @return java.lang.String
      **/
     @ApiOperation(value = "验证是否已经绑定QQ", notes = "返回值： (String)true：已绑定 || (String)false：未绑定 || (String)null：账号不存在")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true)
-    })
     @PostMapping("/isBindingQQ")
-    public String isBindingQQ(@RequestParam("account") String account){
+    public String isBindingQQ(HttpSession session){
         try {
-            return this.userService.isBindingQQ(account);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userService.isBindingQQ(userId);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.NULL;
         }
+        return Result.NULL;
     }
 
     /**
@@ -350,17 +372,19 @@ public class UserController {
      **/
     @ApiOperation(value = "账号绑定QQ", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)already：邮箱已被绑定")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "openId", value = "openId", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/bindingQQ")
-    public String bindingQQ(@RequestParam("account") String account, @RequestParam("openId") String openId){
+    public String bindingQQ(@RequestParam("openId") String openId, HttpSession session){
         try {
-            return this.userService.bindingQQ(account, openId);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userService.bindingQQ(userId, openId);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -371,18 +395,18 @@ public class UserController {
      * @return java.lang.String
      **/
     @ApiOperation(value = "账号解绑QQ", notes = "返回值： (String)true：成功 || (String)false：失败")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true)
-    })
     @PostMapping("unBindingQQ")
-    public String unBindingQQ(@RequestParam("account") String account){
+    public String unBindingQQ(HttpSession session){
         try {
-            this.userService.removeUserAuthority(account);
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userService.removeUserAuthority(userId);
+                return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -414,20 +438,22 @@ public class UserController {
      * @Param [account, email]
      * @return java.lang.String
      **/
-    @ApiOperation(value = "绑定邮箱（直接设置邮箱）", notes = "返回值： (String)true：成功 || (String)fail：失败")
+    @ApiOperation(value = "绑定邮箱（直接设置邮箱）", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/bindingEmail")
-    public String bindingEmail(@RequestParam("account") String account, @RequestParam("email") String email){
+    public String bindingEmail(@RequestParam("email") String email, HttpSession session){
         try {
-            this.userService.editEmail(account, email);
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userService.editEmail(userId, email);
+                return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -437,19 +463,19 @@ public class UserController {
      * @Param
      * @return
      **/
-    @ApiOperation(value = "解绑邮箱", notes = "返回值： (String)true：成功 || (String)fail：失败")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true)
-    })
+    @ApiOperation(value = "解绑邮箱", notes = "返回值： (String)true：成功 || (String)false：失败")
     @PostMapping("/unBindingEmail")
-    public String unBindingEmail(@RequestParam("account") String account){
+    public String unBindingEmail(HttpSession session){
         try {
-            this.userService.editEmail(account, "");
-            return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                this.userService.editEmail(userId, "");
+                return Result.TRUE;
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
     /**
      * @Author 张帅华
@@ -460,22 +486,24 @@ public class UserController {
      **/
     @ApiOperation(value = "添加浇水，施肥次数，减少奖励次数", notes = "返回值： (String)剩余奖励次数 || (String)-1：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "water", value = "水的次数", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "fertilizer", value = "肥料的次数", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "subject", value = "学科", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/lessRewardCount")
-    public String lessRewardCount(@RequestParam("userId") Integer userId,
-                                  @RequestParam("water") Integer water,
+    public String lessRewardCount(@RequestParam("water") Integer water,
                                   @RequestParam("fertilizer") Integer fertilizer,
-                                  @RequestParam("subject") String subject){
+                                  @RequestParam("subject") String subject,
+                                  HttpSession session){
         try {
-            return "" + this.userService.lessRewardCount(userId, water, fertilizer, subject);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return "" + this.userService.lessRewardCount(userId, water, fertilizer, subject);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return "-1";
         }
+        return "-1";
     }
 
     /**
@@ -485,24 +513,26 @@ public class UserController {
      * @Param [userId, subject]
      * @return java.lang.String
      **/
-    @ApiOperation(value = "查询剩余奖励次数", notes = "返回值： (String)剩余奖励次数")
+    @ApiOperation(value = "查询剩余奖励次数", notes = "返回值： (String)剩余奖励次数 || '-1'：无该学科名 || '-2'：用户为空")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "subject", value = "学科", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/getRewardCount")
-    public String getRewardCount(@RequestParam("userId") Integer userId, @RequestParam("subject") String subject){
-        User user = this.userService.findUserById(userId);
-        if(user != null){
-            switch (subject){
-                case "chinese":
-                    return "" + user.getChineseRewardCount();
-                case "english":
-                    return "" + user.getEnglishRewardCount();
-                case "math":
-                    return "" + user.getMathRewardCount();
-                default:
-                    return "-1";
+    public String getRewardCount(@RequestParam("subject") String subject, HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null) {
+            User user = this.userService.findUserById(userId);
+            if (user != null) {
+                switch (subject) {
+                    case "chinese":
+                        return "" + user.getChineseRewardCount();
+                    case "english":
+                        return "" + user.getEnglishRewardCount();
+                    case "math":
+                        return "" + user.getMathRewardCount();
+                    default:
+                        return "-1";
+                }
             }
         }
         return "-2";
@@ -517,26 +547,30 @@ public class UserController {
      **/
     @ApiOperation(value = "浇水", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/waterCrop")
-    public String waterCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber, HttpServletRequest request){
+    public String waterCrop(@RequestParam("landNumber") String landNumber,
+                            HttpServletRequest request,
+                            HttpSession session){
         try {
-            Integer result = this.userService.waterCrop(userId, landNumber);
-            switch (result){
-                case -1:
-                    return Result.FALSE;
-                case 0:
-                    return Result.TRUE;
-                default:
-                    request.setAttribute("StartUserCropGrowJob", new Integer[]{userId, result, Integer.parseInt(landNumber.substring(4))});
-                    return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                Integer result = this.userService.waterCrop(userId, landNumber);
+                switch (result) {
+                    case -1:
+                        return Result.FALSE;
+                    case 0:
+                        return Result.TRUE;
+                    default:
+                        request.setAttribute("StartUserCropGrowJob", new Integer[]{userId, result, Integer.parseInt(landNumber.substring(4))});
+                        return Result.TRUE;
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -548,17 +582,19 @@ public class UserController {
      **/
     @ApiOperation(value = "施肥", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/fertilizerCrop")
-    public String fertilizerCrop(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
+    public String fertilizerCrop(@RequestParam("landNumber") String landNumber, HttpSession session){
         try {
-            return this.userService.fertilizerCrop(userId, landNumber);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userService.fertilizerCrop(userId, landNumber);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -570,18 +606,22 @@ public class UserController {
      **/
     @ApiOperation(value = "购买种子后添加到背包", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "cropId", value = "作物Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "number", value = "数量", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/buyCrop")
-    public String buyCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("number") Integer number){
+    public String buyCrop(@RequestParam("cropId") Integer cropId,
+                          @RequestParam("number") Integer number,
+                          HttpSession session){
         try {
-            return this.userService.buyCrop(userId, cropId, number);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userService.buyCrop(userId, cropId, number);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -593,23 +633,28 @@ public class UserController {
      **/
     @ApiOperation(value = "种植作物", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "cropId", value = "作物Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "number", value = "数量", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/raiseCrop")
-    public String raiseCrop(@RequestParam("userId") Integer userId, @RequestParam("cropId") Integer cropId, @RequestParam("landNumber") String landNumber, HttpServletRequest request){
+    public String raiseCrop(@RequestParam("cropId") Integer cropId,
+                            @RequestParam("landNumber") String landNumber,
+                            HttpServletRequest request,
+                            HttpSession session){
         try {
-            Integer result = this.userService.raiseCrop(userId, cropId, landNumber);
-            if(result != -1){
-                request.setAttribute("StartUserCropGrowJob", new Integer[]{userId, result, Integer.parseInt(landNumber.substring(4))});
-                return Result.TRUE;
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                Integer result = this.userService.raiseCrop(userId, cropId, landNumber);
+                if (result != -1) {
+                    request.setAttribute("StartUserCropGrowJob", new Integer[]{userId, result, Integer.parseInt(landNumber.substring(4))});
+                    return Result.TRUE;
+                }
+                return Result.FALSE;
             }
-            return Result.FALSE;
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -621,17 +666,19 @@ public class UserController {
      **/
     @ApiOperation(value = "收获", notes = "返回值：  (String)up：升级 || (String)true：成功（未升级） || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/harvest")
-    public String harvest(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber){
+    public String harvest(@RequestParam("landNumber") String landNumber, HttpSession session){
         try {
-            return this.userService.harvest(userId, landNumber);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userService.harvest(userId, landNumber);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     /**
@@ -643,64 +690,79 @@ public class UserController {
      **/
     @ApiOperation(value = "扩建土地", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "form", required = true),
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "form", required = true),
             @ApiImplicitParam(name = "needMoney", value = "开扩土地所需金币", dataType = "int", paramType = "form", required = true)
     })
     @PostMapping("/extensionLand")
-    public String extensionLand(@RequestParam("userId") Integer userId, @RequestParam("landNumber") String landNumber, @RequestParam("needMoney") Integer money){
+    public String extensionLand(@RequestParam("landNumber") String landNumber,
+                                @RequestParam("needMoney") Integer money,
+                                HttpSession session){
         try {
-            return this.userService.extensionLand(userId, landNumber, money);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userService.extensionLand(userId, landNumber, money);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     @ApiOperation(value = "购买宠物", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "petId", value = "宠物Id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/buyPet")
-    public String buyPet(@RequestParam("userId")Integer userId,@RequestParam("petId")Integer petId){
+    public String buyPet(@RequestParam("petId")Integer petId, HttpSession session){
         try{
-            return userService.buyPet(userId,petId);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return userService.buyPet(userId, petId);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     @ApiOperation(value = "购买宠物饲料或工具", notes = "返回值： (String)true：成功 || (String)false：失败 || (String)notEnoughMoney：钱不够")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "petUtilId", value = "宠物饲料或工具Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "number", value = "数量", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/buyPetUtil")
-    public String buyPetUtil(@RequestParam("userId") Integer userId,
-                             @RequestParam("petUtilId") Integer petUtilId,
-                             @RequestParam("number") Integer number){
+    public String buyPetUtil(@RequestParam("petUtilId") Integer petUtilId,
+                             @RequestParam("number") Integer number,
+                             HttpSession session){
         try{
-            return userService.buyPetUtil(userId, petUtilId, number);
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return userService.buyPetUtil(userId, petUtilId, number);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.FALSE;
         }
+        return Result.FALSE;
     }
 
     @ApiOperation(value = "喂养宠物", notes = "返回值： (String)true：成功 || (String)false：失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "userPetHouseId", value = "宠物仓库Id", dataType = "int", paramType = "query", required = true),
             @ApiImplicitParam(name = "petUtilBagId", value = "宠物饲料或工具背包Id", dataType = "int", paramType = "query", required = true),
     })
     @GetMapping("feedPet")
-    public String feedPet(@RequestParam("userId") Integer userId,
-                          @RequestParam("userPetHouseId") Integer userPetHouseId,
-                          @RequestParam("petUtilBagId") Integer petUtilBagId){
-        return this.userService.feedPet(userId, userPetHouseId, petUtilBagId);
+    public String feedPet(@RequestParam("userPetHouseId") Integer userPetHouseId,
+                          @RequestParam("petUtilBagId") Integer petUtilBagId,
+                          HttpSession session){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userService.feedPet(userId, userPetHouseId, petUtilBagId);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return Result.FALSE;
     }
 
 }

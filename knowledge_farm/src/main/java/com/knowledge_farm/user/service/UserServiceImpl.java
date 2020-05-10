@@ -227,8 +227,8 @@ public class UserServiceImpl {
      * @Param [account, email]
      * @return java.lang.String
      **/
-    public String sendTestCodePassword(String account, String email){
-        User user = this.userDao.findUserByAccount(account);
+    public String sendTestCodePassword(Integer userId, String email){
+        User user = this.userDao.findUserById(userId);
         if(user != null){
             String userEmail = user.getEmail();
             if(!userEmail.equals("")){
@@ -252,8 +252,8 @@ public class UserServiceImpl {
      * @Param [account]
      * @return java.lang.String
      **/
-    public String isBindingQQ(String account){
-        User user = this.userDao.findUserByAccount(account);
+    public String isBindingQQ(Integer userId){
+        User user = this.userDao.findUserById(userId);
         if(user.getUserAuthority() != null){
             return Result.TRUE;
         }
@@ -268,7 +268,7 @@ public class UserServiceImpl {
      * @return java.lang.String
      **/
     @Transactional(readOnly = false)
-    public String bindingQQ(String account, String openId){
+    public String bindingQQ(Integer userId, String openId){
         UserAuthority userAuthority = this.userAuthorityService.findUserAuthorityByOpenIdAndExist(openId, null);
         if(userAuthority != null){
             if(userAuthority.getUser() != null){
@@ -279,7 +279,7 @@ public class UserServiceImpl {
             userAuthority.setOpenId(openId);
             userAuthority.setType("QQ");
         }
-        User user = this.userDao.findUserByAccount(account);
+        User user = this.userDao.findUserById(userId);
         user.setUserAuthority(userAuthority);
         userAuthority.setUser(user);
         return Result.TRUE;
@@ -293,8 +293,8 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public void removeUserAuthority(String account){
-        User user = this.userDao.findUserByAccount(account);
+    public void removeUserAuthority(Integer userId){
+        User user = this.userDao.findUserById(userId);
         UserAuthority userAuthority = user.getUserAuthority();
         user.setUserAuthority(null);
         if(userAuthority != null){
@@ -369,8 +369,8 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public void editPasswordByAccount(String account, String password){
-        User user = this.userDao.findUserByAccount(account);
+    public void editPasswordById(Integer userId, String password){
+        User user = this.userDao.findUserById(userId);
         user.setPassword(password);
     }
 
@@ -382,8 +382,8 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public void editNickNameByAccount(String account, String nickName){
-        User user = this.userDao.findUserByAccount(account);
+    public void editNickNameById(Integer userId, String nickName){
+        User user = this.userDao.findUserById(userId);
         user.setNickName(nickName);
     }
 
@@ -395,8 +395,8 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public void editGradeByAccount(String account, Integer grade){
-        User user = this.userDao.findUserByAccount(account);
+    public void editGradeById(Integer userId, Integer grade){
+        User user = this.userDao.findUserById(userId);
         user.setGrade(grade);
     }
 
@@ -421,8 +421,8 @@ public class UserServiceImpl {
      * @return com.atguigu.farm.entity.User
      **/
     @Transactional(readOnly = false)
-    public void editEmail(String account, String email){
-        User user = this.userDao.findUserByAccount(account);
+    public void editEmail(Integer userId, String email){
+        User user = this.userDao.findUserById(userId);
         user.setEmail(email);
     }
 
@@ -452,18 +452,15 @@ public class UserServiceImpl {
                     userCrop.setProgress(progress + 5);
                 }
                 user.setWater(user.getWater() - 1);
-            }else{
-                return -1;
+                //修改作物干枯湿润状态
+                if(userCrop.getStatus() == 0){
+                    userCrop.setStatus(1);
+                    return userCrop.getId();
+                }
+                return 0;
             }
-        }else{
-            return -1;
         }
-        //修改作物干枯湿润状态
-        if(userCrop.getStatus() == 0){
-            userCrop.setStatus(1);
-            return userCrop.getId();
-        }
-        return 0;
+        return -1;
     }
 
     /**
