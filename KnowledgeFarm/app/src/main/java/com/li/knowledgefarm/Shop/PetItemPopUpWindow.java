@@ -20,9 +20,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.PetVO;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -72,7 +74,10 @@ public class PetItemPopUpWindow extends PopupWindow {
             toast = Toast.makeText(context,result,Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.BOTTOM,0,0);
             toast.show();
-            if(result.equals("true")){
+            if(result.equals("购买成功！")){
+                EventBean eventBean = new EventBean();
+                eventBean.setPetVO(pet);
+                EventBus.getDefault().post(eventBean);
                 dismiss();
             }
         }

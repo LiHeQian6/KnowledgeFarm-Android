@@ -11,8 +11,17 @@ import java.util.List;
 public class EventBean {
     String account;
     private List<Question3Num> mathList;
+    private PetVO petVO;
     private String message;
     private String notifyType;
+
+    public PetVO getPetVO() {
+        return petVO;
+    }
+
+    public void setPetVO(PetVO petVO) {
+        this.petVO = petVO;
+    }
 
     public String getAccount() {
         return account;
