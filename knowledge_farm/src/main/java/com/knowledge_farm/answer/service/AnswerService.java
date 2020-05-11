@@ -167,7 +167,7 @@ public class AnswerService {
     public List<Question> get23Multiple(){
         Random random = new Random();
         List<Question> list  = new ArrayList<Question>();
-        int i = 20;
+        int i = 10;
         while (i-->0){
             String signal = random.nextBoolean()?"×":"÷";
             int doubleNum = random.nextInt(390)+10;
@@ -184,9 +184,10 @@ public class AnswerService {
                 }
             }
             String question_title = new Multiple(doubleNum,signal,singleNum,num).toString();
-            Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 1, num + "");
+            Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 5, num + "");
             list.add(question);
         }
+        Collections.shuffle(list);
         list.addAll(getMix());
         return list;
     }
@@ -195,7 +196,7 @@ public class AnswerService {
     public List<Question> getMix() {
         Random random = new Random();
         List<Question> list = new ArrayList<Question>();
-        int i = 20;
+        int i = 10;
         while(i-->0){
             int num1 = random.nextInt(290)+10;
             int num2 = 0;
@@ -338,7 +339,7 @@ public class AnswerService {
                 }
             }
             String question_title = new Mix(num1,signal1,num2,signal2,num3,brackets1,brackets2,num).toString();
-            Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 1, num + "");
+            Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 6, num + "");
             list.add(question);
         }
         return list;
@@ -348,17 +349,18 @@ public class AnswerService {
     public List<Question> doubleMutiple(){
         Random random = new Random();
         List<Question> list  = new ArrayList<Question>();
-        int i = 20;
+        int i = 10;
         while (i-->0){
             String signal = "×";
             int num1 = random.nextInt(90)+10;
             int num2 = random.nextInt(90)+10;
             int num = num1 * num2;
             String question_title = new Multiple(num1,signal,num2,num).toString();
-            Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 1, num + "");
+            Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 6, num + "");
             list.add(question);
         }
         list.addAll(getMix());
+        Collections.shuffle(list);
         return list;
     }
 

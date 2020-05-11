@@ -329,10 +329,12 @@ public class AnswerController {
      */
     @ResponseBody
     @GetMapping("/englishThreeDown")
-    public Page<Question> englishThreeDown() {
+    public List<Question> englishThreeDown() {
         int pageNumber = new Random().nextInt(6);
         Page<Question> page =  answerService.findQuestion(6,"English",PageRequest.of(pageNumber, 18));
-        return page;
+        List<Question> list = new ArrayList(page.getContent());
+        Collections.shuffle(list);
+        return list;
     }
 
 }
