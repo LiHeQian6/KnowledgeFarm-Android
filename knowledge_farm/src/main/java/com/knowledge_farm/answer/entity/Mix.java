@@ -94,4 +94,16 @@ public class Mix {
     public void setNum(int num) {
         this.num = num;
     }
+    @Override
+    public String toString() {
+        if (brackets1.equals("false")&&brackets2.equals("false")){
+            return num1 + signal1 +num2 +signal2 +num3 + " = ";
+        }else if(brackets1.equals("true")&&brackets2.equals("false")){
+            return "("+num1 + signal1 + num2 +")" + signal2 + num3 + " = ";
+        }else if(brackets1.equals("false")&&brackets2.equals("true")){
+            return num1 + signal1 + "("+ num2 + signal2 + num3+")"  + " = ";
+        }else {
+            return "null";
+        }
+    }
 }
