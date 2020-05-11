@@ -14,6 +14,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.English;
 import com.li.knowledgefarm.entity.Question3Num;
 import com.li.knowledgefarm.entity.QuestionPage;
@@ -66,11 +67,11 @@ public class GetEnglishQuestion extends SubjectInterface {
             @Override
             public void run() {
                 super.run();
-                if (LoginActivity.user.getEnglishRewardCount() <= 0) {
+                if (UserUtil.getUser().getEnglishRewardCount() <= 0) {
                     Toast.makeText(context,"今天的英语任务做完了哦",Toast.LENGTH_SHORT).show();
                 } else {
                     Request request = null;
-                    switch (LoginActivity.user.getGrade()) {
+                    switch (UserUtil.getUser().getGrade()) {
                         case 1:
                             request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishOneUp").build();
                             break;

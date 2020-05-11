@@ -40,6 +40,7 @@ import com.li.knowledgefarm.Study.Interface.StudyInterface;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.Chinese;
 import com.li.knowledgefarm.entity.QuestionPage;
 
@@ -241,7 +242,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setChineseRewardCount(LoginActivity.user.getChineseRewardCount() - 1);
+                        UserUtil.getUser().setChineseRewardCount(UserUtil.getUser().getChineseRewardCount() - 1);
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
                         answer3.setVisibility(View.INVISIBLE);
@@ -391,7 +392,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getChineseRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getChineseRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
@@ -570,7 +571,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     }
 
     public void exit() {
-        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getMathRewardCount()>0)
             showIfReturn();
         else
             finish();

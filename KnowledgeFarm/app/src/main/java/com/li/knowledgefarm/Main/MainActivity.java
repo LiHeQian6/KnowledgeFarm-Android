@@ -60,6 +60,7 @@ import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.bag.BagPopUpWindow;
 import com.li.knowledgefarm.daytask.DayTaskPopUpWindow;
 import com.li.knowledgefarm.entity.DoTaskBean;
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         getViews();
         addListener();
         getCrop();
-        JPushInterface.setAlias(this,1, LoginActivity.user.getAccount());
+        JPushInterface.setAlias(this,1, UserUtil.getUser().getAccount());
     }
 
     @Override
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.e("用户信息", result);
                             Message message = new Message();
                             message.obj = LoginActivity.parsr(URLDecoder.decode(result), User.class);
-                            LoginActivity.user = (User) message.obj;
+                            UserUtil.setUser ((User)message.obj);
                             Message msg = new Message();
                             msg.obj = "true";
                             operatingHandleMessage.sendMessage(msg);
@@ -251,19 +252,19 @@ public class MainActivity extends AppCompatActivity {
                 .fallback(R.drawable.meigui)
                 .circleCrop()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(this).load(LoginActivity.user.getPhoto()).apply(requestOptions).into(photo);
-        nickName.setText(LoginActivity.user.getNickName());
-        account.setText("账号:" + LoginActivity.user.getAccount());
-        level.setText("Lv:" + LoginActivity.user.getLevel());
-        money.setText("金币:" + LoginActivity.user.getMoney());
-        waterCount.setText(LoginActivity.user.getWater() + "");
-        fertilizerCount.setText(LoginActivity.user.getFertilizer() + "");
+        Glide.with(this).load(UserUtil.getUser().getPhoto()).apply(requestOptions).into(photo);
+        nickName.setText(UserUtil.getUser().getNickName());
+        account.setText("账号:" + UserUtil.getUser().getAccount());
+        level.setText("Lv:" + UserUtil.getUser().getLevel());
+        money.setText("金币:" + UserUtil.getUser().getMoney());
+        waterCount.setText(UserUtil.getUser().getWater() + "");
+        fertilizerCount.setText(UserUtil.getUser().getFertilizer() + "");
         int[] levelExperience = getResources().getIntArray(R.array.levelExperience);
-        int l = LoginActivity.user.getLevel();
+        int l = UserUtil.getUser().getLevel();
         experience.setMax(levelExperience[l] - levelExperience[l - 1]);
-        experience.setProgress((int) LoginActivity.user.getExperience() - levelExperience[l - 1]);
-        experienceValue.setText("" + LoginActivity.user.getExperience() + "/" + levelExperience[l]);
-        List<UserPetHouse> petHouses = LoginActivity.user.getPetHouses();
+        experience.setProgress((int) UserUtil.getUser().getExperience() - levelExperience[l - 1]);
+        experienceValue.setText("" + UserUtil.getUser().getExperience() + "/" + levelExperience[l]);
+        List<UserPetHouse> petHouses = UserUtil.getUser().getPetHouses();
         if (petHouses.size()!=0) {
             Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
         }else
@@ -528,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL) + "/usercrop/initUserCrop?userId="+LoginActivity.user.getId()).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL) + "/usercrop/initUserCrop?userId="+UserUtil.getUser().getId()).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -922,8 +923,8 @@ public class MainActivity extends AppCompatActivity {
                 String message = (String) msg.obj;
                 if (message.equals("true")) {
 //                    LoginActivity.user.setLandStauts(position,0);
-                    int newMoney = LoginActivity.user.getMoney() - ExtensionLandMoney;
-                    LoginActivity.user.setMoney(newMoney);
+                    int newMoney = UserUtil.getUser().getMoney() - ExtensionLandMoney;
+                    UserUtil.getUser().setMoney(newMoney);
                     money.setText("金币:" + newMoney + "");
                     ifExtention.dismiss();
 //                    showLand();

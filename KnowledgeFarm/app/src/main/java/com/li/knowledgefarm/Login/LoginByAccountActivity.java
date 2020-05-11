@@ -3,9 +3,9 @@ package com.li.knowledgefarm.Login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+//import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+//import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+//import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.li.knowledgefarm.Util.Md5Encode;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -27,6 +27,7 @@ import com.li.knowledgefarm.Login.Interpolator.JellyInterpolator;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.User;
 
@@ -72,7 +73,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.li.knowledgefarm.Login.LoginActivity.parsr;
-import static com.li.knowledgefarm.Login.LoginActivity.user;
 
 public class LoginByAccountActivity extends AppCompatActivity {
 
@@ -114,15 +114,16 @@ public class LoginByAccountActivity extends AppCompatActivity {
                     recovery();
                     break;
                 case 5:
-                    user = (User) msg.obj;
+                    UserUtil.setUser((User) msg.obj);
                     SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("account",user.getAccount());
+                    editor.putString("account",UserUtil.getUser().getAccount());
 
                     if(rememberPwd.isChecked()){
                         editor.putString("password",pwd.getText().toString());
                     }
                     editor.apply();
+
                     Intent intentToStart = new Intent(LoginByAccountActivity.this,StartActivity.class);
                     intentToStart.setAction("accountLogin");
                     startActivity(intentToStart);

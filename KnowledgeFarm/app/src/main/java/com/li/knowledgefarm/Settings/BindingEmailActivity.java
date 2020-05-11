@@ -26,6 +26,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
@@ -75,7 +76,7 @@ public class BindingEmailActivity extends AppCompatActivity {
                     if(msg.obj.equals("true")){ //绑定成功
                         endAsync1(); //停止异步任务
                         endAsync2(); //停止异步任务
-                        LoginActivity.user.setEmail(edtEmail.getText().toString().trim());
+                        UserUtil.getUser().setEmail(edtEmail.getText().toString().trim());
                         EventBus.getDefault().post("绑定邮箱成功");
                         Toast.makeText(getApplicationContext(),"绑定邮箱成功",Toast.LENGTH_SHORT).show();
                         finish();

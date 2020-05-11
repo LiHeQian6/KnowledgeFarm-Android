@@ -18,6 +18,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +48,7 @@ public class ChangePasswordPop extends PopupWindow {
             super.handleMessage(msg);
             switch ((String)msg.obj){
                 case "true":
-                    LoginActivity.user.setPassword(new_password.getText().toString().trim());
+                    UserUtil.getUser().setPassword(new_password.getText().toString().trim());
                     dismiss();
                     Toast.makeText(context,"密码修改成功",Toast.LENGTH_SHORT).show();
                     break;

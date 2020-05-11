@@ -33,6 +33,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -139,7 +140,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     }
 
     private void ShowUserMessage(){
-        user = LoginActivity.user;
+        user = UserUtil.getUser();
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.photo)
                 .error(R.drawable.photo)
@@ -275,24 +276,24 @@ public class SettingMessageActivity extends AppCompatActivity {
                             Log.e("photo","上传头像失败2");
                             Toast.makeText(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
                         }else{
-                            LoginActivity.user.setPhoto(aString);
+                            UserUtil.getUser().setPhoto(aString);
                             RequestOptions options = new RequestOptions();
                             options.placeholder(R.drawable.huancun2) //加载图片时
                                     .error(R.drawable.huancun2) //请求出错（图片资源不存在，无访问权限）
                                     .fallback(R.drawable.huancun2) //请求资源为null
                                     .circleCrop() //转换图片效果
                                     .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
-                            Glide.with(getApplicationContext()).load(LoginActivity.user.getPhoto()).apply(options).into(user_photo);
+                            Glide.with(getApplicationContext()).load(UserUtil.getUser().getPhoto()).apply(options).into(user_photo);
                             Log.e("photo","上传头像成功");
                             Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 5: // 修改年级判断
                         if(msg.obj.equals("true")){
-                            LoginActivity.user.setGrade(transmit(newGrade));
+                            UserUtil.getUser().setGrade(transmit(newGrade));
                             change_grade.setText("修改");
                             show_grade.setVisibility(View.VISIBLE);
-                            show_grade.setText(DoubleToString(LoginActivity.user.getGrade()));
+                            show_grade.setText(DoubleToString(UserUtil.getUser().getGrade()));
                             select_grade.setVisibility(View.GONE);
                             Toast.makeText(SettingMessageActivity.this,"年级修改成功",Toast.LENGTH_SHORT).show();
                         }else{
@@ -443,7 +444,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                 }
                 RequestBody requestBody = RequestBody.create(photo,mimeType);
                 RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("photo", URLEncoder.encode(LoginActivity.user.getPhoto()))
+                        .addFormDataPart("photo", URLEncoder.encode(UserUtil.getUser().getPhoto()))
                         .addFormDataPart("upload",photo.getName(),requestBody)
                         .build();
                 Request request = new Request.Builder().post(body).url(getResources().getString(R.string.URL)+"/user/updatePhoto").build();

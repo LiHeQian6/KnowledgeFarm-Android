@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.tencent.tauth.Tencent;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,7 @@ public class IfDoPop extends PopupWindow {
             super.handleMessage(msg);
             switch ((String)msg.obj){
                 case "true":
-                    LoginActivity.user.setEmail("");
+                    UserUtil.getUser().setEmail(null);
                     Toast.makeText(context,"解绑邮箱成功",Toast.LENGTH_SHORT).show();
                     break;
                 case "false":

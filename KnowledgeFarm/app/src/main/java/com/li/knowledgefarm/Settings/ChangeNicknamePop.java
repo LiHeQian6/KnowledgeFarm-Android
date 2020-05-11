@@ -18,6 +18,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,7 @@ public class ChangeNicknamePop extends PopupWindow {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if(msg.obj.equals("true") && msg.what == 200){
-                LoginActivity.user.setNickName(new_nickname.getText().toString().trim());
+                UserUtil.getUser().setNickName(new_nickname.getText().toString().trim());
                 Toast toast = Toast.makeText(context,"修改成功！",Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.BOTTOM,0,0);
                 toast.show();
@@ -125,7 +126,7 @@ public class ChangeNicknamePop extends PopupWindow {
      */
     private void getViews(View contentView) {
         new_nickname = contentView.findViewById(R.id.new_nickname);
-        new_nickname.setText(LoginActivity.user.getNickName());
+        new_nickname.setText(UserUtil.getUser().getNickName());
         commit_nickname = contentView.findViewById(R.id.commit_nickname);
         cancel_nickname = contentView.findViewById(R.id.cancel_nickname);
         commit_nickname.setOnClickListener(new View.OnClickListener() {

@@ -38,6 +38,7 @@ import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.User;
 

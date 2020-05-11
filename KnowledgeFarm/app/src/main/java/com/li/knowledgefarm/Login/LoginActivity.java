@@ -31,6 +31,7 @@ import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -93,10 +94,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private IUiListener userInfoListener;
 
-    /**
-     * 用户表
-     */
-    public static User user;
     private String openID;
     private String accessToken;
 
@@ -119,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                 case 3:
                     //自动登录
                     Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
-                    user = (User) msg.obj;
+                    UserUtil.setUser((User) msg.obj);
                     Intent autoToStart = new Intent(LoginActivity.this,StartActivity.class);
                     autoToStart.setAction("autoLogin");
                     startActivity(autoToStart);
@@ -147,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         okHttpClient = OkHttpUtils.getInstance(this);
-        user = null;
+        UserUtil.setUser(null);
         autoLogin();
         FullScreen.NavigationBarStatusBar(LoginActivity.this,true);
         getViews();
@@ -444,7 +441,7 @@ public class LoginActivity extends AppCompatActivity {
                         }else {                          //非第一次登录，自动
                             message.what = 3;
                             message.obj = parsr(URLDecoder.decode(result), User.class);
-                            user = (User) message.obj;
+                            UserUtil.setUser((User) message.obj);
                             mHandler.sendMessage(message);
                         }
                     }
@@ -489,7 +486,7 @@ public class LoginActivity extends AppCompatActivity {
                         }else {
                             message.what = 3;        //非第一次登录，自动登录
                             message.obj = parsr(URLDecoder.decode(result), User.class);
-                            user = (User) message.obj;
+                            UserUtil.setUser((User) message.obj);
                             mHandler.sendMessage(message);
                         }
                     }

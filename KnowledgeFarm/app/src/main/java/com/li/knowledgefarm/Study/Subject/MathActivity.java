@@ -44,6 +44,7 @@ import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
@@ -86,11 +87,11 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         /** 加载视图*/
         getViews();
         setViewSize();
-        if(LoginActivity.user.getGrade() == 1 || LoginActivity.user.getGrade() == 2){
-            thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
+        if(UserUtil.getUser().getGrade() == 1 || UserUtil.getUser().getGrade() == 2){
+//            thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
             getViews1();
             datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
-        }else if(LoginActivity.user.getGrade() ==2 || LoginActivity.user.getGrade() == 3){
+        }else if(UserUtil.getUser().getGrade() ==2 || UserUtil.getUser().getGrade() == 3){
 
         }
         /** 注册点击事件监听器*/
@@ -228,7 +229,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setMathRewardCount(LoginActivity.user.getMathRewardCount() - 1);
+                        UserUtil.getUser().setMathRewardCount(UserUtil.getUser().getMathRewardCount() - 1);
                         answer.setVisibility(View.GONE);
                         isFalse.setVisibility(View.INVISIBLE);
                         isTrue.setVisibility(View.GONE);
@@ -323,7 +324,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if ((TrueAnswerNumber > 0 && TrueAnswerNumber < datalist.size() && LoginActivity.user.getMathRewardCount() > 0)) {
+                    if ((TrueAnswerNumber > 0 && TrueAnswerNumber < datalist.size() && UserUtil.getUser().getMathRewardCount() > 0)) {
                         showIfReturn();
                     } else {
                         finish();
@@ -437,7 +438,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     }
 
     public void exit() {
-        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getMathRewardCount()>0)
             showIfReturn();
         else
             finish();

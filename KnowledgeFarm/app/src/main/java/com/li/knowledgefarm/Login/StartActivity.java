@@ -28,9 +28,10 @@ import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.User;
 
 import static com.li.knowledgefarm.Login.LoginActivity.mTencent;
-import static com.li.knowledgefarm.Login.LoginActivity.user;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -39,6 +40,7 @@ public class StartActivity extends AppCompatActivity {
     private Button btnStart;
     private StartListener listener;
     private Button btnRegout;
+    private User user = UserUtil.getUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

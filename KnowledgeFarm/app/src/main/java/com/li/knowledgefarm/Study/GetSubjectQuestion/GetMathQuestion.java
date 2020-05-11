@@ -16,6 +16,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.Math23;
 import com.li.knowledgefarm.entity.Mix;
 import com.li.knowledgefarm.entity.Multiple;
@@ -71,11 +72,11 @@ public class GetMathQuestion extends SubjectInterface {
             @Override
             public void run() {
                 super.run();
-                if (LoginActivity.user.getMathRewardCount() <= 0) {
+                if (UserUtil.getUser().getMathRewardCount() <= 0) {
                     Toast.makeText(context,"今天的数学任务做完了哦",Toast.LENGTH_SHORT).show();
                 } else {
                     Request request = null;
-                    switch (LoginActivity.user.getGrade()) {
+                    switch (UserUtil.getUser().getGrade()) {
                         case 1:
                             request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/mathOneUp").build();
                             break;
@@ -111,7 +112,7 @@ public class GetMathQuestion extends SubjectInterface {
                             Message message = Message.obtain();
                             message.obj = response.body().string();
                             message.arg1 = response.code();
-                            message.what = LoginActivity.user.getGrade();
+                            message.what = UserUtil.getUser().getGrade();
                             getMath.sendMessage(message);
                         }
                     });

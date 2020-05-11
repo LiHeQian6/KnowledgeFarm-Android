@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
 
 import org.greenrobot.eventbus.EventBus;
@@ -108,7 +109,7 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         viewHolder.go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!dataList.get(position).getAccount().equals(LoginActivity.user.getAccount())) {
+                if(!dataList.get(position).getAccount().equals(UserUtil.getUser().getAccount())) {
                     Intent go = new Intent(context, MyFriendActivity.class);
                     go.putExtra("friend", (Serializable) dataList.get(position));
                     context.startActivity(go);

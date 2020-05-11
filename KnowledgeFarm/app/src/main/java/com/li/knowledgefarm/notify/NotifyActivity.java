@@ -21,6 +21,7 @@ import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
@@ -405,7 +406,7 @@ public class NotifyActivity extends AppCompatActivity {
                     getMySendNotify("2",1,4);
                     break;
                 case R.id.delete_all_btn:
-                    Delete_All_Notify(current_type,LoginActivity.user.getId());
+                    Delete_All_Notify(current_type,UserUtil.getUser().getId());
                     break;
                 case R.id.goBack_notify:
                     finish();

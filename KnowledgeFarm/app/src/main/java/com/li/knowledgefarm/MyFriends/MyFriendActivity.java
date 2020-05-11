@@ -47,6 +47,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Main.bgsound.BgSoundService;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.notify.NotifyActivity;
 import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
@@ -203,7 +204,7 @@ public class MyFriendActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId?userId="+LoginActivity.user.getId())
+                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId?userId="+ UserUtil.getUser().getId())
                         .build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
@@ -221,7 +222,7 @@ public class MyFriendActivity extends AppCompatActivity {
                             Log.e("用户信息",result);
                             Message message = new Message();
                             message.obj = LoginActivity.parsr(URLDecoder.decode(result), User.class);
-                            LoginActivity.user = (User) message.obj;
+                            UserUtil.setUser((User) message.obj);
                             Message msg = new Message();
                             msg.obj="true";
                             operatingHandleMessage.sendMessage(msg);
@@ -308,8 +309,8 @@ public class MyFriendActivity extends AppCompatActivity {
         account.setText("账号:"+user.getAccount());
         level.setText("Lv:"+user.getLevel());
         money.setText("金币:"+user.getMoney());
-        waterCount.setText(LoginActivity.user.getWater()+"");
-        fertilizerCount.setText(LoginActivity.user.getFertilizer()+"");
+        waterCount.setText(UserUtil.getUser().getWater()+"");
+        fertilizerCount.setText(UserUtil.getUser().getFertilizer()+"");
         int[] levelExperience = getResources().getIntArray(R.array.levelExperience);
         int l = user.getLevel() ;
         experience.setMax(levelExperience[l]-levelExperience[l-1]);

@@ -3,7 +3,7 @@ package com.li.knowledgefarm.entity;
 import java.util.Date;
 
 /**
- * User: li
+ * UserUtil: li
  * Date: 2020/4/14
  * Time: 15:24
  */

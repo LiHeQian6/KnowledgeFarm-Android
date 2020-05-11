@@ -42,6 +42,7 @@ import com.li.knowledgefarm.Study.Interface.StudyInterface;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.English;
 import com.li.knowledgefarm.entity.QuestionPage;
 
@@ -230,7 +231,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setEnglishRewardCount(LoginActivity.user.getEnglishRewardCount() - 1);
+                        UserUtil.getUser().setEnglishRewardCount(UserUtil.getUser().getEnglishRewardCount() - 1);
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
                         isFalse.setVisibility(View.INVISIBLE);
@@ -351,7 +352,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getEnglishRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getEnglishRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
@@ -486,7 +487,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
     }
 
     public void exit() {
-        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getMathRewardCount()>0)
             showIfReturn();
         else
             finish();

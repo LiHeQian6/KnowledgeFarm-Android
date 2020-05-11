@@ -27,6 +27,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.tencent.tauth.Tencent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -81,7 +82,7 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     if(msg.obj.equals("true")){ //绑定成功
                         endAsync1(); //停止异步任务
                         endAsync2(); //停止异步任务
-                        LoginActivity.user.setEmail(new_message.getText().toString().trim());
+                        UserUtil.getUser().setEmail(new_message.getText().toString().trim());
                         EventBus.getDefault().post("绑定邮箱成功");
                         Toast.makeText(context,"绑定邮箱成功",Toast.LENGTH_SHORT).show();
                         dismiss();
