@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @ClassName PetFoodController
+ * @ClassName PetUtilController
  * @Description
  * @Author 张帅华
  * @Date 2020-05-04 10:03
@@ -22,7 +22,7 @@ public class PetUtilController {
     @Resource
     private PetUtilService petUtilService;
 
-    @ApiOperation(value = "商店展示所有饲料或工具", notes = "返回值：List（PetFood）")
+    @ApiOperation(value = "商店展示所有饲料或工具", notes = "返回值：List（PetUtil）")
     @GetMapping("showInStore")
     public List<PetUtil> showInStore(){
         return this.petUtilService.showInStore();

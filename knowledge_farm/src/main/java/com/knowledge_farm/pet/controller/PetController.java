@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +41,15 @@ public class PetController {
      */
     @ApiOperation(value = "商店展示所有宠物", notes = "返回值：List（PetVO）")
     @GetMapping("/showInStore")
-    public List<PetVO> showInStore(HttpSession session){
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
-            return petService.showAllPetInStore(userId);
+    public List<PetVO> showInStore(HttpSession session, HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return petService.showAllPetInStore(userId);
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return new ArrayList<>();
     }
@@ -57,13 +64,14 @@ public class PetController {
             @ApiImplicitParam(name = "willUsingPetId", value = "将要使用的宠物Id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/changePet")
-    public String changePet(@RequestParam("willUsingPetId") Integer willUsingPetId, HttpSession session){
+    public String changePet(@RequestParam("willUsingPetId") Integer willUsingPetId, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.petService.changePet(userId, willUsingPetId);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }

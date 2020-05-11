@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,16 @@ public class UserBagController {
      **/
     @ApiOperation(value = "查询用户背包中所有作物", notes = "返回值：List（BagCropItem）")
     @GetMapping("/initUserBag")
-    public List<BagCropItem> initUserCropBag(HttpSession session){
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
-            List<BagCropItem> bagCropItems = this.userBagService.initUserCropBag(userId);
-            return bagCropItems;
+    public List<BagCropItem> initUserCropBag(HttpSession session, HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                List<BagCropItem> bagCropItems = this.userBagService.initUserCropBag(userId);
+                return bagCropItems;
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return new ArrayList<>();
     }

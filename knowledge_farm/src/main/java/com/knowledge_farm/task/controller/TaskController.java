@@ -1,5 +1,6 @@
 package com.knowledge_farm.task.controller;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.Task;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.task.service.TaskService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -64,9 +66,17 @@ public class TaskController {
      * @return :com.knowledge_farm.entity.Task
      */
     @GetMapping("/getTask2")
-    public Task getTasks2(@RequestParam("userId") int userId) {
-
-        return userService.findUserById(userId).getTask();
+    public Task getTasks2(HttpSession session, HttpServletResponse response) {
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return userService.findUserById(userId).getTask();
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
     /**
      * @description:  领取任务奖励
@@ -77,13 +87,17 @@ public class TaskController {
      */
     @GetMapping("/getReward2")
     public int getReward2(@RequestParam("taskName") String taskName,
-                          @RequestParam("userId")int userId){
-        return taskService.updateTask(userService.findUserById(userId),taskName);
-    }
-
-    @GetMapping("/test")
-    public int test(){
-        return taskService.updateTask(userService.findUserById(109),"sign_in");
+                          HttpSession session, HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if (userId != null) {
+                return taskService.updateTask(userService.findUserById(userId), taskName);
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 
 }

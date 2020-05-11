@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class UserController {
             @ApiImplicitParam(name = "openId", value = "openId", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/loginByOpenId")
-    public Object loginByOpenId(@RequestParam("openId") String openId, HttpSession session){
+    public Object loginByOpenId(@RequestParam("openId") String openId, HttpSession session, HttpServletResponse response){
         Object obj = this.userService.loginByOpenId(openId);
         if(obj instanceof User){
             session.setAttribute("userId", ((User) obj).getId());
@@ -73,14 +74,18 @@ public class UserController {
      **/
     @ApiOperation(value = "根据id查询用户信息", notes = "返回值：User")
     @GetMapping("/findUserInfoByUserId")
-    public Object findUserInfoByUserId(HttpSession session){
-        //User user = this.userService.findUserById(userId);
-        Integer id = (Integer) session.getAttribute("userId");
-        if(id != null){
-            User user = this.userService.findUserById(id);
-            if(user != null){
-                return user;
+    public Object findUserInfoByUserId(HttpSession session, HttpServletResponse response) {
+        try {
+            Integer id = (Integer) session.getAttribute("userId");
+            if(id != null){
+                User user = this.userService.findUserById(id);
+                if(user != null){
+                    return user;
+                }
             }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return "{}";
     }
@@ -181,10 +186,15 @@ public class UserController {
     })
     @PostMapping("/sendTestCodePassword")
     public String sendTestCodePassword(@RequestParam("email") String email,
-                                       HttpSession session){
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null){
-            return this.userService.sendTestCodePassword(userId, email);
+                                       HttpSession session, HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null){
+                return this.userService.sendTestCodePassword(userId, email);
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return Result.NOT_EXIST_ACCOUNT;
     }
@@ -202,13 +212,14 @@ public class UserController {
     })
     @PostMapping("/resetUserPassword")
     public String resetUserPassword(@RequestParam("password") String password,
-                                    HttpSession session){
+                                    HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userService.editPasswordById(userId, password);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -228,13 +239,14 @@ public class UserController {
     })
     @PostMapping("/updateUserNickName")
     public String updateUserNickName(@RequestParam("nickName") String nickName,
-                                     HttpSession session){
+                                     HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userService.editNickNameById(userId, nickName);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();;
         }
@@ -254,13 +266,14 @@ public class UserController {
     })
         @PostMapping("/updateUserGrade")
     public String updateUserGrade(@RequestParam("grade") Integer grade,
-                                  HttpSession session){
+                                  HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userService.editGradeById(userId, grade);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -282,7 +295,7 @@ public class UserController {
     @PostMapping("/updateUserPassword")
     public String updateUserPassword(@RequestParam("oldPassword") String oldPassword,
                                      @RequestParam("newPassword") String newPassword,
-                                     HttpSession session){
+                                     HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
@@ -293,6 +306,7 @@ public class UserController {
                 }
                 return Result.PASSWORD_ERROR;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -314,30 +328,30 @@ public class UserController {
     @PostMapping("/updatePhoto")
     public String updatePhoto(@RequestParam("upload") MultipartFile file,
                               @RequestParam("photo") String photo,
-                              HttpSession session) throws IOException {
-        Integer id = (Integer) session.getAttribute("userId");
-        if(id != null) {
-            if (!file.getOriginalFilename().equals("")) {
-                String defaultFileName = this.userPhotoFolderName + "/" + this.userDefaultFileName;
-                photo = photo.substring((this.photoUrl).length());//URLDecoder.decode(photo).
-                if (!photo.equals(defaultFileName)) {
-                    File file1 = new File(this.photoLocation + "/" + photo);
-                    if (file1.exists()) {
-                        file1.delete();
+                              HttpSession session, HttpServletResponse response) {
+        try {
+            Integer id = (Integer) session.getAttribute("userId");
+            if(id != null) {
+                if (!file.getOriginalFilename().equals("")) {
+                    String defaultFileName = this.userPhotoFolderName + "/" + this.userDefaultFileName;
+                    photo = photo.substring((this.photoUrl).length());//URLDecoder.decode(photo).
+                    if (!photo.equals(defaultFileName)) {
+                        File file1 = new File(this.photoLocation + "/" + photo);
+                        if (file1.exists()) {
+                            file1.delete();
+                        }
                     }
-                }
-                String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
-                FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
-                photo = this.userPhotoFolderName + "/" + photoName;
-                try {
+                    String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+                    FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
+                    photo = this.userPhotoFolderName + "/" + photoName;
                     this.userService.editPhotoById(id, photo);
                     return photo;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return Result.FALSE;
                 }
+                return Result.NULL;
             }
-            return Result.NULL;
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return Result.FALSE;
     }
@@ -351,12 +365,13 @@ public class UserController {
      **/
     @ApiOperation(value = "验证是否已经绑定QQ", notes = "返回值： (String)true：已绑定 || (String)false：未绑定 || (String)null：账号不存在")
     @PostMapping("/isBindingQQ")
-    public String isBindingQQ(HttpSession session){
+    public String isBindingQQ(HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return this.userService.isBindingQQ(userId);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -375,12 +390,13 @@ public class UserController {
             @ApiImplicitParam(name = "openId", value = "openId", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/bindingQQ")
-    public String bindingQQ(@RequestParam("openId") String openId, HttpSession session){
+    public String bindingQQ(@RequestParam("openId") String openId, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return this.userService.bindingQQ(userId, openId);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -396,13 +412,14 @@ public class UserController {
      **/
     @ApiOperation(value = "账号解绑QQ", notes = "返回值： (String)true：成功 || (String)false：失败")
     @PostMapping("unBindingQQ")
-    public String unBindingQQ(HttpSession session){
+    public String unBindingQQ(HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userService.removeUserAuthority(userId);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -443,13 +460,14 @@ public class UserController {
             @ApiImplicitParam(name = "email", value = "邮箱", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/bindingEmail")
-    public String bindingEmail(@RequestParam("email") String email, HttpSession session){
+    public String bindingEmail(@RequestParam("email") String email, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userService.editEmail(userId, email);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -465,13 +483,14 @@ public class UserController {
      **/
     @ApiOperation(value = "解绑邮箱", notes = "返回值： (String)true：成功 || (String)false：失败")
     @PostMapping("/unBindingEmail")
-    public String unBindingEmail(HttpSession session){
+    public String unBindingEmail(HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userService.editEmail(userId, "");
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -494,12 +513,13 @@ public class UserController {
     public String lessRewardCount(@RequestParam("water") Integer water,
                                   @RequestParam("fertilizer") Integer fertilizer,
                                   @RequestParam("subject") String subject,
-                                  HttpSession session){
+                                  HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return "" + this.userService.lessRewardCount(userId, water, fertilizer, subject);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -513,27 +533,32 @@ public class UserController {
      * @Param [userId, subject]
      * @return java.lang.String
      **/
-    @ApiOperation(value = "查询剩余奖励次数", notes = "返回值： (String)剩余奖励次数 || '-1'：无该学科名 || '-2'：用户为空")
+    @ApiOperation(value = "查询剩余奖励次数", notes = "返回值： (String)剩余奖励次数 || -1(String)：无该学科名 || -2(String)：用户为空")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "subject", value = "学科", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/getRewardCount")
-    public String getRewardCount(@RequestParam("subject") String subject, HttpSession session){
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
-            User user = this.userService.findUserById(userId);
-            if (user != null) {
-                switch (subject) {
-                    case "chinese":
-                        return "" + user.getChineseRewardCount();
-                    case "english":
-                        return "" + user.getEnglishRewardCount();
-                    case "math":
-                        return "" + user.getMathRewardCount();
-                    default:
-                        return "-1";
+    public String getRewardCount(@RequestParam("subject") String subject, HttpSession session, HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                User user = this.userService.findUserById(userId);
+                if (user != null) {
+                    switch (subject) {
+                        case "chinese":
+                            return "" + user.getChineseRewardCount();
+                        case "english":
+                            return "" + user.getEnglishRewardCount();
+                        case "math":
+                            return "" + user.getMathRewardCount();
+                        default:
+                            return "-1";
+                    }
                 }
             }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return "-2";
     }
@@ -552,7 +577,7 @@ public class UserController {
     @GetMapping("/waterCrop")
     public String waterCrop(@RequestParam("landNumber") String landNumber,
                             HttpServletRequest request,
-                            HttpSession session){
+                            HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
@@ -567,6 +592,7 @@ public class UserController {
                         return Result.TRUE;
                 }
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -585,12 +611,13 @@ public class UserController {
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/fertilizerCrop")
-    public String fertilizerCrop(@RequestParam("landNumber") String landNumber, HttpSession session){
+    public String fertilizerCrop(@RequestParam("landNumber") String landNumber, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return this.userService.fertilizerCrop(userId, landNumber);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -612,12 +639,13 @@ public class UserController {
     @GetMapping("/buyCrop")
     public String buyCrop(@RequestParam("cropId") Integer cropId,
                           @RequestParam("number") Integer number,
-                          HttpSession session){
+                          HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return this.userService.buyCrop(userId, cropId, number);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -640,7 +668,7 @@ public class UserController {
     public String raiseCrop(@RequestParam("cropId") Integer cropId,
                             @RequestParam("landNumber") String landNumber,
                             HttpServletRequest request,
-                            HttpSession session){
+                            HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
@@ -651,6 +679,7 @@ public class UserController {
                 }
                 return Result.FALSE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -669,12 +698,13 @@ public class UserController {
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/harvest")
-    public String harvest(@RequestParam("landNumber") String landNumber, HttpSession session){
+    public String harvest(@RequestParam("landNumber") String landNumber, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return this.userService.harvest(userId, landNumber);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -696,12 +726,13 @@ public class UserController {
     @PostMapping("/extensionLand")
     public String extensionLand(@RequestParam("landNumber") String landNumber,
                                 @RequestParam("needMoney") Integer money,
-                                HttpSession session){
+                                HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return this.userService.extensionLand(userId, landNumber, money);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -713,12 +744,13 @@ public class UserController {
             @ApiImplicitParam(name = "petId", value = "宠物Id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/buyPet")
-    public String buyPet(@RequestParam("petId")Integer petId, HttpSession session){
+    public String buyPet(@RequestParam("petId")Integer petId, HttpSession session, HttpServletResponse response){
         try{
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return userService.buyPet(userId, petId);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -733,12 +765,13 @@ public class UserController {
     @GetMapping("/buyPetUtil")
     public String buyPetUtil(@RequestParam("petUtilId") Integer petUtilId,
                              @RequestParam("number") Integer number,
-                             HttpSession session){
+                             HttpSession session, HttpServletResponse response){
         try{
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return userService.buyPetUtil(userId, petUtilId, number);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -753,12 +786,13 @@ public class UserController {
     @GetMapping("feedPet")
     public String feedPet(@RequestParam("userPetHouseId") Integer userPetHouseId,
                           @RequestParam("petUtilBagId") Integer petUtilBagId,
-                          HttpSession session){
+                          HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return this.userService.feedPet(userId, userPetHouseId, petUtilBagId);
             }
+            response.sendError(401);
         }catch(Exception e){
             e.printStackTrace();
         }
