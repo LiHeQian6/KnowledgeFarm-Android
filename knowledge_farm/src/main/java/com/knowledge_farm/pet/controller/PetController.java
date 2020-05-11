@@ -37,7 +37,7 @@ public class PetController {
      * @param :[pageNum]
      * @return :org.springframework.data.domain.Page<com.knowledge_farm.entity.Pet>
      */
-    @ApiOperation(value = "商店展示所有宠物", notes = "返回值：List（Pet）")
+    @ApiOperation(value = "商店展示所有宠物", notes = "返回值：List（PetVO）")
     @GetMapping("/showInStore")
     public List<PetVO> showInStore(HttpSession session){
         Integer userId = (Integer) session.getAttribute("userId");
@@ -45,6 +45,11 @@ public class PetController {
             return petService.showAllPetInStore(userId);
         }
         return new ArrayList<>();
+    }
+    @ApiOperation(value = "商店展示所有宠物", notes = "返回值：List（PetVO）")
+    @GetMapping("/showInStore2")
+    public List<PetVO> showInStore2(){
+        return petService.showAllPetInStore(109);
     }
 
     @ApiOperation(value = "切换使用的宠物", notes = "返回值：(String)true || (String)false")

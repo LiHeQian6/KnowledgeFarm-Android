@@ -1,6 +1,6 @@
 package com.knowledge_farm.answer.repository;
 
-import com.knowledge_farm.entity.Math23;
+import com.knowledge_farm.entity.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.io.Serializable;
 
-public interface Math23Repository extends JpaRepository<Math23,Integer>, JpaSpecificationExecutor<Math23>, Serializable {
+public interface QuestionRepository extends JpaRepository<Question,Integer>, JpaSpecificationExecutor<Question>, Serializable {
 
-    Page<Math23> findAllByGrade(String grade, Pageable pageable);
+    Page<Question> findByGradeAndSubject(int grade,String subject, Pageable pageable);
 }
