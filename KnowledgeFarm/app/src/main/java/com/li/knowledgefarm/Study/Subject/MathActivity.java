@@ -43,6 +43,7 @@ import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
@@ -80,6 +81,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
 //        setDensityLand.setDensity(getApplication());
 //        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
         setContentView(R.layout.activity_math);
+        okHttpClient = OkHttpUtils.getInstance(this);
 //        thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
         /** 加载视图*/
         getViews();
@@ -389,7 +391,6 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     @Override
     public void getViews(){
         iv_return = findViewById(R.id.iv_return);
-        okHttpClient = new OkHttpClient();
         gson = new Gson();
         datalist = new ArrayList<>();
         btnPreQuestion = findViewById(R.id.btnPreQuestion);

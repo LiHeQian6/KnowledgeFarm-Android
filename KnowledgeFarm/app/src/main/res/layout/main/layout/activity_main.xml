@@ -9,51 +9,32 @@
     android:clipChildren="false"
     tools:context=".Main.MainActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2">
-        </TextView>
-
         <FrameLayout
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="60dp"
-            android:layout_weight="1"
-            android:clipChildren="false"
-            android:layout_width="match_parent"
-            android:layout_height="300dp">
-            <ImageView
-                android:src="@drawable/land_background"
-                android:layout_width="wrap_content"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:translationX="-60dp"
-                android:layout_height="300dp"/>
-            <FrameLayout
-                android:id="@+id/lands"
-                android:translationY="-40dp"
-                android:translationX="-30dp"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:scaleY="0.8"
-                android:scaleX="0.8"
-                android:rotationX="10"
-                android:rotation="-10"
-                android:clipChildren="false">
-            </FrameLayout>
+            android:id="@+id/land_background"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:background="@drawable/land_background"
+            android:scaleY="0.8"
+            android:scaleX="0.8"
+            android:visibility="gone"
+            android:clipChildren="false">
         </FrameLayout>
-        <TextView
-            android:layout_weight="2"
+        <FrameLayout
+            android:id="@+id/lands"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </TextView>
-    </LinearLayout>
+            android:layout_height="300dp"
+            android:scaleY="0.8"
+            android:scaleX="0.8"
+            android:rotationX="10"
+            android:rotation="-10"
+            android:clipChildren="false">
+        </FrameLayout>
+    </FrameLayout>
     <ImageView android:layout_width="50dp"
         android:layout_alignParentRight="true"
         android:src="@drawable/dog"

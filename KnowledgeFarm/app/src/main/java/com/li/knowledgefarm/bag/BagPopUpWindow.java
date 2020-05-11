@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.BagCropNumber;
 
 import org.jetbrains.annotations.NotNull;
@@ -56,6 +57,7 @@ public class BagPopUpWindow extends PopupWindow {
         View contentView = LayoutInflater.from(context).inflate(R.layout.bag_girdview,
                 null, false);
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
         Init(contentView);
     }
@@ -72,7 +74,6 @@ public class BagPopUpWindow extends PopupWindow {
 
     private void getViews(View contentView) {
         gridView = contentView.findViewById(R.id.bag_grid_view);
-        okHttpClient = new OkHttpClient();
         gson = new Gson();
     }
 

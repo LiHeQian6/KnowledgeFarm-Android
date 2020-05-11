@@ -27,7 +27,7 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:screenOrientation="landscape"
+        android:screenOrientation="fullSensor"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
@@ -37,50 +37,50 @@
 
         <activity
             android:name=".Settings.SettingMessageActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".notify.NotifyActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Login.RegisteActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Study.Subject.ChineseActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="fullSensor"
             android:theme="@style/customApp" />
         <activity
             android:name=".MyFriends.MyFriendActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Study.Subject.EnglishActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="fullSensor"
             android:theme="@style/customApp" />
         <activity
             android:name=".Settings.BindingEmailActivity"
             android:configChanges="screenSize|orientation"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Login.QQFirstActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Login.FindPassword"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Login.StartActivity"
             android:fitsSystemWindows="true"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Shop.ShopActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Main.MainActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Login.LoginByAccountActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Login.LoginActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -105,16 +105,16 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".Study.Subject.MathActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="fullSensor"
             android:theme="@style/customApp" />
         <activity
             android:name=".Study.SubjectListActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="fullSensor"
             android:theme="@style/customApp" />
         <activity
             android:name=".Settings.SettingActivity"
             android:configChanges="screenSize|orientation"
-            android:screenOrientation="landscape">
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -88,7 +89,7 @@ public class BindingEmailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_binding_email);
-
+        okHttpClient = OkHttpUtils.getInstance(this);
         /** 初始化*/
         init();
 
@@ -147,9 +148,6 @@ public class BindingEmailActivity extends AppCompatActivity {
         tv_getTestCode = findViewById(R.id.tv_getTestCode);
         tv_testCode = findViewById(R.id.tv_testCode);
         btnTest = findViewById(R.id.btnTest);
-
-        okHttpClient = new OkHttpClient();
-
         //去掉顶部状态栏和底部导航栏
         FullScreen.NavigationBarStatusBar(BindingEmailActivity.this,true);
     }

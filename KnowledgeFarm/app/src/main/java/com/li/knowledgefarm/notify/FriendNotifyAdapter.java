@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
@@ -64,11 +65,13 @@ public class FriendNotifyAdapter extends BaseAdapter {
             toast.show();
         }
     };
+    private OkHttpClient okHttpClient;
 
     public FriendNotifyAdapter(FriendsPage<Notification> list, int id, Context context) {
         this.list = list;
         this.id = id;
         this.context = context;
+        okHttpClient = OkHttpUtils.getInstance(context);
     }
 
     @Override
@@ -174,7 +177,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
                                 +list.getList().get(position).getTo().getAccount()+
                                 "&sendAccount="+list.getList().get(position).getFrom().getAccount()+
                                 "&notificationId="+list.getList().get(position).getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

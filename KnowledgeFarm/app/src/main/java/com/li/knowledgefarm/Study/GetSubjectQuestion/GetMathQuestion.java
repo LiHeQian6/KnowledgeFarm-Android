@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.Math23;
 import com.li.knowledgefarm.entity.Mix;
 import com.li.knowledgefarm.entity.Multiple;
@@ -42,7 +43,7 @@ import okhttp3.Response;
  */
 
 public class GetMathQuestion extends SubjectInterface {
-    private OkHttpClient okHttpClient = new OkHttpClient();
+    private OkHttpClient okHttpClient;
     private Gson gson = new Gson();
     private List<Question3Num> list = null;
     private Handler getMath;
@@ -52,6 +53,7 @@ public class GetMathQuestion extends SubjectInterface {
     public GetMathQuestion(Activity activity, Intent intent) {
         this.context = activity;
         this.intent = intent;
+        okHttpClient = OkHttpUtils.getInstance(context);
     }
 
     /**

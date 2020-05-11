@@ -17,6 +17,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 
 import java.io.IOException;
 
@@ -67,6 +68,7 @@ public class ChangePasswordPop extends PopupWindow {
         View contentView = LayoutInflater.from(context).inflate(R.layout.update_password,
                 null, false);
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
     }
 
@@ -94,7 +96,6 @@ public class ChangePasswordPop extends PopupWindow {
      * @return void
      */
     private void getViews(View contentView) {
-        okHttpClient = new OkHttpClient();
         old_password = contentView.findViewById(R.id.old_password);
         new_password = contentView.findViewById(R.id.new_password);
         again_new_password = contentView.findViewById(R.id.again_password);

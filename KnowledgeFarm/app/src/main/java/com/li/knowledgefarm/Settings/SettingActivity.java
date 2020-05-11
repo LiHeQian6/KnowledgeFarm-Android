@@ -42,6 +42,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
@@ -213,6 +214,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        okHttpClient = OkHttpUtils.getInstance(this);
 
         /** 初始化*/
         getViews();
@@ -310,7 +312,6 @@ public class SettingActivity extends AppCompatActivity {
         btnUnBindingEmail.setOnClickListener(listener);
         btnRegout.setOnClickListener(listener);
 
-        okHttpClient = new OkHttpClient();
         eventBus = EventBus.getDefault();
         eventBus.register(SettingActivity.this);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());

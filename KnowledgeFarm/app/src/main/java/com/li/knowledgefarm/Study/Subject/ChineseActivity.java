@@ -39,6 +39,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.Chinese;
 import com.li.knowledgefarm.entity.QuestionPage;
 
@@ -88,6 +89,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chinese);
+        okHttpClient = OkHttpUtils.getInstance(this);
 
         /** 加载视图*/
         getViews();
@@ -522,7 +524,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     @Override
     public void getViews(){
         iv_return = findViewById(R.id.iv_return);
-        okHttpClient = new OkHttpClient();
         gson = new Gson();
         datalist = new ArrayList<>();
         btnPreQuestion = findViewById(R.id.btnPreChinese);

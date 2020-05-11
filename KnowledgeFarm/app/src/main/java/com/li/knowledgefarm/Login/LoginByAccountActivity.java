@@ -2,6 +2,10 @@ package com.li.knowledgefarm.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.li.knowledgefarm.Util.Md5Encode;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,6 +26,7 @@ import android.os.Bundle;
 import com.li.knowledgefarm.Login.Interpolator.JellyInterpolator;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.User;
 
@@ -71,13 +76,9 @@ import static com.li.knowledgefarm.Login.LoginActivity.user;
 public class LoginByAccountActivity extends AppCompatActivity {
 
     private TextView mBtnLogin;
-
     private View progress;
-
     private View mInputLayout;
-
     private float mWidth, mHeight;
-
     private LinearLayout mName, mPsw;
     private String accountStr;
     private String pwdStr;
@@ -132,13 +133,14 @@ public class LoginByAccountActivity extends AppCompatActivity {
             }
         }
     };
+    private OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login_by_account);
-
+        okHttpClient = OkHttpUtils.getInstance(this);
         FullScreen.NavigationBarStatusBar(LoginByAccountActivity.this,true);
         initView();
         setViewSize();
@@ -280,7 +282,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 .build();
         Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/loginByAccount").build();
         //Call
-        Call call = new OkHttpClient().newCall(request);
+        Call call = okHttpClient.newCall(request);
         //异步请求
         call.enqueue(new Callback() {
             @Override

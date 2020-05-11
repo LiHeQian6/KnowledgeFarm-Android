@@ -24,6 +24,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.PetUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +78,7 @@ public class UtilItemPopUp extends PopupWindow {
             }
         }
     };
+    private OkHttpClient okHttpClient;
 
     public UtilItemPopUp(Context context, PetUtil petUtil) {
         super(context);
@@ -88,6 +90,7 @@ public class UtilItemPopUp extends PopupWindow {
         View contentView = LayoutInflater.from(context).inflate(R.layout.util_pop_up,
                 null, false);
         this.setContentView(contentView);
+        okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
         showMessage();
         setShopNumber();
@@ -158,7 +161,7 @@ public class UtilItemPopUp extends PopupWindow {
                         +util_Number.getText().toString().trim()
                         +"&userId="+ LoginActivity.user.getId()
                         +"&petUtilId="+ petUtil.getId()).build();
-                new OkHttpClient().newCall(request).enqueue(new Callback() {
+                okHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
 

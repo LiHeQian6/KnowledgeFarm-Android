@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.Chinese;
 import com.li.knowledgefarm.entity.English;
 import com.li.knowledgefarm.entity.QuestionPage;
@@ -38,7 +39,7 @@ import okhttp3.Response;
  */
 
 public class GetChineseQuestion extends SubjectInterface {
-    private OkHttpClient okHttpClient = new OkHttpClient();
+    private OkHttpClient okHttpClient;
     private Gson gson = new Gson();
     private List<Chinese> list = null;
     private Handler getMath;
@@ -48,6 +49,7 @@ public class GetChineseQuestion extends SubjectInterface {
     public GetChineseQuestion(Activity context, Intent intent) {
         this.context = context;
         this.intent = intent;
+        okHttpClient = OkHttpUtils.getInstance(context);
     }
 
     @Override

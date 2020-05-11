@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.UserPetHouse;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,6 +69,7 @@ public class PetPopUpWindow extends PopupWindow {
     private Handler change_pet;
     private PetAdapter adapter;
     private int selectItem=0;
+    private OkHttpClient okHttpClient;
 
     public PetPopUpWindow(Context context) {
         super(context);
@@ -94,6 +96,7 @@ public class PetPopUpWindow extends PopupWindow {
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
+        okHttpClient = OkHttpUtils.getInstance(context);
         contentView = LayoutInflater.from(context).inflate(R.layout.pet_layout,
                 null, false);
         this.setContentView(contentView);
@@ -130,7 +133,7 @@ public class PetPopUpWindow extends PopupWindow {
         physical_value = contentView.findViewById(R.id.physical_value);
         life_value = contentView.findViewById(R.id.life_value);
         use = contentView.findViewById(R.id.use);
-        feed = contentView.findViewById(R.id.feed);
+//        feed = contentView.findViewById(R.id.feed);
     }
 
     /**
@@ -146,7 +149,7 @@ public class PetPopUpWindow extends PopupWindow {
                 super.run();
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/userpethouse/showUserPetHouse?userId="+LoginActivity.user.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -230,12 +233,12 @@ public class PetPopUpWindow extends PopupWindow {
                 changeUserPetHouse(pet.getPet().getId());
             }
         });
-        feed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                feedPet(pet.getPet().getId());
-            }
-        });
+//        feed.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                feedPet(pet.getPet().getId());
+//            }
+//        });
     }
 
     /**
@@ -252,7 +255,7 @@ public class PetPopUpWindow extends PopupWindow {
                 super.run();
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/pet/changePet?willUsingPetId="+petId+"&userId="+LoginActivity.user.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -303,7 +306,7 @@ public class PetPopUpWindow extends PopupWindow {
                 super.run();
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/pet/changePet?willUsingPetId="+petId+"&userId="+LoginActivity.user.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
