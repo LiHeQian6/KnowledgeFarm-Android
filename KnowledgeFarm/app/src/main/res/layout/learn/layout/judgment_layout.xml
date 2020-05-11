@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <LinearLayout
-            android:layout_width="500dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         <TextView
                 android:id="@+id/tvQuestion"
@@ -23,79 +23,36 @@
             android:layout_marginTop="15dp">
 
         <LinearLayout
-                android:id="@+id/AnswerA"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right|center">
-
-            <TextView
-                    android:id="@+id/ClassifierOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="19"
-                    android:textAlignment="center"
-                    android:textColor="#ffffff"
-                    android:textSize="30dp" />
-
-            <ImageView
-                    android:id="@+id/chineseIsTrue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:src="@drawable/cha">
-            </ImageView>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/AnswerC"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center">
 
             <TextView
-                    android:id="@+id/ClassifierThree"
+                    android:id="@+id/judgment_A"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="65"
-                    android:textAlignment="center"
+                    android:gravity="center_horizontal"
                     android:textColor="#ffffff"
                     android:textSize="30dp" />
-
-            <ImageView
-                    android:id="@+id/chineseIsTrue3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:src="@drawable/cha">
-            </ImageView>
 
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/AnswerB"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="left|center">
+                android:gravity="center">
 
             <TextView
-                    android:id="@+id/ClassifierTwo"
+                    android:id="@+id/judgment_B"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="39"
-                    android:textAlignment="center"
+                    android:gravity="center_horizontal"
                     android:textColor="#ffffff"
                     android:textSize="30dp" />
-            <ImageView
-                    android:id="@+id/chineseIsTrue2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:src="@drawable/cha">
-            </ImageView>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

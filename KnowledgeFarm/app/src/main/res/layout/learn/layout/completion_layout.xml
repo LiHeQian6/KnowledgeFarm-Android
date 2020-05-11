@@ -12,7 +12,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="50sp"
                 android:textColor="#ffffff"
-                android:text="832 ÷ 4 = " />
+                android:text="5 + 8 - 3 = " />
         <EditText
                 android:id="@+id/tvAnswer"
                 android:layout_width="60dp"
@@ -22,13 +22,6 @@
                 android:imeOptions="flagNoExtractUi"
                 android:theme="@style/MyEditText"
                 android:textColor="#ffffff" />
-        <ImageView
-                android:id="@+id/isTrue"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/duigou"
-                android:visibility="gone"/>
     </LinearLayout>
     <LinearLayout
             android:layout_width="match_parent"
@@ -37,13 +30,13 @@
             android:layout_centerVertical="true">
 
         <TextView
-        android:id="@+id/isFalse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="你还差一点就答对了哦！"
-        android:textColor="@color/ShopTextColor"
-        android:visibility="invisible"
-        android:textSize="20sp">
-    </TextView>
+                android:id="@+id/isFalse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="你还差一点就答对了哦！"
+                android:textColor="@color/ShopTextColor"
+                android:visibility="invisible"
+                android:textSize="20sp">
+        </TextView>
+    </LinearLayout>
 </LinearLayout>
-        </LinearLayout>
