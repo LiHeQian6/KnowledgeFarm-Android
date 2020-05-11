@@ -266,7 +266,6 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
-                        .add("userId", LoginActivity.user.getId()+"")
                         .add("water",TrueAnswerNumber*1+"")
                         .add("fertilizer",TrueAnswerNumber*1+"")
                         .add("subject","english").build();
@@ -282,6 +281,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         getWAF.sendMessage(message);

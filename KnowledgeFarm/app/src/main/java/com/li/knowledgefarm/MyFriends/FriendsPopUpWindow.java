@@ -216,7 +216,7 @@ public class FriendsPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/userfriend/findAllUser?userId="+LoginActivity.user.getId()+"&pageNumber="+pageNumber).build();
+                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/userfriend/findAllUser?pageNumber="+pageNumber).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -245,7 +245,7 @@ public class FriendsPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/userfriend/findUserFriend?userId="+ LoginActivity.user.getId()+"&pageNumber="+pageNumber).build();
+                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/userfriend/findUserFriend?pageNumber="+pageNumber).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -256,6 +256,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                     }
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj =response.body().string();
                         friendsMessagesHandler.sendMessage(message);
@@ -291,7 +292,7 @@ public class FriendsPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/userfriend/findUserFriend?userId=" + LoginActivity.user.getId() + "&account=" + account).build();
+                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/userfriend/findUserFriend?account=" + account).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -303,6 +304,7 @@ public class FriendsPopUpWindow extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         friendsMessagesHandler.sendMessage(message);
@@ -322,7 +324,7 @@ public class FriendsPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/userfriend/findAllUser?userId=" + LoginActivity.user.getId() +"&account=" + account).build();
+                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/userfriend/findAllUser?account=" + account).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -334,6 +336,7 @@ public class FriendsPopUpWindow extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         friendsMessagesHandler.sendMessage(message);

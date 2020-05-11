@@ -27,60 +27,60 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:screenOrientation="fullSensor"
+        android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <service
             android:name=".Main.bgsound.BgSoundService"
-            android:exported="false"></service>
+            android:exported="false"/>
 
         <activity
             android:name=".Settings.SettingMessageActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".notify.NotifyActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Login.RegisteActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Study.Subject.ChineseActivity"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="landscape"
             android:theme="@style/customApp" />
         <activity
             android:name=".MyFriends.MyFriendActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Study.Subject.EnglishActivity"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="landscape"
             android:theme="@style/customApp" />
         <activity
             android:name=".Settings.BindingEmailActivity"
             android:configChanges="screenSize|orientation"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Login.QQFirstActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Login.FindPassword"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Login.StartActivity"
             android:fitsSystemWindows="true"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Shop.ShopActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Main.MainActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Login.LoginByAccountActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Login.LoginActivity"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -105,16 +105,16 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".Study.Subject.MathActivity"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="landscape"
             android:theme="@style/customApp" />
         <activity
             android:name=".Study.SubjectListActivity"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="landscape"
             android:theme="@style/customApp" />
         <activity
             android:name=".Settings.SettingActivity"
             android:configChanges="screenSize|orientation"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

@@ -145,7 +145,7 @@ public class MyFriendActivity extends AppCompatActivity {
         getViews();
         addListener();
         getCrop();
-//        haveNewNotifications();
+        haveNewNotifications();
     }
 
     @Override
@@ -740,7 +740,7 @@ public class MyFriendActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(getResources().getString(R.string.URL)+"/notification/isHavingNewNotification?userId="+LoginActivity.user.getId()).build();
+                        .url(getResources().getString(R.string.URL)+"/notification/isHavingNewNotification").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -753,6 +753,7 @@ public class MyFriendActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;
@@ -915,9 +916,9 @@ public class MyFriendActivity extends AppCompatActivity {
                 super.run();
                 Request request = null;
                 if (option == 0)
-                    request = new Request.Builder().url(getResources().getString(R.string.URL) + "/notification/addUserFriendNotification?userId=" + LoginActivity.user.getId() + "&account=" + num).build();
+                    request = new Request.Builder().url(getResources().getString(R.string.URL) + "/notification/addUserFriendNotification?account=" + num).build();
                 else if (option == 1) {
-                    request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/deleteUserFriend?userId=" + LoginActivity.user.getId() + "&account=" + num).build();
+                    request = new Request.Builder().url(getResources().getString(R.string.URL) + "/userfriend/deleteUserFriend?account=" + num).build();
                 }
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -930,6 +931,7 @@ public class MyFriendActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         friendMessagesHandler.sendMessage(message);
@@ -976,9 +978,9 @@ public class MyFriendActivity extends AppCompatActivity {
                 super.run();
                 Request request=null;
                 if(operating==0)
-                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/waterForFriend?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant+"&friendId="+user.getId()).build();
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/waterForFriend?landNumber=land"+selectedPlant+"&friendId="+user.getId()).build();
                 else if(operating==-1){
-                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/fertilizerForFriend?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant+"&friendId="+user.getId()).build();
+                    request = new Request.Builder().url(getResources().getString(R.string.URL)+"/userfriend/fertilizerForFriend?landNumber=land"+selectedPlant+"&friendId="+user.getId()).build();
                 }/*else{
                     request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/harvest?userId="+LoginActivity.user.getId()+"&landNumber=land"+selectedPlant).build();
                 }*/
@@ -992,6 +994,7 @@ public class MyFriendActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj =response.body().string();
                         waterMessagesHandler.sendMessage(message);

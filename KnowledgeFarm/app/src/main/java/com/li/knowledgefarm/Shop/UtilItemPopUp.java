@@ -159,7 +159,6 @@ public class UtilItemPopUp extends PopupWindow {
                 super.run();
                 Request request = new Request.Builder().url(context.getResources().getString(R.string.URL)+"/user/buyPetUtil?number="
                         +util_Number.getText().toString().trim()
-                        +"&userId="+ LoginActivity.user.getId()
                         +"&petUtilId="+ petUtil.getId()).build();
                 okHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
@@ -169,6 +168,7 @@ public class UtilItemPopUp extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         message.arg1 = response.code();

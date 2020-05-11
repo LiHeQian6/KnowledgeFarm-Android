@@ -87,6 +87,7 @@ public class NotifyPopUpWindow extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String messages = response.body().string();
                         Message message = Message.obtain();
                         message.obj = messages;

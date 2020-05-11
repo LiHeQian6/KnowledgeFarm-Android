@@ -148,7 +148,7 @@ public class PetPopUpWindow extends PopupWindow {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/userpethouse/showUserPetHouse?userId="+LoginActivity.user.getId()).build();
+                        .url(context.getResources().getString(R.string.URL)+"/userpethouse/showUserPetHouse").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -161,6 +161,7 @@ public class PetPopUpWindow extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;
@@ -254,7 +255,7 @@ public class PetPopUpWindow extends PopupWindow {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/pet/changePet?willUsingPetId="+petId+"&userId="+LoginActivity.user.getId()).build();
+                        .url(context.getResources().getString(R.string.URL)+"/pet/changePet?willUsingPetId="+petId).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -267,6 +268,7 @@ public class PetPopUpWindow extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;
@@ -305,7 +307,7 @@ public class PetPopUpWindow extends PopupWindow {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/pet/changePet?willUsingPetId="+petId+"&userId="+LoginActivity.user.getId()).build();
+                        .url(context.getResources().getString(R.string.URL)+"/pet/changePet?willUsingPetId="+petId).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -318,6 +320,7 @@ public class PetPopUpWindow extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;

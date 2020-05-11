@@ -283,7 +283,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
-                        .add("userId", LoginActivity.user.getId()+"")
                         .add("water",TrueAnswerNumber*2+"")
                         .add("fertilizer",TrueAnswerNumber*2+"")
                         .add("subject","chinese").build();
@@ -299,6 +298,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         getWAF.sendMessage(message);

@@ -30,6 +30,7 @@ import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.tencent.tauth.Tencent;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -186,7 +187,7 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account", LoginActivity.user.getAccount()).add("email", new_message.getText().toString().trim()).build();
+                FormBody formBody = new FormBody.Builder().add("email", new_message.getText().toString().trim()).build();
                 final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/bindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -196,7 +197,8 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(1,response.code(),result);
                     }
@@ -225,7 +227,8 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(0,response.code(),result);
                     }

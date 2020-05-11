@@ -363,7 +363,7 @@ public class MyFragment extends Fragment {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/buyCrop?userId="+userID+"&cropId="+cropId+"&number="+num).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/buyCrop?cropId="+cropId+"&number="+num).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -376,6 +376,7 @@ public class MyFragment extends Fragment {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String addCallback = response.body().string();
                         Message message = Message.obtain();
                         message.obj = addCallback;

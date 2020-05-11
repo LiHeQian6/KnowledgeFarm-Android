@@ -38,6 +38,7 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -430,7 +431,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result =  response.body().string();
                         Message message = new Message();
                         if (result.equals("notEffect")) {
@@ -476,7 +478,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         String result =  response.body().string();
                         Message message = new Message();
                         if (result.equals("notEffect")) { //账号失效

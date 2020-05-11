@@ -142,8 +142,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/userfriend/refuseUserFriend?notificationId="
-                                +list.getList().get(position).getId()+"&account="+list.getList().get(position).getFrom().getAccount()).build();
+                        .url(context.getResources().getString(R.string.URL)+"/userfriend/refuseUserFriend?account="+list.getList().get(position).getFrom().getAccount()).build();
                 Call call = new OkHttpClient().newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -154,6 +153,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String messages = response.body().string();
                         Message message = Message.obtain();
                         message.obj = messages;
@@ -173,10 +173,8 @@ public class FriendNotifyAdapter extends BaseAdapter {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/userfriend/addUserFriend?account="
-                                +list.getList().get(position).getTo().getAccount()+
-                                "&sendAccount="+list.getList().get(position).getFrom().getAccount()+
-                                "&notificationId="+list.getList().get(position).getId()).build();
+                        .url(context.getResources().getString(R.string.URL)+"/userfriend/addUserFriend?sendAccount="+
+                                list.getList().get(position).getFrom().getAccount()).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -187,6 +185,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String messages = response.body().string();
                         Message message = Message.obtain();
                         message.obj = messages;

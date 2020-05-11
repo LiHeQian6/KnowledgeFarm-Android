@@ -19,6 +19,8 @@ import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
@@ -135,7 +137,6 @@ public class ChangePasswordPop extends PopupWindow {
                     @Override
                     public void run() {
                         FormBody formBody = new FormBody.Builder()
-                                .add("account", LoginActivity.user.getAccount())
                                 .add("oldPassword", Md5Encode.getMD5(oldPassword.getBytes()))
                                 .add("newPassword", Md5Encode.getMD5(newPassword.getBytes()))
                                 .build();
@@ -148,7 +149,8 @@ public class ChangePasswordPop extends PopupWindow {
                             }
 
                             @Override
-                            public void onResponse(Call call, Response response) throws IOException {
+                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                OkHttpUtils.unauthorized(response.code());
                                 Message message = Message.obtain();
                                 message.obj = response.body().string();
                                 message.what = response.code();

@@ -51,6 +51,7 @@ import com.tencent.tauth.UiError;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -400,7 +401,6 @@ public class SettingActivity extends AppCompatActivity {
                 }
                 RequestBody requestBody = RequestBody.create(photo,mimeType);
                 RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("id", "" + LoginActivity.user.getId())
                         .addFormDataPart("photo", URLEncoder.encode(LoginActivity.user.getPhoto()))
                         .addFormDataPart("upload",photo.getName(),requestBody)
                         .build();
@@ -413,7 +413,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(4,result);
                     }
@@ -429,7 +430,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/isBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -439,7 +440,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(0,result);
                     }
@@ -542,7 +544,7 @@ public class SettingActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).add("openId",openId).build();
+                            FormBody formBody = new FormBody.Builder().add("openId",openId).build();
                             final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -552,7 +554,8 @@ public class SettingActivity extends AppCompatActivity {
                                 }
 
                                 @Override
-                                public void onResponse(Call call, Response response) throws IOException {
+                                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                    OkHttpUtils.unauthorized(response.code());
                                     String result = response.body().string();
                                     sendMessage(1,result);
                                 }
@@ -632,7 +635,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -642,7 +645,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(2,result);
                     }
@@ -681,7 +685,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -691,7 +695,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(3,result);
                     }

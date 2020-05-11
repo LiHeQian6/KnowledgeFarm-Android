@@ -40,6 +40,7 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -337,7 +338,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).add("openId",openId).build();
+                            FormBody formBody = new FormBody.Builder().add("openId",openId).build();
                             final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -347,7 +348,8 @@ public class SettingMessageActivity extends AppCompatActivity {
                                 }
 
                                 @Override
-                                public void onResponse(Call call, Response response) throws IOException {
+                                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                    OkHttpUtils.unauthorized(response.code());
                                     String result = response.body().string();
                                     Message message = new Message();
                                     message.what = 1;
@@ -441,7 +443,6 @@ public class SettingMessageActivity extends AppCompatActivity {
                 }
                 RequestBody requestBody = RequestBody.create(photo,mimeType);
                 RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("id", "" + LoginActivity.user.getId())
                         .addFormDataPart("photo", URLEncoder.encode(LoginActivity.user.getPhoto()))
                         .addFormDataPart("upload",photo.getName(),requestBody)
                         .build();
@@ -455,7 +456,8 @@ public class SettingMessageActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         Message message = new Message();
                         message.what = 4;
@@ -598,7 +600,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).add("grade",""+transmit(newGrade)).build();
+                FormBody formBody = new FormBody.Builder().add("grade",""+transmit(newGrade)).build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/updateUserGrade").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -608,7 +610,8 @@ public class SettingMessageActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         Message message = new Message();
                         message.obj = result;

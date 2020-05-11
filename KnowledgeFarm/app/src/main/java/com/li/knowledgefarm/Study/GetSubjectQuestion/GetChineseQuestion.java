@@ -82,6 +82,7 @@ public class GetChineseQuestion extends SubjectInterface {
 
                         @Override
                         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            OkHttpUtils.unauthorized(response.code());
                             Message message = Message.obtain();
                             message.obj = response.body().string();
                             message.arg1 = response.code();
