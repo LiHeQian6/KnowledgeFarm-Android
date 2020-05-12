@@ -1,4 +1,6 @@
-package com.li.knowledgefarm.entity;
+package com.li.knowledgefarm.entity.QuestionEntity;
+
+import java.io.Serializable;
 
 /**
  * @ClassName Question
@@ -6,7 +8,7 @@ package com.li.knowledgefarm.entity;
  * @Author 张帅华
  * @Date 2020-05-09 08:53
  */
-public class Question {
+public class Question implements Serializable {
     private Integer id;
     private QuestionTitle questionTitle;
     private String subject;

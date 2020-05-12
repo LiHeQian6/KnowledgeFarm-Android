@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.entity;
+package com.li.knowledgefarm.entity.QuestionEntity;
 
 /**
  * @ClassName Judgment
@@ -6,7 +6,7 @@ package com.li.knowledgefarm.entity;
  * @Author 张帅华
  * @Date 2020-05-09 09:07
  */
-public class Judgment extends Question{
+public class Judgment extends Question {
     private Integer answer;
     private Integer choice;
 

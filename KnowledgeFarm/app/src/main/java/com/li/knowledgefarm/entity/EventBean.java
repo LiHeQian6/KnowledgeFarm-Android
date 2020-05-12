@@ -1,5 +1,7 @@
 package com.li.knowledgefarm.entity;
 
+import com.li.knowledgefarm.entity.QuestionEntity.Question3Num;
+
 import java.util.List;
 
 /**

@@ -4,20 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
-import com.li.knowledgefarm.entity.English;
-import com.li.knowledgefarm.entity.Question3Num;
-import com.li.knowledgefarm.entity.QuestionPage;
+import com.li.knowledgefarm.entity.QuestionEntity.English;
 
 import org.jetbrains.annotations.NotNull;
 

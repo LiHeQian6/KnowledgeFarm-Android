@@ -2,7 +2,6 @@ package com.li.knowledgefarm.Study.GetSubjectQuestion;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
@@ -12,15 +11,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
+import com.li.knowledgefarm.Util.FromJson;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
-import com.li.knowledgefarm.entity.Math23;
-import com.li.knowledgefarm.entity.Mix;
-import com.li.knowledgefarm.entity.Multiple;
-import com.li.knowledgefarm.entity.Question3Num;
+import com.li.knowledgefarm.entity.QuestionEntity.Completion;
+import com.li.knowledgefarm.entity.QuestionEntity.Math23;
+import com.li.knowledgefarm.entity.QuestionEntity.Question;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +44,7 @@ import okhttp3.Response;
 public class GetMathQuestion extends SubjectInterface {
     private OkHttpClient okHttpClient;
     private Gson gson = new Gson();
-    private List<Question3Num> list = null;
+    private List<Question> list = null;
     private Handler getMath;
     private final Activity context;
     private Intent intent;
@@ -126,7 +124,7 @@ public class GetMathQuestion extends SubjectInterface {
      * @Author 孙建旺
      * @Date 下午 8:28 2020/03/23
      * @Param []
-     * @return java.util.List<com.li.knowledgefarm.entity.Question3Num>
+     * @return java.util.List<com.li.knowledgefarm.entity.QuestionEntity.Question3Num>
      */
     @SuppressLint("HandlerLeak")
     @Override
@@ -136,16 +134,15 @@ public class GetMathQuestion extends SubjectInterface {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
+                Log.i("data",data);
                 if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
                     Type type = null;
                     if(msg.what == 1 || msg.what ==2){
-                        type = new TypeToken<List<Question3Num>>() {
-                        }.getType();
+                        list = FromJson.JsonToEntity(data);
                     }else if(msg.what == 3 || msg.what == 3){
                         type = new TypeToken<List<Math23>>() {
                         }.getType();
                     }
-                    list = gson.fromJson(data, type);
                     Log.i("jing",list.toString());
                     if(list != null){
                         intent.putExtra("math",(Serializable) list);

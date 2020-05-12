@@ -1,6 +1,5 @@
 package com.li.knowledgefarm.Study.Subject;
 
-import android.text.Layout;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,17 +34,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.li.knowledgefarm.Login.LoginActivity;
-import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
-import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
-import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
-import com.li.knowledgefarm.entity.Question3Num;
+import com.li.knowledgefarm.entity.QuestionEntity.Completion;
+import com.li.knowledgefarm.entity.QuestionEntity.Question;
+import com.li.knowledgefarm.entity.QuestionEntity.Question3Num;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,31 +63,27 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     private Handler getMath; //接收数学题Handler
     private Handler getWAF; //接收增加水和肥料结果
     private Gson gson; //Gson
-    private List<Question3Num> datalist; //题目List
+    private List<Question> datalist; //题目List
     private int position=0; //题目位置
     private int TrueAnswerNumber = 0; //回答正确计数器
     private Dialog ifReturn; //询问是否返回弹窗
     private Boolean returnHandlerFinish = false; //返回条件
     private int displayWidth; //屏幕宽度
     private int displayHeight; //屏幕高度
-    private View thisGrade;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setDensityLand.setDensity(getApplication());
-//        setDensityLand.setOrientation(this,AppUtil.HEIGHT);
         setContentView(R.layout.activity_math);
         okHttpClient = OkHttpUtils.getInstance(this);
-//        thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
         /** 加载视图*/
         getViews();
         setViewSize();
         if(UserUtil.getUser().getGrade() == 1 || UserUtil.getUser().getGrade() == 2){
 //            thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
             getViews1();
-            datalist = (List<Question3Num>) getIntent().getSerializableExtra("math");
+            datalist = (List<Question>) getIntent().getSerializableExtra("math");
         }else if(UserUtil.getUser().getGrade() ==2 || UserUtil.getUser().getGrade() == 3){
 
         }
@@ -101,8 +94,8 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     }
 
     private void getViews1() {
-        question = findViewById(R.id.tvQuestion);
-        answer = findViewById(R.id.tvAnswer);
+        question = findViewById(R.id.completion_Question);
+        answer = findViewById(R.id.completion_Answer);
         isTrue = findViewById(R.id.isTrue);
         isFalse = findViewById(R.id.isFalse);
     }
@@ -124,7 +117,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
 
         TextView btnPre = findViewById(R.id.btnPreQuestion);
         TextView btnNext = findViewById(R.id.btnNextQuestion);
-        LinearLayout question  = findViewById(R.id.linearQuestion);
+        RelativeLayout question  = findViewById(R.id.relative_question);
 
         LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.1));
         params_btn.gravity = Gravity.CENTER_HORIZONTAL;
@@ -305,14 +298,15 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
             isFalse.setText(" ");
             isTrue.setVisibility(View.INVISIBLE);
             answer.setVisibility(View.INVISIBLE);
-            question.setText(datalist.get(pos).toString()+ datalist.get(pos).getResult());
+            Completion completion = (Completion) datalist.get(pos);
+            question.setText(datalist.get(pos).toString()+ completion.getAnswer());
         }else{
             if(answer.getVisibility() == View.INVISIBLE){
                 answer.setVisibility(View.VISIBLE);
             }
             isFalse.setText("");
-            isTrue.setVisibility(View.INVISIBLE);
-            question.setText(datalist.get(pos).toString());
+            isTrue.setVisibility(View.VISIBLE);
+            question.setText(datalist.get(pos).getQuestionTitle().getTitle());
         }
     }
 
@@ -351,7 +345,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                         }
                         return;
                     }
-                    if(inputRes.equals(datalist.get(position).getResult()+"")) {
+                    if(inputRes.equals(((Completion)datalist.get(position)).getAnswer()+"")) {
                         TrueAnswerNumber++;
                         isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
                         isTrue.setVisibility(View.VISIBLE);
@@ -364,7 +358,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                                 @Override
                                 public void run() {
                                     answer.setText("");
-                                    datalist.get(position).setIfDone("true");
+                                    datalist.get(position).setIfDone(1);
                                     position = ++position;
                                     showQuestion(position);
                                 }

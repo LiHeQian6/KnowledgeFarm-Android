@@ -7,14 +7,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         <TextView
-                android:id="@+id/tvQuestion"
+                android:id="@+id/completion_Question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="50sp"
                 android:textColor="#ffffff"
                 android:text="5 + 8 - 3 = " />
         <EditText
-                android:id="@+id/tvAnswer"
+                android:id="@+id/completion_Answer"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:textSize="50sp"

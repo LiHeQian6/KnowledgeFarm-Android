@@ -1,4 +1,7 @@
-package com.li.knowledgefarm.entity;
+package com.li.knowledgefarm.entity.QuestionEntity;
+
+import com.li.knowledgefarm.entity.Pageable;
+import com.li.knowledgefarm.entity.Sort;
 
 import java.io.Serializable;
 import java.util.List;

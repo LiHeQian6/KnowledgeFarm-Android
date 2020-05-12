@@ -1,4 +1,6 @@
-package com.li.knowledgefarm.entity;
+package com.li.knowledgefarm.entity.QuestionEntity;
+
+import com.li.knowledgefarm.entity.QuestionEntity.Question;
 
 /**
  * @ClassName SingleChoice
@@ -6,7 +8,7 @@ package com.li.knowledgefarm.entity;
  * @Author 张帅华
  * @Date 2020-05-09 08:59
  */
-public class SingleChoice extends Question{
+public class SingleChoice extends Question {
     private String answer;
     private String choice1;
     private String choice2;
