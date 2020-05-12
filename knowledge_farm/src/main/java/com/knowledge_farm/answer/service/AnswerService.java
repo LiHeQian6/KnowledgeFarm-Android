@@ -68,7 +68,7 @@ public class AnswerService {
                     num2 = random.nextInt(num1+1);
                     num12 = num1 - num2;
                     if(signal2.equals("-")) {
-                        num3 = random.nextInt(num12)+1;
+                        num3 = random.nextInt(num12+1);
                         result = num12 - num3;
                     }else {
                         num3 = random.nextInt(20-num12);
@@ -78,7 +78,7 @@ public class AnswerService {
                     num2 = random.nextInt(20-num1);
                     num12 = num1 + num2;
                     if(signal2.equals("-")) {
-                        num3 = random.nextInt(num12)+1;
+                        num3 = random.nextInt(num12+1);
                         result = num12 - num3;
                     }else {
                         num3 = random.nextInt(20-num12);
@@ -116,16 +116,16 @@ public class AnswerService {
                     result = num1 + num2;
                 } else {
                     num1 = random.nextInt(80) + 20;
-                    num2 = random.nextInt(num1)+1;
+                    num2 = random.nextInt(num1+1);
                     result = num1 - num2;
                 }
             } else {
                 if (signal1.equals("-")) {
                     num1 = random.nextInt(80) + 20;
-                    num2 = random.nextInt(num1)+1;
+                    num2 = random.nextInt(num1+1);
                     num12 = num1 - num2;
                     if (signal2.equals("-")) {
-                        num3 = random.nextInt(num12)+1;
+                        num3 = random.nextInt(num12+1);
                         result = num12 - num3;
                     } else {
                         num3 = random.nextInt(100 - num12);
@@ -134,7 +134,7 @@ public class AnswerService {
                 } else {
                     num12 = num1 + num2;
                     if (signal2.equals("-")) {
-                        num3 = random.nextInt(num12)+1;
+                        num3 = random.nextInt(num12+1);
                         result = num12 - num3;
                     } else {
                         num3 = random.nextInt(100 - num12);
