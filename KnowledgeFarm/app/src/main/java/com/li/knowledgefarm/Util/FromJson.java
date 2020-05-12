@@ -27,15 +27,15 @@ public class FromJson {
                 List<Question> list = new ArrayList<>();
                 JsonArray array = json.getAsJsonArray();
                 for(JsonElement je : array){
-                    String type = je.getAsJsonObject().get("questionType").getAsJsonObject().get("name").getAsString();
+                    String type = je.getAsJsonObject().get("questionType").getAsJsonObject().get("id").getAsString();
                     switch (type){
-                        case "填空题":
+                        case "2":
                             list.add((Question) context.deserialize(je, Completion.class));
                             break;
-                        case "选择题":
+                        case "1":
                             list.add((Question) context.deserialize(je, SingleChoice.class));
                             break;
-                        case "判断题":
+                        case "3":
                             list.add((Question) context.deserialize(je, Judgment.class));
                             break;
                     }

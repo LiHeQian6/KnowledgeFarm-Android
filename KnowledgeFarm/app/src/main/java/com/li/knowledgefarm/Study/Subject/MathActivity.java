@@ -19,6 +19,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,6 +71,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     private Boolean returnHandlerFinish = false; //返回条件
     private int displayWidth; //屏幕宽度
     private int displayHeight; //屏幕高度
+    private Toast toast;
     private TextView number_tip;//显示回答正确数量及题目总数
 
     private View completion_layout; //填空题布局
@@ -86,6 +90,9 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     private TextView choice_B; //B选项
     private TextView choice_C; //C选项
     private ImageView choice_isTrue; //是否选择正确提示
+    private CheckBox checkBox_A;//A选项单选框
+    private CheckBox checkBox_B;//B选项单选框
+    private CheckBox checkBox_C;//C选项单选框
 
     //判断题
     private TextView judge_question;//判断题问题
@@ -102,12 +109,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         /** 加载视图*/
         getViews();
         setViewSize();
-        if(UserUtil.getUser().getGrade() == 1 || UserUtil.getUser().getGrade() == 2){
-//            thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
-            datalist = (List<Question>) getIntent().getSerializableExtra("math");
-        }else if(UserUtil.getUser().getGrade() ==2 || UserUtil.getUser().getGrade() == 3){
-
-        }
+        datalist = (List<Question>) getIntent().getSerializableExtra("math");
         /** 注册点击事件监听器*/
         registListener();
         FullScreen.NavigationBarStatusBar(MathActivity.this,true);
@@ -142,11 +144,121 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         choice_A = findViewById(R.id.choice_A);
         choice_B = findViewById(R.id.choice_B);
         choice_C = findViewById(R.id.choice_C);
+        checkBox_A = findViewById(R.id.checkbox_A);
+        checkBox_B = findViewById(R.id.checkbox_B);
+        checkBox_C = findViewById(R.id.checkbox_C);
         //判断题
         judge_question = findViewById(R.id.judge_Question);
         judge_isTrue = findViewById(R.id.judge_isTrue);
         judge_A = findViewById(R.id.judge_A);
         judge_B = findViewById(R.id.judge_B);
+    }
+
+    /**
+     * @Description 判断是否正确
+     * @Author 孙建旺
+     * @Date 下午8:38 2020/05/12
+     * @Param []
+     * @return void
+     */
+    private void JudgementIfTrue(){
+
+    }
+
+    /**
+     * @Description 判断单选是否正确
+     * @Author 孙建旺
+     * @Date 下午8:31 2020/05/12
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void ChoiceIfTrue(){
+        String choose_answer = "";
+        if(checkBox_A.isChecked())
+            choose_answer = choice_A.getText().toString();
+        if(checkBox_B.isChecked())
+            choose_answer = choice_B.getText().toString();
+        if(checkBox_C.isChecked())
+            choose_answer = choice_C.getText().toString();
+        if(choose_answer.equals(((SingleChoice)datalist.get(position)).getAnswer())){
+            choice_isTrue.setVisibility(View.VISIBLE);
+            choice_isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
+            StudyUtil.PlayTrueSound(getApplicationContext());
+            if((position+1)<=datalist.size()-1) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        datalist.get(position).setIfDone(1);
+                        position = ++position;
+                        showQuestion(position);
+                    }
+                }, 1000);
+            }
+        }else {
+            choice_isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
+            choice_isTrue.setVisibility(View.VISIBLE);
+            StudyUtil.PlayFalseSound(getApplicationContext());
+        }
+    }
+
+    /**
+     * @Description 判断填空题是否正确
+     * @Author 孙建旺
+     * @Date 下午8:26 2020/05/12
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void CompletionIfTrue(){
+        String inputRes = completion_answer.getText().toString().trim();
+        if(inputRes.equals("")) {
+            completion_answer.setText("");
+            if((position+1)<=datalist.size()-1) {
+                position = ++position;
+                showQuestion(position);
+            }else{
+                if(TrueAnswerNumber < datalist.size()){
+                    if(toast!=null){
+                        toast = Toast.makeText(MathActivity.this,"你还没有答完哦",Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+            }
+            return;
+        }
+        if(inputRes.equals(((Completion)datalist.get(position)).getAnswer()+"")) {
+            TrueAnswerNumber++;
+            isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
+            isTrue.setVisibility(View.VISIBLE);
+            isFalse.setText("答对啦！获得了奖励哦！");
+            isFalse.setVisibility(View.VISIBLE);
+            btnNextQuestion.setClickable(false);
+            StudyUtil.PlayTrueSound(getApplicationContext());
+            if((position+1)<=datalist.size()-1) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        completion_answer.setText("");
+                        datalist.get(position).setIfDone(1);
+                        position = ++position;
+                        showQuestion(position);
+                    }
+                }, 1000);
+            }else{
+                getWandFCallBack();
+                getWaterAndFertilizer();
+                btnNextQuestion.setClickable(false);
+            }
+        }else{
+            isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
+            isTrue.setVisibility(View.VISIBLE);
+            isFalse.setText("你还差一点就答对了哦！");
+            StudyUtil.PlayFalseSound(getApplicationContext());
+            isFalse.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -196,21 +308,32 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         choice_layout.setVisibility(View.VISIBLE);
         completion_layout.setVisibility(View.GONE);
         judgement_layout.setVisibility(View.GONE);
+        number_tip.setText(pos+1 + " / " + datalist.size());
+        btnNextQuestion.setClickable(true);
+        checkBox_A.setChecked(false);
+        checkBox_B.setChecked(false);
+        checkBox_C.setChecked(false);
         if(position == datalist.size()-1){
             btnNextQuestion.setText("我答完啦");
         }else{
             btnNextQuestion.setText("下一题");
         }
         if(datalist.get(pos).getIfDone() == 1){
-            choice_isTrue.setVisibility(View.GONE);
+            choice_isTrue.setVisibility(View.INVISIBLE);
+            choice_question.setVisibility(View.VISIBLE);
+            choice_question.setText(datalist.get(pos).getQuestionTitle().getTitle());
             choice_A.setVisibility(View.INVISIBLE);
+            checkBox_C.setVisibility(View.INVISIBLE);
+            checkBox_A.setVisibility(View.INVISIBLE);
+            checkBox_B.setVisibility(View.GONE);
             choice_C.setVisibility(View.INVISIBLE);
             choice_B.setText(((SingleChoice)datalist.get(pos)).getAnswer());
         }else {
             choice_A.setVisibility(View.VISIBLE);
             choice_C.setVisibility(View.VISIBLE);
             choice_isTrue.setVisibility(View.INVISIBLE);
-            switch (new Random().nextInt(2)){
+            choice_question.setText(datalist.get(pos).getQuestionTitle().getTitle());
+            switch (new Random().nextInt(3)){
                 case 0:
                     choice_A.setText(((SingleChoice)datalist.get(pos)).getAnswer());
                     choice_B.setText(((SingleChoice)datalist.get(pos)).getChoice2());
@@ -487,49 +610,17 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                     }
                     break;
                 case R.id.btnNextQuestion:
-                    String inputRes = completion_answer.getText().toString().trim();
-                    if(inputRes.equals("")) {
-                        completion_answer.setText("");
-                        if((position+1)<=datalist.size()-1) {
-                            position = ++position;
-                            showQuestion(position);
-                        }else{
-                            if(TrueAnswerNumber < datalist.size()){
-                                Toast.makeText(MathActivity.this,"你还没有答完哦",Toast.LENGTH_SHORT).show();;
-                            }
-                        }
-                        return;
-                    }
-                    if(inputRes.equals(((Completion)datalist.get(position)).getAnswer()+"")) {
-                        TrueAnswerNumber++;
-                        isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
-                        isTrue.setVisibility(View.VISIBLE);
-                        isFalse.setText("答对啦！获得了奖励哦！");
-                        isFalse.setVisibility(View.VISIBLE);
-                        btnNextQuestion.setClickable(false);
-                        StudyUtil.PlayTrueSound(getApplicationContext());
-                        if((position+1)<=datalist.size()-1) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    completion_answer.setText("");
-                                    datalist.get(position).setIfDone(1);
-                                    position = ++position;
-                                    showQuestion(position);
-                                }
-                            }, 1000);
-                        }else{
-                            getWandFCallBack();
-                            getWaterAndFertilizer();
-                            btnNextQuestion.setClickable(false);
-                        }
-                    }else{
-                        isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
-                        isTrue.setVisibility(View.VISIBLE);
-                        isFalse.setText("你还差一点就答对了哦！");
-                        StudyUtil.PlayFalseSound(getApplicationContext());
-                        isFalse.setVisibility(View.VISIBLE);
+                    switch (datalist.get(position).getQuestionType().getId()){
+                        case 1:
+                            if(position < datalist.size() - 1)
+                                showQuestion(++position);
+                            break;
+                        case 2:
+                            CompletionIfTrue();
+                            break;
+                        case 3:
+                            JudgementIfTrue();
+                            break;
                     }
                     break;
             }
@@ -545,6 +636,9 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         iv_return.setOnClickListener(listener);
         btnPreQuestion.setOnClickListener(listener);
         btnNextQuestion.setOnClickListener(listener);
+        choice_A.setOnClickListener(new CustomerListener());
+        choice_B.setOnClickListener(new CustomerListener());
+        choice_C.setOnClickListener(new CustomerListener());
         completion_answer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -558,6 +652,40 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
             public void afterTextChanged(Editable s) {
                 if (position == datalist.size() - 1)
                     btnNextQuestion.setText("我做完啦 ");
+            }
+        });
+        checkBox_A.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    checkBox_B.setChecked(false);
+                    checkBox_C.setChecked(false);
+                    btnNextQuestion.setClickable(false);
+                    ChoiceIfTrue();
+                }
+            }
+        });
+        checkBox_B.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    checkBox_A.setChecked(false);
+                    checkBox_C.setChecked(false);
+                    ChoiceIfTrue();
+                }
+            }
+        });
+        checkBox_C.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    checkBox_A.setChecked(false);
+                    checkBox_B.setChecked(false);
+                    ChoiceIfTrue();
+                }
             }
         });
     }

@@ -136,14 +136,7 @@ public class GetMathQuestion extends SubjectInterface {
                 String data = (String)msg.obj;
                 Log.i("data",data);
                 if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
-                    Type type = null;
-                    if(msg.what == 1 || msg.what ==2){
-                        list = FromJson.JsonToEntity(data);
-                    }else if(msg.what == 3 || msg.what == 3){
-                        type = new TypeToken<List<Math23>>() {
-                        }.getType();
-                    }
-                    Log.i("jing",list.toString());
+                    list = FromJson.JsonToEntity(data);
                     if(list != null){
                         intent.putExtra("math",(Serializable) list);
                         context.startActivity(intent);

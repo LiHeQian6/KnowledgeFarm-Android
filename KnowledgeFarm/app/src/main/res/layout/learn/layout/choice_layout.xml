@@ -12,13 +12,16 @@
             android:layout_weight="5"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
             <TextView
                 android:id="@+id/choice_Question"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autoSizeMaxTextSize="40dp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
                 android:textColor="#ffffff"
                 android:text="学校有白粉笔65盒，粉色粉笔27盒，用了73盒，还剩多少盒？" />
         </LinearLayout>
@@ -44,11 +47,16 @@
         android:layout_marginTop="15dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
-
+            <CheckBox
+                android:id="@+id/checkbox_A"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A："
+                android:textSize="25dp"/>
             <TextView
                 android:id="@+id/choice_A"
                 android:layout_width="wrap_content"
@@ -56,16 +64,21 @@
                 android:text="19"
                 android:gravity="center_horizontal"
                 android:textColor="#ffffff"
-                android:textSize="30dp" />
+                android:textSize="25dp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
-
+            <CheckBox
+                android:id="@+id/checkbox_B"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="B："
+                android:textSize="25dp"/>
             <TextView
                 android:id="@+id/choice_B"
                 android:layout_width="wrap_content"
@@ -73,23 +86,28 @@
                 android:text="65"
                 android:gravity="center_horizontal"
                 android:textColor="#ffffff"
-                android:textSize="30dp" />
+                android:textSize="25dp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
-
+            <CheckBox
+                android:id="@+id/checkbox_C"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C："
+                android:textSize="25dp"/>
             <TextView
                 android:id="@+id/choice_C"                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="39"
                 android:gravity="center_horizontal"
                 android:textColor="#ffffff"
-                android:textSize="30dp" />
+                android:textSize="25dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

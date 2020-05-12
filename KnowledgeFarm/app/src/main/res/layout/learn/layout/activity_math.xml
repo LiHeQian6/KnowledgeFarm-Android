@@ -47,7 +47,7 @@
                         android:id="@+id/relative_question">
                         <include
                             android:id="@+id/completion_layout"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:layout_gravity="center"
@@ -56,7 +56,7 @@
                             android:visibility="visible"/>
                         <include
                             android:id="@+id/choice_layout"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:layout_gravity="center"
@@ -65,7 +65,7 @@
                             android:visibility="gone"/>
                         <include
                             android:id="@+id/judge_layout"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:layout_gravity="center"
