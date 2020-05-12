@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4">
+        android:layout_weight="5">
         <ImageView
             android:id="@+id/iv_return"
             android:layout_width="100dp"
@@ -25,12 +25,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="4"/>
+            android:layout_weight="3"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp">
+            android:layout_weight="2"
+            android:layout_marginTop="30dp">
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -41,11 +41,12 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true">
                     <RelativeLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:id="@+id/relative_question">
                         <include
+                            android:id="@+id/completion_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -54,6 +55,7 @@
                             layout="@layout/completion_layout"
                             android:visibility="visible"/>
                         <include
+                            android:id="@+id/choice_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -62,6 +64,7 @@
                             layout="@layout/choice_layout"
                             android:visibility="gone"/>
                         <include
+                            android:id="@+id/judge_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -70,57 +73,66 @@
                             layout="@layout/judgment_layout"
                             android:visibility="gone"/>
                     </RelativeLayout>
-                    <ImageView
-                        android:id="@+id/isTrue"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/duigou">
-                    </ImageView>
                 </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_marginTop="20dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/question_li"
+                android:gravity="center">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-50dp"
-                    android:layout_below="@+id/question_li">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/btnPreQuestion"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <TextView
-                            android:id="@+id/btnPreQuestion"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="30dp"
-                            android:textColor="#ffffff"
-                            android:text="上一题"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:gravity="center"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-                        <TextView
-                            android:id="@+id/btnNextQuestion"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="30dp"
-                            android:textColor="#ffffff"
-                            android:text="下一题"/>
-                    </LinearLayout>
+                        android:textSize="30dp"
+                        android:textColor="#ffffff"
+                        android:text="上一题"/>
                 </LinearLayout>
-            </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/number_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="第1题"
+                        android:textColor="@color/ShopTextColor"
+                        android:textSize="25dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/btnNextQuestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="30dp"
+                        android:textColor="#ffffff"
+                        android:text="下一题"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4">
+        android:layout_weight="5">
 
     </LinearLayout>
 </LinearLayout>

@@ -41,14 +41,17 @@ import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.QuestionEntity.Completion;
+import com.li.knowledgefarm.entity.QuestionEntity.Judgment;
 import com.li.knowledgefarm.entity.QuestionEntity.Question;
 import com.li.knowledgefarm.entity.QuestionEntity.Question3Num;
+import com.li.knowledgefarm.entity.QuestionEntity.SingleChoice;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MathActivity extends AppCompatActivity implements StudyInterface {
     private ImageView iv_return; //返回
@@ -56,11 +59,6 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     private OkHttpClient okHttpClient; //Okhttp
     private TextView btnPreQuestion; //下一题
     private TextView btnNextQuestion; //上一题
-    private TextView question; //问题
-    private TextView isFalse; //回答错误文字提示
-    private ImageView isTrue; //回答正确图片提示
-    private EditText answer; //答案输入框
-    private Handler getMath; //接收数学题Handler
     private Handler getWAF; //接收增加水和肥料结果
     private Gson gson; //Gson
     private List<Question> datalist; //题目List
@@ -70,6 +68,30 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     private Boolean returnHandlerFinish = false; //返回条件
     private int displayWidth; //屏幕宽度
     private int displayHeight; //屏幕高度
+    private TextView number_tip;//显示回答正确数量及题目总数
+
+    private View completion_layout; //填空题布局
+    private View judgement_layout; //判断题布局
+    private View choice_layout; //选择题布局
+
+    //填空题
+    private TextView completion_question; //填空题问题
+    private TextView isFalse; //回答是否错误文字提示
+    private ImageView isTrue; //回答是否正确图片提示
+    private EditText completion_answer; //填空题答案输入框
+
+    //选择题
+    private TextView choice_question; //选择题问题
+    private TextView choice_A; //A选项
+    private TextView choice_B; //B选项
+    private TextView choice_C; //C选项
+    private ImageView choice_isTrue; //是否选择正确提示
+
+    //判断题
+    private TextView judge_question;//判断题问题
+    private TextView judge_A; //A选项
+    private TextView judge_B; //B选项
+    private ImageView judge_isTrue; //是否判断正确提示
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -82,7 +104,6 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         setViewSize();
         if(UserUtil.getUser().getGrade() == 1 || UserUtil.getUser().getGrade() == 2){
 //            thisGrade = getLayoutInflater().inflate(R.layout.math_grade_one,null);
-            getViews1();
             datalist = (List<Question>) getIntent().getSerializableExtra("math");
         }else if(UserUtil.getUser().getGrade() ==2 || UserUtil.getUser().getGrade() == 3){
 
@@ -93,11 +114,176 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         showQuestion(position);
     }
 
-    private void getViews1() {
-        question = findViewById(R.id.completion_Question);
-        answer = findViewById(R.id.completion_Answer);
-        isTrue = findViewById(R.id.isTrue);
-        isFalse = findViewById(R.id.isFalse);
+    /**
+     * 加载视图
+     */
+    @Override
+    public void getViews(){
+        iv_return = findViewById(R.id.iv_return);
+        gson = new Gson();
+        datalist = new ArrayList<>();
+        btnPreQuestion = findViewById(R.id.btnPreQuestion);
+        btnNextQuestion = findViewById(R.id.btnNextQuestion);
+        number_tip = findViewById(R.id.number_tip);
+        //填空题布局
+        completion_layout = findViewById(R.id.completion_layout);
+        //选择题布局
+        choice_layout = findViewById(R.id.choice_layout);
+        //判断题布局
+        judgement_layout = findViewById(R.id.judge_layout);
+        //填空题
+        completion_question = findViewById(R.id.completion_Question); //填空题问题
+        completion_answer = findViewById(R.id.completion_Answer); //填空题答案输入框
+        isTrue = findViewById(R.id.isTrue); //是否正确文字提示
+        isFalse = findViewById(R.id.isFalse); //是否正确图片提示
+        //选择题
+        choice_question = findViewById(R.id.choice_Question);
+        choice_isTrue = findViewById(R.id.choice_isTrue);
+        choice_A = findViewById(R.id.choice_A);
+        choice_B = findViewById(R.id.choice_B);
+        choice_C = findViewById(R.id.choice_C);
+        //判断题
+        judge_question = findViewById(R.id.judge_Question);
+        judge_isTrue = findViewById(R.id.judge_isTrue);
+        judge_A = findViewById(R.id.judge_A);
+        judge_B = findViewById(R.id.judge_B);
+    }
+
+    /**
+     * @Description 展示判断题
+     * @Author 孙建旺
+     * @Date 下午5:36 2020/05/12
+     * @Param []
+     * @return void
+     */
+    private void ShowJudgement(int pos){
+        judgement_layout.setVisibility(View.VISIBLE);
+        choice_layout.setVisibility(View.GONE);
+        completion_layout.setVisibility(View.GONE);
+        if(position == datalist.size()-1){
+            btnNextQuestion.setText("我答完啦");
+        }else{
+            btnNextQuestion.setText("下一题");
+        }
+        if(datalist.get(pos).getIfDone() == 1){
+            judge_isTrue.setVisibility(View.GONE);
+            judge_A.setVisibility(View.GONE);
+            judge_B.setText(((Judgment)datalist.get(pos)).getAnswer());
+        }else {
+            judge_isTrue.setVisibility(View.GONE);
+            judge_A.setVisibility(View.VISIBLE);
+            switch (new Random().nextInt(1)){
+                case 0:
+                    judge_A.setText(((Judgment)datalist.get(pos)).getAnswer()+"");
+                    judge_B.setText(((Judgment)datalist.get(pos)).getChoice()+"");
+                    break;
+                case 1:
+                    judge_B.setText(((Judgment)datalist.get(pos)).getAnswer()+"");
+                    judge_A.setText(((Judgment)datalist.get(pos)).getChoice()+"");
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @Description 展示单选题
+     * @Author 孙建旺
+     * @Date 下午5:35 2020/05/12
+     * @Param [pos]
+     * @return void
+     */
+    private void ShowSingleChoice(int pos){
+        choice_layout.setVisibility(View.VISIBLE);
+        completion_layout.setVisibility(View.GONE);
+        judgement_layout.setVisibility(View.GONE);
+        if(position == datalist.size()-1){
+            btnNextQuestion.setText("我答完啦");
+        }else{
+            btnNextQuestion.setText("下一题");
+        }
+        if(datalist.get(pos).getIfDone() == 1){
+            choice_isTrue.setVisibility(View.GONE);
+            choice_A.setVisibility(View.INVISIBLE);
+            choice_C.setVisibility(View.INVISIBLE);
+            choice_B.setText(((SingleChoice)datalist.get(pos)).getAnswer());
+        }else {
+            choice_A.setVisibility(View.VISIBLE);
+            choice_C.setVisibility(View.VISIBLE);
+            choice_isTrue.setVisibility(View.INVISIBLE);
+            switch (new Random().nextInt(2)){
+                case 0:
+                    choice_A.setText(((SingleChoice)datalist.get(pos)).getAnswer());
+                    choice_B.setText(((SingleChoice)datalist.get(pos)).getChoice2());
+                    choice_C.setText(((SingleChoice)datalist.get(pos)).getChoice1());
+                    break;
+                case 1:
+                    choice_B.setText(((SingleChoice)datalist.get(pos)).getAnswer());
+                    choice_A.setText(((SingleChoice)datalist.get(pos)).getChoice2());
+                    choice_C.setText(((SingleChoice)datalist.get(pos)).getChoice1());
+                    break;
+                case 2:
+                    choice_C.setText(((SingleChoice)datalist.get(pos)).getAnswer());
+                    choice_A.setText(((SingleChoice)datalist.get(pos)).getChoice2());
+                    choice_B.setText(((SingleChoice)datalist.get(pos)).getChoice1());
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @Description 展示填空题
+     * @Author 孙建旺
+     * @Date 下午5:31 2020/05/12
+     * @Param [pos]
+     * @return void
+     */
+    private void ShowCompletion(int pos){
+        completion_layout.setVisibility(View.VISIBLE);
+        choice_layout.setVisibility(View.GONE);
+        judgement_layout.setVisibility(View.GONE);
+        number_tip.setText(pos+1 + " / " + datalist.size());
+        btnNextQuestion.setClickable(true);
+        if(position == datalist.size()-1){
+            btnNextQuestion.setText("我答完啦");
+        }else{
+            btnNextQuestion.setText("下一题");
+        }
+        if(datalist.get(pos).getIfDone() == 1) {
+            isFalse.setText(" ");
+            isTrue.setVisibility(View.INVISIBLE);
+            completion_answer.setVisibility(View.GONE);
+            Completion completion = (Completion) datalist.get(pos);
+            completion_question.setText(datalist.get(pos).getQuestionTitle().getTitle()+ completion.getAnswer());
+        }else{
+            if(completion_answer.getVisibility() == View.INVISIBLE){
+                completion_answer.setVisibility(View.VISIBLE);
+            }
+            isFalse.setText("");
+            isTrue.setVisibility(View.INVISIBLE);
+            completion_answer.setVisibility(View.VISIBLE);
+            completion_question.setText(datalist.get(pos).getQuestionTitle().getTitle());
+        }
+    }
+
+    /**
+     * @Description 展示下一道题目
+     * @Auther 孙建旺
+     * @Date 上午 11:33 2019/12/11
+     * @Param [pos]
+     * @return void
+     */
+    public void showQuestion(int pos){
+        switch (datalist.get(pos).getQuestionType().getId()){
+            case 1:
+                ShowSingleChoice(pos);
+                break;
+            case 2:
+                ShowCompletion(pos);
+                break;
+            case 3:
+                ShowJudgement(pos);
+                break;
+        }
     }
 
     /**
@@ -109,30 +295,30 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void setViewSize() {
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayWidth = ds.widthPixels;
-        displayHeight = ds.heightPixels;
-
-        TextView btnPre = findViewById(R.id.btnPreQuestion);
-        TextView btnNext = findViewById(R.id.btnNextQuestion);
-        RelativeLayout question  = findViewById(R.id.relative_question);
-
-        LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.1));
-        params_btn.gravity = Gravity.CENTER_HORIZONTAL;
-        btnPre.setLayoutParams(params_btn);
-        params_btn.setMargins(0,0,0,(int)(displayHeight*0.02));
-        btnPre.setTextSize((int)(displayWidth*0.015));
-        btnPre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        btnNext.setLayoutParams(params_btn);
-        btnNext.setTextSize((int)(displayWidth*0.015));
-        btnNext.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        RelativeLayout.LayoutParams params_question = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(displayHeight*0.3));
-        params_question.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params_question.bottomMargin = (int)(displayHeight*0.2);
-        question.setLayoutParams(params_question);
+//        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+//        DisplayMetrics ds = new DisplayMetrics();
+//        wm.getDefaultDisplay().getMetrics(ds);
+//        displayWidth = ds.widthPixels;
+//        displayHeight = ds.heightPixels;
+//
+//        TextView btnPre = findViewById(R.id.btnPreQuestion);
+//        TextView btnNext = findViewById(R.id.btnNextQuestion);
+//        RelativeLayout question  = findViewById(R.id.relative_question);
+//
+//        LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams((int)(displayWidth*0.2),(int)(displayHeight*0.1));
+//        params_btn.gravity = Gravity.CENTER_HORIZONTAL;
+//        btnPre.setLayoutParams(params_btn);
+//        params_btn.setMargins(0,0,0,(int)(displayHeight*0.02));
+//        btnPre.setTextSize((int)(displayWidth*0.015));
+//        btnPre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//        btnNext.setLayoutParams(params_btn);
+//        btnNext.setTextSize((int)(displayWidth*0.015));
+//        btnNext.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//
+//        RelativeLayout.LayoutParams params_question = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(displayHeight*0.3));
+//        params_question.addRule(RelativeLayout.CENTER_HORIZONTAL);
+//        params_question.bottomMargin = (int)(displayHeight*0.2);
+//        question.setLayoutParams(params_question);
     }
 
     /**
@@ -223,14 +409,14 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                 if(data!= null){
                     if(!data.equals("-1")){
                         UserUtil.getUser().setMathRewardCount(UserUtil.getUser().getMathRewardCount() - 1);
-                        answer.setVisibility(View.GONE);
+                        completion_answer.setVisibility(View.GONE);
                         isFalse.setVisibility(View.INVISIBLE);
                         isTrue.setVisibility(View.GONE);
                         btnPreQuestion.setVisibility(View.GONE);
                         btnNextQuestion.setVisibility(View.GONE);
-                        question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
-                        question.setTextSize((int)(displayWidth*0.011));
-                        question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        completion_question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
+                        completion_question.setTextSize((int)(displayWidth*0.011));
+                        completion_question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         if(returnHandlerFinish)
                             finish();
                     }else{
@@ -280,37 +466,6 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         }.start();
     }
 
-    /**
-     * @Description 展示下一道题目
-     * @Auther 孙建旺
-     * @Date 上午 11:33 2019/12/11
-     * @Param [pos]
-     * @return void
-     */
-    @Override
-    public void showQuestion(int pos){
-        if(position == datalist.size()-1){
-            btnNextQuestion.setText("我答完啦");
-        }else{
-            btnNextQuestion.setText("下一题");
-        }
-        if(datalist.get(pos).getIfDone().equals("true")) {
-            isFalse.setText(" ");
-            isTrue.setVisibility(View.INVISIBLE);
-            answer.setVisibility(View.INVISIBLE);
-            Completion completion = (Completion) datalist.get(pos);
-            question.setText(datalist.get(pos).toString()+ completion.getAnswer());
-        }else{
-            if(answer.getVisibility() == View.INVISIBLE){
-                answer.setVisibility(View.VISIBLE);
-            }
-            isFalse.setText("");
-            isTrue.setVisibility(View.VISIBLE);
-            question.setText(datalist.get(pos).getQuestionTitle().getTitle());
-        }
-    }
-
-
     class CustomerListener implements View.OnClickListener{
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -326,15 +481,15 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                     break;
                 case R.id.btnPreQuestion:
                     if((position-1)>=0) {
-                        answer.setText("");
+                        completion_answer.setText("");
                         position = --position;
                         showQuestion(position);
                     }
                     break;
                 case R.id.btnNextQuestion:
-                    String inputRes = answer.getText().toString().trim();
+                    String inputRes = completion_answer.getText().toString().trim();
                     if(inputRes.equals("")) {
-                        answer.setText("");
+                        completion_answer.setText("");
                         if((position+1)<=datalist.size()-1) {
                             position = ++position;
                             showQuestion(position);
@@ -351,13 +506,14 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                         isTrue.setVisibility(View.VISIBLE);
                         isFalse.setText("答对啦！获得了奖励哦！");
                         isFalse.setVisibility(View.VISIBLE);
+                        btnNextQuestion.setClickable(false);
                         StudyUtil.PlayTrueSound(getApplicationContext());
                         if((position+1)<=datalist.size()-1) {
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    answer.setText("");
+                                    completion_answer.setText("");
                                     datalist.get(position).setIfDone(1);
                                     position = ++position;
                                     showQuestion(position);
@@ -381,20 +537,6 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     }
 
     /**
-     * 加载视图
-     */
-    @Override
-    public void getViews(){
-        iv_return = findViewById(R.id.iv_return);
-        gson = new Gson();
-        datalist = new ArrayList<>();
-        btnPreQuestion = findViewById(R.id.btnPreQuestion);
-        btnNextQuestion = findViewById(R.id.btnNextQuestion);
-
-
-    }
-
-    /**
      * 注册点击事件监听器
      */
     @Override
@@ -403,7 +545,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         iv_return.setOnClickListener(listener);
         btnPreQuestion.setOnClickListener(listener);
         btnNextQuestion.setOnClickListener(listener);
-        answer.addTextChangedListener(new TextWatcher() {
+        completion_answer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
