@@ -206,7 +206,7 @@ public class MyFriendActivity extends AppCompatActivity {
                 Request request = new Request.Builder()
                         .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId?userId="+ UserUtil.getUser().getId())
                         .build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {

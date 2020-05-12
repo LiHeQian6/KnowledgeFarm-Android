@@ -41,11 +41,11 @@ public class OkHttpUtils {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-						PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-						AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-						mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent); // 1秒钟后重启应用
-						System.exit(0);
+					Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+					PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+					AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+					mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent); // 1秒钟后重启应用
+					System.exit(0);
 					}
 				};
 				Timer timer = new Timer();

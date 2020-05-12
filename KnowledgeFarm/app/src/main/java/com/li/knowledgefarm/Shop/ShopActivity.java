@@ -236,8 +236,8 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/showInStore").build();
-                Call call = new OkHttpClient().newCall(request);
+                final Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/showInStore").build();
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
