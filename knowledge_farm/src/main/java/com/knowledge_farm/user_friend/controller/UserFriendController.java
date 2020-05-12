@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 
@@ -33,8 +34,6 @@ import java.util.ArrayList;
 public class UserFriendController {
     @Resource
     private UserFriendServiceImpl userFriendService;
-    @Resource
-    private NotificationService notificationService;
 
     /**
      * @Author 张帅华
@@ -53,14 +52,19 @@ public class UserFriendController {
     public PageUtil<User> findUserFriend(@RequestParam(value = "account", required = false) String account,
                                          @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                          @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                         HttpSession session){
+                                         HttpSession session, HttpServletResponse response){
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
-            Page<User> page = this.userFriendService.findUserFriendPageByAccount(userId, account, pageNumber, pageSize);
-            pageUtil.setTotalCount((int) page.getTotalElements());
-            pageUtil.setList(page.getContent());
-            return pageUtil;
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                Page<User> page = this.userFriendService.findUserFriendPageByAccount(userId, account, pageNumber, pageSize);
+                pageUtil.setTotalCount((int) page.getTotalElements());
+                pageUtil.setList(page.getContent());
+                return pageUtil;
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         pageUtil.setTotalCount(0);
         pageUtil.setList(new ArrayList<>());
@@ -84,14 +88,19 @@ public class UserFriendController {
     public PageUtil<User> findAllUser(@RequestParam(value = "account", required = false) String account,
                                       @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                       @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                      HttpSession session) {
+                                      HttpSession session, HttpServletResponse response) {
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
-            Page<User> page = this.userFriendService.findAllUserByAccount(userId, account, pageNumber, pageSize);
-            pageUtil.setTotalCount((int) page.getTotalElements());
-            pageUtil.setList(page.getContent());
-            return pageUtil;
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                Page<User> page = this.userFriendService.findAllUserByAccount(userId, account, pageNumber, pageSize);
+                pageUtil.setTotalCount((int) page.getTotalElements());
+                pageUtil.setList(page.getContent());
+                return pageUtil;
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         pageUtil.setTotalCount(0);
         pageUtil.setList(new ArrayList<>());
@@ -103,13 +112,14 @@ public class UserFriendController {
             @ApiImplicitParam(name = "sendAccount", value = "发送方用户账号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/addUserFriend")
-    public String addUserFriend(@RequestParam("sendAccount") String sendAccount, HttpSession session){
+    public String addUserFriend(@RequestParam("sendAccount") String sendAccount, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userFriendService.addUserFriend(sendAccount, userId);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -121,13 +131,14 @@ public class UserFriendController {
             @ApiImplicitParam(name = "account", value = "发送方用户账号", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/refuseUserFriend")
-    public String refuseUserFriend(@RequestParam("account") String account, HttpSession session){
+    public String refuseUserFriend(@RequestParam("account") String account, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userFriendService.refuseUserFriend(account, userId);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -139,13 +150,14 @@ public class UserFriendController {
             @ApiImplicitParam(name = "account", value = "要删除好友的账号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/deleteUserFriend")
-    public String deleteUserFriend(@RequestParam("account") String account, HttpSession session){
+    public String deleteUserFriend(@RequestParam("account") String account, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.userFriendService.deleteUserFriend(userId, account);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -161,7 +173,7 @@ public class UserFriendController {
     public String waterForFriend(@RequestParam("friendId") Integer friendId,
                                  @RequestParam("landNumber") String landNumber,
                                  HttpServletRequest request,
-                                 HttpSession session){
+                                 HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
@@ -176,6 +188,7 @@ public class UserFriendController {
                         return Result.TRUE;
                 }
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -190,13 +203,14 @@ public class UserFriendController {
     @GetMapping("fertilizerForFriend")
     public String fertilizerForFriend(@RequestParam("friendId") Integer friendId,
                                       @RequestParam("landNumber") String landNumber,
-                                      HttpSession session){
+                                      HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 String result = this.userFriendService.fertilizerForFriend(userId, friendId, landNumber);
                 return result;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package com.li.knowledgefarm.entity;
+package com.li.knowledgefarm.entity.QuestionEntity;
 
 
 import java.io.Serializable;

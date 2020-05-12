@@ -18,7 +18,10 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.tencent.tauth.Tencent;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -43,7 +46,7 @@ public class IfDoPop extends PopupWindow {
             super.handleMessage(msg);
             switch ((String)msg.obj){
                 case "true":
-                    LoginActivity.user.setEmail("");
+                    UserUtil.getUser().setEmail(null);
                     Toast.makeText(context,"解绑邮箱成功",Toast.LENGTH_SHORT).show();
                     break;
                 case "false":
@@ -123,7 +126,7 @@ public class IfDoPop extends PopupWindow {
         new Thread() {
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().build();
                 final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/unBindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -133,7 +136,8 @@ public class IfDoPop extends PopupWindow {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         message.what = response.code();

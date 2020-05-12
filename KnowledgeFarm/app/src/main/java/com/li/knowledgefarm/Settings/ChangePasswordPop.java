@@ -18,6 +18,9 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -45,7 +48,7 @@ public class ChangePasswordPop extends PopupWindow {
             super.handleMessage(msg);
             switch ((String)msg.obj){
                 case "true":
-                    LoginActivity.user.setPassword(new_password.getText().toString().trim());
+                    UserUtil.getUser().setPassword(new_password.getText().toString().trim());
                     dismiss();
                     Toast.makeText(context,"密码修改成功",Toast.LENGTH_SHORT).show();
                     break;
@@ -135,7 +138,6 @@ public class ChangePasswordPop extends PopupWindow {
                     @Override
                     public void run() {
                         FormBody formBody = new FormBody.Builder()
-                                .add("account", LoginActivity.user.getAccount())
                                 .add("oldPassword", Md5Encode.getMD5(oldPassword.getBytes()))
                                 .add("newPassword", Md5Encode.getMD5(newPassword.getBytes()))
                                 .build();
@@ -148,7 +150,8 @@ public class ChangePasswordPop extends PopupWindow {
                             }
 
                             @Override
-                            public void onResponse(Call call, Response response) throws IOException {
+                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                OkHttpUtils.unauthorized(response.code());
                                 Message message = Message.obtain();
                                 message.obj = response.body().string();
                                 message.what = response.code();

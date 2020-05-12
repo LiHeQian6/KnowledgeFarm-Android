@@ -12,9 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,7 +41,8 @@ public class NotificationController {
     public PageUtil<Notification> findReceivedNotificationByType(@RequestParam("typeId") Integer typeId,
                                                                  @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                                                  @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                                                 HttpSession session){
+                                                                 HttpSession session,
+                                                                 HttpServletResponse response){
         PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
         try {
             Integer userId = (Integer) session.getAttribute("userId");
@@ -50,6 +52,7 @@ public class NotificationController {
                 pageUtil.setList(page.getContent());
                 return pageUtil;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -68,14 +71,20 @@ public class NotificationController {
     public PageUtil<Notification> findSendNotificationByType(@RequestParam("typeId") Integer typeId,
                                                              @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                                              @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                                             HttpSession session){
+                                                             HttpSession session,
+                                                             HttpServletResponse response){
         PageUtil<Notification> pageUtil = new PageUtil<>(pageNumber, pageSize);
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
-            Page<Notification> page = this.notificationService.findSendByNotificationType(userId, typeId, pageNumber, pageSize);
-            pageUtil.setTotalCount((int) page.getTotalElements());
-            pageUtil.setList(page.getContent());
-            return pageUtil;
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                Page<Notification> page = this.notificationService.findSendByNotificationType(userId, typeId, pageNumber, pageSize);
+                pageUtil.setTotalCount((int) page.getTotalElements());
+                pageUtil.setList(page.getContent());
+                return pageUtil;
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         pageUtil.setTotalCount(0);
         pageUtil.setList(new ArrayList<>());
@@ -84,12 +93,13 @@ public class NotificationController {
 
     @ApiOperation(value = "查询是否有新消息", notes = "返回值：List（boolean）：1、system；2、receive；3、send；4、message")
     @GetMapping("/isHavingNewNotification")
-    public List<Boolean> isHavingNewNotification(HttpSession session){
+    public List<Boolean> isHavingNewNotification(HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return this.notificationService.isHavingNewNotification(userId);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -101,13 +111,14 @@ public class NotificationController {
             @ApiImplicitParam(name = "account", value = "被加好友的用户账号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/addUserFriendNotification")
-    public String addUserFriendNotification(@RequestParam("account") String account, HttpSession session){
+    public String addUserFriendNotification(@RequestParam("account") String account, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.notificationService.addUserFriendNotification(userId, account);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -139,13 +150,14 @@ public class NotificationController {
             @ApiImplicitParam(name = "typeId", value = "消息类型", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/deleteNotificationByType")
-    public String deleteNotificationByType(@RequestParam("typeId") Integer typeId, HttpSession session){
+    public String deleteNotificationByType(@RequestParam("typeId") Integer typeId, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 this.notificationService.deleteNotificationByType(userId, typeId);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -185,7 +197,7 @@ public class NotificationController {
                                              @RequestParam("haveRead") Integer haveRead,
                                              @RequestParam("typeId") Integer typeId,
                                              @RequestParam("flag") Integer flag,
-                                             HttpSession session){
+                                             HttpSession session, HttpServletResponse response){
         String ids[] = notificationIds.split(",");
         List<Integer> idList = new ArrayList<>();
         for(String id : ids){
@@ -197,6 +209,7 @@ public class NotificationController {
                 this.notificationService.editNotificationReadStatus(idList, userId, haveRead, typeId, flag);
                 return Result.TRUE;
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }

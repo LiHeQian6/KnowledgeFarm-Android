@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
@@ -107,7 +106,7 @@ public class BagPopUpWindow extends PopupWindow {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/bag/initUserBag?userId=" + LoginActivity.user.getId()).build();
+                final Request request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/bag/initUserBag").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -119,6 +118,7 @@ public class BagPopUpWindow extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         bagMessagesHandler.sendMessage(message);

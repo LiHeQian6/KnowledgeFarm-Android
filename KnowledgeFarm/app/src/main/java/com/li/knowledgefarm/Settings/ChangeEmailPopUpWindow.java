@@ -27,9 +27,11 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.tencent.tauth.Tencent;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -80,7 +82,7 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     if(msg.obj.equals("true")){ //绑定成功
                         endAsync1(); //停止异步任务
                         endAsync2(); //停止异步任务
-                        LoginActivity.user.setEmail(new_message.getText().toString().trim());
+                        UserUtil.getUser().setEmail(new_message.getText().toString().trim());
                         EventBus.getDefault().post("绑定邮箱成功");
                         Toast.makeText(context,"绑定邮箱成功",Toast.LENGTH_SHORT).show();
                         dismiss();
@@ -186,7 +188,7 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account", LoginActivity.user.getAccount()).add("email", new_message.getText().toString().trim()).build();
+                FormBody formBody = new FormBody.Builder().add("email", new_message.getText().toString().trim()).build();
                 final Request request = new Request.Builder().post(formBody).url(context.getResources().getString(R.string.URL)+"/user/bindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -196,7 +198,8 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(1,response.code(),result);
                     }
@@ -225,7 +228,8 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(0,response.code(),result);
                     }

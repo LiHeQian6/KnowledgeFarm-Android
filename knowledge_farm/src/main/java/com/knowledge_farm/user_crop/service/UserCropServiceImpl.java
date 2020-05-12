@@ -56,7 +56,8 @@ public class UserCropServiceImpl {
 
     @Transactional(readOnly = false)
     public void deleteUserCropById(Integer id){
-        this.userCropDao.deleteById(id);
+        UserCrop userCrop = this.userCropDao.findUserCropById(id);
+        this.userCropDao.delete(userCrop);
     }
 
     public List<UserCrop> findUserCropListByLand(Land land){

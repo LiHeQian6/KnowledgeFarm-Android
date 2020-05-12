@@ -65,7 +65,8 @@ public class AdminServiceImpl {
      **/
     @Transactional(readOnly = false)
     public void deleteById(Integer id){
-        this.adminDao.deleteById(id);
+        Admin admin = this.adminDao.findAdminById(id);
+        this.adminDao.delete(admin);
     }
     
     /**

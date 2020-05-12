@@ -43,6 +43,7 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
@@ -51,6 +52,7 @@ import com.tencent.tauth.UiError;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -125,10 +127,10 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
-                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccount()+"已绑定QQ");
+                            tv_QQ.setText("您的账号"+ UserUtil.getUser().getAccount()+"已绑定QQ");
                             break;
                         case "false":
-                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccount()+"还未绑定QQ");
+                            tv_QQ.setText("您的账号"+UserUtil.getUser().getAccount()+"还未绑定QQ");
                             break;
                     }
                     break;
@@ -137,7 +139,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.GONE);
                             btnUnBindingQQ.setVisibility(View.VISIBLE);
-                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccount()+"已绑定QQ");
+                            tv_QQ.setText("您的账号"+UserUtil.getUser().getAccount()+"已绑定QQ");
                             /** 存入SharedPreferences*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
@@ -161,7 +163,7 @@ public class SettingActivity extends AppCompatActivity {
                         case "true":
                             btnBindingQQ.setVisibility(View.VISIBLE);
                             btnUnBindingQQ.setVisibility(View.GONE);
-                            tv_QQ.setText("您的账号"+LoginActivity.user.getAccount()+"还未绑定QQ");
+                            tv_QQ.setText("您的账号"+UserUtil.getUser().getAccount()+"还未绑定QQ");
                             mTencent.logout(getApplicationContext());
                             /** 删除SharedPreferences内Token信息*/
                             SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
@@ -178,10 +180,10 @@ public class SettingActivity extends AppCompatActivity {
                 case 3: //解绑邮箱判断
                     switch ((String)msg.obj){
                         case "true":
-                            LoginActivity.user.setEmail("");
+                            UserUtil.getUser().setEmail("");
                             btnBindingEmail.setVisibility(View.VISIBLE);
                             btnUnBindingEmail.setVisibility(View.GONE);
-                            tv_email.setText("您的账号"+LoginActivity.user.getAccount()+"还未绑定邮箱");
+                            tv_email.setText("您的账号"+UserUtil.getUser().getAccount()+"还未绑定邮箱");
                             Toast.makeText(getApplicationContext(),"解绑邮箱成功",Toast.LENGTH_SHORT).show();
                             break;
                         case "false":
@@ -196,7 +198,7 @@ public class SettingActivity extends AppCompatActivity {
                     }else if(aString.equals("null")){
                         Toast.makeText(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
                     }else{
-                        LoginActivity.user.setPhoto(aString);
+                        UserUtil.getUser().setPhoto(aString);
                         RequestOptions options = new RequestOptions();
                         options.placeholder(R.drawable.huancun2) //加载图片时
                                 .error(R.drawable.huancun2) //请求出错（图片资源不存在，无访问权限）
@@ -322,7 +324,7 @@ public class SettingActivity extends AppCompatActivity {
                 .fallback(R.drawable.huancun2) //请求资源为null
                 .circleCrop() //转换图片效果
                 .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
-        Glide.with(getApplicationContext()).load(LoginActivity.user.getPhoto()).apply(options).into(iv_photo);
+        Glide.with(getApplicationContext()).load(UserUtil.getUser().getPhoto()).apply(options).into(iv_photo);
 
         /** 关闭状态栏*/
         FullScreen.NavigationBarStatusBar(SettingActivity.this,true);
@@ -400,8 +402,7 @@ public class SettingActivity extends AppCompatActivity {
                 }
                 RequestBody requestBody = RequestBody.create(photo,mimeType);
                 RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("id", "" + LoginActivity.user.getId())
-                        .addFormDataPart("photo", URLEncoder.encode(LoginActivity.user.getPhoto()))
+                        .addFormDataPart("photo", URLEncoder.encode(UserUtil.getUser().getPhoto()))
                         .addFormDataPart("upload",photo.getName(),requestBody)
                         .build();
                 Request request = new Request.Builder().post(body).url(getResources().getString(R.string.URL)+"/user/updatePhoto").build();
@@ -413,7 +414,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(4,result);
                     }
@@ -429,7 +431,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/isBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -439,7 +441,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(0,result);
                     }
@@ -542,7 +545,7 @@ public class SettingActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).add("openId",openId).build();
+                            FormBody formBody = new FormBody.Builder().add("openId",openId).build();
                             final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/bindingQQ").build();
                             Call call = okHttpClient.newCall(request);
                             call.enqueue(new Callback() {
@@ -552,7 +555,8 @@ public class SettingActivity extends AppCompatActivity {
                                 }
 
                                 @Override
-                                public void onResponse(Call call, Response response) throws IOException {
+                                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                    OkHttpUtils.unauthorized(response.code());
                                     String result = response.body().string();
                                     sendMessage(1,result);
                                 }
@@ -632,7 +636,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingQQ").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -642,7 +646,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(2,result);
                     }
@@ -681,7 +686,7 @@ public class SettingActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                FormBody formBody = new FormBody.Builder().add("account",LoginActivity.user.getAccount()).build();
+                FormBody formBody = new FormBody.Builder().build();
                 final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingEmail").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
@@ -691,7 +696,8 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String result = response.body().string();
                         sendMessage(3,result);
                     }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +39,16 @@ public class UserCropController {
      * @return java.util.List<com.atguigu.farm.entity.UserCrop>
      **/
     @ApiOperation(value = "查询用户种植作物", notes = "返回值：List（UserCrop）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", dataType = "int", paramType = "query", required = true)
+    })
     @GetMapping("/initUserCrop")
-    public List<UserCrop> initUserCrop(HttpSession session){
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
+    public List<UserCrop> initUserCrop(@RequestParam("userId") Integer userId){
+        try {
             List<UserCrop> userCrops = this.userCropService.initUserCrop(userId);
             return userCrops;
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return new ArrayList<>();
     }
@@ -60,12 +65,13 @@ public class UserCropController {
             @ApiImplicitParam(name = "landNumber", value = "土地号", dataType = "String", paramType = "query", required = true)
     })
     @GetMapping("/getCropProgress")
-    public String getCropProgress(@RequestParam("landNumber") String landNumber, HttpSession session){
+    public String getCropProgress(@RequestParam("landNumber") String landNumber, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
                 return "" + this.userCropService.getCropProgress(userId, landNumber);
             }
+            response.sendError(401);
         }catch (Exception e){
             e.printStackTrace();
         }

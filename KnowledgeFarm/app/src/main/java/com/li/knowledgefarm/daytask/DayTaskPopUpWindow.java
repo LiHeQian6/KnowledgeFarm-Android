@@ -121,7 +121,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/task/getTask2?userId="+LoginActivity.user.getId()).build();
+                        .url(context.getResources().getString(R.string.URL)+"/task/getTask2").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -134,6 +134,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;

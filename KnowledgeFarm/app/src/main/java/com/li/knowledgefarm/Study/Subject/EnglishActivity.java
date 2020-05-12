@@ -14,13 +14,11 @@ import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -35,20 +33,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
-import com.li.knowledgefarm.entity.English;
-import com.li.knowledgefarm.entity.QuestionPage;
+import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.QuestionEntity.English;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -230,7 +225,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setEnglishRewardCount(LoginActivity.user.getEnglishRewardCount() - 1);
+                        UserUtil.getUser().setEnglishRewardCount(UserUtil.getUser().getEnglishRewardCount() - 1);
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
                         isFalse.setVisibility(View.INVISIBLE);
@@ -266,7 +261,6 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
-                        .add("userId", LoginActivity.user.getId()+"")
                         .add("water",TrueAnswerNumber*1+"")
                         .add("fertilizer",TrueAnswerNumber*1+"")
                         .add("subject","english").build();
@@ -282,6 +276,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         getWAF.sendMessage(message);
@@ -351,7 +346,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getEnglishRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getEnglishRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
@@ -486,7 +481,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
     }
 
     public void exit() {
-        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getMathRewardCount()>0)
             showIfReturn();
         else
             finish();

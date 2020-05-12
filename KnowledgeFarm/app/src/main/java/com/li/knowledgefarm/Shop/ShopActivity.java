@@ -212,6 +212,7 @@ public class ShopActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.what = 3;
                         message.obj = response.body().string();
@@ -235,8 +236,8 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/showInStore?userId="+LoginActivity.user.getId()).build();
-                Call call = new OkHttpClient().newCall(request);
+                final Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/showInStore").build();
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -245,6 +246,7 @@ public class ShopActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.what = 2;
                         message.arg1 = response.code();
@@ -274,7 +276,8 @@ public class ShopActivity extends AppCompatActivity {
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
-                    public void onResponse(@NotNull okhttp3.Call call, @NotNull Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String shopItemMessages = response.body().string();
                         Message message = Message.obtain();
                         message.what = 1;

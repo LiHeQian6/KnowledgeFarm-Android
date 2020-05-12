@@ -56,7 +56,7 @@ public class UserFriendNotificationAspect {
         if(result == Result.TRUE){
             try {
                 Object[] args = joinPoint.getArgs();
-                jpushService.sendCustomPush("notification", "receive", new HashMap<>(), (String) args[1]);
+                jpushService.sendCustomPush("notification", "receive", new HashMap<>(), (String) args[0]);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -98,7 +98,7 @@ public class UserFriendNotificationAspect {
         if(result == Result.TRUE){
             try {
                 Object[] args = joinPoint.getArgs();
-                User user = this.userService.findUserById((Integer) args[1]);
+                User user = this.userService.findUserById((Integer) args[0]);
                 jpushService.sendCustomPush("notification", "message", new HashMap<>(), user.getAccount());
             }catch (Exception e){
                 e.printStackTrace();
@@ -114,7 +114,7 @@ public class UserFriendNotificationAspect {
         if(result == Result.TRUE){
             try {
                 Object[] args = joinPoint.getArgs();
-                User user = this.userService.findUserById((Integer) args[1]);
+                User user = this.userService.findUserById((Integer) args[0]);
                 jpushService.sendCustomPush("notification", "message", new HashMap<>(), user.getAccount());
             }catch (Exception e){
                 e.printStackTrace();

@@ -8,12 +8,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.UserUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
-import static com.li.knowledgefarm.Login.LoginActivity.user;
 
 public class NotifyAccountDialog extends DialogFragment {
     @Nullable
@@ -22,9 +21,9 @@ public class NotifyAccountDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.notifyaccount_dialog,container,false);
 
         TextView account = view.findViewById(R.id.account);
-        account.setText(user.getAccount());
+        account.setText(UserUtil.getUser().getAccount());
         TextView nickName = view.findViewById(R.id.nName);
-        nickName.setText(user.getNickName());
+        nickName.setText(UserUtil.getUser().getNickName());
 
         Button button = view.findViewById(R.id.accountEnsure);
         button.setOnClickListener(new View.OnClickListener() {

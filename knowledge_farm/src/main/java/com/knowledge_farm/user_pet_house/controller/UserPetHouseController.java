@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,21 +33,31 @@ public class UserPetHouseController {
 
     @ApiOperation(value = "查看宠物仓库", notes = "返回值：List（UserPetHouse）")
     @GetMapping("/showUserPetHouse")
-    public List<UserPetHouse> showUserPetHouse(HttpSession session){
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
-            return this.userPetHouseService.showUserPet(userId);
+    public List<UserPetHouse> showUserPetHouse(HttpSession session, HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userPetHouseService.showUserPet(userId);
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return new ArrayList<>();
     }
 
     @ApiOperation(value = "查询仓库中所有道具", notes = "返回值：List（BagPetUtilItem）")
     @GetMapping("/initUserPetUtilBag")
-    public List<BagPetUtilItem> initUserPetUtilBag(HttpSession session){
-        Integer userId = (Integer) session.getAttribute("userId");
-        if(userId != null) {
-            List<BagPetUtilItem> bagPetUtilItems = this.userPetHouseService.initUserPetUtilBag(userId);
-            return bagPetUtilItems;
+    public List<BagPetUtilItem> initUserPetUtilBag(HttpSession session, HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                List<BagPetUtilItem> bagPetUtilItems = this.userPetHouseService.initUserPetUtilBag(userId);
+                return bagPetUtilItems;
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return new ArrayList<>();
     }

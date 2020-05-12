@@ -33,20 +33,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
-import com.li.knowledgefarm.entity.Chinese;
-import com.li.knowledgefarm.entity.QuestionPage;
+import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.QuestionEntity.Chinese;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -241,7 +238,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        LoginActivity.user.setChineseRewardCount(LoginActivity.user.getChineseRewardCount() - 1);
+                        UserUtil.getUser().setChineseRewardCount(UserUtil.getUser().getChineseRewardCount() - 1);
                         answer1.setVisibility(View.INVISIBLE);
                         answer2.setVisibility(View.INVISIBLE);
                         answer3.setVisibility(View.INVISIBLE);
@@ -283,7 +280,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
-                        .add("userId", LoginActivity.user.getId()+"")
                         .add("water",TrueAnswerNumber*2+"")
                         .add("fertilizer",TrueAnswerNumber*2+"")
                         .add("subject","chinese").build();
@@ -299,6 +295,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         Message message = Message.obtain();
                         message.obj = response.body().string();
                         getWAF.sendMessage(message);
@@ -391,7 +388,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getChineseRewardCount()>0)
+                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getChineseRewardCount()>0)
                         showIfReturn();
                     else
                         finish();
@@ -570,7 +567,7 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     }
 
     public void exit() {
-        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && LoginActivity.user.getMathRewardCount()>0)
+        if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getMathRewardCount()>0)
             showIfReturn();
         else
             finish();

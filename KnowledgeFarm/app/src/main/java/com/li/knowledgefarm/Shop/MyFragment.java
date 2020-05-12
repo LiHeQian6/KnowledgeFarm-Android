@@ -30,6 +30,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.PetUtil;
@@ -238,7 +239,7 @@ public class MyFragment extends Fragment {
                     Toast.makeText(getContext(),"购买数量不能为空哦！",Toast.LENGTH_SHORT).show();
                 }else{
                     buyFlowers(
-                            LoginActivity.user.getId(),
+                            UserUtil.getUser().getId(),
                             shopList.get(position).getId(),
                             Integer.parseInt(shopNumber.getText().toString().trim())
                     );
@@ -252,8 +253,8 @@ public class MyFragment extends Fragment {
                 super.handleMessage(msg);
                 String addCallBack = (String)msg.obj;
                 if(addCallBack.equals("true")){
-                    int newMoney = LoginActivity.user.getMoney() - Integer.parseInt(shopNumber.getText().toString().trim())*shopList.get(position).getPrice();
-                    LoginActivity.user.setMoney(newMoney);
+                    int newMoney = UserUtil.getUser().getMoney() - Integer.parseInt(shopNumber.getText().toString().trim())*shopList.get(position).getPrice();
+                    UserUtil.getUser().setMoney(newMoney);
                     if(toast != null) {
                         toast.cancel();
                         toast = Toast.makeText(alertBuilder.getContext(), "购买成功！", Toast.LENGTH_SHORT);
@@ -363,7 +364,7 @@ public class MyFragment extends Fragment {
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/buyCrop?userId="+userID+"&cropId="+cropId+"&number="+num).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/buyCrop?cropId="+cropId+"&number="+num).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -376,6 +377,7 @@ public class MyFragment extends Fragment {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String addCallback = response.body().string();
                         Message message = Message.obtain();
                         message.obj = addCallback;

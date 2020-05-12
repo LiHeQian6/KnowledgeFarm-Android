@@ -31,7 +31,11 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -53,7 +57,6 @@ import okhttp3.Response;
 
 
 import static com.li.knowledgefarm.Login.LoginActivity.parsr;
-import static com.li.knowledgefarm.Login.LoginActivity.user;
 
 public class QQFirstActivity extends AppCompatActivity {
     private String grade;
@@ -148,7 +151,8 @@ public class QQFirstActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                 Message message = new Message();
                 String result = response.body().string();
                 if(result.equals("fail")){
@@ -158,7 +162,7 @@ public class QQFirstActivity extends AppCompatActivity {
                 }else {
                     message.what = 4;
                     message.obj = parsr(URLDecoder.decode(result), User.class);
-                    user = (User) message.obj;
+                    UserUtil.setUser((User) message.obj);
                     mHandler.sendMessage(message);
                 }
             }

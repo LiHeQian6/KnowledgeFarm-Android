@@ -21,6 +21,7 @@ import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
@@ -236,7 +237,6 @@ public class NotifyActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
-                        .add("userId", LoginActivity.user.getId() +"")
                         .add("typeId",type)
                         .add("pageNumber",pageNumber+"")
                         .add("pageSize",pageSize+"").build();
@@ -253,6 +253,7 @@ public class NotifyActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.obj = notify_message;
@@ -277,7 +278,6 @@ public class NotifyActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 FormBody formBody = new FormBody.Builder()
-                        .add("userId", LoginActivity.user.getId() +"")
                         .add("typeId",type)
                         .add("pageNumber",pageNumber+"")
                         .add("pageSize",pageSize+"").build();
@@ -294,6 +294,7 @@ public class NotifyActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String notify_message = response.body().string();
                         Message message = Message.obtain();
                         message.arg1 = response.code();
@@ -344,7 +345,7 @@ public class NotifyActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(getResources().getString(R.string.URL)+"/notification/deleteNotificationByType?typeId="+type+"&userId="+userId).build();
+                        .url(getResources().getString(R.string.URL)+"/notification/deleteNotificationByType?typeId="+type).build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -354,6 +355,7 @@ public class NotifyActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                         String messages = response.body().string();
                         Message message = Message.obtain();
                         message.obj = messages;
@@ -404,7 +406,7 @@ public class NotifyActivity extends AppCompatActivity {
                     getMySendNotify("2",1,4);
                     break;
                 case R.id.delete_all_btn:
-                    Delete_All_Notify(current_type,LoginActivity.user.getId());
+                    Delete_All_Notify(current_type,UserUtil.getUser().getId());
                     break;
                 case R.id.goBack_notify:
                     finish();

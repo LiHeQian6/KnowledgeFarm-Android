@@ -40,6 +40,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -262,7 +263,6 @@ public class FindPassword extends AppCompatActivity {
     private void resetPwdToServer(String s) {
 
         FormBody formBody = new FormBody.Builder()
-                .add("account", account)
                 .add("password",stringMD5(newPwd))
                 .build();
         Request request = new Request.Builder().post(formBody).url(s).build();
@@ -277,7 +277,8 @@ public class FindPassword extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                 String result = response.body().string();
                 Log.e("rs",result);
                 Message message = new Message();
@@ -295,7 +296,6 @@ public class FindPassword extends AppCompatActivity {
     //访问服务器，获取验证码
     private void getCodeFromServer(final String urlPath) {
         FormBody formBody = new FormBody.Builder()
-                .add("account", account)
                 .add("email", email)
                 .build();
         Request request = new Request.Builder().post(formBody).url(urlPath).build();
@@ -310,7 +310,8 @@ public class FindPassword extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
                 String result = response.body().string();
                 Log.e("rs",result);
                 Message message = new Message();

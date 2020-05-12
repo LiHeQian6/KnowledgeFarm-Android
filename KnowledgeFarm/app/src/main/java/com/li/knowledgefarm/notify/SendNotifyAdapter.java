@@ -130,6 +130,7 @@ public class SendNotifyAdapter extends BaseAdapter {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
 
                     }
                 });
