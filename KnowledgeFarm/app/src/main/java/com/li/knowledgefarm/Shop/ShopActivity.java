@@ -144,6 +144,13 @@ public class ShopActivity extends AppCompatActivity {
         FullScreen.NavigationBarStatusBar(ShopActivity.this,true);
     }
 
+    /**
+     * @Description 设置适配器
+     * @Author 孙建旺
+     * @Date 上午11:47 2020/05/13
+     * @Param []
+     * @return void
+     */
     private void setViewPagerAdapter() {
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),itemList);
         viewPager.setAdapter(adapter);

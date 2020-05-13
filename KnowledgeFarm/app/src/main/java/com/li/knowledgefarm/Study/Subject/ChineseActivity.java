@@ -312,7 +312,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
      * @Param [pos]
      * @return void
      */
-    @Override
     public void showQuestion(int pos){
         String quan1 = null;
         String quan2 = null;

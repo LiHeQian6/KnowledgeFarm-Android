@@ -43,7 +43,7 @@ public class AnswerController {
     @GetMapping("/mathOneUp")
     public List OneUpMath() {
         List<Question> list = new AnswerService().getQuestion3OneUpMath();
-
+        
         return list;
     }
     /**
@@ -71,7 +71,7 @@ public class AnswerController {
     @GetMapping("/mathTwoUp")
     public List twoUpMath(){
         int pageNumber = new Random().nextInt(5);
-        Page<Question> page = answerService.findQuestion(3,"Math",PageRequest.of(pageNumber,20));
+        Page<Question> page = answerService.findQuestion(3,"Math",PageRequest.of(pageNumber,22));
         List<Question> list = new ArrayList<>(page.getContent());
         list.addAll(get99Multiple());
         Collections.shuffle(list);
@@ -88,7 +88,7 @@ public class AnswerController {
     @GetMapping("/mathTwoDown")
     public List twoDownMath(){
         int pageNumber = new Random().nextInt(5);
-        Page<Question> page = answerService.findQuestion(4,"Math",PageRequest.of(pageNumber,22));
+        Page<Question> page = answerService.findQuestion(4,"Math",PageRequest.of(pageNumber,24));
         List<Question> list = new ArrayList<>(page.getContent());
         list.addAll(get99Multiple());
         Collections.shuffle(list);

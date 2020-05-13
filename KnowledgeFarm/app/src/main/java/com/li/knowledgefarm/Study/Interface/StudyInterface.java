@@ -47,13 +47,4 @@ public interface StudyInterface{
      */
     public void getWandFCallBack();
 
-    /**
-     * @Description 展示下一道题目
-     * @Auther 孙建旺
-     * @Date 上午 10:10 2020/03/09
-     * @Param []
-     * @return void
-     */
-    public void showQuestion(int pos);
-
 }

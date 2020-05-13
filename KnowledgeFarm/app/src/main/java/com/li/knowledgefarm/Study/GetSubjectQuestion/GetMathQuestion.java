@@ -138,7 +138,7 @@ public class GetMathQuestion extends SubjectInterface {
                 if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
                     list = FromJson.JsonToEntity(data);
                     if(list != null){
-                        intent.putExtra("math",(Serializable) list);
+                        intent.putExtra("question",(Serializable) list);
                         context.startActivity(intent);
                     }else{
                         Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
