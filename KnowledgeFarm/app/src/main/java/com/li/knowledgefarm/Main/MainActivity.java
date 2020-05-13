@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -15,6 +14,8 @@ import okhttp3.Response;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,14 +52,15 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.Login.LoginByAccountActivity;
-import com.li.knowledgefarm.Main.bgsound.BgSoundService;
 import com.li.knowledgefarm.MyFriends.FriendsPopUpWindow;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.Util.DisplayUtils;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.GuideHelper;
+import com.li.knowledgefarm.Util.GuideHelper.TipData;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.bag.BagPopUpWindow;
@@ -82,6 +84,8 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -155,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         getViews();
         addListener();
         getCrop();
-        JPushInterface.setAlias(this,1, UserUtil.getUser().getAccount());
+        guide();
     }
 
     @Override
@@ -1416,6 +1420,163 @@ public class MainActivity extends AppCompatActivity {
             finish();
             System.exit(0);
         }
+    }
+
+    public void guide(){
+        SharedPreferences guide = getSharedPreferences("guide", MODE_PRIVATE);
+        boolean main = guide.getBoolean("main", true);
+        if (!main){
+            return;
+        }
+        final GuideHelper guideHelper = new GuideHelper(MainActivity.this);
+        //第一页
+        TextView hello = new TextView(this);
+        hello.setText("  欢迎来到知识农场！\n接下来将进入新手引导！\n    点击屏幕继续");
+        hello.setTextSize(30);
+        TipData tipData = new TipData(hello, Gravity.CENTER);
+        TextView close = new TextView(this);
+        close.setText("跳过");
+        close.setTextSize(26);
+        TipData tipData1 = new TipData(close, Gravity.TOP | Gravity.END);
+        tipData1.setLocation(-50,50);
+        tipData1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                guideHelper.dismiss();
+            }
+        });
+        guideHelper.addPage(tipData,tipData1);
+        //第二页
+        TextView shop = new TextView(this);
+        shop.setText("\n在商店可以购买到种子！");
+        shop.setTextSize(26);
+        TipData tipData2 = new TipData(shop,Gravity.CENTER);
+        TipData tipData3 = new TipData(R.drawable.top,Gravity.BOTTOM,this.shop);
+        tipData3.setLocation(DisplayUtils.dipToPix(this,40),0);
+//        ImageView block = new ImageView(this);
+//        Glide.with(this).asGif().load(R.drawable.xuanzhong4).override(DisplayUtils.dipToPix(this,70),DisplayUtils.dipToPix(this,70)).into(block);
+//        block.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                intent = new Intent();
+//                intent.setClass(MainActivity.this, ShopActivity.class);
+//                startActivity(intent);
+//                new Timer().schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        guideHelper.nextPage();
+//                    }
+//                },1000);
+//            }
+//        });
+//        TipData tipData4 = new TipData(block,Gravity.CENTER,this.shop);
+        guideHelper.addPage(tipData2,tipData3);
+        //第三页
+        TextView textView1 = new TextView(this);
+        textView1.setTextSize(26);
+        textView1.setText("查看购买到的种子");
+        TipData tipData5 = new TipData(textView1,Gravity.END|Gravity.TOP,bag);
+        tipData5.setLocation(0,-DisplayUtils.dipToPix(this,40));
+        TipData tipData6 = new TipData(R.drawable.down,Gravity.END|Gravity.TOP,bag);
+        tipData6.setLocation(-DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData5,tipData6);
+
+        //第四页
+        TextView textView2 = new TextView(this);
+        textView2.setTextSize(26);
+        textView2.setText("点击空地，然后在背包中选择要种植的种子\n            就可以完成种植啦！");
+        TipData tipData7 = new TipData(textView2, Gravity.CENTER);
+        guideHelper.addPage(tipData7);
+
+        //第五页
+        TextView textView3 = new TextView(this);
+        textView3.setTextSize(26);
+        textView3.setText("选中水壶可以进行连续浇水！");
+        TipData tipData8 = new TipData(textView3,Gravity.END|Gravity.TOP,water);
+        tipData8.setLocation(0,-DisplayUtils.dipToPix(this,50));
+        TipData tipData9 = new TipData(R.drawable.down,Gravity.END|Gravity.TOP,water);
+        tipData9.setLocation(-DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData8,tipData9);
+
+        //第六页
+        TextView textView4 = new TextView(this);
+        textView4.setTextSize(26);
+        textView4.setText("选中肥料可以进行连续施肥！");
+        TipData tipData10 = new TipData(textView4,Gravity.END|Gravity.TOP,fertilizer);
+        tipData10.setLocation(0,-DisplayUtils.dipToPix(this,50));
+        TipData tipData11 = new TipData(R.drawable.down,Gravity.END|Gravity.TOP,fertilizer);
+        tipData11.setLocation(-DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData10,tipData11);
+
+        //第七页
+        TextView textView5 = new TextView(this);
+        textView5.setTextSize(26);
+        textView5.setText("选中手可以进行连续收获！");
+        TipData tipData12 = new TipData(textView5,Gravity.END|Gravity.TOP,harvest);
+        tipData12.setLocation(0,-DisplayUtils.dipToPix(this,50));
+        TipData tipData13 = new TipData(R.drawable.down,Gravity.END|Gravity.TOP,harvest);
+        tipData13.setLocation(-DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData12,tipData13);
+
+        //第八页
+        TextView textView6 = new TextView(this);
+        textView6.setTextSize(26);
+        textView6.setText("查看每日任务！");
+        TipData tipData14 = new TipData(textView6,Gravity.END|Gravity.TOP,dayTask);
+        tipData14.setLocation(0,-DisplayUtils.dipToPix(this,50));
+        TipData tipData15 = new TipData(R.drawable.down,Gravity.END|Gravity.TOP,dayTask);
+        tipData15.setLocation(-DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData14,tipData15);
+
+        //第九页
+        TextView textView7 = new TextView(this);
+        textView7.setTextSize(26);
+        textView7.setText("进入学习中心，通过答题获得水和肥料！");
+        TipData tipData16 = new TipData(textView7,Gravity.END|Gravity.TOP,learn);
+        tipData16.setLocation(0,-DisplayUtils.dipToPix(this,50));
+        TipData tipData17 = new TipData(R.drawable.down,Gravity.END|Gravity.TOP,learn);
+        tipData17.setLocation(-DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData16,tipData17);
+
+        //第十页
+        TextView textView8 = new TextView(this);
+        textView8.setTextSize(26);
+        textView8.setText("查看和修改个人信息！");
+        TipData tipData18 = new TipData(textView8,Gravity.END|Gravity.BOTTOM,photo);
+        tipData18.setLocation(0,DisplayUtils.dipToPix(this,50));
+        TipData tipData19 = new TipData(R.drawable.left,Gravity.END|Gravity.BOTTOM,photo);
+        tipData19.setLocation(-DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData18,tipData19);
+
+        //第十一页
+        TextView textView9 = new TextView(this);
+        textView9.setTextSize(26);
+        textView9.setText("查看通知和好友申请！");
+        TipData tipData20 = new TipData(textView9,Gravity.START|Gravity.BOTTOM,notify);
+        tipData20.setLocation(0,DisplayUtils.dipToPix(this,50));
+        TipData tipData21 = new TipData(R.drawable.top,Gravity.START|Gravity.BOTTOM,notify);
+        tipData21.setLocation(DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData20,tipData21);
+
+        //第十二页
+        TextView textView10 = new TextView(this);
+        textView10.setTextSize(26);
+        textView10.setText("查看和喂养宠物！");
+        TipData tipData22 = new TipData(textView10,Gravity.START|Gravity.BOTTOM,pet);
+        tipData22.setLocation(0,DisplayUtils.dipToPix(this,50));
+        TipData tipData23 = new TipData(R.drawable.top,Gravity.START|Gravity.BOTTOM,pet);
+        tipData23.setLocation(DisplayUtils.dipToPix(this,50),0);
+        guideHelper.addPage(tipData22,tipData23);
+
+        //第十三页
+        TextView textView11 = new TextView(this);
+        textView11.setTextSize(26);
+        textView11.setText("新手引导结束啦！");
+        TipData tipData24 = new TipData(textView11,Gravity.CENTER);
+        guideHelper.addPage(tipData24);
+
+        guideHelper.show(false);
+        guide.edit().putBoolean("main",false).apply();
     }
 
 }

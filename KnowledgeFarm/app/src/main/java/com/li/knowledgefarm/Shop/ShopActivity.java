@@ -1,6 +1,8 @@
 package com.li.knowledgefarm.Shop;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,14 +14,19 @@ import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.Login.LoginActivity;
+import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.DisplayUtils;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.GuideHelper;
+import com.li.knowledgefarm.Util.GuideHelper.TipData;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.PetUtil;
 import com.li.knowledgefarm.entity.PetVO;
@@ -35,10 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -123,7 +128,6 @@ public class ShopActivity extends AppCompatActivity {
         getShopingsItems();
         getAllPets();
         getAllPetUtils();
-        FullScreen.NavigationBarStatusBar(ShopActivity.this,true);
         setViewSize();
         registerOnclickListener();
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +141,7 @@ public class ShopActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        FullScreen.NavigationBarStatusBar(ShopActivity.this,true);
     }
 
     private void setViewPagerAdapter() {
@@ -147,6 +152,7 @@ public class ShopActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("道具"));
         tabLayout.setupWithViewPager(viewPager);
         adapter.notifyDataSetChanged();
+        guide();
     }
     /**
      * @Description 设置控件适配屏幕
@@ -305,4 +311,29 @@ public class ShopActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void guide(){
+        SharedPreferences guide = getSharedPreferences("guide", MODE_PRIVATE);
+        boolean main = guide.getBoolean("shop", true);
+        if (!main){
+            return;
+        }
+        final GuideHelper guideHelper = new GuideHelper(ShopActivity.this);
+        //第一页
+        TextView hello = new TextView(this);
+        hello.setText("点击选择要购买的商品类型\n或者直接滑动屏幕切换");
+        hello.setTextSize(30);
+        TipData tipData = new TipData(hello, Gravity.END,tabLayout);
+        tipData.setLocation(-DisplayUtils.dipToPix(this,100),0);
+        guideHelper.addPage(tipData);
+        //第二页
+        TextView textView = new TextView(this);
+        textView.setText("点击心仪的种子进行购买！");
+        textView.setTextSize(26);
+        TipData tipData1 = new TipData(textView, Gravity.CENTER);
+        guideHelper.addPage(tipData1);
+        guideHelper.show(false);
+        guide.edit().putBoolean("shop",false).apply();
+    }
+
 }

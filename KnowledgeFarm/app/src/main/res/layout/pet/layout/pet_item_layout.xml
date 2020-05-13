@@ -12,14 +12,10 @@
         android:id="@+id/photo"
         android:layout_height="50dp"/>
     <ImageView
-        android:src="@drawable/border"
+        android:src="@drawable/xuanzhong"
         android:layout_gravity="center"
         android:id="@+id/border"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
         android:visibility="gone"
-        android:translationX="10dp"
-        android:translationY="10dp"
         android:layout_width="50dp"
         android:layout_height="50dp"/>
 <!--    <LinearLayout-->
