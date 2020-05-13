@@ -10,9 +10,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
+import com.li.knowledgefarm.Util.FromJson;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.QuestionEntity.English;
+import com.li.knowledgefarm.entity.QuestionEntity.Question;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +39,7 @@ import okhttp3.Response;
 public class GetEnglishQuestion extends SubjectInterface {
     private OkHttpClient okHttpClient;
     private Gson gson = new Gson();
-    private List<English> list = null;
+    private List<Question> list = null;
     private Handler getMath;
     private final Activity context;
     private Intent intent;
@@ -124,11 +126,9 @@ public class GetEnglishQuestion extends SubjectInterface {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
                 if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
-                    Type type = new TypeToken<List<English>>() {
-                    }.getType();
-                    list = gson.fromJson(data, type);
+                    list = FromJson.JsonToEntity(data);
                     if(list != null){
-                        intent.putExtra("english",(Serializable) list);
+                        intent.putExtra("question",(Serializable) list);
                         context.startActivity(intent);
                     }else{
                         Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();

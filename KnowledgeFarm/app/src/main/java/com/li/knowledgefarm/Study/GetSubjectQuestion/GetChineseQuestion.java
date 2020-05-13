@@ -10,9 +10,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
+import com.li.knowledgefarm.Util.FromJson;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.QuestionEntity.Chinese;
+import com.li.knowledgefarm.entity.QuestionEntity.Question;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +39,7 @@ import okhttp3.Response;
 public class GetChineseQuestion extends SubjectInterface {
     private OkHttpClient okHttpClient;
     private Gson gson = new Gson();
-    private List<Chinese> list = null;
+    private List<Question> list = null;
     private Handler getMath;
     private final Activity context;
     private final Intent intent;
@@ -65,6 +67,18 @@ public class GetChineseQuestion extends SubjectInterface {
                             break;
                         case 2:
                             request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseOneDown").build();
+                            break;
+                        case 3:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseTwoUp").build();
+                            break;
+                        case 4:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseTwoDown").build();
+                            break;
+                        case 5:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseThreeUp").build();
+                            break;
+                        case 6:
+                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseThreeDown").build();
                             break;
                     }
                     Call call = okHttpClient.newCall(request);
@@ -105,12 +119,9 @@ public class GetChineseQuestion extends SubjectInterface {
                 super.handleMessage(msg);
                 String data = (String)msg.obj;
                 if(!data.equals("Fail") && !data.equals("") && msg.arg1 == 200) {
-                    Type type = new TypeToken<List<Chinese>>() {
-                    }.getType();
-                    System.out.println(data);
-                    list = gson.fromJson(data, type);
+                    list = FromJson.JsonToEntity(data);
                     if(list != null){
-                        intent.putExtra("chinese",(Serializable) list);
+                        intent.putExtra("question",(Serializable) list);
                         context.startActivity(intent);
                     }else{
                         Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();

@@ -40,6 +40,7 @@ import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.QuestionEntity.English;
+import com.li.knowledgefarm.entity.QuestionEntity.Question;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +64,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
     private Handler getMath;
     private Handler getWAF;
     private Gson gson;
-    private List<English> datalist;
+    private List<Question> datalist;
     private int position=0;
     private int TrueAnswerNumber = 0;
     private Dialog ifReturn;
@@ -76,6 +77,7 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
     private LinearLayout answerB;
     private TextView trueAnswer;
     private LinearLayout tipText;
+    private QuestionUtil questionUtil;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -86,12 +88,13 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
 
         /** 加载视图*/
         getViews();
-        setViewSize();
+        //setViewSize();
         /** 注册点击事件监听器*/
         registListener();
         FullScreen.NavigationBarStatusBar(EnglishActivity.this,true);
-        datalist = (List<English>) getIntent().getSerializableExtra("english");
-        showQuestion(position);
+        datalist = (List<Question>) getIntent().getSerializableExtra("english");
+        questionUtil = new QuestionUtil(this,EnglishActivity.this,datalist);
+        questionUtil.showQuestion();
     }
 
     /**
@@ -101,41 +104,41 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
      * @Param []
      * @return void
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setViewSize() {
-        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayWidth = ds.widthPixels;
-        displayHeight = ds.heightPixels;
-
-        TextView tip = findViewById(R.id.tip);
-        ImageView isTrue = findViewById(R.id.englishIsTrue);
-        TextView trans2 = findViewById(R.id.transTwo);
-        ImageView isTrue2 = findViewById(R.id.englishIsTrue2);
-
-        RelativeLayout.LayoutParams params_tip = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params_tip.setMargins((int)(displayWidth*0.1),(int)(displayHeight*0.2),0,0);
-        tipText.setLayoutParams(params_tip);
-
-        LinearLayout.LayoutParams params_tiptext = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params_tiptext.gravity = Gravity.CENTER_HORIZONTAL;
-        tip.setLayoutParams(params_tiptext);
-        tip.setTextSize((int)(displayWidth*0.01));
-        tip.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
-
-        LinearLayout.LayoutParams params_isTrue = new LinearLayout.LayoutParams((int)(displayWidth*0.05),(int)(displayHeight*0.1));
-        params_isTrue.setMargins(0,0,(int)(displayWidth*0.01),0);
-        isTrue.setLayoutParams(params_isTrue);
-
-        LinearLayout.LayoutParams params_trans2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params_trans2.setMargins((int)(displayWidth*0.06),0,0,0);
-        trans2.setLayoutParams(params_trans2);
-
-        LinearLayout.LayoutParams params_isTrue2 = new LinearLayout.LayoutParams((int)(displayWidth*0.05),(int)(displayHeight*0.1));
-        params_isTrue2.setMargins(0,0,0,0);
-        isTrue2.setLayoutParams(params_isTrue2);
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.M)
+//    private void setViewSize() {
+//        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+//        DisplayMetrics ds = new DisplayMetrics();
+//        wm.getDefaultDisplay().getMetrics(ds);
+//        displayWidth = ds.widthPixels;
+//        displayHeight = ds.heightPixels;
+//
+//        TextView tip = findViewById(R.id.tip);
+//        ImageView isTrue = findViewById(R.id.englishIsTrue);
+//        TextView trans2 = findViewById(R.id.transTwo);
+//        ImageView isTrue2 = findViewById(R.id.englishIsTrue2);
+//
+//        RelativeLayout.LayoutParams params_tip = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        params_tip.setMargins((int)(displayWidth*0.1),(int)(displayHeight*0.2),0,0);
+//        tipText.setLayoutParams(params_tip);
+//
+//        LinearLayout.LayoutParams params_tiptext = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        params_tiptext.gravity = Gravity.CENTER_HORIZONTAL;
+//        tip.setLayoutParams(params_tiptext);
+//        tip.setTextSize((int)(displayWidth*0.01));
+//        tip.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+//
+//        LinearLayout.LayoutParams params_isTrue = new LinearLayout.LayoutParams((int)(displayWidth*0.05),(int)(displayHeight*0.1));
+//        params_isTrue.setMargins(0,0,(int)(displayWidth*0.01),0);
+//        isTrue.setLayoutParams(params_isTrue);
+//
+//        LinearLayout.LayoutParams params_trans2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        params_trans2.setMargins((int)(displayWidth*0.06),0,0,0);
+//        trans2.setLayoutParams(params_trans2);
+//
+//        LinearLayout.LayoutParams params_isTrue2 = new LinearLayout.LayoutParams((int)(displayWidth*0.05),(int)(displayHeight*0.1));
+//        params_isTrue2.setMargins(0,0,0,0);
+//        isTrue2.setLayoutParams(params_isTrue2);
+//    }
 
     /**
      * @Description 设置弹窗控件大小
@@ -293,50 +296,49 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
      * @Param [pos]
      * @return void
      */
-    @Override
     public void showQuestion(int pos){
-        if(position == datalist.size()-1){
-            btnNextQuestion.setText("我答完啦");
-        }else{
-            btnNextQuestion.setText("下一题");
-        }
-        if(!datalist.get(pos).getIfDone().equals("true")) {
-            isFalse.setText("");
-            answerA.setVisibility(View.VISIBLE);
-            answerB.setVisibility(View.VISIBLE);
-            trueAnswer.setVisibility(View.GONE);
-            isTrue.setVisibility(View.INVISIBLE);
-            isTrue2.setVisibility(View.INVISIBLE);
-            question.setText(datalist.get(pos).getWord());
-            if(new Random().nextInt(2) == 0) {
-                answer1.setText(datalist.get(pos).getTrans());
-                String trans = null;
-                do{
-                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
-                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
-                answer2.setText(trans);
-            }else{
-                answer2.setText(datalist.get(pos).getTrans());
-                String trans = null;
-                do{
-                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
-                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
-                answer1.setText(trans);
-            }
-        }else {
-            isTrue.setVisibility(View.VISIBLE);
-            answerA.setVisibility(View.GONE);
-            answerB.setVisibility(View.GONE);
-            trueAnswer.setVisibility(View.VISIBLE);
-            question.setText(datalist.get(pos).getWord());
-            trueAnswer.setText(datalist.get(pos).getTrans());
-
-            LinearLayout.LayoutParams params_trueanswer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params_trueanswer.gravity = Gravity.CENTER_HORIZONTAL;
-            trueAnswer.setLayoutParams(params_trueanswer);
-            trueAnswer.setTextSize((int)(displayWidth*0.02));
-            trueAnswer.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
-        }
+//        if(position == datalist.size()-1){
+//            btnNextQuestion.setText("我答完啦");
+//        }else{
+//            btnNextQuestion.setText("下一题");
+//        }
+//        if(!datalist.get(pos).getIfDone().equals("true")) {
+//            isFalse.setText("");
+//            answerA.setVisibility(View.VISIBLE);
+//            answerB.setVisibility(View.VISIBLE);
+//            trueAnswer.setVisibility(View.GONE);
+//            isTrue.setVisibility(View.INVISIBLE);
+//            isTrue2.setVisibility(View.INVISIBLE);
+//            question.setText(datalist.get(pos).getQuestionTitle().getTitle());
+//            if(new Random().nextInt(2) == 0) {
+//                answer1.setText(datalist.get(pos).getTrans());
+//                String trans = null;
+//                do{
+//                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
+//                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
+//                answer2.setText(trans);
+//            }else{
+//                answer2.setText(datalist.get(pos).getTrans());
+//                String trans = null;
+//                do{
+//                    trans = datalist.get(new Random().nextInt(datalist.size())).getTrans();
+//                }while (trans.equals(datalist.get(pos).getTrans()) && trans != null);
+//                answer1.setText(trans);
+//            }
+//        }else {
+//            isTrue.setVisibility(View.VISIBLE);
+//            answerA.setVisibility(View.GONE);
+//            answerB.setVisibility(View.GONE);
+//            trueAnswer.setVisibility(View.VISIBLE);
+//            question.setText(datalist.get(pos).getWord());
+//            trueAnswer.setText(datalist.get(pos).getTrans());
+//
+//            LinearLayout.LayoutParams params_trueanswer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            params_trueanswer.gravity = Gravity.CENTER_HORIZONTAL;
+//            trueAnswer.setLayoutParams(params_trueanswer);
+//            trueAnswer.setTextSize((int)(displayWidth*0.02));
+//            trueAnswer.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.ShopTextColor));
+//        }
     }
 
     class CustomerListener implements View.OnClickListener{
@@ -346,88 +348,32 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.iv_return:
-                    if(TrueAnswerNumber>0 && TrueAnswerNumber<datalist.size() && UserUtil.getUser().getEnglishRewardCount()>0)
+                    if ((QuestionUtil.TRUE_ANSWER_COUNT > 0 && QuestionUtil.TRUE_ANSWER_COUNT < datalist.size() && UserUtil.getUser().getMathRewardCount() > 0)) {
                         showIfReturn();
-                    else
+                    } else {
                         finish();
+                    }
                     break;
                 case R.id.btnPreEnglish:
-                    if((position-1)>=0) {
-                        position = --position;
-                        showQuestion(position);
-                    }
-                    break;
-                case R.id.transOne:
-                    String t1 = answer1.getText().toString().trim();
-                    if(t1.equals(datalist.get(position).getTrans())){
-                        TrueAnswerNumber++;
-                        isTrue.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
-                        isTrue.setVisibility(View.VISIBLE);
-                        isTrue2.setVisibility(View.INVISIBLE);
-                        isFalse.setText("答对啦！获得了奖励哦！");
-                        StudyUtil.PlayTrueSound(getApplicationContext());
-                        isFalse.setVisibility(View.VISIBLE);
-                        if((position+1)<=datalist.size()-1) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    datalist.get(position).setIfDone("true");
-                                    position = ++position;
-                                    showQuestion(position);
-                                }
-                            }, 1000);
-                        }
-                    }else{
-                        isTrue.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
-                        isTrue.setVisibility(View.VISIBLE);
-                        isFalse.setText("哎呀，选错了！");
-                        StudyUtil.PlayFalseSound(getApplicationContext());
-                        isFalse.setVisibility(View.VISIBLE);
-                    }
-                    break;
-                case R.id.transTwo:
-                    String t2 = answer2.getText().toString().trim();
-                    if(t2.equals(datalist.get(position).getTrans())){
-                        datalist.get(position).setIfDone("true");
-                        TrueAnswerNumber++;
-                        isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.duigou,null));
-                        isTrue2.setVisibility(View.VISIBLE);
-                        isTrue.setVisibility(View.INVISIBLE);
-                        isFalse.setText("答对啦！获得了奖励哦！");
-                        StudyUtil.PlayTrueSound(getApplicationContext());
-                        isFalse.setVisibility(View.VISIBLE);
-                        if((position+1)<=datalist.size()-1) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    datalist.get(position).setIfDone("true");
-                                    position = ++position;
-                                    showQuestion(position);
-                                }
-                            }, 1000);
-                        }
-                    }else{
-                        isTrue2.setImageDrawable(getResources().getDrawable(R.drawable.cha,null));
-                        isTrue2.setVisibility(View.VISIBLE);
-                        isFalse.setText("哎呀，选错了！");
-                        StudyUtil.PlayFalseSound(getApplicationContext());
-                        isFalse.setVisibility(View.VISIBLE);
+                    if((QuestionUtil.POSITION - 1)>=0) {
+                        QuestionUtil.PositionLess();
+                        questionUtil.showQuestion();
                     }
                     break;
                 case R.id.btnNextEnglish:
-                    if((position+1)<=datalist.size()-1) {
-                        position = ++position;
-                        showQuestion(position);
-                    }else{
-                        if(TrueAnswerNumber < datalist.size()){
-                            Toast.makeText(EnglishActivity.this,"你还没有答完哦",Toast.LENGTH_SHORT).show();;
-                        }else {
-                            getWandFCallBack();
-                            getWaterAndFertilizer();
-                            btnNextQuestion.setClickable(false);
-                        }
+                    switch (datalist.get(QuestionUtil.POSITION).getQuestionType().getId()){
+                        case 1:
+                            if(QuestionUtil.POSITION < datalist.size() - 1) {
+                                QuestionUtil.PositionAdd();
+                                questionUtil.showQuestion();
+                            }
+                            break;
+                        case 2:
+                            questionUtil.CompletionIfTrue();
+                            break;
+                        case 3:
+//                            JudgementIfTrue();
+                            break;
                     }
                     break;
             }

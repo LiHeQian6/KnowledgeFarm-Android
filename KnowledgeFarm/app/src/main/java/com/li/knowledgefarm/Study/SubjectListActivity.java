@@ -67,16 +67,15 @@ public class SubjectListActivity extends AppCompatActivity {
 //                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.iv_english:
-//                    Intent intent1 = new Intent(SubjectListActivity.this, EnglishActivity.class);
-//                    GetEnglishQuestion getEnglishQuestion = new GetEnglishQuestion(SubjectListActivity.this,intent1);
-//                    getEnglishQuestion.getQuestion();
-                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
+                    Intent intent1 = new Intent(SubjectListActivity.this, MathActivity.class);
+                    GetEnglishQuestion getEnglishQuestion = new GetEnglishQuestion(SubjectListActivity.this,intent1);
+                    getEnglishQuestion.getQuestion();
+//                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.chinese:
-//                    Intent intent2 = new Intent(SubjectListActivity.this, ChineseActivity.class);
-//                    GetChineseQuestion getChineseQuestion = new GetChineseQuestion(SubjectListActivity.this,intent2);
-//                    getChineseQuestion.getQuestion();
-                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
+                    Intent intent2 = new Intent(SubjectListActivity.this, MathActivity.class);
+                    GetChineseQuestion getChineseQuestion = new GetChineseQuestion(SubjectListActivity.this,intent2);
+                    getChineseQuestion.getQuestion();
                     break;
             }
         }
