@@ -406,6 +406,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                 if(isChecked) {
                     checkBox_B.setChecked(false);
                     checkBox_C.setChecked(false);
+                    btnPreQuestion.setClickable(false);
                     btnNextQuestion.setClickable(false);
                     questionUtil.ChoiceIfTrue();
                 }
@@ -418,6 +419,8 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                 if(isChecked) {
                     checkBox_A.setChecked(false);
                     checkBox_C.setChecked(false);
+                    btnPreQuestion.setClickable(false);
+                    btnNextQuestion.setClickable(false);
                     questionUtil.ChoiceIfTrue();
                 }
             }
@@ -429,6 +432,8 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                 if(isChecked) {
                     checkBox_A.setChecked(false);
                     checkBox_B.setChecked(false);
+                    btnPreQuestion.setClickable(false);
+                    btnNextQuestion.setClickable(false);
                     questionUtil.ChoiceIfTrue();
                 }
             }

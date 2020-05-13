@@ -160,7 +160,6 @@ public class QuestionUtil {
                 completion_layout.setVisibility(View.GONE);
                 judgement_layout.setVisibility(View.GONE);
                 number_tip.setText(POSITION+1 + " / " + datalist.size());
-                btnNextQuestion.setClickable(true);
                 checkBox_A.setChecked(false);
                 checkBox_B.setChecked(false);
                 checkBox_C.setChecked(false);
@@ -176,7 +175,6 @@ public class QuestionUtil {
                 choice_layout.setVisibility(View.GONE);
                 judgement_layout.setVisibility(View.GONE);
                 number_tip.setText(POSITION+1 + " / " + datalist.size());
-                btnNextQuestion.setClickable(true);
                 if(POSITION == datalist.size()-1){
                     btnNextQuestion.setText("我答完啦");
                 }else{
@@ -231,6 +229,8 @@ public class QuestionUtil {
      * @return void
      */
     public void ShowSingleChoice(){
+        btnPreQuestion.setClickable(true);
+        btnNextQuestion.setClickable(true);
         if(datalist.get(POSITION).getIfDone() == 1){
             choice_isTrue.setVisibility(View.INVISIBLE);
             choice_question.setVisibility(View.VISIBLE);
@@ -242,6 +242,9 @@ public class QuestionUtil {
             choice_C.setVisibility(View.INVISIBLE);
             choice_B.setText(((SingleChoice)datalist.get(POSITION)).getAnswer());
         }else {
+            checkBox_C.setVisibility(View.VISIBLE);
+            checkBox_A.setVisibility(View.VISIBLE);
+            checkBox_B.setVisibility(View.VISIBLE);
             choice_A.setVisibility(View.VISIBLE);
             choice_C.setVisibility(View.VISIBLE);
             choice_isTrue.setVisibility(View.INVISIBLE);
