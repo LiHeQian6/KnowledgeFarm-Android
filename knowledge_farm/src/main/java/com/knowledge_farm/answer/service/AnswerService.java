@@ -9,6 +9,7 @@ import com.knowledge_farm.entity.Question;
 import com.knowledge_farm.entity.QuestionTitle;
 import com.knowledge_farm.entity.QuestionType;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,10 @@ public class AnswerService {
     //查询语文,英语,数学2年级题
     public Page<Question> findQuestion(int grade,String subject,Pageable pageable){
         return questionRepository.findByGradeAndSubject(grade,subject,pageable);
+    }
+    //查询语文,英语,数学2年级题
+    public Page<Question> findQuestion2(int grade,String subject,QuestionType type,Pageable pageable){
+        return questionRepository.findByGradeAndSubjectAndQuestionType(grade,subject,type,pageable);
     }
 
     //一年级上册数学
@@ -90,6 +95,7 @@ public class AnswerService {
             Question question = new Completion(new QuestionTitle(question_title),"Math",new QuestionType(2,"填空题"),1,result+"");
             list.add(question);
         }
+//        list.addAll(findQuestion2(1,"Math",new QuestionType(1,"单选题"), PageRequest.of(random.nextInt(5),2)).getContent());
         return list;
     }
 
@@ -132,6 +138,7 @@ public class AnswerService {
                         result = num12 + num3;
                     }
                 } else {
+                    num2 = random.nextInt(100 - num1);
                     num12 = num1 + num2;
                     if (signal2.equals("-")) {
                         num3 = random.nextInt(num12+1);
@@ -146,6 +153,7 @@ public class AnswerService {
             Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 1, result + "");
             list.add(question);
         }
+//        list.addAll(findQuestion2(2,"Math", new QuestionType(1,"单选题"),PageRequest.of(random.nextInt(5),2)).getContent());
         return list;
     }
 
@@ -189,6 +197,7 @@ public class AnswerService {
         }
         Collections.shuffle(list);
         list.addAll(getMix());
+//        list.addAll(findQuestion2(5,"Math",new QuestionType(1,"单选题"), PageRequest.of(random.nextInt(5),2)).getContent());
         return list;
     }
 
@@ -314,7 +323,7 @@ public class AnswerService {
                     }else {
                         num1 = random.nextInt(590)+10;
                         num2 = random.nextInt(9)+1;
-                        num3 = random.nextInt(9-num2);
+                        num3 = random.nextInt(10-num2)+1;
                         num23 = num2 + num3;
                         int remain = num1 % num23;
                         if(remain == 0) {
@@ -325,7 +334,7 @@ public class AnswerService {
                         }
                         if(signal2.equals("-")){
                             num3 = random.nextInt(290)+1;
-                            num2 = random.nextInt(10)+num3;
+                            num2 = random.nextInt(10)+num3+1;
                             num23 = num2 - num3;
                             remain = num1 % num23;
                             if(remain == 0) {
@@ -360,6 +369,7 @@ public class AnswerService {
             list.add(question);
         }
         list.addAll(getMix());
+//        list.addAll(findQuestion2(6,"Math", new QuestionType(1,"单选题"),PageRequest.of(random.nextInt(5),2)).getContent());
         Collections.shuffle(list);
         return list;
     }
