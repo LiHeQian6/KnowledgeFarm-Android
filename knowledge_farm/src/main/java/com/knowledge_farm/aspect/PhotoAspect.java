@@ -68,6 +68,9 @@ public class PhotoAspect {
     public void crop(JoinPoint joinPoint, Object result) {
         if(result instanceof List){
             for(Crop crop : ((List<Crop>) result)){
+                if((crop.getImg1().substring(0,4)).equals("http")){
+                    continue;
+                }
                 crop.setImg1(photoUrl + crop.getImg1());
                 crop.setImg2(photoUrl + crop.getImg2());
                 crop.setImg3(photoUrl + crop.getImg3());
@@ -81,6 +84,9 @@ public class PhotoAspect {
         if(result instanceof List){
             for(BagCropItem item : ((List<BagCropItem>) result)){
                 Crop crop = item.getCrop();
+                if((crop.getImg1().substring(0,4)).equals("http")){
+                    continue;
+                }
                 crop.setImg1(photoUrl + crop.getImg1());
                 crop.setImg2(photoUrl + crop.getImg2());
                 crop.setImg3(photoUrl + crop.getImg3());
@@ -113,6 +119,9 @@ public class PhotoAspect {
     public void showInStore(JoinPoint joinPoint, Object result) {
         if(result instanceof List){
             for(PetVO petVO : ((List<PetVO>) result)){
+                if((petVO.getImg1().substring(0,4)).equals("http")){
+                    continue;
+                }
                 petVO.setImg1(photoUrl + petVO.getImg1());
                 petVO.setImg2(photoUrl + petVO.getImg2());
                 petVO.setImg3(photoUrl + petVO.getImg3());
@@ -125,6 +134,9 @@ public class PhotoAspect {
         if(result instanceof List){
             for(UserPetHouse userPetHouse : ((List<UserPetHouse>) result)){
                 Pet pet = userPetHouse.getPet();
+                if((pet.getImg1().substring(0,4)).equals("http")){
+                    continue;
+                }
                 pet.setImg1(photoUrl + pet.getImg1());
                 pet.setImg2(photoUrl + pet.getImg2());
                 pet.setImg3(photoUrl + pet.getImg3());
@@ -135,8 +147,11 @@ public class PhotoAspect {
     @AfterReturning(pointcut = "showPetUtilInStore()", returning="result")
     public void showPetUtilInStore(JoinPoint joinPoint, Object result) {
         if(result instanceof List){
-            for(PetUtil petfood : ((List<PetUtil>) result)){
-                petfood.setImg(photoUrl + petfood.getImg());
+            for(PetUtil petUtil : ((List<PetUtil>) result)){
+                if((petUtil.getImg().substring(0,4)).equals("http")){
+                    continue;
+                }
+                petUtil.setImg(photoUrl + petUtil.getImg());
             }
         }
     }
@@ -146,6 +161,9 @@ public class PhotoAspect {
         if(result instanceof List){
             for(BagPetUtilItem bagPetUtilItem : ((List<BagPetUtilItem>) result)){
                 PetUtil petUtil = bagPetUtilItem.getPetUtil();
+                if((petUtil.getImg().substring(0,4)).equals("http")){
+                    continue;
+                }
                 petUtil.setImg(photoUrl + petUtil.getImg());
             }
         }
@@ -192,6 +210,9 @@ public class PhotoAspect {
         while(iterator.hasNext()){
             UserPetHouse userPetHouse = iterator.next();
             Pet pet = userPetHouse.getPet();
+            if((pet.getImg1().substring(0,4)).equals("http")){
+                continue;
+            }
             pet.setImg1(photoUrl + pet.getImg1());
             pet.setImg2(photoUrl + pet.getImg2());
             pet.setImg3(photoUrl + pet.getImg3());
