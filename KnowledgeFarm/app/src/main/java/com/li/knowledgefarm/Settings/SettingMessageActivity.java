@@ -81,10 +81,13 @@ public class SettingMessageActivity extends AppCompatActivity {
     private Handler handler;
     /** 用户信息*/
     private UserInfo mInfo;
+    private TextView message_title;//标题文字
     private Button my_message; //我的信息按钮
     private Button system_setting; //系统设置按钮
+    private Button about;//版权信息按钮
     private LinearLayout user_mess_li; //个人信息展示块
     private LinearLayout system_setting_li; //系统设置展示块
+    private LinearLayout system_about; // 版权信息展示块
     private TextView show_grade; //展示用户年级
     private TextView user_nickName; //展示昵称
     private TextView user_account; //展示账号
@@ -169,6 +172,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     private void registListener(){
         my_message.setOnClickListener(new CustomerOnclickListener());
         system_setting.setOnClickListener(new CustomerOnclickListener());
+        about.setOnClickListener(new CustomerOnclickListener());
         change_grade.setOnClickListener(new CustomerOnclickListener());
         user_photo.setOnClickListener(new CustomerOnclickListener());
         change_Email.setOnClickListener(new CustomerOnclickListener());
@@ -197,10 +201,13 @@ public class SettingMessageActivity extends AppCompatActivity {
      * @return void
      */
     private void getViews() {
+        message_title = findViewById(R.id.message_title);
         my_message = findViewById(R.id.my_message_btn);
         system_setting = findViewById(R.id.system_setting);
+        about = findViewById(R.id.about);
         user_mess_li = findViewById(R.id.user_mess_li);
         system_setting_li = findViewById(R.id.system_setting_li);
+        system_about = findViewById(R.id.system_about_li);
         show_grade = findViewById(R.id.show_grade);
         select_grade = findViewById(R.id.grade_spinner);
         change_grade = findViewById(R.id.btnUpdateGrade);
@@ -671,10 +678,20 @@ public class SettingMessageActivity extends AppCompatActivity {
                 case R.id.my_message_btn:
                     user_mess_li.setVisibility(View.VISIBLE);
                     system_setting_li.setVisibility(View.GONE);
+                    system_about.setVisibility(View.GONE);
+                    message_title.setText("个人信息");
                     break;
                 case R.id.system_setting:
                     user_mess_li.setVisibility(View.GONE);
+                    system_about.setVisibility(View.GONE);
                     system_setting_li.setVisibility(View.VISIBLE);
+                    message_title.setText("系统设置");
+                    break;
+                case R.id.about:
+                    user_mess_li.setVisibility(View.GONE);
+                    system_about.setVisibility(View.VISIBLE);
+                    system_setting_li.setVisibility(View.GONE);
+                    message_title.setText("版权信息");
                     break;
                 case R.id.btnUpdateGrade:
                     if(change_grade.getText().toString().equals("修改")) {
