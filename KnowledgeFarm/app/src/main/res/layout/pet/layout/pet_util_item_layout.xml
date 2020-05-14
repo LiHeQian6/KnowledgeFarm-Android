@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_margin="30dp"
+    android:gravity="center"
+    android:theme="@style/customApp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:src="@drawable/dog"
+        android:layout_width="50dp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:id="@+id/photo"
+        android:layout_height="50dp"/>
+    <TextView
+        android:text="12"
+        android:textSize="16sp"
+        android:id="@+id/num"
+        android:layout_gravity="bottom|end"
+        android:textColor="@color/blackTextColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:text="大力丸"
+        android:textSize="12sp"
+        android:id="@+id/name"
+        android:textColor="@color/blackTextColor"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</FrameLayout>

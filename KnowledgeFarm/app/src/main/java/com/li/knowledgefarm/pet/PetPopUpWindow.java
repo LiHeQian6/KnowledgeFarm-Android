@@ -1,18 +1,24 @@
 package com.li.knowledgefarm.pet;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,11 +27,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.entity.BagPetUtilItem;
 import com.li.knowledgefarm.entity.UserPetHouse;
+import com.li.knowledgefarm.view.HorizontalListView;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -36,7 +44,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.viewpager.widget.PagerAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -64,18 +71,23 @@ public class PetPopUpWindow extends PopupWindow {
     private TextView physical_value;
     private TextView life_value;
     private Button use;
-    private Button feed;
     private ArrayList<UserPetHouse> pets= new ArrayList<>();
     private Handler change_pet;
     private PetAdapter adapter;
-    private int selectItem=0;
+    private int selectItem=0;//选中的宠物位置-1
     private OkHttpClient okHttpClient;
+    private Handler get_pet_util;
+    private HorizontalListView pet_utils_list;
+    private List<BagPetUtilItem> pet_utils;
+    private PetUtilAdapter util_adapter;
+    private Handler use_util;
 
     public PetPopUpWindow(Context context) {
         super(context);
         this.context = context;
         Init();
         getPetInfo();
+        getPetUtilInfo();
     }
 
     /**
@@ -133,7 +145,7 @@ public class PetPopUpWindow extends PopupWindow {
         physical_value = contentView.findViewById(R.id.physical_value);
         life_value = contentView.findViewById(R.id.life_value);
         use = contentView.findViewById(R.id.use);
-//        feed = contentView.findViewById(R.id.feed);
+        pet_utils_list = contentView.findViewById(R.id.pet_utils);
     }
 
     /**
@@ -358,4 +370,130 @@ public class PetPopUpWindow extends PopupWindow {
         };
     }
 
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description
+     * @Date 10:54 2020/5/14
+     **/
+    @SuppressLint("HandlerLeak")
+    private void getPetUtilInfo(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder()
+                        .url(context.getResources().getString(R.string.URL)+"/userpethouse/initUserPetUtilBag").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("宠物道具信息", "请求失败");
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        get_pet_util.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
+                        String notify_message = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = notify_message;
+                        get_pet_util.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        get_pet_util = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+                Log.e("宠物道具信息",message);
+                if (!message.equals("Fail")){
+                    Type type = new TypeToken<List<BagPetUtilItem>>(){}.getType();
+                    pet_utils = gson.fromJson(message,type);
+                    Collections.sort(pet_utils);
+                    if (pet_utils.size()!=0){
+                        util_adapter = new PetUtilAdapter(context, R.layout.pet_util_item_layout, pet_utils);
+                        PetPopUpWindow.this.pet_utils_list.setAdapter(util_adapter);
+                        pet_utils_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @SuppressLint("RestrictedApi")
+                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                                PopupMenu popupMenu = new PopupMenu(context, view, Gravity.TOP);
+                                MenuInflater inflater = popupMenu.getMenuInflater();
+                                inflater.inflate(R.menu.pet_util_menu, popupMenu.getMenu());
+                                popupMenu.show();
+                                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        userPetUtil(pets.get(selectItem).getId(),pet_utils.get(i).getId(),i);
+                                        return false;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }else {
+                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
+    private void userPetUtil(final int petId, final int petUtilId, final int i) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder()
+                        .url(context.getResources().getString(R.string.URL)+"/user/feedPet?userPetHouseId="+petId+"&petUtilBagId="+petUtilId).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("使用道具", "请求失败");
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        use_util.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
+                        String notify_message = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = notify_message;
+                        use_util.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        use_util = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+                if (!message.equals("Fail")){
+                    if (message.equals("true")){
+                        Toast.makeText(context,"使用成功！",Toast.LENGTH_SHORT).show();
+                        BagPetUtilItem bagPetUtilItem = pet_utils.get(i);
+                        bagPetUtilItem.setNumber(bagPetUtilItem.getNumber()-1);
+                        pet_utils.remove(bagPetUtilItem);
+                        pet_utils.add(bagPetUtilItem);
+                        Collections.sort(pet_utils);
+                        util_adapter.notifyDataSetChanged();
+                        //TODO 更新展示的宠物的信息
+                    }else
+                        Toast.makeText(context,"使用失败！",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
 }

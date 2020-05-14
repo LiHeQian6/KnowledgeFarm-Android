@@ -285,7 +285,16 @@ public class MyFragment extends Fragment {
             }
         });
         alertDialog = alertBuilder.create();
+        alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         alertDialog.show();
+        alertDialog.getWindow().getDecorView().post(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.getWindow().setFlags(~WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            }
+        });
         WindowManager.LayoutParams attrs = alertDialog.getWindow().getAttributes();
         attrs.gravity = Gravity.CENTER;
         final float scale = this.getResources().getDisplayMetrics().density;

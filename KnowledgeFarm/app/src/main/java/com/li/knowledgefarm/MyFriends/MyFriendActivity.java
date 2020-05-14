@@ -128,7 +128,7 @@ public class MyFriendActivity extends AppCompatActivity {
     private FriendsPopUpWindow friendsPopUpWindow;
     private ImageView notify_red;
     private ImageView daytask_red;
-    private static List<Boolean> notifyStatus=new ArrayList<>(4);
+    private static List<Boolean> notifyStatus=new ArrayList<>(5);
     private Handler new_notification;
     private ImageView notify;
     private ImageView dog;
@@ -233,7 +233,6 @@ public class MyFriendActivity extends AppCompatActivity {
                                 selectLand=0;
                             }
                         }
-
                     }
                 });
             }
@@ -774,8 +773,11 @@ public class MyFriendActivity extends AppCompatActivity {
                 if (!message.equals("Fail")){
                     Type type = new TypeToken<List<Boolean>>(){}.getType();
                     notifyStatus= gson.fromJson(message,type);
-                    if (notifyStatus.get(0)){
+                    if (notifyStatus.subList(0,3).contains(true)){
                         notify_red.setVisibility(View.VISIBLE);
+                    }
+                    if(notifyStatus.get(4)){
+                        daytask_red.setVisibility(View.VISIBLE);
                     }
                 }else {
                     Toast.makeText(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();
