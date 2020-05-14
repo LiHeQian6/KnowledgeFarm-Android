@@ -9,10 +9,7 @@ import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -34,22 +31,27 @@ public class AnswerController {
     private AnswerService answerService;
 
     /**
+     * @description: 宠物对战题目
+     * @author :景光赞
+     * @date :2020/5/14 16:03
+     * @param :[grade]
+     * @return :java.util.List
+     */
+    @ResponseBody
+    @RequestMapping("/fightQuestions")
+    public List petFightingQuestions(@RequestParam("grade")int grade){
+        List<Question> list = answerService.findByGrade(grade);
+
+        return list;
+    }
+    
+    /**
      * @description: 一年级数学上册
      * @author :景光赞
      * @date :2020/4/30 11:11
      * @param :[]
      * @return :java.util.List
      */
-
-    @ResponseBody
-    @GetMapping("/fightQuestions")
-    public List petFightingQuestions(@RequestParam("grade")int grade){
-        List<Question> list = answerService.findByGrade(grade);
-
-        return list;
-    }
-
-
     @ResponseBody
     @GetMapping("/mathOneUp")
     public List OneUpMath() {
