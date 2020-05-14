@@ -1,11 +1,16 @@
 package com.li.knowledgefarm.Study.Subject;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,6 +53,7 @@ public class QuestionUtil {
     private Handler getWAF; //接收增加水和肥料结果
     private Boolean returnHandlerFinish = false; //返回条件
     private Toast toast;
+    private Dialog ifReturn; //询问是否返回弹窗
     private View completion_layout; //填空题布局
     private View judgement_layout; //判断题布局
     private View choice_layout; //选择题布局
@@ -204,6 +210,8 @@ public class QuestionUtil {
      * @return void
      */
     public void ShowCompletion(){
+        btnPreQuestion.setClickable(true);
+        btnNextQuestion.setClickable(true);
         if(datalist.get(POSITION).getIfDone() == 1) {
             isFalse.setText(" ");
             isTrue.setVisibility(View.INVISIBLE);
@@ -277,6 +285,8 @@ public class QuestionUtil {
      * @return void
      */
     public void ShowJudgement(){
+        btnPreQuestion.setClickable(true);
+        btnNextQuestion.setClickable(true);
         if(datalist.get(POSITION).getIfDone() == 1){
             judge_isTrue.setVisibility(View.GONE);
             judge_A.setVisibility(View.GONE);
@@ -365,7 +375,7 @@ public class QuestionUtil {
                     public void run() {
                         completion_answer.setText("");
                         datalist.get(POSITION).setIfDone(1);
-                        POSITION = ++POSITION;
+                        PositionAdd();
                         showQuestion();
                     }
                 }, 1000);
@@ -430,10 +440,60 @@ public class QuestionUtil {
                         if(returnHandlerFinish)
                             activity.finish();
                     }else{
-                        isFalse.setText("获得奖励失败了！");
+                        if(toast == null){
+                            toast = Toast.makeText(context,"服务器开小差了",Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.BOTTOM,0,0);
+                            toast.show();
+                        }
                     }
                 }
             }
         };
+    }
+
+    /**
+     * @Description  确认是否返回
+     * @Auther 孙建旺
+     * @Date 下午 5:00 2019/12/11
+     * @Param []
+     * @return void
+     */
+    public void showIfReturn(){
+        ifReturn = new Dialog(context);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.math_return_dialog,null);
+        ImageView cancel = layout.findViewById(R.id.cancel_return);
+        ImageView sure = layout.findViewById(R.id.sure_return);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ifReturn.dismiss();
+            }
+        });
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnHandlerFinish = true;
+                ifReturn.dismiss();
+                getWaterAndFertilizer();
+            }
+        });
+        ifReturn.setContentView(layout);
+        ifReturn.show();
+        WindowManager.LayoutParams attrs = ifReturn.getWindow().getAttributes();
+        attrs.gravity = Gravity.CENTER;
+        final float scale = context.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(300*scale+0.5f);
+        attrs.height =(int)(300*scale+0.5f);
+        ifReturn.getWindow().setAttributes(attrs);
+        Window dialogWindow = ifReturn.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
+    }
+
+    public void exit() {
+        if(QuestionUtil.TRUE_ANSWER_COUNT>0 && QuestionUtil.TRUE_ANSWER_COUNT<datalist.size() && UserUtil.getUser().getMathRewardCount()>0)
+            showIfReturn();
+        else
+            activity.finish();
     }
 }
