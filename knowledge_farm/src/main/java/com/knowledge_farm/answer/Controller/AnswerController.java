@@ -9,9 +9,7 @@ import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -33,6 +31,21 @@ public class AnswerController {
     private AnswerService answerService;
 
     /**
+     * @description: 宠物对战题目
+     * @author :景光赞
+     * @date :2020/5/14 16:03
+     * @param :[grade]
+     * @return :java.util.List
+     */
+    @ResponseBody
+    @RequestMapping("/fightQuestions")
+    public List petFightingQuestions(@RequestParam("grade")int grade){
+        List<Question> list = answerService.findByGrade(grade);
+
+        return list;
+    }
+    
+    /**
      * @description: 一年级数学上册
      * @author :景光赞
      * @date :2020/4/30 11:11
@@ -42,7 +55,7 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/mathOneUp")
     public List OneUpMath() {
-        List<Question> list = new AnswerService().getQuestion3OneUpMath();
+        List<Question> list = answerService.getQuestion3OneUpMath();
         
         return list;
     }
@@ -56,7 +69,7 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/mathOneDown")
     public List OneDownMath() {
-        List<Question> list = new AnswerService().getQuestion3OneDownMath();
+        List<Question> list = answerService.getQuestion3OneDownMath();
 
         return list;
     }
@@ -70,8 +83,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/mathTwoUp")
     public List twoUpMath(){
-        int pageNumber = new Random().nextInt(5);
-        Page<Question> page = answerService.findQuestion(3,"Math",PageRequest.of(pageNumber,22));
+        int pageNumber = new Random().nextInt(10);
+        Page<Question> page = answerService.findQuestion(3,"Math",PageRequest.of(pageNumber,11));
         List<Question> list = new ArrayList<>(page.getContent());
         list.addAll(get99Multiple());
         Collections.shuffle(list);
@@ -87,15 +100,15 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/mathTwoDown")
     public List twoDownMath(){
-        int pageNumber = new Random().nextInt(5);
-        Page<Question> page = answerService.findQuestion(4,"Math",PageRequest.of(pageNumber,24));
+        int pageNumber = new Random().nextInt(10);
+        Page<Question> page = answerService.findQuestion(4,"Math",PageRequest.of(pageNumber,12));
         List<Question> list = new ArrayList<>(page.getContent());
         list.addAll(get99Multiple());
         Collections.shuffle(list);
         return list;
     }
     /**
-     * @description: 九九乘法题 10道
+     * @description: 九九乘法题
      * @author :景光赞
      * @date :2020/5/2 18:44
      * @param :[]
@@ -118,18 +131,7 @@ public class AnswerController {
     public List<Question> mathThreeUp23Num(){
         return answerService.get23Multiple();
     }
-    /**
-     * @description: 三年级数学上下册通用：四则运算  20 道
-     * @author :景光赞
-     * @date :2020/5/2 18:44
-     * @param :[]
-     * @return :java.util.List<com.knowledge_farm.answer.entity.Mix>
-     */
-    @ResponseBody
-    @GetMapping("/mathThreeMix")
-    public List<Question> mathThreeMix(){
-        return answerService.getMix();
-    }
+
     /**
      * @description: 三年级数学下册：2位数乘2位数
      * @author :景光赞
@@ -153,8 +155,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/ChineseOneUp")
     public List<Question> findChineseOneUp(){
-        int pageNumber = new Random().nextInt(3);
-        Page<Question> page =  answerService.findQuestion(1,"Chinese",PageRequest.of(pageNumber, 20));
+        int pageNumber = new Random().nextInt(6);
+        Page<Question> page =  answerService.findQuestion(1,"Chinese",PageRequest.of(pageNumber, 10));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -169,8 +171,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/ChineseOneDown")
     public List<Question> findChineseOneDown(){
-        int pageNumber = new Random().nextInt(3);
-        Page<Question> page =  answerService.findQuestion(2,"Chinese",PageRequest.of(pageNumber, 20));
+        int pageNumber = new Random().nextInt(6);
+        Page<Question> page =  answerService.findQuestion(2,"Chinese",PageRequest.of(pageNumber, 10));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -185,8 +187,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/ChineseTwoUp")
     public List<Question> findChineseTwoUp(){
-        int pageNumber = new Random().nextInt(5);
-        Page<Question> page =  answerService.findQuestion(3,"Chinese",PageRequest.of(pageNumber, 20));
+        int pageNumber = new Random().nextInt(10);
+        Page<Question> page =  answerService.findQuestion(3,"Chinese",PageRequest.of(pageNumber, 10));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -201,8 +203,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/ChineseTwoDown")
     public List<Question> findChineseTwoDown(){
-        int pageNumber = new Random().nextInt(5);
-        Page<Question> page =  answerService.findQuestion(4,"Chinese",PageRequest.of(pageNumber, 20));
+        int pageNumber = new Random().nextInt(10);
+        Page<Question> page =  answerService.findQuestion(4,"Chinese",PageRequest.of(pageNumber, 10));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -217,8 +219,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/ChineseThreeUp")
     public List<Question> findChineseThreeUp(){
-        int pageNumber = new Random().nextInt(5);
-        Page<Question> page =  answerService.findQuestion(5,"Chinese",PageRequest.of(pageNumber, 20));
+        int pageNumber = new Random().nextInt(10);
+        Page<Question> page =  answerService.findQuestion(5,"Chinese",PageRequest.of(pageNumber, 10));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -233,8 +235,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/ChineseThreeDown")
     public List<Question> findChineseThreeDown(){
-        int pageNumber = new Random().nextInt(5);
-        Page<Question> page =  answerService.findQuestion(6,"Chinese",PageRequest.of(pageNumber, 20));
+        int pageNumber = new Random().nextInt(10);
+        Page<Question> page =  answerService.findQuestion(6,"Chinese",PageRequest.of(pageNumber, 10));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -250,8 +252,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/englishOneUp")
     public List<Question> englishOneUp() {
-        int pageNumber = new Random().nextInt(3);
-        Page<Question> page =  answerService.findQuestion(1,"English",PageRequest.of(pageNumber, 17));
+        int pageNumber = new Random().nextInt(5);
+        Page<Question> page =  answerService.findQuestion(1,"English",PageRequest.of(pageNumber, 10));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -266,8 +268,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/englishOneDown")
     public List<Question> englishOneDown() {
-        int pageNumber = new Random().nextInt(3);
-        Page<Question> page =  answerService.findQuestion(2,"English",PageRequest.of(pageNumber, 16));
+        int pageNumber = new Random().nextInt(5);
+        Page<Question> page =  answerService.findQuestion(2,"English",PageRequest.of(pageNumber, 9));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -282,8 +284,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/englishTwoUp")
     public List<Question> englishTwoUp() {
-        int pageNumber = new Random().nextInt(3);
-        Page<Question> page =  answerService.findQuestion(3,"English",PageRequest.of(pageNumber, 18));
+        int pageNumber = new Random().nextInt(5);
+        Page<Question> page =  answerService.findQuestion(3,"English",PageRequest.of(pageNumber, 11));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -298,8 +300,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/englishTwoDown")
     public List<Question> englishTwoDown() {
-        int pageNumber = new Random().nextInt(3);
-        Page<Question> page =  answerService.findQuestion(4,"English",PageRequest.of(pageNumber, 18));
+        int pageNumber = new Random().nextInt(5);
+        Page<Question> page =  answerService.findQuestion(4,"English",PageRequest.of(pageNumber, 11));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -314,8 +316,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/englishThreeUp")
     public List<Question> englishThreeUp() {
-        int pageNumber = new Random().nextInt(4);
-        Page<Question> page =  answerService.findQuestion(5,"English",PageRequest.of(pageNumber, 15));
+        int pageNumber = new Random().nextInt(5);
+        Page<Question> page =  answerService.findQuestion(5,"English",PageRequest.of(pageNumber, 10));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
@@ -330,8 +332,8 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/englishThreeDown")
     public List<Question> englishThreeDown() {
-        int pageNumber = new Random().nextInt(6);
-        Page<Question> page =  answerService.findQuestion(6,"English",PageRequest.of(pageNumber, 18));
+        int pageNumber = new Random().nextInt(9);
+        Page<Question> page =  answerService.findQuestion(6,"English",PageRequest.of(pageNumber, 12));
         List<Question> list = new ArrayList(page.getContent());
         Collections.shuffle(list);
         return list;
