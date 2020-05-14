@@ -448,6 +448,9 @@ public class QuestionUtil {
                         btnPreQuestion.setVisibility(View.GONE);
                         btnNextQuestion.setVisibility(View.GONE);
                         number_tip.setVisibility(View.GONE);
+                        choice_layout.setVisibility(View.GONE);
+                        completion_layout.setVisibility(View.GONE);
+                        judgement_layout.setVisibility(View.GONE);
                         if(returnHandlerFinish) {
                             activity.finish();
                             return;
