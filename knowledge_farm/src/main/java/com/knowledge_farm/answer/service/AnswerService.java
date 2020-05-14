@@ -32,13 +32,21 @@ public class AnswerService {
     @Resource
     private QuestionRepository questionRepository;
 
+    public List<Question> findByGrade(int grade){
+        List<Question> questions = questionRepository.findByGrade(grade);
+        Collections.shuffle(questions);
+        return questions.subList(0,10);
+    }
+
     //查询语文,英语,数学2年级题
     public Page<Question> findQuestion(int grade,String subject,Pageable pageable){
         return questionRepository.findByGradeAndSubject(grade,subject,pageable);
     }
     //查询语文,英语,数学2年级题
-    public Page<Question> findQuestion2(int grade,String subject,QuestionType type,Pageable pageable){
-        return questionRepository.findByGradeAndSubjectAndQuestionType(grade,subject,type,pageable);
+    public List<Question> findQuestion2(int grade,String subject,QuestionType type){
+        List<Question> list = questionRepository.findByGradeAndSubjectAndQuestionType(grade,subject,type);
+        Collections.shuffle(list);
+        return list.subList(0,2);
     }
 
     //一年级上册数学
@@ -95,7 +103,7 @@ public class AnswerService {
             Question question = new Completion(new QuestionTitle(question_title),"Math",new QuestionType(2,"填空题"),1,result+"");
             list.add(question);
         }
-//        list.addAll(findQuestion2(1,"Math",new QuestionType(1,"单选题"), PageRequest.of(random.nextInt(5),2)).getContent());
+        list.addAll(findQuestion2(1,"Math",new QuestionType(1,"单选题")));
         return list;
     }
 
@@ -153,7 +161,7 @@ public class AnswerService {
             Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 1, result + "");
             list.add(question);
         }
-//        list.addAll(findQuestion2(2,"Math", new QuestionType(1,"单选题"),PageRequest.of(random.nextInt(5),2)).getContent());
+        list.addAll(findQuestion2(2,"Math", new QuestionType(1,"单选题")));
         return list;
     }
 
@@ -197,7 +205,7 @@ public class AnswerService {
         }
         Collections.shuffle(list);
         list.addAll(getMix());
-//        list.addAll(findQuestion2(5,"Math",new QuestionType(1,"单选题"), PageRequest.of(random.nextInt(5),2)).getContent());
+        list.addAll(findQuestion2(5,"Math",new QuestionType(1,"单选题")));
         return list;
     }
 
@@ -369,7 +377,7 @@ public class AnswerService {
             list.add(question);
         }
         list.addAll(getMix());
-//        list.addAll(findQuestion2(6,"Math", new QuestionType(1,"单选题"),PageRequest.of(random.nextInt(5),2)).getContent());
+        list.addAll(findQuestion2(6,"Math", new QuestionType(1,"单选题")));
         Collections.shuffle(list);
         return list;
     }
