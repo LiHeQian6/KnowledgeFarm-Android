@@ -60,7 +60,7 @@ public class PetUtilsAdapter extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(petUtils.get(position).getImg()).apply(requestOptions).into(viewHolder.imageView);
         viewHolder.name.setText(petUtils.get(position).getName());
-        viewHolder.price.setText(petUtils.get(position).getName());
+        viewHolder.price.setText(petUtils.get(position).getPrice().toString()+"金币");
         if(!MyFragment.mIsScroll) {
             notifyDataSetChanged();
         }
