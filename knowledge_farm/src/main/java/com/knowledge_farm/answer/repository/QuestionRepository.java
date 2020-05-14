@@ -8,10 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question,Integer>, JpaSpecificationExecutor<Question>, Serializable {
 
     Page<Question> findByGradeAndSubject(int grade,String subject, Pageable pageable);
 
-    Page<Question> findByGradeAndSubjectAndQuestionType(int grade, String subject, QuestionType type, Pageable pageable);
+    List<Question> findByGradeAndSubjectAndQuestionType(int grade, String subject, QuestionType type);
+
+    List<Question> findByGrade(int grade);
 }

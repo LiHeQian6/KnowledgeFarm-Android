@@ -22,7 +22,7 @@ public class Question {
     private Integer ifDone;
 
     public Question(){
-
+        this.ifDone = 0;
     }
     public Question(QuestionTitle title,String subject,QuestionType type,Integer grade){
         this.questionTitle = title;
@@ -79,7 +79,7 @@ public class Question {
         this.grade = grade;
     }
 
-    @Column(name = "if_done")
+    @Column(name = "if_done", columnDefinition = "int default 0")
     public Integer getIfDone() {
         return ifDone;
     }

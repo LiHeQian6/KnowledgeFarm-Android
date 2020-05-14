@@ -16,6 +16,9 @@ import javax.persistence.*;
 public class Completion extends Question{
     private String answer;
 
+    public Completion() {
+    }
+
     public Completion(QuestionTitle title, String subject, QuestionType type, Integer grade, String answer) {
         super(title, subject, type, grade);
         this.answer = answer;

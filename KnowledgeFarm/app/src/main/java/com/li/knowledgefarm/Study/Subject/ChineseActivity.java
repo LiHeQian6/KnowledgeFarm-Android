@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ChineseActivity extends AppCompatActivity implements StudyInterface {
+public class ChineseActivity extends AppCompatActivity {
     /** 返回*/
     private ImageView iv_return;
     /** 自定义点击事件监听器*/
@@ -185,7 +185,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
      * @Param []
      * @return void
      */
-    @Override
     public void showIfReturn(){
         ifReturn = new Dialog(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -228,7 +227,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
      * @Param []
      * @return void
      */
-    @Override
     @SuppressLint("HandlerLeak")
     public void getWandFCallBack(){
         getWAF = new Handler(){
@@ -273,7 +271,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
      * @Param []
      * @return void
      */
-    @Override
     public void getWaterAndFertilizer(){
         new Thread(){
             @Override
@@ -517,7 +514,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     /**
      * 加载视图
      */
-    @Override
     public void getViews(){
         iv_return = findViewById(R.id.iv_return);
         gson = new Gson();
@@ -543,7 +539,6 @@ public class ChineseActivity extends AppCompatActivity implements StudyInterface
     /**
      * 注册点击事件监听器
      */
-    @Override
     public void registListener(){
         listener = new CustomerListener();
         iv_return.setOnClickListener(listener);

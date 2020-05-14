@@ -315,7 +315,7 @@ public class UserServiceImpl {
         int rewardCount = 0;
         int flag = 0;
         switch (subject){
-            case "chinese":
+            case "Chinese":
                 rewardCount = user.getChineseRewardCount();
                 if(rewardCount >= 1){
                     rewardCount = rewardCount - 1;
@@ -323,7 +323,7 @@ public class UserServiceImpl {
                     flag = 1;
                 }
                 break;
-            case "english":
+            case "English":
                 rewardCount = user.getEnglishRewardCount();
                 if(rewardCount >= 1){
                     rewardCount = rewardCount - 1;
@@ -331,7 +331,7 @@ public class UserServiceImpl {
                     flag = 1;
                 }
                 break;
-            case "math":
+            case "Math":
                 rewardCount = user.getMathRewardCount();
                 if(rewardCount >= 1){
                     rewardCount = rewardCount - 1;

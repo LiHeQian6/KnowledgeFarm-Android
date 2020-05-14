@@ -174,7 +174,6 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
      * @Param []
      * @return void
      */
-    @Override
     public void showIfReturn(){
         ifReturn = new Dialog(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -217,7 +216,6 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
      * @Param []
      * @return void
      */
-    @Override
     @SuppressLint("HandlerLeak")
     public void getWandFCallBack(){
         getWAF = new Handler(){
@@ -257,7 +255,6 @@ public class EnglishActivity extends AppCompatActivity implements StudyInterface
      * @Param []
      * @return void
      */
-    @Override
     public void getWaterAndFertilizer(){
         new Thread(){
             @Override
