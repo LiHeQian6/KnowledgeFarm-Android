@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import cn.jpush.android.api.JPushInterface;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -96,6 +97,7 @@ public class StartActivity extends AppCompatActivity {
                     regout();
                     break;
                 case R.id.btnStart:
+                    JPushInterface.setAlias(getApplicationContext(),1, UserUtil.getUser().getAccount());
                     Intent begin = new Intent(StartActivity.this, MainActivity.class);
                     startActivity(begin);
                     finish();

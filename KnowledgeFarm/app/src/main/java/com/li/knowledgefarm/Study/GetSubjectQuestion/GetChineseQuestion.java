@@ -3,7 +3,9 @@ package com.li.knowledgefarm.Study.GetSubjectQuestion;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -43,6 +45,7 @@ public class GetChineseQuestion extends SubjectInterface {
     private Handler getMath;
     private final Activity context;
     private final Intent intent;
+    private Toast toast;
 
     public GetChineseQuestion(Activity context, Intent intent) {
         this.context = context;
@@ -58,7 +61,13 @@ public class GetChineseQuestion extends SubjectInterface {
             public void run() {
                 super.run();
                 if (UserUtil.getUser().getChineseRewardCount() <= 0) {
-                    Toast.makeText(context,"今天的语文任务做完了哦",Toast.LENGTH_SHORT).show();
+                    Looper.prepare();
+                    if(toast == null) {
+                        toast = Toast.makeText(context, "今天的任务做完了哦", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,0);
+                        toast.show();
+                    }
+                    Looper.loop();
                 } else {
                     Request request = null;
                     switch (UserUtil.getUser().getGrade()) {

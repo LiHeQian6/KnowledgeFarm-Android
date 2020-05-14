@@ -2,6 +2,7 @@ package com.li.knowledgefarm.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.Nullable;
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;

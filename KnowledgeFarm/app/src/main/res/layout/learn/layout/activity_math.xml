@@ -45,6 +45,18 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:id="@+id/relative_question">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:id="@+id/finish_do"
+                            android:layout_centerVertical="true"
+                            android:text="恭喜你获得了奖励，快去照顾你的植物吧！"
+                            android:autoSizeMaxTextSize="35dp"
+                            android:autoSizeTextType="uniform"
+                            android:visibility="gone"
+                            android:textColor="@color/ShopTextColor"
+                            android:maxLines="1"/>
                         <include
                             android:id="@+id/completion_layout"
                             android:layout_width="match_parent"

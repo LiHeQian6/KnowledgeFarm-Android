@@ -56,6 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="A："
+                android:maxLines="1"
                 android:autoSizeMaxTextSize="35dp"
                 android:autoSizeTextType="uniform"/>
             <TextView
@@ -81,6 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="B："
+                android:maxLines="1"
                 android:autoSizeMaxTextSize="35dp"
                 android:autoSizeTextType="uniform"/>
             <TextView
@@ -106,6 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="C："
+                android:maxLines="1"
                 android:autoSizeMaxTextSize="35dp"
                 android:autoSizeTextType="uniform"/>
             <TextView

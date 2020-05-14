@@ -46,6 +46,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Main.bgsound.BgSoundService;
+import com.li.knowledgefarm.Util.DisplayUtils;
+import com.li.knowledgefarm.Util.GuideHelper;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.notify.NotifyActivity;
@@ -204,7 +206,7 @@ public class MyFriendActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = new Request.Builder()
-                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId?userId="+ UserUtil.getUser().getId())
+                        .url(getResources().getString(R.string.URL)+"/user/findUserInfoByUserId")
                         .build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {

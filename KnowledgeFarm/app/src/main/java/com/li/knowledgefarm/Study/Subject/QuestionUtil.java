@@ -1,11 +1,16 @@
 package com.li.knowledgefarm.Study.Subject;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,6 +45,7 @@ public class QuestionUtil {
 
     public static int POSITION = 0; //
     public static int TRUE_ANSWER_COUNT = 0;
+    public static String CURRENT_SUBJECT;
 
     private Context context;
     private Activity activity;
@@ -48,12 +54,14 @@ public class QuestionUtil {
     private Handler getWAF; //接收增加水和肥料结果
     private Boolean returnHandlerFinish = false; //返回条件
     private Toast toast;
+    private Dialog ifReturn; //询问是否返回弹窗
     private View completion_layout; //填空题布局
     private View judgement_layout; //判断题布局
     private View choice_layout; //选择题布局
     private TextView btnPreQuestion; //下一题
     private TextView btnNextQuestion; //上一题
     private TextView number_tip;//显示回答正确数量及题目总数
+    private TextView finish_do; //获得奖励提示
     //填空题
     private TextView completion_question; //填空题问题
     private TextView isFalse; //回答是否错误文字提示
@@ -97,6 +105,7 @@ public class QuestionUtil {
         number_tip = activity.findViewById(R.id.number_tip);
         btnPreQuestion = activity.findViewById(R.id.btnPreQuestion);
         btnNextQuestion = activity.findViewById(R.id.btnNextQuestion);
+        finish_do = activity.findViewById(R.id.finish_do);
         //填空题布局
         completion_layout = activity.findViewById(R.id.completion_layout);
         //选择题布局
@@ -160,7 +169,6 @@ public class QuestionUtil {
                 completion_layout.setVisibility(View.GONE);
                 judgement_layout.setVisibility(View.GONE);
                 number_tip.setText(POSITION+1 + " / " + datalist.size());
-                btnNextQuestion.setClickable(true);
                 checkBox_A.setChecked(false);
                 checkBox_B.setChecked(false);
                 checkBox_C.setChecked(false);
@@ -176,7 +184,6 @@ public class QuestionUtil {
                 choice_layout.setVisibility(View.GONE);
                 judgement_layout.setVisibility(View.GONE);
                 number_tip.setText(POSITION+1 + " / " + datalist.size());
-                btnNextQuestion.setClickable(true);
                 if(POSITION == datalist.size()-1){
                     btnNextQuestion.setText("我答完啦");
                 }else{
@@ -206,6 +213,8 @@ public class QuestionUtil {
      * @return void
      */
     public void ShowCompletion(){
+        btnPreQuestion.setClickable(true);
+        btnNextQuestion.setClickable(true);
         if(datalist.get(POSITION).getIfDone() == 1) {
             isFalse.setText(" ");
             isTrue.setVisibility(View.INVISIBLE);
@@ -231,6 +240,8 @@ public class QuestionUtil {
      * @return void
      */
     public void ShowSingleChoice(){
+        btnPreQuestion.setClickable(true);
+        btnNextQuestion.setClickable(true);
         if(datalist.get(POSITION).getIfDone() == 1){
             choice_isTrue.setVisibility(View.INVISIBLE);
             choice_question.setVisibility(View.VISIBLE);
@@ -242,6 +253,9 @@ public class QuestionUtil {
             choice_C.setVisibility(View.INVISIBLE);
             choice_B.setText(((SingleChoice)datalist.get(POSITION)).getAnswer());
         }else {
+            checkBox_C.setVisibility(View.VISIBLE);
+            checkBox_A.setVisibility(View.VISIBLE);
+            checkBox_B.setVisibility(View.VISIBLE);
             choice_A.setVisibility(View.VISIBLE);
             choice_C.setVisibility(View.VISIBLE);
             choice_isTrue.setVisibility(View.INVISIBLE);
@@ -274,6 +288,8 @@ public class QuestionUtil {
      * @return void
      */
     public void ShowJudgement(){
+        btnPreQuestion.setClickable(true);
+        btnNextQuestion.setClickable(true);
         if(datalist.get(POSITION).getIfDone() == 1){
             judge_isTrue.setVisibility(View.GONE);
             judge_A.setVisibility(View.GONE);
@@ -362,7 +378,7 @@ public class QuestionUtil {
                     public void run() {
                         completion_answer.setText("");
                         datalist.get(POSITION).setIfDone(1);
-                        POSITION = ++POSITION;
+                        PositionAdd();
                         showQuestion();
                     }
                 }, 1000);
@@ -416,21 +432,81 @@ public class QuestionUtil {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        UserUtil.getUser().setMathRewardCount(UserUtil.getUser().getMathRewardCount() - 1);
-                        completion_answer.setVisibility(View.GONE);
-                        isFalse.setVisibility(View.INVISIBLE);
-                        isTrue.setVisibility(View.GONE);
+                        switch (CURRENT_SUBJECT){
+                            case "Math":
+                                UserUtil.getUser().setMathRewardCount(UserUtil.getUser().getMathRewardCount() - 1);
+                                break;
+                            case "Chinese":
+                                UserUtil.getUser().setChineseRewardCount(UserUtil.getUser().getChineseRewardCount() - 1);
+                                break;
+                            case "English":
+                                UserUtil.getUser().setEnglishRewardCount(UserUtil.getUser().getEnglishRewardCount() - 1);
+                                break;
+
+                        }
+                        finish_do.setVisibility(View.VISIBLE);
                         btnPreQuestion.setVisibility(View.GONE);
                         btnNextQuestion.setVisibility(View.GONE);
-                        completion_question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
-                        completion_question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        if(returnHandlerFinish)
+                        number_tip.setVisibility(View.GONE);
+                        if(returnHandlerFinish) {
                             activity.finish();
+                            return;
+                        }
                     }else{
-                        isFalse.setText("获得奖励失败了！");
+                        if(toast == null){
+                            toast = Toast.makeText(context,"服务器开小差了",Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.BOTTOM,0,0);
+                            toast.show();
+                        }
                     }
                 }
             }
         };
+    }
+
+    /**
+     * @Description  确认是否返回
+     * @Auther 孙建旺
+     * @Date 下午 5:00 2019/12/11
+     * @Param []
+     * @return void
+     */
+    public void showIfReturn(){
+        ifReturn = new Dialog(context);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.math_return_dialog,null);
+        ImageView cancel = layout.findViewById(R.id.cancel_return);
+        ImageView sure = layout.findViewById(R.id.sure_return);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ifReturn.dismiss();
+            }
+        });
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnHandlerFinish = true;
+                ifReturn.dismiss();
+                getWaterAndFertilizer();
+            }
+        });
+        ifReturn.setContentView(layout);
+        ifReturn.show();
+        WindowManager.LayoutParams attrs = ifReturn.getWindow().getAttributes();
+        attrs.gravity = Gravity.CENTER;
+        final float scale = context.getResources().getDisplayMetrics().density;
+        attrs.width = (int)(300*scale+0.5f);
+        attrs.height =(int)(300*scale+0.5f);
+        ifReturn.getWindow().setAttributes(attrs);
+        Window dialogWindow = ifReturn.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
+    }
+
+    public void exit() {
+        if(QuestionUtil.TRUE_ANSWER_COUNT>0 && QuestionUtil.TRUE_ANSWER_COUNT<datalist.size() && UserUtil.getUser().getMathRewardCount()>0)
+            showIfReturn();
+        else
+            activity.finish();
     }
 }

@@ -29,6 +29,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.GuideHelper;
+import com.li.knowledgefarm.Util.GuideHelper.TipData;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.EventBean;
@@ -82,6 +85,7 @@ public class MyFragment extends Fragment {
     private WindowManager wm;
     private DisplayMetrics ds;
     private int data;
+    private Button button;
 
     @Nullable
     @Override
@@ -213,7 +217,8 @@ public class MyFragment extends Fragment {
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext(),R.style.dialog_soft_input);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.shop_dialog, null);
-        Button button = layout.findViewById(R.id.buy);
+        FullScreen.hideBottomUIMenu(layout);
+        button = layout.findViewById(R.id.buy);
         Button cancel = layout.findViewById(R.id.btnCancel);
         TextView thisName = layout.findViewById(R.id.thisName);
         TextView thisPrice = layout.findViewById(R.id.thisPrice);

@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -48,6 +50,7 @@ public class GetMathQuestion extends SubjectInterface {
     private Handler getMath;
     private final Activity context;
     private Intent intent;
+    private Toast toast;
 
     public GetMathQuestion(Activity activity, Intent intent) {
         this.context = activity;
@@ -71,7 +74,13 @@ public class GetMathQuestion extends SubjectInterface {
             public void run() {
                 super.run();
                 if (UserUtil.getUser().getMathRewardCount() <= 0) {
-                    Toast.makeText(context,"今天的数学任务做完了哦",Toast.LENGTH_SHORT).show();
+                    Looper.prepare();
+                    if(toast == null) {
+                        toast = Toast.makeText(context, "今天的任务做完了哦", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,0);
+                        toast.show();
+                    }
+                    Looper.loop();
                 } else {
                     Request request = null;
                     switch (UserUtil.getUser().getGrade()) {
