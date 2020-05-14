@@ -45,6 +45,7 @@ public class QuestionUtil {
 
     public static int POSITION = 0; //
     public static int TRUE_ANSWER_COUNT = 0;
+    public static String CURRENT_SUBJECT;
 
     private Context context;
     private Activity activity;
@@ -60,6 +61,7 @@ public class QuestionUtil {
     private TextView btnPreQuestion; //下一题
     private TextView btnNextQuestion; //上一题
     private TextView number_tip;//显示回答正确数量及题目总数
+    private TextView finish_do; //获得奖励提示
     //填空题
     private TextView completion_question; //填空题问题
     private TextView isFalse; //回答是否错误文字提示
@@ -103,6 +105,7 @@ public class QuestionUtil {
         number_tip = activity.findViewById(R.id.number_tip);
         btnPreQuestion = activity.findViewById(R.id.btnPreQuestion);
         btnNextQuestion = activity.findViewById(R.id.btnNextQuestion);
+        finish_do = activity.findViewById(R.id.finish_do);
         //填空题布局
         completion_layout = activity.findViewById(R.id.completion_layout);
         //选择题布局
@@ -429,16 +432,26 @@ public class QuestionUtil {
                 String data = (String)msg.obj;
                 if(data!= null){
                     if(!data.equals("-1")){
-                        UserUtil.getUser().setMathRewardCount(UserUtil.getUser().getMathRewardCount() - 1);
-                        completion_answer.setVisibility(View.GONE);
-                        isFalse.setVisibility(View.INVISIBLE);
-                        isTrue.setVisibility(View.GONE);
+                        switch (CURRENT_SUBJECT){
+                            case "Math":
+                                UserUtil.getUser().setMathRewardCount(UserUtil.getUser().getMathRewardCount() - 1);
+                                break;
+                            case "Chinese":
+                                UserUtil.getUser().setChineseRewardCount(UserUtil.getUser().getChineseRewardCount() - 1);
+                                break;
+                            case "English":
+                                UserUtil.getUser().setEnglishRewardCount(UserUtil.getUser().getEnglishRewardCount() - 1);
+                                break;
+
+                        }
+                        finish_do.setVisibility(View.VISIBLE);
                         btnPreQuestion.setVisibility(View.GONE);
                         btnNextQuestion.setVisibility(View.GONE);
-                        completion_question.setText("你获得了水和肥料哦，快去照顾你的植物吧！");
-                        completion_question.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        if(returnHandlerFinish)
+                        number_tip.setVisibility(View.GONE);
+                        if(returnHandlerFinish) {
                             activity.finish();
+                            return;
+                        }
                     }else{
                         if(toast == null){
                             toast = Toast.makeText(context,"服务器开小差了",Toast.LENGTH_SHORT);
