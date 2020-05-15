@@ -1,12 +1,10 @@
 package com.knowledge_farm.front.question.controller;
 
-import com.knowledge_farm.entity.PetUtil;
-import com.knowledge_farm.entity.PetUtilType;
-import com.knowledge_farm.entity.Question;
-import com.knowledge_farm.entity.QuestionType;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.front.question.service.FrontQuestionService;
 import com.knowledge_farm.util.PageUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +27,8 @@ import java.util.List;
 public class FrontQuestionController {
     @Resource
     private FrontQuestionService frontQuestionService;
+    @Value("${excel.subjects}")
+    public List<String> subjects;
 
     @GetMapping("/toTest")
     public String toTest(){
@@ -50,12 +50,8 @@ public class FrontQuestionController {
         gradeList.add("二年级下");
         gradeList.add("三年级上");
         gradeList.add("三年级下");
-        List<String> subjectList = new ArrayList<>();
-        subjectList.add("Math");
-        subjectList.add("English");
-        subjectList.add("Chinese");
         model.addAttribute("grades", gradeList);
-        model.addAttribute("subjects", subjectList);
+        model.addAttribute("subjects", subjects);
         return "question-add";
     }
 
@@ -76,8 +72,215 @@ public class FrontQuestionController {
         return "question-edit";
     }
 
+    @GetMapping("/findAllQuestion")
+    public String findAllQuestion(@RequestParam(value = "questionTitle", required = false) String questionTitle,
+                                          @RequestParam(value = "questionTypeId", required = false) Integer questionTypeId,
+                                          @RequestParam(value = "grade", required = false) Integer grade,
+                                          @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                          @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+                                          Model model){
+        Page<Question> page = this.frontQuestionService.findAllQuestion(questionTitle, questionTypeId, grade, pageNumber, pageSize);
+        PageUtil<Question> pageUtil = new PageUtil<>(pageNumber, pageSize);
+        pageUtil.setTotalCount((int) page.getTotalElements());
+        pageUtil.setList(page.getContent());
+        List<String> gradeList = new ArrayList<>();
+        gradeList.add("一年级上");
+        gradeList.add("一年级下");
+        gradeList.add("二年级上");
+        gradeList.add("二年级下");
+        gradeList.add("三年级上");
+        gradeList.add("三年级下");
+        model.addAttribute("grades", gradeList);
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("questionPage", pageUtil);
+        switch (questionTypeId){
+            case 1:
+                return "question-singleChoice-list";
+            case 2:
+                return "question-completion-list";
+            case 3:
+                return "question-judgment-list";
+            default:
+                return "";
+        }
+    }
 
+    @PostMapping("/deleteOneQuestion")
+    @ResponseBody
+    public String deleteOneQuestion(@RequestParam("id") Integer id){
+        try {
+            this.frontQuestionService.deleteQuestion(id);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
 
+    @PostMapping("/deleteMultiQuestion")
+    @ResponseBody
+    public String deleteMultiQuestion(@RequestParam("deleteStr") String deleteStr){
+        String deleteIds[] = deleteStr.split(",");
+        List<Integer> idList = new ArrayList<>();
+        for(String id : deleteIds){
+            idList.add(Integer.parseInt(id));
+        }
+        try {
+            this.frontQuestionService.deleteQuestionByIdList(idList);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
+
+    @PostMapping("/addSingleChoiceQuestion")
+    @ResponseBody
+    public String addSingleChoiceQuestion(@RequestParam("questionTitle") String questionTitle,
+                                          @RequestParam("subject") String subject,
+                                          @RequestParam("grade") Integer grade,
+                                          @RequestParam("answer") String answer,
+                                          @RequestParam("choice1") String choice1,
+                                          @RequestParam("choice2") String choice2,
+                                          @RequestParam("choice3") String choice3){
+        try {
+            SingleChoice singleChoice = new SingleChoice();
+            QuestionType questionType = this.frontQuestionService.findQuestionTypeById(1);
+            QuestionTitle title = new QuestionTitle();
+            title.setTitle(questionTitle);
+            singleChoice.setQuestionType(questionType);
+            singleChoice.setSubject(subject);
+            singleChoice.setGrade(grade);
+            singleChoice.setAnswer(answer);
+            singleChoice.setChoice1(choice1);
+            singleChoice.setChoice2(choice2);
+            singleChoice.setChoice3(choice3);
+            singleChoice.setQuestionTitle(title);
+            title.setQuestion(singleChoice);
+            this.frontQuestionService.save(singleChoice);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
+
+    @PostMapping("/addCompletionQuestion")
+    @ResponseBody
+    public String addCompletionQuestion(@RequestParam("questionTitle") String questionTitle,
+                                        @RequestParam("subject") String subject,
+                                        @RequestParam("grade") Integer grade,
+                                        @RequestParam("answer") String answer){
+        try {
+            Completion completion = new Completion();
+            QuestionType questionType = this.frontQuestionService.findQuestionTypeById(2);
+            QuestionTitle title = new QuestionTitle();
+            title.setTitle(questionTitle);
+            completion.setQuestionType(questionType);
+            completion.setSubject(subject);
+            completion.setGrade(grade);
+            completion.setAnswer(answer);
+            completion.setQuestionTitle(title);
+            title.setQuestion(completion);
+            this.frontQuestionService.save(completion);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
+
+    @PostMapping("/addJudgmentQuestion")
+    @ResponseBody
+    public String addJudgmentQuestion(@RequestParam("questionTitle") String questionTitle,
+                                      @RequestParam("subject") String subject,
+                                      @RequestParam("grade") Integer grade,
+                                      @RequestParam("answer") Integer answer,
+                                      @RequestParam("choice") Integer choice){
+        try {
+            Judgment judgment = new Judgment();
+            QuestionType questionType = this.frontQuestionService.findQuestionTypeById(3);
+            QuestionTitle title = new QuestionTitle();
+            title.setTitle(questionTitle);
+            judgment.setQuestionType(questionType);
+            judgment.setSubject(subject);
+            judgment.setGrade(grade);
+            judgment.setAnswer(answer);
+            judgment.setChoice(choice);
+            judgment.setQuestionTitle(title);
+            title.setQuestion(judgment);
+            this.frontQuestionService.save(judgment);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
+
+    @PostMapping("/editSingleChoiceQuestion")
+    @ResponseBody
+    public String editSingleChoiceQuestion(@RequestParam("id") Integer id,
+                                           @RequestParam("questionTitle") String questionTitle,
+                                           @RequestParam("grade") Integer grade,
+                                           @RequestParam("answer") String answer,
+                                           @RequestParam("choice1") String choice1,
+                                           @RequestParam("choice2") String choice2,
+                                           @RequestParam("choice3") String choice3){
+        try {
+            SingleChoice singleChoice = (SingleChoice) this.frontQuestionService.findQuestionById(id);
+            singleChoice.getQuestionTitle().setTitle(questionTitle);;
+            singleChoice.setGrade(grade);
+            singleChoice.setAnswer(answer);
+            singleChoice.setChoice1(choice1);
+            singleChoice.setChoice2(choice2);
+            singleChoice.setChoice3(choice3);
+            this.frontQuestionService.save(singleChoice);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
+
+    @PostMapping("/editCompletionQuestion")
+    @ResponseBody
+    public String editCompletionQuestion(@RequestParam("id") Integer id,
+                                         @RequestParam("questionTitle") String questionTitle,
+                                         @RequestParam("grade") Integer grade,
+                                         @RequestParam("answer") String answer){
+        try {
+            Completion completion = (Completion) this.frontQuestionService.findQuestionById(id);
+            completion.getQuestionTitle().setTitle(questionTitle);;
+            completion.setGrade(grade);
+            completion.setAnswer(answer);
+            this.frontQuestionService.save(completion);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
+
+    @PostMapping("/editJudgmentQuestion")
+    @ResponseBody
+    public String editJudgmentQuestion(@RequestParam("id") Integer id,
+                                       @RequestParam("questionTitle") String questionTitle,
+                                       @RequestParam("grade") Integer grade,
+                                       @RequestParam("answer") Integer answer,
+                                       @RequestParam("choice") Integer choice){
+        try {
+            Judgment judgment = (Judgment) this.frontQuestionService.findQuestionById(id);
+            judgment.getQuestionTitle().setTitle(questionTitle);;
+            judgment.setGrade(grade);
+            judgment.setAnswer(answer);
+            judgment.setChoice(choice);
+            this.frontQuestionService.save(judgment);
+            return Result.SUCCEED;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
 
     @GetMapping(value = "/exportExcelModel")
     public void exportExcelModel(@RequestParam("questionTypeId") Integer questionTypeId, HttpServletResponse response) {

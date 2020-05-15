@@ -11,11 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.*;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,15 +49,48 @@ public class FrontQuestionService {
     public List<QuestionType> findAllQuestionType(){
         return this.questionRepository.findAllQuestionType();
     }
+    public QuestionType findQuestionTypeById(Integer id){
+        return this.questionRepository.findQuestionTypeById(id);
+    }
     public Question findQuestionById(Integer id){
         return this.questionRepository.findQuestionById(id);
     }
-//    public Page<Question> findAllQuestion(String questionTitle, Integer questionTypeId, Integer  grade){
-//        if(questionTitle != null){
-//
-//        }
-//        return this.questionRepository.findAll();
-//    }
+    public Page<Question> findAllQuestion(String questionTitle, Integer questionTypeId, Integer  grade, Integer pageNumber, Integer pageSize){
+        Specification<Question> spec = new Specification<Question>() {
+            @Override
+            public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> list = new ArrayList<>();
+                if(questionTitle != null && !questionTitle.equals("")){
+                    Join<QuestionTitle, Question> join = root.join("questionTitle", JoinType.INNER);
+                    list.add(cb.like(join.get("title").as(String.class), "%" + questionTitle + "%"));
+                }
+                if(questionTypeId != null){
+                    Join<QuestionType, Question> join = root.join("questionType", JoinType.INNER);
+                    list.add(cb.equal(join.get("id"), questionTypeId));
+                }
+                if(grade != null) {
+                    list.add(cb.equal(root.get("grade"), grade));
+                }
+                //此时条件之间是没有任何关系的。
+                Predicate[] arr = new Predicate[list.size()];
+                return cb.and(list.toArray(arr));
+            }
+        };
+        return this.questionRepository.findAll(spec, PageRequest.of(pageNumber - 1, pageSize));
+    }
+    @Transactional(readOnly = false)
+    public void deleteQuestion(Integer id){
+        Question question = this.questionRepository.findQuestionById(id);
+        this.questionRepository.delete(question);
+    }
+    @Transactional(readOnly = false)
+    public void deleteQuestionByIdList(List<Integer> idList){
+        this.questionRepository.deleteAllById(idList);
+    }
+    @Transactional(readOnly = false)
+    public void save(Question question){
+        this.questionRepository.save(question);
+    }
 
     /**
      * @Author 张帅华
@@ -483,14 +519,6 @@ public class FrontQuestionService {
         Integer questionId = Integer.parseInt(cellList.get(0).getStringCellValue());
         SingleChoice question = (SingleChoice)this.questionRepository.findQuestionById(questionId);
         question.getQuestionTitle().setTitle(cellList.get(1).getStringCellValue());
-        question.setSubject(cellList.get(2).getStringCellValue());
-        List<QuestionType> questionTypeList = this.questionRepository.findAllQuestionType();
-        for(QuestionType questionType : questionTypeList){
-            if(questionType.getName().equals(cellList.get(3).getStringCellValue())){
-                question.setQuestionType(questionType);
-                break;
-            }
-        }
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer(cellList.get(5).getStringCellValue());
         question.setChoice1(cellList.get(6).getStringCellValue());
@@ -501,14 +529,6 @@ public class FrontQuestionService {
         Integer questionId = Integer.parseInt(cellList.get(0).getStringCellValue());
         Completion question = (Completion)this.questionRepository.findQuestionById(questionId);
         question.getQuestionTitle().setTitle(cellList.get(1).getStringCellValue());
-        question.setSubject(cellList.get(2).getStringCellValue());
-        List<QuestionType> questionTypeList = this.questionRepository.findAllQuestionType();
-        for(QuestionType questionType : questionTypeList){
-            if(questionType.getName().equals(cellList.get(3).getStringCellValue())){
-                question.setQuestionType(questionType);
-                break;
-            }
-        }
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer(cellList.get(5).getStringCellValue());
     }
@@ -516,14 +536,6 @@ public class FrontQuestionService {
         Integer questionId = Integer.parseInt(cellList.get(0).getStringCellValue());
         Judgment question = (Judgment)this.questionRepository.findQuestionById(questionId);
         question.getQuestionTitle().setTitle(cellList.get(1).getStringCellValue());
-        question.setSubject(cellList.get(2).getStringCellValue());
-        List<QuestionType> questionTypeList = this.questionRepository.findAllQuestionType();
-        for(QuestionType questionType : questionTypeList){
-            if(questionType.getName().equals(cellList.get(3).getStringCellValue())){
-                question.setQuestionType(questionType);
-                break;
-            }
-        }
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer((cellList.get(5).getStringCellValue().equals("正确") ? 1 : 0));
         question.setChoice((cellList.get(6).getStringCellValue().equals("正确") ? 1 : 0));
@@ -666,13 +678,8 @@ public class FrontQuestionService {
         QuestionTitle questionTitle = new QuestionTitle();
         questionTitle.setTitle(cellList.get(1).getStringCellValue());
         question.setSubject(cellList.get(2).getStringCellValue());
-        List<QuestionType> questionTypeList = this.questionRepository.findAllQuestionType();
-        for(QuestionType questionType : questionTypeList){
-            if(questionType.getName().equals(cellList.get(3).getStringCellValue())){
-                question.setQuestionType(questionType);
-                break;
-            }
-        }
+        QuestionType questionType = this.questionRepository.findQuestionTypeById(1);
+        question.setQuestionType(questionType);
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer(cellList.get(5).getStringCellValue());
         question.setChoice1(cellList.get(6).getStringCellValue());
@@ -687,13 +694,8 @@ public class FrontQuestionService {
         QuestionTitle questionTitle = new QuestionTitle();
         questionTitle.setTitle(cellList.get(1).getStringCellValue());
         question.setSubject(cellList.get(2).getStringCellValue());
-        List<QuestionType> questionTypeList = this.questionRepository.findAllQuestionType();
-        for(QuestionType questionType : questionTypeList){
-            if(questionType.getName().equals(cellList.get(3).getStringCellValue())){
-                question.setQuestionType(questionType);
-                break;
-            }
-        }
+        QuestionType questionType = this.questionRepository.findQuestionTypeById(2);
+        question.setQuestionType(questionType);
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer(cellList.get(5).getStringCellValue());
         question.setQuestionTitle(questionTitle);
@@ -705,13 +707,8 @@ public class FrontQuestionService {
         QuestionTitle questionTitle = new QuestionTitle();
         questionTitle.setTitle(cellList.get(1).getStringCellValue());
         question.setSubject(cellList.get(2).getStringCellValue());
-        List<QuestionType> questionTypeList = this.questionRepository.findAllQuestionType();
-        for(QuestionType questionType : questionTypeList){
-            if(questionType.getName().equals(cellList.get(3).getStringCellValue())){
-                question.setQuestionType(questionType);
-                break;
-            }
-        }
+        QuestionType questionType = this.questionRepository.findQuestionTypeById(3);
+        question.setQuestionType(questionType);
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer((cellList.get(5).getStringCellValue().equals("正确") ? 1 : 0));
         question.setChoice((cellList.get(6).getStringCellValue().equals("正确") ? 1 : 0));
