@@ -585,12 +585,12 @@ public class UserServiceImpl {
     }
 
     /**
-     * @description: 宠物喂食
-     * @author :景光赞
-     * @date :2020/5/3 22:01
-     * @param :[userId, petId]
-     * @return :java.lang.String
-     */
+     * @Author 张帅华
+     * @Description 宠物喂食
+     * @Date 21:12 2020/5/14 0014
+     * @Param [userId, userPetHouseId, petUtilBagId]
+     * @return java.lang.String
+     **/
     @Transactional(readOnly = false)
     public String feedPet(Integer userId, Integer userPetHouseId, Integer petUtilBagId){
         UserPetUtilBag userPetUtilBag = this.userPetHouseService.findUserPetUtilBagById(petUtilBagId);
@@ -600,6 +600,41 @@ public class UserServiceImpl {
         Set<UserPetUtilBag> userPetUtilBagSet = user.getUserPetUtilBags();
         UserPetHouse userPetHouse = this.userPetHouseService.findUserPetHouseById(userPetHouseId);
         int number = userPetUtilBag.getNumber();
+
+        switch (petUtilType.getId()){
+            case 1:
+                int userPetLife = userPetHouse.getLife();
+                int petLife = 3 * userPetHouse.getPet().getLife();
+                int lifeValue = userPetUtilBag.getPetUtil().getValue();
+                if(userPetLife >= petLife){
+                    return Result.FALSE;
+                }
+                if(userPetLife + lifeValue >= petLife){
+                    userPetHouse.setLife(petLife);
+                }else{
+                    userPetHouse.setLife(userPetLife + lifeValue);
+                }
+                break;
+            case 2:
+                int userPetPhysical = userPetHouse.getPhysical();
+                int petPhysical = userPetHouse.getPet().getPhysical();
+                int physicalValue = userPetUtilBag.getPetUtil().getValue();
+                if(userPetPhysical >= petPhysical){
+                    return Result.FALSE;
+                }
+                if(userPetPhysical + physicalValue >= petPhysical){
+                    userPetHouse.setPhysical(petPhysical);
+                }else{
+                    userPetHouse.setPhysical(userPetPhysical + physicalValue);
+                }
+                break;
+            case 3:
+                int userPetIntelligence = userPetHouse.getIntelligence();
+                int intelligenceValue = userPetUtilBag.getPetUtil().getValue();
+                userPetHouse.setIntelligence(userPetIntelligence + intelligenceValue);
+                break;
+        }
+
         if(number - 1 <= 0){
             userPetUtilBagSet.remove(userPetUtilBag);
             userPetUtilBag.setUser(null);
@@ -607,43 +642,11 @@ public class UserServiceImpl {
         }else{
             userPetUtilBag.setNumber(number - 1);
         }
+        return Result.TRUE;
+    }
 
-        switch (petUtilType.getId()){
-            case 1:
-                int userPetLife = userPetHouse.getLife();
-                int petLife = 3 * userPetHouse.getPet().getLife();
-                int lifeValue = userPetUtilBag.getPetUtil().getValue();
-                if(userPetLife < petLife){
-                    if(userPetLife + lifeValue >= petLife){
-                        userPetHouse.setLife(petLife);
-                    }else{
-                        userPetHouse.setLife(userPetLife + lifeValue);
-                    }
-                    return Result.TRUE;
-                }else{
-                    return Result.FALSE;
-                }
-            case 2:
-                int userPetPhysical = userPetHouse.getPhysical();
-                int petPhysical = userPetHouse.getPet().getPhysical();
-                int physicalValue = userPetUtilBag.getPetUtil().getValue();
-                if(userPetPhysical < petPhysical){
-                    if(userPetPhysical + physicalValue >= petPhysical){
-                        userPetHouse.setPhysical(petPhysical);
-                    }else{
-                        userPetHouse.setPhysical(userPetPhysical + physicalValue);
-                    }
-                    return Result.TRUE;
-                }else{
-                    return Result.FALSE;
-                }
-            case 3:
-                int userPetIntelligence = userPetHouse.getIntelligence();
-                int intelligenceValue = userPetUtilBag.getPetUtil().getValue();
-                userPetHouse.setIntelligence(userPetIntelligence + intelligenceValue);
-                return Result.TRUE;
-        }
-        return Result.FALSE;
+    public UserPetHouse findUserPetHouseById(Integer userId, Integer id){
+        return this.userPetHouseService.findUserPetHouseByUserAndId(userId, id);
     }
 
     /**

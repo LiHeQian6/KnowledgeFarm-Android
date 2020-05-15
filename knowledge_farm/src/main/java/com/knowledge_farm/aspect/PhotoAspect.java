@@ -44,6 +44,10 @@ public class PhotoAspect {
     private void showUserPetHouse() {
     }
 
+    @Pointcut(value = "execution(* com.knowledge_farm.user.controller.UserController.findUserPetHouseById(..))")
+    private void findUserPetHouseById() {
+    }
+
     @Pointcut(value = "execution(* com.knowledge_farm.pet_util.controller.PetUtilController.showInStore(..))")
     private void showPetUtilInStore() {
     }
@@ -143,6 +147,20 @@ public class PhotoAspect {
             }
         }
     }
+
+    @AfterReturning(pointcut = "findUserPetHouseById()", returning="result")
+    public void findUserPetHouseById(JoinPoint joinPoint, Object result) {
+        if(result instanceof UserPetHouse){
+            Pet pet = ((UserPetHouse) result).getPet();
+            if((pet.getImg1().substring(0,4)).equals("http")){
+                return;
+            }
+            pet.setImg1(photoUrl + pet.getImg1());
+            pet.setImg2(photoUrl + pet.getImg2());
+            pet.setImg3(photoUrl + pet.getImg3());
+        }
+    }
+
 
     @AfterReturning(pointcut = "showPetUtilInStore()", returning="result")
     public void showPetUtilInStore(JoinPoint joinPoint, Object result) {

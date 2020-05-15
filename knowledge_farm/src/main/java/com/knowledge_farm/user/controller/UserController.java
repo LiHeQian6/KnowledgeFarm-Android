@@ -2,6 +2,7 @@ package com.knowledge_farm.user.controller;
 
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
+import com.knowledge_farm.entity.UserPetHouse;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.util.Email;
 import io.swagger.annotations.Api;
@@ -786,7 +787,8 @@ public class UserController {
     @GetMapping("feedPet")
     public String feedPet(@RequestParam("userPetHouseId") Integer userPetHouseId,
                           @RequestParam("petUtilBagId") Integer petUtilBagId,
-                          HttpSession session, HttpServletResponse response){
+                          HttpSession session,
+                          HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
@@ -797,6 +799,30 @@ public class UserController {
             e.printStackTrace();
         }
         return Result.FALSE;
+    }
+
+    @ApiOperation(value = "查询用户宠物信息", notes = "返回值： UserPetHouse")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userPetHouseId", value = "用户宠物Id", dataType = "int", paramType = "query", required = true)
+    })
+    @GetMapping("findUserPetHouseById")
+    public Object findUserPetHouseById(@RequestParam("userPetHouseId") Integer userPetHouseId,
+                                             HttpSession session,
+                                             HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                UserPetHouse userPetHouse = this.userService.findUserPetHouseById(userId, userPetHouseId);
+                if(userPetHouse != null){
+                    return userPetHouse;
+                }
+                return "{}";
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "{}";
     }
 
 }

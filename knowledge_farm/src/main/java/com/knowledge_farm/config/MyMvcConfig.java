@@ -41,7 +41,7 @@ public class MyMvcConfig {
                 //super.addInterceptors(registry);
                 //静态资源：*.css,*.js
                 //StringBoot已经做好了静态资源映射
-                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/admin/**")
+                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/adminaaaa/**")
                         .excludePathPatterns("/admin/toLogin", "/admin/changeTestCode", "/admin/login");
             }
 

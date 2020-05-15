@@ -7,12 +7,23 @@ package com.knowledge_farm.entity;
  * @Date 2020-05-04 10:17
  */
 public class BagPetUtilItem {
+    private Integer id;
     private Integer number;
     private PetUtil petUtil;
 
-    public BagPetUtilItem(Integer number, PetUtil petUtil) {
+
+    public BagPetUtilItem(Integer id, Integer number, PetUtil petUtil) {
+        this.id = id;
         this.number = number;
         this.petUtil = petUtil;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getNumber() {
