@@ -118,7 +118,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content">
                 <ImageView android:layout_width="50dp"
-                    android:src="@drawable/shop"
+                    android:src="@drawable/shop1"
                     android:id="@+id/shop"
                     android:layout_height="50dp"/>
                 <TextView android:layout_width="wrap_content"
@@ -144,7 +144,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content">
                 <ImageView android:layout_width="50dp"
-                    android:src="@drawable/setting"
+                    android:src="@drawable/setting1"
                     android:id="@+id/setting"
                     android:layout_height="50dp"/>
                 <TextView android:layout_width="wrap_content"
