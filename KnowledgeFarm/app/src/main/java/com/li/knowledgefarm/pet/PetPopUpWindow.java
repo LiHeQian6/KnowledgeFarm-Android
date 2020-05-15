@@ -258,58 +258,6 @@ public class PetPopUpWindow extends PopupWindow {
      * @Author li
      * @param petId
      * @return void
-     * @Description 喂养宠物
-     * @Date 12:22 2020/5/1
-     **/
-    private void feedPet(final int petId) {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/pet/changePet?willUsingPetId="+petId).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Log.e("喂养宠物", "请求失败");
-                        Message message = Message.obtain();
-                        message.obj = "Fail";
-                        change_pet.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        OkHttpUtils.unauthorized(response.code());
-                        String notify_message = response.body().string();
-                        Message message = Message.obtain();
-                        message.obj = notify_message;
-                        change_pet.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-        change_pet = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String message = (String)msg.obj;
-                if (!message.equals("Fail")){
-                    if (message.equals("true")){
-
-                    }else
-                        Toast.makeText(context,"投喂失败！",Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-    }
-
-    /**
-     * @Author li
-     * @param petId
-     * @return void
      * @Description 更换正在使用的宠物
      * @Date 21:49 2020/4/30
      **/
@@ -374,7 +322,7 @@ public class PetPopUpWindow extends PopupWindow {
      * @Author li
      * @param
      * @return void
-     * @Description
+     * @Description 获取用户的宠物道具
      * @Date 10:54 2020/5/14
      **/
     @SuppressLint("HandlerLeak")
@@ -445,6 +393,15 @@ public class PetPopUpWindow extends PopupWindow {
         };
     }
 
+    /**
+     * @Author li
+     * @param petId
+     * @param petUtilId
+     * @param i
+     * @return void
+     * @Description 使用宠物道具
+     * @Date 11:19 2020/5/15
+     **/
     private void userPetUtil(final int petId, final int petUtilId, final int i) {
         new Thread(){
             @Override
@@ -484,10 +441,11 @@ public class PetPopUpWindow extends PopupWindow {
                         BagPetUtilItem bagPetUtilItem = pet_utils.get(i);
                         bagPetUtilItem.setNumber(bagPetUtilItem.getNumber()-1);
                         pet_utils.remove(bagPetUtilItem);
-                        pet_utils.add(bagPetUtilItem);
+                        if (bagPetUtilItem.getNumber()!=0)
+                            pet_utils.add(bagPetUtilItem);
                         Collections.sort(pet_utils);
                         util_adapter.notifyDataSetChanged();
-                        //TODO 更新展示的宠物的信息
+                        getPetInfo(petId);
                     }else
                         Toast.makeText(context,"使用失败！",Toast.LENGTH_SHORT).show();
                 }else {
@@ -496,4 +454,56 @@ public class PetPopUpWindow extends PopupWindow {
             }
         };
     }
+
+    /**
+     * @Author li
+     * @param petId
+     * @return void
+     * @Description 得到某个宠物的信息
+     * @Date 11:20 2020/5/15
+     **/
+    private void getPetInfo(final int petId){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder()
+                        .url(context.getResources().getString(R.string.URL)+"/user/findUserPetHouseById?userPetHouseId="+petId).build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("宠物信息", "请求失败");
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        change_pet.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
+                        String notify_message = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = notify_message;
+                        change_pet.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        change_pet = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String message = (String)msg.obj;
+                System.out.println(message);
+                if (!message.equals("Fail")){
+                    UserPetHouse userPetHouse = gson.fromJson(message, UserPetHouse.class);
+                    setPetDetail(userPetHouse);
+                }else {
+                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
 }
