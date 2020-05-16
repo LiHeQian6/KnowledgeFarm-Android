@@ -48,6 +48,12 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
     <ImageView
+        android:src="@drawable/pk"
+        android:id="@+id/pk"
+        android:visibility="gone"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+    <ImageView
         android:id="@+id/add"
         android:visibility="gone"
         android:src="@drawable/addfriend"
@@ -66,6 +72,7 @@
         android:text="访问"
         android:id="@+id/go"
         android:layout_weight="1"
+        android:visibility="gone"
         android:background="@drawable/buttonbackground"
         android:layout_height="30dp"/>
 </LinearLayout>

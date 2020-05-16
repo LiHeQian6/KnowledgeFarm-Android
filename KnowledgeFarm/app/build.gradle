@@ -12,7 +12,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。
-            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a','x86', 'x86_64'
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
         }
         manifestPlaceholders = [
@@ -28,8 +28,8 @@ android {
         }
     }
 
-    sourceSets{
-        main{
+    sourceSets {
+        main {
             res.srcDirs = [
                     'src/main/res/layout/bag',
                     'src/main/res/layout/pet',

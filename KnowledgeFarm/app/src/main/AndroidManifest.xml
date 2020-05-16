@@ -31,9 +31,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".pk.PkActivity"></activity>
+
         <service
             android:name=".Main.bgsound.BgSoundService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".Settings.SettingMessageActivity"
