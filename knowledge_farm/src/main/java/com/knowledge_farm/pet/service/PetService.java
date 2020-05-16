@@ -1,9 +1,6 @@
 package com.knowledge_farm.pet.service;
 
-import com.knowledge_farm.entity.Pet;
-import com.knowledge_farm.entity.PetVO;
-import com.knowledge_farm.entity.User;
-import com.knowledge_farm.entity.UserPetHouse;
+import com.knowledge_farm.entity.*;
 import com.knowledge_farm.pet.dao.PetDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import org.springframework.stereotype.Service;
@@ -11,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -71,24 +69,38 @@ public class PetService {
     }
 
     @Transactional(readOnly = false)
-    public void changePet(Integer userId, Integer willUsingPetId){
+        public String changePet(Integer userId, Integer willUsingPetId){
         User user = this.userService.findUserById(userId);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
-        int isChanging1 = 0;
-        int isChanging2 = 0;
+        int count = 0;
+        int count1 = -1;
+        int count2 = -1;
+
         for(UserPetHouse userPetHouse : userPetHouses){
             if(userPetHouse.getIfUsing() == 1){
-                userPetHouse.setIfUsing(0);
-                isChanging1 = 1;
+                count1 = count;;
             }
             if(userPetHouse.getPet().getId() == willUsingPetId){
-                userPetHouse.setIfUsing(1);
-                isChanging2 = 1;
+                count2 = count;
             }
-            if(isChanging1 == 1 && isChanging2 == 1){
+            if(count1 != -1 && count2 != -1){
                 break;
             }
+            count++;
         }
+        if(count1 == -1 || count2 == -1){
+            return Result.FALSE;
+        }
+        count = 0;
+        for(UserPetHouse userPetHouse : userPetHouses){
+            if(count == count1){
+                userPetHouse.setIfUsing(0);
+            }
+            if(count == count2){
+                userPetHouse.setIfUsing(1);
+            }
+        }
+        return Result.TRUE;
     }
 
 //    @Transactional(readOnly = false)

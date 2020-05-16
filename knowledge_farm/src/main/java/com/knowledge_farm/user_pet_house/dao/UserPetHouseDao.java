@@ -5,10 +5,13 @@ import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserPetHouse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.io.Serializable;
 
 public interface UserPetHouseDao extends JpaRepository<UserPetHouse,Integer>, JpaSpecificationExecutor<UserPetHouse>, Serializable {
     UserPetHouse findUserPetHouseByUserAndPet(User user, Pet pet);
-    public UserPetHouse findUserPetHouseById(Integer id);
+    UserPetHouse findUserPetHouseById(Integer id);
+    @Query("select uph from UserPetHouse uph where uph.user.id = ?1 and uph.id = ?2")
+    UserPetHouse findUserPetHouseByUserAndId(Integer userId, Integer id);
 }

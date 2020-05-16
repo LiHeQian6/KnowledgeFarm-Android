@@ -1,7 +1,5 @@
 package com.knowledge_farm.entity;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 
 /**

@@ -56,6 +56,14 @@ public class NotificationService {
         return this.notificationDao.findSendByNotificationType(userId, typeId, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "createTime")));
     }
 
+    public Notification findNotificationByUser(Integer userFromId, Integer userToId, Integer typeId){
+        return this.notificationDao.findNotificationByUser(userFromId, userToId, typeId);
+    }
+
+    public Notification findNotificationByUser2(Integer userFromId, Integer userToId, Integer typeId){
+        return this.notificationDao.findNotificationByUser2(userFromId, userToId, typeId);
+    }
+
     public List<Boolean> isHavingNewNotification(Integer userId){
         User user = this.userService.findUserById(userId);
         List<Boolean> isHavingRead = new ArrayList<>();
@@ -91,12 +99,15 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = false)
-    public void addUserFriendNotification(Integer userId, String account){
+    public String addUserFriendNotification(Integer userId, String account){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
-        Notification find = this.notificationDao.findNotificationByFromAndTo(userId, account);
+        if(user == null || friendUser == null){
+            return Result.FALSE;
+        }
+        Notification find = this.notificationDao.findNotificationByUserAndHaveRead(userId, account);
         if(find != null){
-            return;
+            return Result.TRUE;
         }
         String title = "新朋友";
         String content = friendUser.getNickName() + "请求添加你为好友";
@@ -112,6 +123,7 @@ public class NotificationService {
         notification.setHaveRead(0);
         notification.setNotificationType(notificationType);
         this.notificationDao.save(notification);
+        return Result.TRUE;
     }
 
     @Transactional(readOnly = false)
@@ -204,17 +216,45 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = false)
-    public void editNotificationReadStatus(List<Integer> idList, Integer userId, Integer haveRead, Integer typeId, Integer flag){
-        List<Notification> notifications = null;
-        if(flag == 0){
-            notifications = this.notificationDao.findNotificationListByFromAndTo(idList, userId, typeId);
-        }else{
-            notifications = this.notificationDao.findNotificationListByFromAndTo2(userId, idList, typeId);
+    public String editNotificationReadStatus(Integer userId, Integer flag, List<Integer> idList){
+        User user = this.userService.findUserById(userId);
+        List<Notification> notifications = this.notificationDao.findAllById(idList);
+        int count = 0;
+        switch (flag){
+            case 0:
+                for(Notification notification : notifications){
+                    if(notification.getTo() == user){
+                        count++;
+                    }
+                }
+                break;
+            case 1:
+                for(Notification notification : notifications){
+                    if(notification.getFrom() == user){
+                        count++;
+                    }
+                }
+                break;
         }
-        for(Notification notification : notifications){
-            notification.setHaveRead(haveRead);
+        if(count == notifications.size()){
+            for(Notification notification : notifications){
+                Integer notificationTypeId = notification.getNotificationType().getId();
+                if(notificationTypeId == 2){
+                    if(notification.getHaveRead() == 2){
+                        notification.setHaveRead(1);
+                    }else if(notification.getHaveRead() == -2){
+                        notification.setHaveRead(-1);
+                    }
+                }else if(notificationTypeId == 3){
+                    if(notification.getHaveRead() == 0){
+                        notification.setHaveRead(1);
+                    }
+                }
+            }
+            this.notificationDao.saveAll(notifications);
+            return Result.TRUE;
         }
-        this.notificationDao.saveAll(notifications);
+        return Result.FALSE;
     }
 
 }

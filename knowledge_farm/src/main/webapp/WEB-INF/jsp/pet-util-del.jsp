@@ -276,7 +276,7 @@
                         </div>
                         <div class="layui-input-inline">
                             <select name="petUtilTypeId">
-                                <option value="0" selected="">请选择宠物道具类型名称</option>
+                                <option value="0" selected="">请选择宠物道具类型</option>
                                 <c:forEach var="petUtilType" items="${petUtilTypes}">
                                     <c:if test="${petUtilType.id == param.petUtilTypeId}">
                                         <option value="${petUtilType.id}" selected>${petUtilType.name}</option>

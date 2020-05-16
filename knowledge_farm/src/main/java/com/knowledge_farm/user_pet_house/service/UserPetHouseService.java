@@ -38,6 +38,10 @@ public class UserPetHouseService {
         return this.userPetHouseDao.findUserPetHouseById(id);
     }
 
+    public UserPetHouse findUserPetHouseByUserAndId(Integer userId, Integer id){
+        return this.userPetHouseDao.findUserPetHouseByUserAndId(userId, id);
+    }
+
     public UserPetUtilBag findUserPetUtilBagById(Integer id){
         return this.userPetUtilBagDao.findUserPetUtilBagById(id);
     }
@@ -58,7 +62,7 @@ public class UserPetHouseService {
             Set<UserPetUtilBag> userPetUtilBags = user.getUserPetUtilBags();
             List<BagPetUtilItem> bagPetUtilItems = new ArrayList<>();
             for(UserPetUtilBag userPetUtilBag : userPetUtilBags){
-                BagPetUtilItem bagPetUtilItem = new BagPetUtilItem(userPetUtilBag.getNumber(), userPetUtilBag.getPetUtil());
+                BagPetUtilItem bagPetUtilItem = new BagPetUtilItem(userPetUtilBag.getId(), userPetUtilBag.getNumber(), userPetUtilBag.getPetUtil());
                 bagPetUtilItems.add(bagPetUtilItem);
             }
             return bagPetUtilItems;
