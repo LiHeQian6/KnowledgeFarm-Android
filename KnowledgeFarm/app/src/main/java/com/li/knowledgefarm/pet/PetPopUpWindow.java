@@ -495,9 +495,9 @@ public class PetPopUpWindow extends PopupWindow {
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 String message = (String)msg.obj;
-                System.out.println(message);
                 if (!message.equals("Fail")){
                     UserPetHouse userPetHouse = gson.fromJson(message, UserPetHouse.class);
+                    pets.set(selectItem,userPetHouse);
                     setPetDetail(userPetHouse);
                 }else {
                     Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
