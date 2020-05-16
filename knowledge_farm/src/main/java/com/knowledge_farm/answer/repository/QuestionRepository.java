@@ -34,11 +34,4 @@ public interface QuestionRepository extends JpaRepository<Question,Integer>, Jpa
     List<QuestionType> findAllQuestionType();
 
     Page<Question> findAll(Specification<Question> specification, Pageable pageable);
-
-    @Query("delete from Question q where q.id in ?1")
-    @Modifying
-    int deleteAllById(List<Integer> idList);
-
-
-
 }

@@ -53,11 +53,6 @@ public class PetController {
         }
         return new ArrayList<>();
     }
-    @ApiOperation(value = "商店展示所有宠物", notes = "返回值：List（PetVO）")
-    @GetMapping("/showInStore2")
-    public List<PetVO> showInStore2(){
-        return petService.showAllPetInStore(109);
-    }
 
     @ApiOperation(value = "切换使用的宠物", notes = "返回值：(String)true || (String)false")
     @ApiImplicitParams({
@@ -68,8 +63,7 @@ public class PetController {
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
-                this.petService.changePet(userId, willUsingPetId);
-                return Result.TRUE;
+                return this.petService.changePet(userId, willUsingPetId);
             }
             response.sendError(401);
         }catch (Exception e){

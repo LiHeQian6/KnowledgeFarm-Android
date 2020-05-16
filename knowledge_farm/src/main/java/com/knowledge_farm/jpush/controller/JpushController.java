@@ -18,9 +18,4 @@ public class JpushController {
     @Resource
     private JpushService jpushService;
 
-    @GetMapping("/test")
-    public void test(){
-
-    }
-
 }

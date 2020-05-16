@@ -85,7 +85,8 @@ public class FrontQuestionService {
     }
     @Transactional(readOnly = false)
     public void deleteQuestionByIdList(List<Integer> idList){
-        this.questionRepository.deleteAllById(idList);
+        List<Question> questions = this.questionRepository.findAllById(idList);
+        this.questionRepository.deleteAll(questions);
     }
     @Transactional(readOnly = false)
     public void save(Question question){

@@ -116,8 +116,7 @@ public class UserFriendController {
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
-                this.userFriendService.addUserFriend(sendAccount, userId);
-                return Result.TRUE;
+                return this.userFriendService.addUserFriend(sendAccount, userId);
             }
             response.sendError(401);
         }catch (Exception e){

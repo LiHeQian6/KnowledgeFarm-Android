@@ -49,9 +49,12 @@ public class UserFriendServiceImpl {
     }
 
     @Transactional(readOnly = false)
-    public void addUserFriend(String sendAccount, Integer userId){
+    public String addUserFriend(String sendAccount, Integer userId){
         User user = this.userService.findUserByAccount(sendAccount);
         User friendUser = this.userService.findUserById(userId);
+        if(user == null || friendUser == null){
+            return Result.FALSE;
+        }
 
         UserFriend userFriend = new UserFriend();
         userFriend.setUser(user);
@@ -66,17 +69,16 @@ public class UserFriendServiceImpl {
         friends.add(userFriend1);
         this.userFriendDao.saveAll(friends);
 
-        List<Integer> idList = new ArrayList<>();
-        idList.add(user.getId());
-        this.notificationService.editNotificationReadStatus(idList, userId, 2, 2, 0);
+        Notification notification = this.notificationService.findNotificationByUser(user.getId(), userId, 2);
+        notification.setHaveRead(2);
+        return Result.TRUE;
     }
 
     @Transactional(readOnly = false)
     public void refuseUserFriend(String sendAccount, Integer userId){
         User user = this.userService.findUserByAccount(sendAccount);
-        List<Integer> idList = new ArrayList<>();
-        idList.add(user.getId());
-        this.notificationService.editNotificationReadStatus(idList, userId, -2, 2, 0);
+        Notification notification = this.notificationService.findNotificationByUser(user.getId(), userId, 2);
+        notification.setHaveRead(-2);
     }
 
     @Transactional(readOnly = false)
@@ -84,6 +86,12 @@ public class UserFriendServiceImpl {
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserByAccount(account);
         List<UserFriend> userFriends2 = this.userFriendDao.findUserFriendByUserAndFriendUser(user.getId(), friendUser.getId());
+        Notification notification = this.notificationService.findNotificationByUser2(user.getId(), userId, 2);
+        if(notification != null){
+            List<Integer> id = new ArrayList<>();
+            id.add(notification.getId());
+            this.notificationService.deleteNotification(id);
+        }
         this.userFriendDao.deleteAll(userFriends2);
     }
 

@@ -115,8 +115,7 @@ public class NotificationController {
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
-                this.notificationService.addUserFriendNotification(userId, account);
-                return Result.TRUE;
+                return this.notificationService.addUserFriendNotification(userId, account);
             }
             response.sendError(401);
         }catch (Exception e){
@@ -124,26 +123,6 @@ public class NotificationController {
         }
         return Result.FALSE;
     }
-
-//    @ApiOperation(value = "根据id删除消息记录", notes = "返回值：(String)true：成功 || (String)false；失败")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "ids", value = "消息记录的id字符串(若有多个id，用逗号分隔开)", dataType = "String", paramType = "query", required = true)
-//    })
-//    @GetMapping("/deleteNotification")
-//    public String deleteNotification(@RequestParam("ids") String notificationIds){
-//        try {
-//            String ids[] = notificationIds.split(",");
-//            List<Integer> idList = new ArrayList<>();
-//            for(String id : ids){
-//                idList.add(Integer.parseInt(id));
-//            }
-//            this.notificationService.deleteNotification(idList);
-//            return Result.TRUE;
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            return Result.FALSE;
-//        }
-//    }
 
     @ApiOperation(value = "删除指定类型的消息记录", notes = "返回值：(String)true：成功 || (String)false；失败")
     @ApiImplicitParams({
@@ -164,50 +143,29 @@ public class NotificationController {
         return Result.FALSE;
     }
 
-//    @ApiOperation(value = "根据id修改消息状态", notes = "返回值：(String)true：成功 || (String)false；失败")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "ids", value = "消息记录的id字符串(若有多个id，用逗号分隔开)", dataType = "string", paramType = "query", required = true),
-//            @ApiImplicitParam(name = "haveRead", value = "消息状态", dataType = "int", paramType = "query", required = true)
-//    })
-//    @GetMapping("/editNotificationReadStatus")
-//    public String editNotificationReadStatus(@RequestParam("ids") String notificationIds, @RequestParam("haveRead") Integer haveRead){
-//        String ids[] = notificationIds.split(",");
-//        List<Integer> idList = new ArrayList<>();
-//        for(String id : ids){
-//            idList.add(Integer.parseInt(id));
-//        }
-//        try {
-//            this.notificationService.editNotificationReadStatus(idList, haveRead);
-//            return Result.TRUE;
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            return Result.FALSE;
-//        }
-//    }
-
-    @ApiOperation(value = "修改消息状态", notes = "返回值：(String)true：成功 || (String)false；失败")
+    @ApiOperation(value = "根据id修改消息状态", notes = "返回值：(String)true：成功 || (String)false；失败")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "ids", value = "对方用户的id字符串(若有多个id，用逗号分隔开)", dataType = "string", paramType = "query", required = true),
-            @ApiImplicitParam(name = "haveRead", value = "消息状态", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "typeId", value = "消息类型", dataType = "int", paramType = "query", required = true),
-            @ApiImplicitParam(name = "flag", value = "1：表示ids是接收方id（to） || 0：表示ids是发送方id(from)", dataType = "int", paramType = "query", required = true)
+            @ApiImplicitParam(name = "ids", value = "消息记录的id字符串(若有多个id，用逗号分隔开)", dataType = "string", paramType = "query", required = true),
+            @ApiImplicitParam(name = "flag", value = "1:表示该用户是发送方 0表示该用户是接收方", dataType = "int", paramType = "query", required = true)
     })
-    @GetMapping("/editNotificationReadStatus")
+    @PostMapping("/editNotificationReadStatus")
     public String editNotificationReadStatus(@RequestParam("ids") String notificationIds,
-                                             @RequestParam("haveRead") Integer haveRead,
-                                             @RequestParam("typeId") Integer typeId,
                                              @RequestParam("flag") Integer flag,
-                                             HttpSession session, HttpServletResponse response){
-        String ids[] = notificationIds.split(",");
-        List<Integer> idList = new ArrayList<>();
-        for(String id : ids){
-            idList.add(Integer.parseInt(id));
-        }
+                                             HttpSession session,
+                                             HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
-                this.notificationService.editNotificationReadStatus(idList, userId, haveRead, typeId, flag);
-                return Result.TRUE;
+                //判断flag是否是指定范围的值
+                if(flag != 0 && flag != 1){
+                    return Result.FALSE;
+                }
+                String ids[] = notificationIds.split(",");
+                List<Integer> idList = new ArrayList<>();
+                for(String id : ids){
+                    idList.add(Integer.parseInt(id));
+                }
+                return this.notificationService.editNotificationReadStatus(userId, flag, idList);
             }
             response.sendError(401);
         }catch (Exception e){
