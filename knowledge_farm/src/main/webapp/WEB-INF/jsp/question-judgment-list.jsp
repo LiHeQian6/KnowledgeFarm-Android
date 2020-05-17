@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2020/5/2 0002
-  Time: 18:29
+  Date: 2020/5/17 0017
+  Time: 13:27
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -32,59 +32,68 @@
     <script>
         //初始化左侧菜单（作物管理）
         window.onload = function(){
-            $("#initPetManager").attr("class","sub-menu opened");
-            $("#initPetManager2").attr("class","current");
+            $("#initQuestionManager").attr("class","sub-menu opened");
+            $("#initQuestionManager3").attr("class","current");
         }
 
-        //恢复单个作物信息
-        function recoveryOnePet(id){
-            layer.confirm('确认要恢复吗？',function(index){
-                $.post("${ctx}/admin/pet/recoveryOnePet",{"id":id},function(data){
+        //删除单个题目
+        function deleteOneQuestion(id){
+            layer.confirm('删除后无法恢复，确认要删除数据吗？',function(index){
+                $.post("${ctx}/admin/question/deleteOneQuestion",{"id":id},function(data){
                     if(data == "succeed"){
-                        window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}";
-                    }else if(data == "fail"){
-                        layer.msg('恢复失败');
-                    }
-                })
-            });
-        }
-
-        //恢复批量作物信息
-        function recoveryMultiPet() {
-            var arrRecovery = document.getElementsByName("checkBox");
-            var recoveryStr="";
-            for(i in arrRecovery){
-                if(arrRecovery[i].checked){
-                    recoveryStr = recoveryStr + arrRecovery[i].value + ",";
-                }
-            }
-            layer.confirm('确认要批量恢复吗？',function(index){
-                if(recoveryStr != ""){
-                    $.post("${ctx}/admin/pet/recoveryMultiPet",{"recoveryStr":recoveryStr},function(data){
-                        if(data == "succeed"){
-                            window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}";
-                        }else if(data == "fail"){
-                            layer.msg('恢复失败');
-                        }
-                    })
-                }else{
-                    layer.msg('恢复不能为空');
-                }
-            });
-        }
-
-        //彻底删除作物信息
-        function deleteThoroughPet(id){
-            layer.confirm('彻底删除无法恢复，确认要删除数据吗？',function(index){
-                $.post("${ctx}/admin/pet/deleteThoroughPet",{"id":id},function(data){
-                    if(data == "succeed"){
-                        window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}";
+                        window.location.href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageUtilSize=${questionPage.pageSize}";
                     }else if(data == "fail"){
                         layer.msg('删除失败');
                     }
                 })
             });
         }
+
+        //删除批量题目
+        function deleteMultiQuestion() {
+            var arrDelete = document.getElementsByName("checkBox");
+            var deleteStr="";
+            for(i in arrDelete){
+                if(arrDelete[i].checked){
+                    deleteStr = deleteStr + arrDelete[i].value + ",";
+                }
+            }
+            layer.confirm('删除后无法恢复，确认要批量删除吗？',function(index){
+                if(deleteStr != ""){
+                    $.post("${ctx}/admin/question/deleteMultiQuestion",{"deleteStr":deleteStr},function(data){
+                        if(data == "succeed"){
+                            window.location.href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageUtilSize=${questionPage.pageSize}";
+                        }else if(data == "fail"){
+                            layer.msg('删除失败');
+                        }
+                    })
+                }else{
+                    layer.msg('删除不能为空');
+                }
+            });
+        }
+
+        //添加题目
+        function addQuestion(title,url,w,h){
+            x_admin_show(title,url,w,h);
+        }
+
+        //添加批量题目
+        function addMultiQuestion(){
+            $.post("${ctx}/admin/question/deleteOneQuestion",{"id":id},function(data){
+                if(data == "succeed"){
+
+                }else if(data == "fail"){
+                    layer.msg('删除失败');
+                }
+            })
+        }
+
+        //修改题目
+        function updateQuestion(title,url,w,h) {
+            x_admin_show(title,url,w,h);
+        }
+
     </script>
 
 </head>
@@ -295,65 +304,110 @@
     <div class="page-content">
         <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
-            <form class="layui-form xbs" action="${ctx}/admin/pet/findPetPage">
+            <form class="layui-form xbs" action="${ctx}/admin/question/findAllQuestion">
                 <div class="layui-form-pane" style="text-align: center;">
                     <div class="layui-form-item" style="display: inline-block;">
                         <div class="layui-input-inline">
-                            <input type="text" name="name" placeholder="请输入宠物名称" autocomplete="off" class="layui-input" value="${param.name}">
-                            <input type="hidden" name="exist" value="0"/>
+                            <input type="text" name="questionTitle" placeholder="请输入题目有关词" autocomplete="off" class="layui-input" value="${param.questionTitle}">
                         </div>
+                        <div class="layui-input-inline">
+                            <select name="subject">
+                                <option value="" selected="">请选择学科</option>
+                                <c:forEach var="subject" items="${subjects}">
+                                    <c:if test="${subject == param.subject}">
+                                        <option value="${subject}" selected>${subject}</option>
+                                    </c:if>
+                                    <c:if test="${subject != param.subject}">
+                                        <option value="${subject}">${subject}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="grade">
+                                <option value="0" selected="">请选择年级</option>
+                                <c:forEach var="grade" items="${grades}">
+                                    <c:if test="${grade.id == param.grade}">
+                                        <option value="${grade.id}" selected>${grade.name}</option>
+                                    </c:if>
+                                    <c:if test="${grade.id != param.grade}">
+                                        <option value="${grade.id}">${grade.name}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <input type="hidden" name="questionTypeId" value="${param.questionTypeId}"/>
                         <div class="layui-input-inline" style="width:80px">
                             <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
                     </div>
                 </div>
             </form>
+
             <xblock>
-                <button class="layui-btn layui-btn-danger" onclick="recoveryMultiPet()">
-                    <i class="layui-icon">&#xe640;</i>批量恢复
+                <a href="${ctx}/admin/question/exportExcelData?questionTypeId=${param.questionTypeId}">
+                    <button class="layui-btn layui-btn-normal" id="exportData">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/download.png"/>
+                        </i>导出Excel数据
+                    </button>
+                </a>
+                <a href="${ctx}/admin/question/exportExcelModel?questionTypeId=${param.questionTypeId}">
+                    <button class="layui-btn layui-btn-normal" id="exportHeader">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/download.png"/>
+                        </i>导出Excel表头
+                    </button>
+                </a>
+                <button class="layui-btn layui-btn-danger" onclick="deleteMultiQuestion()">
+                    <i class="layui-icon">&#xe640;</i>批量删除
                 </button>
-                <span class="x-right" style="line-height:40px">共有数据：${petPage.totalCount} 条</span>
+                <input id="addMulti" type="file" lay-type="file" name="file" class="layui-upload-file">
+                <input id="editMulti" type="file" lay-type="file" name="file" class="layui-upload-file">
+                <button class="layui-btn" onclick="addQuestion('添加题目','${ctx}/admin/question/toAdd?questionTypeId=${param.questionTypeId}','600','500')">
+                    <i class="layui-icon">&#xe608;</i>添加
+                </button>
+                <a href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageSize=${questionPage.pageSize}">
+                    <button class="layui-btn">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/save.png"/>
+                        </i>刷新
+                    </button>
+                </a>
+                <span class="x-right" style="line-height:40px">共有数据：${questionPage.totalCount} 条</span>
             </xblock>
             <table class="layui-table">
                 <thead >
                 <tr>
                     <th></th>
-                    <th style="text-align:center;">宠物ID</th>
-                    <th style="text-align:center;">名称</th>
-                    <th style="text-align:center;">描述</th>
-                    <th style="text-align:center;">img1</th>
-                    <th style="text-align:center;">img2</th>
-                    <th style="text-align:center;">img3</th>
-                    <th style="text-align:center;">价格</th>
-                    <th style="text-align:center;">生命值</th>
-                    <th style="text-align:center;">智力值</th>
-                    <th style="text-align:center;">体力值</th>
-                    <th style="text-align:center;">状态</th>
+                    <th style="text-align:center;">ID</th>
+                    <th style="text-align:center;">题目</th>
+                    <th style="text-align:center;">学科</th>
+                    <th style="text-align:center;">年级</th>
+                    <th style="text-align:center;">答案</th>
+                    <th style="text-align:center;">选项</th>
                     <th style="text-align:center;">操作</th>
                 </tr>
                 </thead>
                 <tbody align="center">
-                <c:forEach var="petPage" items="${petPage.list}">
+                <c:forEach var="questionPage" items="${questionPage.list}">
                     <tr>
-                        <td><input type="checkbox" value="${petPage.id}" name="checkBox"></td>
-                        <td>${petPage.id}</td>
-                        <td>${petPage.name}</td>
-                        <td>${petPage.description}</td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img1}"/></td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img2}"/></td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img3}"/></td>
-                        <td>${petPage.price}金币</td>
-                        <td>${petPage.life}</td>
-                        <td>${petPage.intelligence}</td>
-                        <td>${petPage.physical}</td>
-                        <td class="td-status">
-                            <span class="layui-btn layui-btn-danger layui-btn-mini">已删除</span>
-                        </td>
+                        <td><input type="checkbox" value="${questionPage.id}" name="checkBox"></td>
+                        <td>${questionPage.id}</td>
+                        <td>${questionPage.questionTitle.title}</td>
+                        <td>${questionPage.subject}</td>
+                        <c:forEach var="grade" items="${grades}">
+                            <c:if test="${grade.id == questionPage.grade}">
+                                <td>${grade.name}</td>
+                            </c:if>
+                        </c:forEach>
+                        <td>${(questionPage.answer == 1) ? "正确" : "错误"}</td>
+                        <td>${(questionPage.choice == 1) ? "正确" : "错误"}</td>
                         <td class="td-manage" align="center">
-                            <a style="text-decoration:none" onclick="recoveryOnePet(${petPage.id})" href="javascript:;" title="恢复">
-                                <i class="layui-icon">&#xe618;</i>
+                            <a style="text-decoration:none"  onclick="updateQuestion('编辑','${ctx}/admin/question/toEdit?id=${questionPage.id}','600','400')" href="javascript:;" title="编辑">
+                                <i class="layui-icon">&#xe642;</i>
                             </a>
-                            <a title="彻底删除" href="javascript:;" onclick="deleteThoroughPet(${petPage.id})" style="text-decoration:none">
+                            <a title="删除" href="javascript:;" onclick="deleteOneQuestion(${questionPage.id})" style="text-decoration:none">
                                 <i class="layui-icon">&#xe640;</i>
                             </a>
                         </td>
@@ -365,15 +419,15 @@
         </div>
         <!-- 分页处理开始 -->
         <div align="center">
-            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=1&&pageSize=${petPage.pageSize}&&exist=${param.exist}">首页</a>
-            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.prePageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}">上一页</a>
-            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.nextPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}">下一页</a>
-            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.totalPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}">末页</a>
+            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=1&&pageSize=${questionPage.pageSize}&&exist=1">首页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.prePageNum}&&pageSize=${questionPage.pageSize}&&exist=1">上一页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.nextPageNum}&&pageSize=${questionPage.pageSize}&&exist=1">下一页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.totalPageNum}&&pageSize=${questionPage.pageSize}&&exist=1">末页</a>
         </div>
         <div align="center" style="margin-top:20px;">
-            <span style="margin-right:10px;">${petPage.currentPageNum}</span>
+            <span style="margin-right:10px;">${questionPage.currentPageNum}</span>
             <span>/</span>
-            <span style="margin-left:10px;">${petPage.totalPageNum}</span>
+            <span style="margin-left:10px;">${questionPage.totalPageNum}</span>
         </div>
         <!-- 分页处理结束 -->
     </div>
@@ -405,6 +459,38 @@
     <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
 </div>
 <!-- 背景切换结束 -->
+<script type="text/javascript">
+    layui.use('upload', function(){
+        layui.upload({
+            elem: '#addMulti' //绑定元素
+            ,url: '${ctx}/admin/question/importExcelToAdd?questionTypeId=${param.questionTypeId}' //上传接口
+            ,ext: 'xls|xlsx'
+            ,method: 'post'
+            ,title: '批量添加'
+            ,success: function(res, input){
+                if(res == "succeed"){
+                    layer.msg("上传成功");
+                }else{
+                    layer.msg(res);
+                }
+            }
+        });
+
+        layui.upload({
+            elem: '#editMulti' //绑定元素
+            ,url: '${ctx}/admin/question/importExcelToEdit?questionTypeId=${param.questionTypeId}' //上传接口
+            ,ext: 'xls|xlsx'
+            ,method: 'post'
+            ,title: '批量修改'
+            ,success: function(res, input){
+                if(res == "succeed"){
+                    layer.msg("上传成功");
+                }else{
+                    layer.msg(res);
+                }
+            }
+        });
+    });
+</script>
 </body>
-</html>
 </html>

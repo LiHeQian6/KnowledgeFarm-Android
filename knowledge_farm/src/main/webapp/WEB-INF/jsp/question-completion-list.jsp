@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2020/4/28 0028
-  Time: 16:42
+  Date: 2020/5/17 0017
+  Time: 13:17
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -23,67 +23,83 @@
     <script src="${ctx}/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
 
-    <script type="text/javascript">
-        //初始化左侧菜单（管理员管理）
-        window.onload = function(){
-            $("#sendNotificationManager").attr("class","sub-menu opened");
-            $("#sendCustomMessageManager").attr("class","current");
+    <style>
+        .page{
+            margin-right:25px;
         }
-        function sendCustomMessage() {
-            var title = $("#title").val();
-            var content = $("#content").val();
-            var extra = MapToJson();
-            var alias = $("#aliasInput").val();
-            var aliasRadioValue = $('input[name="alias"]:checked').val();
-            if(aliasRadioValue == 0){
-                alias = "";
+    </style>
+
+    <script>
+        //初始化左侧菜单（作物管理）
+        window.onload = function(){
+            $("#initQuestionManager").attr("class","sub-menu opened");
+            $("#initQuestionManager2").attr("class","current");
+        }
+
+        //删除单个题目
+        function deleteOneQuestion(id){
+            layer.confirm('删除后无法恢复，确认要删除数据吗？',function(index){
+                $.post("${ctx}/admin/question/deleteOneQuestion",{"id":id},function(data){
+                    if(data == "succeed"){
+                        window.location.href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageUtilSize=${questionPage.pageSize}";
+                    }else if(data == "fail"){
+                        layer.msg('删除失败');
+                    }
+                })
+            });
+        }
+
+        //删除批量题目
+        function deleteMultiQuestion() {
+            var arrDelete = document.getElementsByName("checkBox");
+            var deleteStr="";
+            for(i in arrDelete){
+                if(arrDelete[i].checked){
+                    deleteStr = deleteStr + arrDelete[i].value + ",";
+                }
             }
-            $.post("${ctx}/admin/notification/sendCustomMessage",{"title":title,"content":content,"extra":extra,"alias":alias},function(data){
-                switch (data) {
-                    case "succeed":
-                        layer.msg('发送成功');
-                        break;
-                    case "fail":
-                        layer.msg('发送失败');
-                    case "notExist":
-                        layer.msg('存在不能识别的设备别名');
-                        break;
-                    case "false":
-                        layer.msg('极光推送连接错误');
-                        break;
+            layer.confirm('删除后无法恢复，确认要批量删除吗？',function(index){
+                if(deleteStr != ""){
+                    $.post("${ctx}/admin/question/deleteMultiQuestion",{"deleteStr":deleteStr},function(data){
+                        if(data == "succeed"){
+                            window.location.href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageUtilSize=${questionPage.pageSize}";
+                        }else if(data == "fail"){
+                            layer.msg('删除失败');
+                        }
+                    })
+                }else{
+                    layer.msg('删除不能为空');
+                }
+            });
+        }
+
+        //添加题目
+        function addQuestion(title,url,w,h){
+            x_admin_show(title,url,w,h);
+        }
+
+        //添加批量题目
+        function addMultiQuestion(){
+            $.post("${ctx}/admin/question/deleteOneQuestion",{"id":id},function(data){
+                if(data == "succeed"){
+
+                }else if(data == "fail"){
+                    layer.msg('删除失败');
                 }
             })
         }
-        function MapToJson() {
-            var map = new Map();
-            for(var i = 0,j = 0;i < extraKeys.length && j < extraValues.length;i++,j++){
-                var key = $("#" + extraKeys[i]).val();
-                var value = $("#" + extraValues[i]).val();
-                if(key == "" && value == ""){
-                    continue;
-                }else{
-                    map.set(key, value);
-                }
-            }
 
-            var str = '{';
-            var n = 1;
-            map.forEach(function (item, key, mapObj) {
-                if(mapObj.size == n){
-                    str += '"'+ key+'":"'+ item + '"';
-                }else{
-                    str += '"'+ key+'":"'+ item + '",';
-                }
-                n++;
-            });
-            str +='}';
-            return str;
+        //修改题目
+        function updateQuestion(title,url,w,h) {
+            x_admin_show(title,url,w,h);
         }
+
     </script>
+
 </head>
 <body>
 <!-- 顶部开始 -->
-<%--<%@ include file="/layout/header.jsp"%>--%>
+<%--    	<%@ include file="/layout/header.jsp"%>--%>
 <div class="container">
     <div class="logo"><a href="${ctx}/admin/toIndex">知识农场后台管理系统</a></div>
     <div class="open-nav"><i class="iconfont">&#xe699;</i></div>
@@ -101,7 +117,7 @@
 <!-- 中部开始 -->
 <div class="wrapper">
     <!-- 左侧菜单开始 -->
-    <%--    <%@ include file="/layout/menuLeft.jsp"%>--%>
+    <%--        	<%@ include file="/layout/menuLeft.jsp"%>--%>
     <div class="left-nav">
         <div id="side-nav">
             <ul id="nav">
@@ -287,56 +303,131 @@
     <!-- 右侧主体开始 -->
     <div class="page-content">
         <div class="content">
-            <form class="layui-form" action="javascript:sendCustomMessage()">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">通知标题</label>
-                    <div class="layui-input-block">
-                        <input id="title" type="text" name="title" required lay-verify="title" autocomplete="off" placeholder="请输入通知标题" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">通知内容</label>
-                    <div class="layui-input-block">
-                        <textarea id="content" placeholder="请输入通知内容" required class="layui-textarea"></textarea>
-                    </div>
-                </div>
-                <div id="extraAll" class="layui-form-item">
-                    <div id="extraDiv0" class="layui-form-item">
-                        <label class="layui-form-label">附加字段</label>
-                        <div class="layui-inline">
-                            <div class="layui-input-inline" style="width: 150px;">
-                                <input id="extraKey0" type="text" name="price_min" placeholder="键" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-form-mid">：</div>
-                            <div class="layui-input-inline" style="width: 150px;">
-                                <input id="extraValue0" type="text" name="price_max" placeholder="值" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-input-inline" style="margin-top: 10px">
-                                <a href="javascript:addKeyValue()"><i class="layui-icon">&#xe608;</i></a>
-                            </div>
+            <!-- 右侧内容框架，更改从这里开始 -->
+            <form class="layui-form xbs" action="${ctx}/admin/question/findAllQuestion">
+                <div class="layui-form-pane" style="text-align: center;">
+                    <div class="layui-form-item" style="display: inline-block;">
+                        <div class="layui-input-inline">
+                            <input type="text" name="questionTitle" placeholder="请输入题目有关词" autocomplete="off" class="layui-input" value="${param.questionTitle}">
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="subject">
+                                <option value="" selected="">请选择学科</option>
+                                <c:forEach var="subject" items="${subjects}">
+                                    <c:if test="${subject == param.subject}">
+                                        <option value="${subject}" selected>${subject}</option>
+                                    </c:if>
+                                    <c:if test="${subject != param.subject}">
+                                        <option value="${subject}">${subject}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="grade">
+                                <option value="0" selected="">请选择年级</option>
+                                <c:forEach var="grade" items="${grades}">
+                                    <c:if test="${grade.id == param.grade}">
+                                        <option value="${grade.id}" selected>${grade.name}</option>
+                                    </c:if>
+                                    <c:if test="${grade.id != param.grade}">
+                                        <option value="${grade.id}">${grade.name}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <input type="hidden" name="questionTypeId" value="${param.questionTypeId}"/>
+                        <div class="layui-input-inline" style="width:80px">
+                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">目标人群</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="alias" value="0" lay-filter="aliasEvent" title="广播给所有人" checked="">
-                        <input type="radio" name="alias" value="1" lay-filter="aliasEvent" title="设备别名(Alias)">
-                    </div>
-                </div>
-                <div id="aliasDiv" class="layui-form-item" hidden>
-                    <label class="layui-form-label"></label>
-                    <div class="layui-input-block">
-                        <input id="aliasInput" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="添加设备别名，用逗号分隔开" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label"></label>
-                    <button class="layui-btn" lay-filter="add" lay-submit="">添加</button>
-                </div>
             </form>
+
+            <xblock>
+                <a href="${ctx}/admin/question/exportExcelData?questionTypeId=${param.questionTypeId}">
+                    <button class="layui-btn layui-btn-normal" id="exportData">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/download.png"/>
+                        </i>导出Excel数据
+                    </button>
+                </a>
+                <a href="${ctx}/admin/question/exportExcelModel?questionTypeId=${param.questionTypeId}">
+                    <button class="layui-btn layui-btn-normal" id="exportHeader">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/download.png"/>
+                        </i>导出Excel表头
+                    </button>
+                </a>
+                <button class="layui-btn layui-btn-danger" onclick="deleteMultiQuestion()">
+                    <i class="layui-icon">&#xe640;</i>批量删除
+                </button>
+                <input id="addMulti" type="file" lay-type="file" name="file" class="layui-upload-file">
+                <input id="editMulti" type="file" lay-type="file" name="file" class="layui-upload-file">
+                <button class="layui-btn" onclick="addQuestion('添加题目','${ctx}/admin/question/toAdd?questionTypeId=${param.questionTypeId}','600','500')">
+                    <i class="layui-icon">&#xe608;</i>添加
+                </button>
+                <a href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageSize=${questionPage.pageSize}">
+                    <button class="layui-btn">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/save.png"/>
+                        </i>刷新
+                    </button>
+                </a>
+                <span class="x-right" style="line-height:40px">共有数据：${questionPage.totalCount} 条</span>
+            </xblock>
+            <table class="layui-table">
+                <thead >
+                <tr>
+                    <th></th>
+                    <th style="text-align:center;">ID</th>
+                    <th style="text-align:center;">题目</th>
+                    <th style="text-align:center;">学科</th>
+                    <th style="text-align:center;">年级</th>
+                    <th style="text-align:center;">答案</th>
+                    <th style="text-align:center;">操作</th>
+                </tr>
+                </thead>
+                <tbody align="center">
+                <c:forEach var="questionPage" items="${questionPage.list}">
+                    <tr>
+                        <td><input type="checkbox" value="${questionPage.id}" name="checkBox"></td>
+                        <td>${questionPage.id}</td>
+                        <td>${questionPage.questionTitle.title}</td>
+                        <td>${questionPage.subject}</td>
+                        <c:forEach var="grade" items="${grades}">
+                            <c:if test="${grade.id == questionPage.grade}">
+                                <td>${grade.name}</td>
+                            </c:if>
+                        </c:forEach>
+                        <td>${questionPage.answer}</td>
+                        <td class="td-manage" align="center">
+                            <a style="text-decoration:none"  onclick="updateQuestion('编辑','${ctx}/admin/question/toEdit?id=${questionPage.id}','600','400')" href="javascript:;" title="编辑">
+                                <i class="layui-icon">&#xe642;</i>
+                            </a>
+                            <a title="删除" href="javascript:;" onclick="deleteOneQuestion(${questionPage.id})" style="text-decoration:none">
+                                <i class="layui-icon">&#xe640;</i>
+                            </a>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
             <!-- 右侧内容框架，更改从这里结束 -->
         </div>
+        <!-- 分页处理开始 -->
+        <div align="center">
+            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=1&&pageSize=${questionPage.pageSize}&&exist=1">首页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.prePageNum}&&pageSize=${questionPage.pageSize}&&exist=1">上一页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.nextPageNum}&&pageSize=${questionPage.pageSize}&&exist=1">下一页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.totalPageNum}&&pageSize=${questionPage.pageSize}&&exist=1">末页</a>
+        </div>
+        <div align="center" style="margin-top:20px;">
+            <span style="margin-right:10px;">${questionPage.currentPageNum}</span>
+            <span>/</span>
+            <span style="margin-left:10px;">${questionPage.totalPageNum}</span>
+        </div>
+        <!-- 分页处理结束 -->
     </div>
     <!-- 右侧主体结束 -->
 </div>
@@ -344,7 +435,7 @@
 <!-- 底部开始 -->
 <!-- 底部结束 -->
 <!-- 背景切换开始 -->
-<%--<%@ include file="/layout/background.jsp"%>--%>
+<%--    	<%@ include file="/layout/background.jsp"%>--%>
 <div class="bg-changer">
     <div class="swiper-container changer-list">
         <div class="swiper-wrapper">
@@ -366,63 +457,40 @@
     <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
 </div>
 <!-- 背景切换结束 -->
-
-<!-- 键值对 -->
 <script type="text/javascript">
-    var count = 0;
-    var extraKeys = new Array();
-    var extraValues = new Array();
-    extraKeys[count] = "extraKey0";
-    extraValues[count] = "extraValue0";
-
-    function addKeyValue() {
-        var extraAll = document.getElementById("extraAll");
-        var div = document.createElement("div");
-        var id = count + 1;
-        var extraDivId = "extraDiv" + id;
-        var extraKeyId = "extraKey" + id;
-        var extraValueId = "extraValue" + id;
-
-        div.setAttribute("class", "layui-form-item");
-        div.setAttribute("id", extraDivId);
-        div.innerHTML = "<label class='layui-form-label'></label><div class='layui-inline'><div class='layui-input-inline' style='width: 150px;'><input id='"+extraKeyId+"' type='text' placeholder='键' autocomplete='off' class='layui-input'></div><div class='layui-form-mid'>：</div><div class='layui-input-inline' style='width: 150px;'><input id='"+extraValueId+"' type='text' name='price_max' placeholder='值' autocomplete='off' class='layui-input'></div><div class='layui-input-inline' style='margin-top: 10px;margin-left:-2px'><a href='javascript:removeKeyValue(&quot;"+extraDivId+"&quot;,&quot;"+extraKeyId+"&quot;,&quot;"+extraValueId+"&quot;)'><img src='${ctx}/images/decrease.png' style='width:22px;height:22px'/></a></div></div>";
-        extraAll.appendChild(div);
-
-        count++;
-        extraKeys[count] = extraKeyId;
-        extraValues[count] = extraValueId;
-    }
-
-    Array.prototype.remove = function(val) {
-        var index = this.indexOf(val);
-        if (index > -1) {
-            this.splice(index, 1);
-        }
-    };
-
-    function removeKeyValue(divId, keyId, valueId){
-        var extraAll = document.getElementById("extraAll");
-        var extraDiv = document.getElementById(divId);
-        extraAll.removeChild(extraDiv);
-        extraKeys.remove(keyId);
-        extraValues.remove(valueId);
-    }
-</script>
-
-<!-- 别名 -->
-<script type="text/javascript">
-    layui.use(['form'], function(){
-        var form = layui.form();
-        form.on('radio(aliasEvent)', function(data){
-            var value = data.value;
-            if(value == 0){
-                $("#aliasDiv").hide();
+    layui.use('upload', function(){
+        layui.upload({
+            elem: '#addMulti' //绑定元素
+            ,url: '${ctx}/admin/question/importExcelToAdd?questionTypeId=${param.questionTypeId}' //上传接口
+            ,ext: 'xls|xlsx'
+            ,method: 'post'
+            ,title: '批量添加'
+            ,success: function(res, input){
+                if(res == "succeed"){
+                    layer.msg("上传成功");
+                }else{
+                    layer.msg(res);
+                }
             }
-            if(value == 1){
-                $("#aliasDiv").show();
+        });
+
+        layui.upload({
+            elem: '#editMulti' //绑定元素
+            ,url: '${ctx}/admin/question/importExcelToEdit?questionTypeId=${param.questionTypeId}' //上传接口
+            ,ext: 'xls|xlsx'
+            ,method: 'post'
+            ,title: '批量修改'
+            ,success: function(res, input){
+                if(res == "succeed"){
+                    layer.msg("上传成功");
+                }else{
+                    layer.msg(res);
+                }
             }
         });
     });
 </script>
 </body>
 </html>
+
+

@@ -43,13 +43,14 @@ public class FrontQuestionController {
                 model.addAttribute("questionType", questionType);
             }
         }
-        List<String> gradeList = new ArrayList<>();
-        gradeList.add("一年级上");
-        gradeList.add("一年级下");
-        gradeList.add("二年级上");
-        gradeList.add("二年级下");
-        gradeList.add("三年级上");
-        gradeList.add("三年级下");
+        List<Grade> gradeList = new ArrayList<>();
+        Grade grade1 = new Grade(1, "一年级上");
+        Grade grade2 = new Grade(2, "一年级下");
+        Grade grade3 = new Grade(3, "二年级上");
+        Grade grade4 = new Grade(4, "二年级下");
+        Grade grade5 = new Grade(5, "三年级上");
+        Grade grade6 = new Grade(6, "三年级下");
+        gradeList.add(grade1);gradeList.add(grade2);gradeList.add(grade3);gradeList.add(grade4);gradeList.add(grade5);gradeList.add(grade6);
         model.addAttribute("grades", gradeList);
         model.addAttribute("subjects", subjects);
         return "question-add";
@@ -59,37 +60,51 @@ public class FrontQuestionController {
     public String toEdit(@RequestParam("id") Integer id, Model model){
         Question question = this.frontQuestionService.findQuestionById(id);
         if(question != null){
-            List<String> gradeList = new ArrayList<>();
-            gradeList.add("一年级上");
-            gradeList.add("一年级下");
-            gradeList.add("二年级上");
-            gradeList.add("二年级下");
-            gradeList.add("三年级上");
-            gradeList.add("三年级下");
-            model.addAttribute("question", question);
+            List<Grade> gradeList = new ArrayList<>();
+            Grade grade1 = new Grade(1, "一年级上");
+            Grade grade2 = new Grade(2, "一年级下");
+            Grade grade3 = new Grade(3, "二年级上");
+            Grade grade4 = new Grade(4, "二年级下");
+            Grade grade5 = new Grade(5, "三年级上");
+            Grade grade6 = new Grade(6, "三年级下");
+            gradeList.add(grade1);gradeList.add(grade2);gradeList.add(grade3);gradeList.add(grade4);gradeList.add(grade5);gradeList.add(grade6);
             model.addAttribute("grades", gradeList);
+            model.addAttribute("question", question);
+            switch(question.getQuestionType().getId()){
+                case 1:
+                    model.addAttribute("singleChoice", question);
+                    break;
+                case 2:
+                    model.addAttribute("completion", question);
+                    break;
+                case 3:
+                    model.addAttribute("judgment", question);
+                    break;
+            }
         }
         return "question-edit";
     }
 
     @GetMapping("/findAllQuestion")
     public String findAllQuestion(@RequestParam(value = "questionTitle", required = false) String questionTitle,
-                                          @RequestParam(value = "questionTypeId", required = false) Integer questionTypeId,
-                                          @RequestParam(value = "grade", required = false) Integer grade,
-                                          @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
-                                          @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                          Model model){
-        Page<Question> page = this.frontQuestionService.findAllQuestion(questionTitle, questionTypeId, grade, pageNumber, pageSize);
+                                  @RequestParam(value = "questionTypeId") Integer questionTypeId,
+                                  @RequestParam(value = "subject", required = false) String subject,
+                                  @RequestParam(value = "grade", required = false) Integer grade,
+                                  @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                  @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize,
+                                  Model model){
+        Page<Question> page = this.frontQuestionService.findAllQuestion(questionTitle, questionTypeId, subject, grade, pageNumber, pageSize);
         PageUtil<Question> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
         pageUtil.setList(page.getContent());
-        List<String> gradeList = new ArrayList<>();
-        gradeList.add("一年级上");
-        gradeList.add("一年级下");
-        gradeList.add("二年级上");
-        gradeList.add("二年级下");
-        gradeList.add("三年级上");
-        gradeList.add("三年级下");
+        List<Grade> gradeList = new ArrayList<>();
+        Grade grade1 = new Grade(1, "一年级上");
+        Grade grade2 = new Grade(2, "一年级下");
+        Grade grade3 = new Grade(3, "二年级上");
+        Grade grade4 = new Grade(4, "二年级下");
+        Grade grade5 = new Grade(5, "三年级上");
+        Grade grade6 = new Grade(6, "三年级下");
+        gradeList.add(grade1);gradeList.add(grade2);gradeList.add(grade3);gradeList.add(grade4);gradeList.add(grade5);gradeList.add(grade6);
         model.addAttribute("grades", gradeList);
         model.addAttribute("subjects", subjects);
         model.addAttribute("questionPage", pageUtil);

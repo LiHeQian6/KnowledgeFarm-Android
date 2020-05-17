@@ -41,7 +41,7 @@
             layer.confirm('确认要恢复吗？',function(index){
                 $.post("${ctx}/admin/petUtil/recoveryOnePetUtil",{"id":id},function(data){
                     if(data == "succeed"){
-                        window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=0";
+                        window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}";
                     }else if(data == "fail"){
                         layer.msg('恢复失败');
                     }
@@ -62,7 +62,7 @@
                 if(recoveryStr != ""){
                     $.post("${ctx}/admin/petUtil/recoveryMultiPetUtil",{"recoveryStr":recoveryStr},function(data){
                         if(data == "succeed"){
-                            window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=0";
+                            window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}";
                         }else if(data == "fail"){
                             layer.msg('恢复失败');
                         }
@@ -78,7 +78,7 @@
             layer.confirm('彻底删除无法恢复，确认要删除数据吗？',function(index){
                 $.post("${ctx}/admin/petUtil/deleteThoroughPetUtil",{"id":id},function(data){
                     if(data == "succeed"){
-                        window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=0";
+                        window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}";
                     }else if(data == "fail"){
                         layer.msg('删除失败');
                     }
@@ -242,6 +242,33 @@
                 <li class="list" >
                     <a href="javascript:;">
                         <i class="iconfont">&#xe6a3;</i>
+                        题目管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initQuestionManager" class="sub-menu">
+                        <li id="initQuestionManager1">
+                            <a href="${ctx}/admin/question/findAllQuestion?questionTypeId=1">
+                                <i class="iconfont">&#xe6a7;</i>
+                                单选题
+                            </a>
+                        </li>
+                        <li id="initQuestionManager2">
+                            <a href="${ctx}/admin/question/findAllQuestion?questionTypeId=2">
+                                <i class="iconfont">&#xe6a7;</i>
+                                填空题
+                            </a>
+                        </li>
+                        <li id="initQuestionManager3">
+                            <a href="${ctx}/admin/question/findAllQuestion?questionTypeId=3">
+                                <i class="iconfont">&#xe6a7;</i>
+                                判断题
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list" >
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
                         管理员管理
                         <i class="iconfont nav_right">&#xe697;</i>
                     </a>
@@ -345,10 +372,10 @@
         </div>
         <!-- 分页处理开始 -->
         <div align="center">
-            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=1&&pageSize=${petUtilPage.pageSize}&&exist=0">首页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.prePageNum}&&pageSize=${petUtilPage.pageSize}&&exist=0">上一页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.nextPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=0">下一页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.totalPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=0">末页</a>
+            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=1&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">首页</a>
+            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.prePageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">上一页</a>
+            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.nextPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">下一页</a>
+            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.totalPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">末页</a>
         </div>
         <div align="center" style="margin-top:20px;">
             <span style="margin-right:10px;">${petUtilPage.currentPageNum}</span>
@@ -385,89 +412,6 @@
     <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
 </div>
 <!-- 背景切换结束 -->
-<!-- 页面动态效果 -->
-<script>
-
-    layui.use(['laydate'], function(){
-        laydate = layui.laydate;//日期插件
-
-        //以上模块根据需要引入
-        //
-
-
-
-        var start = {
-            min: laydate.now()
-            ,max: '2099-06-16 23:59:59'
-            ,istoday: false
-            ,choose: function(datas){
-                end.min = datas; //开始日选好后，重置结束日的最小日期
-                end.start = datas //将结束日的初始值设定为开始日
-            }
-        };
-
-        var end = {
-            min: laydate.now()
-            ,max: '2099-06-16 23:59:59'
-            ,istoday: false
-            ,choose: function(datas){
-                start.max = datas; //结束日选好后，重置开始日的最大日期
-            }
-        };
-
-        document.getElementById('LAY_demorange_s').onclick = function(){
-            start.elem = this;
-            laydate(start);
-        }
-        document.getElementById('LAY_demorange_e').onclick = function(){
-            end.elem = this
-            laydate(end);
-        }
-
-    });
-
-    /*用户-添加*/
-    function member_add(title,url,w,h){
-        x_admin_show(title,url,w,h);
-    }
-    /*用户-查看*/
-    function member_show(title,url,id,w,h){
-        x_admin_show(title,url,w,h);
-    }
-
-    /*用户-停用*/
-    function member_stop(obj,id){
-        layer.confirm('确认要停用吗？',function(index){
-            //发异步把用户状态进行更改
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="layui-icon">&#xe62f;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="layui-btn layui-btn-disabled layui-btn-mini">已停用</span>');
-            $(obj).remove();
-            layer.msg('已停用!',{icon: 5,time:1000});
-        });
-    }
-
-    /*用户-启用*/
-    function member_start(obj,id){
-        layer.confirm('确认要启用吗？',function(index){
-            //发异步把用户状态进行更改
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="layui-icon">&#xe601;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span>');
-            $(obj).remove();
-            layer.msg('已启用!',{icon: 6,time:1000});
-        });
-    }
-
-</script>
-<script>
-    //百度统计可去掉
-    var _hmt = _hmt || [];
-    (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();
-</script>
 </body>
 </html>
 </html>

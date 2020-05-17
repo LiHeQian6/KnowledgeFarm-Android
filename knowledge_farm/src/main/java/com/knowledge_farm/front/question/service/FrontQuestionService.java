@@ -1,5 +1,6 @@
 package com.knowledge_farm.front.question.service;
 
+import com.google.gson.Gson;
 import com.knowledge_farm.answer.repository.QuestionRepository;
 import com.knowledge_farm.entity.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -45,6 +46,7 @@ public class FrontQuestionService {
     @Value("${excel.subjects}")
     private String[] subjects;
     Logger logger = LoggerFactory.getLogger(getClass());
+    Gson gson = new Gson();
 
     public List<QuestionType> findAllQuestionType(){
         return this.questionRepository.findAllQuestionType();
@@ -55,20 +57,21 @@ public class FrontQuestionService {
     public Question findQuestionById(Integer id){
         return this.questionRepository.findQuestionById(id);
     }
-    public Page<Question> findAllQuestion(String questionTitle, Integer questionTypeId, Integer  grade, Integer pageNumber, Integer pageSize){
+    public Page<Question> findAllQuestion(String questionTitle, Integer questionTypeId, String subject, Integer  grade, Integer pageNumber, Integer pageSize){
         Specification<Question> spec = new Specification<Question>() {
             @Override
             public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> list = new ArrayList<>();
+                Join<QuestionType, Question> join1 = root.join("questionType", JoinType.INNER);
+                list.add(cb.equal(join1.get("id"), questionTypeId));
                 if(questionTitle != null && !questionTitle.equals("")){
                     Join<QuestionTitle, Question> join = root.join("questionTitle", JoinType.INNER);
                     list.add(cb.like(join.get("title").as(String.class), "%" + questionTitle + "%"));
                 }
-                if(questionTypeId != null){
-                    Join<QuestionType, Question> join = root.join("questionType", JoinType.INNER);
-                    list.add(cb.equal(join.get("id"), questionTypeId));
+                if(subject != null && !subject.equals("")){
+                    list.add(cb.equal(root.get("subject"), subject));
                 }
-                if(grade != null) {
+                if(grade != null && grade != 0) {
                     list.add(cb.equal(root.get("grade"), grade));
                 }
                 //此时条件之间是没有任何关系的。
@@ -178,19 +181,19 @@ public class FrontQuestionService {
                 case 1:
                     Sheet sheet0 = book.getSheetAt(0);
                     if(sheet0.getLastRowNum() == 0){
-                        return "上传文件数据为空";
+                        return gson.toJson("上传文件数据为空");
                     }
                     return importSingleChoiceToEdit(sheet0);
                 case 2:
                     Sheet sheet1 = book.getSheetAt(0);
                     if(sheet1.getLastRowNum() == 0){
-                        return "上传文件数据为空";
+                        return gson.toJson("上传文件数据为空");
                     }
                     return importCompletionToEdit(sheet1);
                 case 3:
                     Sheet sheet2 = book.getSheetAt(0);
                     if(sheet2.getLastRowNum() == 0){
-                        return "上传文件数据为空";
+                        return gson.toJson("上传文件数据为空");
                     }
                     return importJudgmentToEdit(sheet2);
             }
@@ -208,7 +211,7 @@ public class FrontQuestionService {
 //            }
 //            return result1;
         }
-        return "上传文件为空";
+        return gson.toJson("上传文件为空");
     }
     /**
      * @Author 张帅华
@@ -237,21 +240,21 @@ public class FrontQuestionService {
                 case 1:
                     Sheet sheet0 = book.getSheetAt(0);
                     if(sheet0.getLastRowNum() == 0){
-                        return "上传文件数据为空";
+                        return gson.toJson("上传文件数据为空");
                     }
-                    return importSingleChoiceToAdd(sheet0);
+                    return importSingleChoiceToAdd(sheet0, questionType);
                 case 2:
                     Sheet sheet1 = book.getSheetAt(0);
                     if(sheet1.getLastRowNum() == 0){
-                        return "上传文件数据为空";
+                        return gson.toJson("上传文件数据为空");
                     }
-                    return importCompletionToAdd(sheet1);
+                    return importCompletionToAdd(sheet1, questionType);
                 case 3:
                     Sheet sheet2 = book.getSheetAt(0);
                     if(sheet2.getLastRowNum() == 0){
-                        return "上传文件数据为空";
+                        return gson.toJson("上传文件数据为空");
                     }
-                    return importJudgmentToAdd(sheet2);
+                    return importJudgmentToAdd(sheet2, questionType);
             }
 //            if(sheet0.getLastRowNum() == 0 && sheet1.getLastRowNum() == 0 && sheet2.getLastRowNum() == 0){
 //                return "上传文件数据为空";
@@ -267,7 +270,7 @@ public class FrontQuestionService {
 //            }
 //            return result1;
         }
-        return "上传文件为空";
+        return gson.toJson("上传文件为空");
     }
 
     public void exportSingleChoiceExcelModel(XSSFWorkbook workbook, CellStyle cellStyleHeader) {
@@ -397,7 +400,7 @@ public class FrontQuestionService {
         int rowLength = sheet.getLastRowNum();
         logger.info("sheet1总数据行数有多少行"+rowLength);
         if(rowLength == 0) {
-            return "succeed";
+            return gson.toJson("succeed");
         }
         //工作表的列
         Row row0 = sheet.getRow(0);
@@ -422,23 +425,23 @@ public class FrontQuestionService {
                 cell.setCellType(CellType.STRING);
                 Integer formatResult = isFormatTrueForSheet1(cell.getStringCellValue(), n);
                 if(formatResult == 0){
-                    return "sheet1第"+count1+"行的第"+count2+"列的数据格式错误";
+                    return gson.toJson("sheet1第"+count1+"行的第"+count2+"列的数据格式错误");
                 }else if(formatResult == -1){
-                    return "sheet1第"+count1+"行的第"+count2+"列的数据输入错误";
+                    return gson.toJson("sheet1第"+count1+"行的第"+count2+"列的数据输入错误");
                 }else if(formatResult == -2){
-                    return "sheet1第"+count1+"行的第"+count2+"列的数据不能为空";
+                    return gson.toJson("sheet1第"+count1+"行的第"+count2+"列的数据不能为空");
                 }
                 cellList.add(cell);
             }
             updateSingleChoice(cellList);
         }
-        return "succeed";
+        return gson.toJson("succeed");
     }
     public String importCompletionToEdit(Sheet sheet){
         int rowLength = sheet.getLastRowNum();
         logger.info("sheet2总数据行数有多少行"+rowLength);
         if(rowLength == 0) {
-            return "succeed";
+            return gson.toJson("succeed");
         }
         //工作表的列
         Row row0 = sheet.getRow(0);
@@ -463,23 +466,23 @@ public class FrontQuestionService {
                 cell.setCellType(CellType.STRING);
                 Integer formatResult = isFormatTrueForSheet2(cell.getStringCellValue(), n);
                 if(formatResult == 0){
-                    return "sheet2第"+count1+"行的第"+count2+"列的数据格式错误";
+                    return gson.toJson("sheet2第"+count1+"行的第"+count2+"列的数据格式错误");
                 }else if(formatResult == -1){
-                    return "sheet2第"+count1+"行的第"+count2+"列的数据输入错误";
+                    return gson.toJson("sheet2第"+count1+"行的第"+count2+"列的数据输入错误");
                 }else if(formatResult == -2){
-                    return "sheet2第"+count1+"行的第"+count2+"列的数据不能为空";
+                    return gson.toJson("sheet2第"+count1+"行的第"+count2+"列的数据不能为空");
                 }
                 cellList.add(cell);
             }
             updateCompletion(cellList);
         }
-        return "succeed";
+        return gson.toJson("succeed");
     }
     public String importJudgmentToEdit(Sheet sheet){
         int rowLength = sheet.getLastRowNum();
         logger.info("sheet3总数据行数有多少行"+rowLength);
         if(rowLength == 0) {
-            return "succeed";
+            return gson.toJson("succeed");
         }
         //工作表的列
         Row row0 = sheet.getRow(0);
@@ -504,17 +507,17 @@ public class FrontQuestionService {
                 cell.setCellType(CellType.STRING);
                 Integer formatResult = isFormatTrueForSheet3(cell.getStringCellValue(), n);
                 if(formatResult == 0){
-                    return "sheet3第"+count1+"行的第"+count2+"列的数据格式错误";
+                    return gson.toJson("sheet3第"+count1+"行的第"+count2+"列的数据格式错误");
                 }else if(formatResult == -1){
-                    return "sheet3第"+count1+"行的第"+count2+"列的数据输入错误";
+                    return gson.toJson("sheet3第"+count1+"行的第"+count2+"列的数据输入错误");
                 }else if(formatResult == -2){
-                    return "sheet3第"+count1+"行的第"+count2+"列的数据不能为空";
+                    return gson.toJson("sheet3第"+count1+"行的第"+count2+"列的数据不能为空");
                 }
                 cellList.add(cell);
             }
             updateJudgment(cellList);
         }
-        return "succeed";
+        return gson.toJson("succeed");
     }
     public void updateSingleChoice(List<Cell> cellList){
         Integer questionId = Integer.parseInt(cellList.get(0).getStringCellValue());
@@ -542,11 +545,11 @@ public class FrontQuestionService {
         question.setChoice((cellList.get(6).getStringCellValue().equals("正确") ? 1 : 0));
     }
 
-    public String importSingleChoiceToAdd(Sheet sheet){
+    public String importSingleChoiceToAdd(Sheet sheet, Integer questionTypeId){
         int rowLength = sheet.getLastRowNum();
         logger.info("sheet1总数据行数有多少行"+rowLength);
         if(rowLength == 0) {
-            return "succeed";
+            return gson.toJson("succeed");
         }
         //工作表的列
         Row row0 = sheet.getRow(0);
@@ -573,24 +576,24 @@ public class FrontQuestionService {
                 cell.setCellType(CellType.STRING);
                 Integer formatResult = isFormatTrueForSheet1(cell.getStringCellValue(), n);
                 if(formatResult == 0){
-                    return "sheet1第"+count1+"行的第"+count2+"列的数据格式错误";
+                    return gson.toJson("sheet1第"+count1+"行的第"+count2+"列的数据格式错误");
                 }else if(formatResult == -1){
-                    return "sheet1第"+count1+"行的第"+count2+"列的数据输入错误";
+                    return gson.toJson("sheet1第"+count1+"行的第"+count2+"列的数据输入错误");
                 }else if(formatResult == -2){
-                    return "sheet1第"+count1+"行的第"+count2+"列的数据不能为空";
+                    return gson.toJson("sheet1第"+count1+"行的第"+count2+"列的数据不能为空");
                 }
                 cellList.add(cell);
             }
-            singleChoiceList.add(saveSingleChoice(cellList));
+            singleChoiceList.add(saveSingleChoice(cellList, questionTypeId));
         }
         this.questionRepository.saveAll(singleChoiceList);
-        return "succeed";
+        return gson.toJson("succeed");
     }
-    public String importCompletionToAdd(Sheet sheet){
+    public String importCompletionToAdd(Sheet sheet, Integer questionTypeId){
         int rowLength = sheet.getLastRowNum();
         logger.info("sheet2总数据行数有多少行"+rowLength);
         if(rowLength == 0) {
-            return "succeed";
+            return gson.toJson("succeed");
         }
         //工作表的列
         Row row0 = sheet.getRow(0);
@@ -617,24 +620,24 @@ public class FrontQuestionService {
                 cell.setCellType(CellType.STRING);
                 Integer formatResult = isFormatTrueForSheet2(cell.getStringCellValue(), n);
                 if(formatResult == 0){
-                    return "sheet2第"+count1+"行的第"+count2+"列的数据格式错误";
+                    return gson.toJson("sheet2第"+count1+"行的第"+count2+"列的数据格式错误");
                 }else if(formatResult == -1){
-                    return "sheet2第"+count1+"行的第"+count2+"列的数据输入错误";
+                    return gson.toJson("sheet2第"+count1+"行的第"+count2+"列的数据输入错误");
                 }else if(formatResult == -2){
-                    return "sheet2第"+count1+"行的第"+count2+"列的数据不能为空";
+                    return gson.toJson("sheet2第"+count1+"行的第"+count2+"列的数据不能为空");
                 }
                 cellList.add(cell);
             }
-            completionList.add(saveCompletion(cellList));
+            completionList.add(saveCompletion(cellList, questionTypeId));
         }
         this.questionRepository.saveAll(completionList);
-        return "succeed";
+        return gson.toJson("succeed");
     }
-    public String importJudgmentToAdd(Sheet sheet){
+    public String importJudgmentToAdd(Sheet sheet, Integer questionTypeId){
         int rowLength = sheet.getLastRowNum();
         logger.info("sheet3总数据行数有多少行"+rowLength);
         if(rowLength == 0) {
-            return "succeed";
+            return gson.toJson("succeed");
         }
         //工作表的列
         Row row0 = sheet.getRow(0);
@@ -661,25 +664,25 @@ public class FrontQuestionService {
                 cell.setCellType(CellType.STRING);
                 Integer formatResult = isFormatTrueForSheet3(cell.getStringCellValue(), n);
                 if(formatResult == 0){
-                    return "sheet3第"+count1+"行的第"+count2+"列的数据格式错误";
+                    return gson.toJson("sheet3第"+count1+"行的第"+count2+"列的数据格式错误");
                 }else if(formatResult == -1){
-                    return "sheet3第"+count1+"行的第"+count2+"列的数据输入错误";
+                    return gson.toJson("sheet3第"+count1+"行的第"+count2+"列的数据输入错误");
                 }else if(formatResult == -2){
-                    return "sheet3第"+count1+"行的第"+count2+"列的数据不能为空";
+                    return gson.toJson("sheet3第"+count1+"行的第"+count2+"列的数据不能为空");
                 }
                 cellList.add(cell);
             }
-            judgmentList.add(saveJudgment(cellList));
+            judgmentList.add(saveJudgment(cellList, questionTypeId));
         }
         this.questionRepository.saveAll(judgmentList);
-        return "succeed";
+        return gson.toJson("succeed");
     }
-    public SingleChoice saveSingleChoice(List<Cell> cellList){
+    public SingleChoice saveSingleChoice(List<Cell> cellList, Integer questionTypeId){
         SingleChoice question = new SingleChoice();
         QuestionTitle questionTitle = new QuestionTitle();
         questionTitle.setTitle(cellList.get(1).getStringCellValue());
         question.setSubject(cellList.get(2).getStringCellValue());
-        QuestionType questionType = this.questionRepository.findQuestionTypeById(1);
+        QuestionType questionType = this.questionRepository.findQuestionTypeById(questionTypeId);
         question.setQuestionType(questionType);
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer(cellList.get(5).getStringCellValue());
@@ -690,12 +693,12 @@ public class FrontQuestionService {
         questionTitle.setQuestion(question);
         return question;
     }
-    public Completion saveCompletion(List<Cell> cellList){
+    public Completion saveCompletion(List<Cell> cellList, Integer questionTypeId){
         Completion question = new Completion();
         QuestionTitle questionTitle = new QuestionTitle();
         questionTitle.setTitle(cellList.get(1).getStringCellValue());
         question.setSubject(cellList.get(2).getStringCellValue());
-        QuestionType questionType = this.questionRepository.findQuestionTypeById(2);
+        QuestionType questionType = this.questionRepository.findQuestionTypeById(questionTypeId);
         question.setQuestionType(questionType);
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer(cellList.get(5).getStringCellValue());
@@ -703,12 +706,12 @@ public class FrontQuestionService {
         questionTitle.setQuestion(question);
         return question;
     }
-    public Judgment saveJudgment(List<Cell> cellList){
+    public Judgment saveJudgment(List<Cell> cellList, Integer questionTypeId){
         Judgment question = new Judgment();
         QuestionTitle questionTitle = new QuestionTitle();
         questionTitle.setTitle(cellList.get(1).getStringCellValue());
         question.setSubject(cellList.get(2).getStringCellValue());
-        QuestionType questionType = this.questionRepository.findQuestionTypeById(3);
+        QuestionType questionType = this.questionRepository.findQuestionTypeById(questionTypeId);
         question.setQuestionType(questionType);
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer((cellList.get(5).getStringCellValue().equals("正确") ? 1 : 0));
@@ -719,8 +722,10 @@ public class FrontQuestionService {
     }
 
     public Integer isFormatTrue(String value, Integer no){
-        if(value == null || value.equals("")){
-            return -2;
+        if(no <= 4){
+            if(value == null || value.equals("")){
+                return -2;
+            }
         }
         switch (no) {
             case 0:
@@ -882,4 +887,5 @@ public class FrontQuestionService {
                 return 0;
         }
     }
+
 }

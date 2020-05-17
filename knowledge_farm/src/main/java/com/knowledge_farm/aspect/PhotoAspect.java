@@ -64,8 +64,12 @@ public class PhotoAspect {
     private void notification() {
     }
 
-    @Pointcut(value = "execution(* com.knowledge_farm.user_friend.controller.UserFriendController.*(..))")
+    @Pointcut(value = "execution(* com.knowledge_farm.user_friend.controller.UserFriendController.findUserFriend(..))")
     private void userFriend() {
+    }
+
+    @Pointcut(value = "execution(* com.knowledge_farm.user_friend.controller.UserFriendController.findAllUser(..))")
+    private void findAllUser() {
     }
 
     @AfterReturning(pointcut = "showCropInStore()", returning="result")
@@ -202,10 +206,10 @@ public class PhotoAspect {
                 User from = notification.getFrom();
                 User to = notification.getTo();
                 if(from != null){
-                    changeUser(from);
+                    changeUser3(from);
                 }
                 if(to != null){
-                    changeUser(to);
+                    changeUser3(to);
                 }
             }
         }
@@ -215,7 +219,16 @@ public class PhotoAspect {
     public void userFriend(JoinPoint joinPoint, Object result) {
         if(result instanceof PageUtil){
             for(User user : ((PageUtil<User>) result).getList()){
-                changeUser(user);
+                changeUser2(user);
+            }
+        }
+    }
+
+    @AfterReturning(pointcut = "findAllUser()", returning="result")
+    public void findAllUser(JoinPoint joinPoint, Object result) {
+        if(result instanceof PageUtil){
+            for(User user : ((PageUtil<User>) result).getList()){
+                changeUser3(user);
             }
         }
     }
@@ -238,6 +251,37 @@ public class PhotoAspect {
                 iterator.remove();
             }
         }
+        return user;
+    }
+
+    public User changeUser2(User user){
+        if(!(user.getPhoto().substring(0,4)).equals("http")){
+            user.setPhoto(this.photoUrl + user.getPhoto());
+        }
+        user.setUserAuthority(null);
+        Iterator<UserPetHouse> iterator = user.getPetHouses().iterator();
+        while(iterator.hasNext()){
+            UserPetHouse userPetHouse = iterator.next();
+            Pet pet = userPetHouse.getPet();
+            if((pet.getImg1().substring(0,4)).equals("http")){
+                continue;
+            }
+            pet.setImg1(photoUrl + pet.getImg1());
+            pet.setImg2(photoUrl + pet.getImg2());
+            pet.setImg3(photoUrl + pet.getImg3());
+            if(userPetHouse.getIfUsing() != 1){
+                iterator.remove();
+            }
+        }
+        return user;
+    }
+
+    public User changeUser3(User user){
+        if(!(user.getPhoto().substring(0,4)).equals("http")){
+            user.setPhoto(this.photoUrl + user.getPhoto());
+        }
+        user.setUserAuthority(null);
+        user.setPetHouses(null);
         return user;
     }
 

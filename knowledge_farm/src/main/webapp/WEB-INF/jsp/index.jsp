@@ -171,6 +171,33 @@
                 <li class="list" >
                     <a href="javascript:;">
                         <i class="iconfont">&#xe6a3;</i>
+                        题目管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initQuestionManager" class="sub-menu">
+                        <li id="initQuestionManager1">
+                            <a href="${ctx}/admin/question/findAllQuestion?questionTypeId=1">
+                                <i class="iconfont">&#xe6a7;</i>
+                                单选题
+                            </a>
+                        </li>
+                        <li id="initQuestionManager2">
+                            <a href="${ctx}/admin/question/findAllQuestion?questionTypeId=2">
+                                <i class="iconfont">&#xe6a7;</i>
+                                填空题
+                            </a>
+                        </li>
+                        <li id="initQuestionManager3">
+                            <a href="${ctx}/admin/question/findAllQuestion?questionTypeId=3">
+                                <i class="iconfont">&#xe6a7;</i>
+                                判断题
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list" >
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
                         管理员管理
                         <i class="iconfont nav_right">&#xe697;</i>
                     </a>
@@ -287,15 +314,5 @@
     <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
 </div>
 <!-- 背景切换结束 -->
-<script>
-    //百度统计可去掉
-    var _hmt = _hmt || [];
-    (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();
-</script>
 </body>
 </html>

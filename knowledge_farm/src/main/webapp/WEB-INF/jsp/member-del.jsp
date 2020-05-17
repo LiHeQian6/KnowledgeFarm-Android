@@ -35,7 +35,7 @@
             layer.confirm('确认要恢复吗？',function(index){
             	$.post("${ctx}/admin/user/recoveryOneUser",{"userId":id},function(data){
 	    			if(data == "succeed"){
-	    				window.location.href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=0";
+	    				window.location.href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=${param.exist}";
 	    			}else if(data == "fail"){
 	    				layer.msg('恢复失败');
 	    			}
@@ -56,7 +56,7 @@
             	if(recoveryStr != ""){
 	        	    $.post("${ctx}/admin/user/recoveryMultiUser",{"recoveryStr":recoveryStr},function(data){
 			    	 	 if(data == "succeed"){
-			    			 window.location.href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=0";
+			    			 window.location.href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=${param.exist}";
 			    		 }else if(data == "fail"){
 			    			 layer.msg('恢复失败');
 			    		 }
@@ -72,7 +72,7 @@
             layer.confirm('彻底删除无法恢复，确认要删除数据吗？',function(index){
             	$.post("${ctx}/admin/user/deleteThoroughUser",{"userId":id},function(data){
 	    			if(data == "succeed"){
-	    				window.location.href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=0";
+	    				window.location.href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.currentPageNum}&&pageSize=${userPage.pageSize}&&exist=${param.exist}";
 	    			}else if(data == "fail"){
 	    				layer.msg('删除失败');
 	    			}
@@ -236,6 +236,33 @@
 					<li class="list" >
 						<a href="javascript:;">
 							<i class="iconfont">&#xe6a3;</i>
+							题目管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initQuestionManager" class="sub-menu">
+							<li id="initQuestionManager1">
+								<a href="${ctx}/admin/question/findAllQuestion?questionTypeId=1">
+									<i class="iconfont">&#xe6a7;</i>
+									单选题
+								</a>
+							</li>
+							<li id="initQuestionManager2">
+								<a href="${ctx}/admin/question/findAllQuestion?questionTypeId=2">
+									<i class="iconfont">&#xe6a7;</i>
+									填空题
+								</a>
+							</li>
+							<li id="initQuestionManager3">
+								<a href="${ctx}/admin/question/findAllQuestion?questionTypeId=3">
+									<i class="iconfont">&#xe6a7;</i>
+									判断题
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="list" >
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
 							管理员管理
 							<i class="iconfont nav_right">&#xe697;</i>
 						</a>
@@ -362,10 +389,10 @@
           </div>
           <!-- 分页处理开始 -->
 		  <div align="center">
-			<a  class="page" style="margin-left:25px;" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=1&&pageSize=${userPage.pageSize}&&exist=0">首页</a>
-			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.prePageNum}&&pageSize=${userPage.pageSize}&&exist=0">上一页</a>
-			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.nextPageNum}&&pageSize=${userPage.pageSize}&&exist=0">下一页</a>
-			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.totalPageNum}&&pageSize=${userPage.pageSize}&&exist=0">末页</a>
+			<a  class="page" style="margin-left:25px;" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=1&&pageSize=${userPage.pageSize}&&exist=${param.exist}">首页</a>
+			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.prePageNum}&&pageSize=${userPage.pageSize}&&exist=${param.exist}">上一页</a>
+			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.nextPageNum}&&pageSize=${userPage.pageSize}&&exist=${param.exist}">下一页</a>
+			<a  class="page" href="${ctx}/admin/user/findUserPage?account=${param.account}&&pageNumber=${userPage.totalPageNum}&&pageSize=${userPage.pageSize}&&exist=${param.exist}">末页</a>
 		  </div>
 		  <div align="center" style="margin-top:20px;">
 			  <span style="margin-right:10px;">${userPage.currentPageNum}</span>
@@ -402,57 +429,5 @@
 		<div id="changer-set"><i class="iconfont">&#xe696;</i></div>
 	</div>
     <!-- 背景切换结束 -->
-    <!-- 页面动态效果 -->
-    <script>
-
-        layui.use(['laydate'], function(){
-          laydate = layui.laydate;//日期插件
-
-          //以上模块根据需要引入
-          //
-          
-
-          
-          var start = {
-            min: laydate.now()
-            ,max: '2099-06-16 23:59:59'
-            ,istoday: false
-            ,choose: function(datas){
-              end.min = datas; //开始日选好后，重置结束日的最小日期
-              end.start = datas //将结束日的初始值设定为开始日
-            }
-          };
-          
-          var end = {
-            min: laydate.now()
-            ,max: '2099-06-16 23:59:59'
-            ,istoday: false
-            ,choose: function(datas){
-              start.max = datas; //结束日选好后，重置开始日的最大日期
-            }
-          };
-          
-          document.getElementById('LAY_demorange_s').onclick = function(){
-            start.elem = this;
-            laydate(start);
-          }
-          document.getElementById('LAY_demorange_e').onclick = function(){
-            end.elem = this
-            laydate(end);
-          }
-          
-        });
-
-        </script>
-        <script>
-        //百度统计可去掉
-        var _hmt = _hmt || [];
-        (function() {
-          var hm = document.createElement("script");
-          hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
-          var s = document.getElementsByTagName("script")[0]; 
-          s.parentNode.insertBefore(hm, s);
-        })();
-        </script>
 </body>
 </html>
