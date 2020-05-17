@@ -158,6 +158,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/buttonbackground"
+                        android:layout_gravity="center"
+                        android:id="@+id/all_have_read"
+                        android:textSize="20dp"
+                        android:text="一键已读"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/buttonbackground"
                         android:id="@+id/delete_all_btn"
                         android:layout_gravity="center"
                         android:textSize="20dp"

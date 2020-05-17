@@ -22,9 +22,13 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -49,25 +53,26 @@ import okhttp3.Response;
 
 public class NotifyActivity extends AppCompatActivity {
 
-    private ListView listView;
+    private ListView listView; // 展示通知ListView
     private FriendsPage<Notification> notify_list;
     private Handler get_system_notify;
     private Handler get_mysend_notify;
-    private String current_type = "1";
-    private Button system_notify;
-    private Button friend_notify;
-    private Button mess_notify;
-    private Button add_notify;
-    private ImageView returns;
-    private Gson gson;
-    private TextView none_notify;
-    private Button delete_all_btn;
+    private String current_type = "1"; //当前通知类型
+    private Button system_notify; //系统通知按钮
+    private Button friend_notify; //好友通知按钮
+    private Button mess_notify; // 其他通知按钮
+    private Button add_notify; // 发送的通知按钮
+    private ImageView returns; //返回图标
+    private Gson gson; // gson
+    private TextView none_notify; //没有通知提示
+    private Button delete_all_btn; //删除已读按钮
+    private Button all_have_read; //一键已读按钮
     private Handler if_delete_all;
-    private SendNotifyAdapter sendNotifyAdapter;
-    private ImageView system_notify_red;
-    private ImageView friend_notify_red;
-    private ImageView send_notify_red;
-    private ImageView other_notify_red;
+    private SendNotifyAdapter sendNotifyAdapter; //数据绑定器
+    private ImageView system_notify_red; //系统通知提示红点
+    private ImageView friend_notify_red; //好友通知提示红点
+    public ImageView send_notify_red; //我发送的通知提示红点
+    private ImageView other_notify_red; //其他通知提示红点
     private OkHttpClient okHttpClient;
 
     @Override
@@ -81,6 +86,26 @@ public class NotifyActivity extends AppCompatActivity {
         FullScreen.NavigationBarStatusBar(NotifyActivity.this,true);
         getNotify("1",1,6);
         getNotifyHandler();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void UpdateRed(EventBean eventBean){
+        if(eventBean.getIfRead()) {
+            send_notify_red.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -129,6 +154,9 @@ public class NotifyActivity extends AppCompatActivity {
                             case "2":
                                 none_notify.setText("暂时没有好友申请，快去加好友吧");
                                 break;
+                            case "3":
+                                none_notify.setText("暂时没有通知哦");
+                                break;
                         }
                         none_notify.setVisibility(View.VISIBLE);
                         return;
@@ -149,6 +177,12 @@ public class NotifyActivity extends AppCompatActivity {
                             FriendNotifyAdapter listAdapter1 = new FriendNotifyAdapter(notify_list,R.layout.friend_notify_item,getApplicationContext());
                             listView.setAdapter(listAdapter1);
                             friend_notify_red.setVisibility(View.INVISIBLE);
+                            break;
+                        case "3":
+                            MainActivity.notifyStatus.set(3,false);
+                            OtherNotifyAdapter otherNotifyAdapter = new OtherNotifyAdapter(notify_list,R.layout.other_notify_item,getApplicationContext());
+                            listView.setAdapter(otherNotifyAdapter);
+                            other_notify_red.setVisibility(View.INVISIBLE);
                             break;
                     }
                 }
@@ -199,6 +233,7 @@ public class NotifyActivity extends AppCompatActivity {
         mess_notify = findViewById(R.id.message_btn);
         add_notify = findViewById(R.id.add_btn);
         none_notify = findViewById(R.id.none_notify);
+        all_have_read = findViewById(R.id.all_have_read);
         delete_all_btn = findViewById(R.id.delete_all_btn);
         returns = findViewById(R.id.goBack_notify);
         system_notify_red = findViewById(R.id.system_notify_red);
@@ -206,6 +241,7 @@ public class NotifyActivity extends AppCompatActivity {
         send_notify_red = findViewById(R.id.send_notify_red);
         other_notify_red = findViewById(R.id.other_notify_red);
         delete_all_btn.setVisibility(View.INVISIBLE);
+        all_have_read.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -222,6 +258,7 @@ public class NotifyActivity extends AppCompatActivity {
         add_notify.setOnClickListener(new CustomerOnclickListener());
         delete_all_btn.setOnClickListener(new CustomerOnclickListener());
         returns.setOnClickListener(new CustomerOnclickListener());
+        all_have_read.setOnClickListener(new CustomerOnclickListener());
     }
 
     /**
@@ -393,23 +430,35 @@ public class NotifyActivity extends AppCompatActivity {
                 case R.id.system_btn:
                     current_type = "1";
                     delete_all_btn.setVisibility(View.INVISIBLE);
+                    all_have_read.setVisibility(View.INVISIBLE);
                     getNotify("1",1,4);
                     break;
                 case R.id.friend_btn:
                     current_type = "2";
                     delete_all_btn.setVisibility(View.INVISIBLE);
+                    all_have_read.setVisibility(View.INVISIBLE);
                     getNotify("2",1,4);
                     break;
                 case R.id.add_btn:
                     current_type = "2";
                     delete_all_btn.setVisibility(View.VISIBLE);
+                    all_have_read.setVisibility(View.VISIBLE);
                     getMySendNotify("2",1,4);
+                    break;
+                case R.id.message_btn:
+                    current_type = "3";
+                    delete_all_btn.setVisibility(View.INVISIBLE);
+                    all_have_read.setVisibility(View.INVISIBLE);
+                    getNotify(current_type,1,4);
                     break;
                 case R.id.delete_all_btn:
                     Delete_All_Notify(current_type,UserUtil.getUser().getId());
                     break;
                 case R.id.goBack_notify:
                     finish();
+                    break;
+                case R.id.all_have_read:
+                    sendNotifyAdapter.AllHaveRead();
                     break;
             }
         }

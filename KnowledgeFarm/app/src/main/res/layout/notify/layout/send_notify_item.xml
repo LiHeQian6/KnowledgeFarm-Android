@@ -40,17 +40,30 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/send_result"
-                android:text="已添加"
-                android:textColor="@color/blackTextColor"
-                android:textSize="25dp">
-            </TextView>
+            android:layout_height="match_parent"
+            android:layout_weight="6">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/send_result"
+                    android:text="已添加"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/blackTextColor"
+                    android:textSize="25dp">
+                </TextView>
+                <ImageView
+                    android:src="@drawable/red"
+                    android:visibility="gone"
+                    android:id="@+id/system_send_red"
+                    android:layout_width="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="10dp"/>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

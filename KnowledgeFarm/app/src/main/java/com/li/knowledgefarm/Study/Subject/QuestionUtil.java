@@ -339,6 +339,8 @@ public class QuestionUtil {
                 btnNextQuestion.setClickable(false);
             }
         }else {
+            btnPreQuestion.setClickable(true);
+            btnNextQuestion.setClickable(true);
             choice_isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.cha,null));
             choice_isTrue.setVisibility(View.VISIBLE);
             StudyUtil.PlayFalseSound(context);
@@ -387,11 +389,14 @@ public class QuestionUtil {
                 btnNextQuestion.setClickable(false);
             }
         }else{
+            btnNextQuestion.setClickable(true);
+            btnPreQuestion.setClickable(true);
             isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.cha,null));
             isTrue.setVisibility(View.VISIBLE);
             isFalse.setText("你还差一点就答对了哦！");
             StudyUtil.PlayFalseSound(context);
             isFalse.setVisibility(View.VISIBLE);
+            completion_answer.setText("");
         }
     }
 

@@ -14,8 +14,17 @@ public class EventBean {
     String account;
     private List<Question3Num> mathList;
     private PetVO petVO;
+    private Boolean ifRead = false;
     private String message;
     private String notifyType;
+
+    public Boolean getIfRead() {
+        return ifRead;
+    }
+
+    public void setIfRead(Boolean ifRead) {
+        this.ifRead = ifRead;
+    }
 
     public PetVO getPetVO() {
         return petVO;
