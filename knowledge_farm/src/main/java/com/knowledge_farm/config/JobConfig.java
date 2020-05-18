@@ -1,5 +1,6 @@
 package com.knowledge_farm.config;
 
+import com.knowledge_farm.util.DatabaseBackup;
 import com.knowledge_farm.util.EveryDayTaskJob;
 import com.knowledge_farm.util.RewardCountJob;
 import org.quartz.JobDetail;
@@ -67,6 +68,27 @@ public class JobConfig {
         return cronTriggerFactoryBean;
     }
 
+    @Bean(name = "databaseBackup")
+    public JobDetailFactoryBean jobDetailFactoryBean2(){
+        JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
+        jobDetailFactoryBean.setJobClass(DatabaseBackup.class);
+        jobDetailFactoryBean.setDurability(true);
+        return jobDetailFactoryBean;
+    }
+
+    /**
+     * 触发器  cronTriggerFactoryBean
+     * @param jobDetailFactoryBean
+     * @return
+     */
+    @Bean
+    public CronTriggerFactoryBean cronTriggerFactoryBean2(@Qualifier("databaseBackup")JobDetailFactoryBean jobDetailFactoryBean){
+        CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
+        cronTriggerFactoryBean.setJobDetail(jobDetailFactoryBean.getObject());
+        cronTriggerFactoryBean.setCronExpression("0 0 0 ? * WED,SAT");
+        return cronTriggerFactoryBean;
+    }
+
     /**
      * 将上面的jobDetails和triggers都配置到一个类中，这样便于后续定时任务的添加
      * @return
@@ -77,11 +99,13 @@ public class JobConfig {
         List<JobDetail> jobDetails = new ArrayList<>();
         jobDetails.add(jobDetailFactoryBean().getObject());
         jobDetails.add(jobDetailFactoryBean1().getObject());
+        jobDetails.add(jobDetailFactoryBean2().getObject());
         JobDetail[] jobDetailarr = createJobDetail(jobDetails);
 
         List<Trigger> triggers = new ArrayList<>();
         triggers.add(cronTriggerFactoryBean(jobDetailFactoryBean()).getObject());
         triggers.add(cronTriggerFactoryBean1(jobDetailFactoryBean1()).getObject());
+        triggers.add(cronTriggerFactoryBean2(jobDetailFactoryBean2()).getObject());
         Trigger[] triggerarr = createTriggers(triggers);
 
         jobConfigBean.setJobDetails(jobDetailarr);
