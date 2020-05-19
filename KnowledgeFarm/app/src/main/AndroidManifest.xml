@@ -31,7 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pk.PkActivity"></activity>
+        <activity android:name=".pk.PkActivity" android:screenOrientation="landscape"></activity>
 
         <service
             android:name=".Main.bgsound.BgSoundService"
