@@ -53,7 +53,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="倒计时"
+            android:text="第1回合"
             android:layout_centerInParent="true"
             android:textSize="30dp"
             android:id="@+id/time_limit"
@@ -103,6 +103,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/show_battle_title">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始"
+            android:background="@drawable/buy"
+            android:layout_centerInParent="true"
+            android:textSize="20dp"
+            android:id="@+id/start_battle_btn"
+            android:textColor="@color/ShopTextColor"/>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
