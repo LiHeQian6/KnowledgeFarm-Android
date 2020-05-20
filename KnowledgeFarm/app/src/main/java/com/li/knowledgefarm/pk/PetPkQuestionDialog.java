@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -76,17 +78,34 @@ public class PetPkQuestionDialog extends Dialog {
 
     @Override
     protected void onStart() {
-        super.onStart();
         checkBox_A.setChecked(false);
         checkBox_B.setChecked(false);
         checkBox_C.setChecked(false);
         completion_answer.setText("");
         timeLimit = new QuestionTimeLimit(time_limit,listener,this,startTime);
         timeLimit.execute();
+        super.onStart();
     }
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        setDialogSize();
+    }
+
+    private void setDialogSize(){
+        WindowManager wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        WindowManager.LayoutParams params = this.getWindow().getAttributes();
+        params.width = (int)(0.7*ds.widthPixels);
+        params.height = (int)(0.95*ds.heightPixels);
+        this.getWindow().setAttributes(params);
+        this.setCancelable(false);
     }
 
     /**
@@ -263,8 +282,7 @@ public class PetPkQuestionDialog extends Dialog {
         completion_question = findViewById(R.id.completion_Question); //填空题问题
         completion_answer = findViewById(R.id.completion_Answer); //填空题答案输入框
         isTrue = findViewById(R.id.isTrue); //是否正确文字提示
-        isFalse = findViewById(R.id.isFalse); //是否正确图片提示
-        isFalse.setVisibility(View.GONE);
+//        isFalse = findViewById(R.id.isFalse); //是否正确图片提示
         //选择题
         choice_question = findViewById(R.id.choice_Question);
         choice_isTrue = findViewById(R.id.choice_isTrue);

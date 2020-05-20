@@ -1,62 +1,40 @@
 package com.li.knowledgefarm.Study.Subject;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
-import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
-import com.li.knowledgefarm.entity.QuestionEntity.Completion;
-import com.li.knowledgefarm.entity.QuestionEntity.Judgment;
 import com.li.knowledgefarm.entity.QuestionEntity.Question;
-import com.li.knowledgefarm.entity.QuestionEntity.Question3Num;
-import com.li.knowledgefarm.entity.QuestionEntity.SingleChoice;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class MathActivity extends AppCompatActivity implements StudyInterface {
+public class QuestionActivity extends AppCompatActivity implements StudyInterface {
     private ImageView iv_return; //返回
     private CustomerListener listener; //自定义点击事件监听器
     private OkHttpClient okHttpClient; //Okhttp
@@ -102,17 +80,17 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_math);
+        setContentView(R.layout.activity_question);
         okHttpClient = OkHttpUtils.getInstance(this);
         /** 加载视图*/
         getViews();
         setViewSize();
         datalist = (List<Question>) getIntent().getSerializableExtra("question");
         QuestionUtil.CURRENT_SUBJECT = datalist.get(0).getSubject();
-        questionUtil = new QuestionUtil(this,MathActivity.this,datalist);
+        questionUtil = new QuestionUtil(this, QuestionActivity.this,datalist);
         /** 注册点击事件监听器*/
         registListener();
-        FullScreen.NavigationBarStatusBar(MathActivity.this,true);
+        FullScreen.NavigationBarStatusBar(QuestionActivity.this,true);
         questionUtil.showQuestion();
     }
 
@@ -131,7 +109,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         completion_question = findViewById(R.id.completion_Question); //填空题问题
         completion_answer = findViewById(R.id.completion_Answer); //填空题答案输入框
         isTrue = findViewById(R.id.isTrue); //是否正确文字提示
-        isFalse = findViewById(R.id.isFalse); //是否正确图片提示
+//        isFalse = findViewById(R.id.isFalse); //是否正确图片提示
         //选择题
         choice_question = findViewById(R.id.choice_Question);
         choice_isTrue = findViewById(R.id.choice_isTrue);
@@ -186,6 +164,7 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
         choice_A.setWidth((int)(displayWidth * 0.25));
         choice_B.setWidth((int)(displayWidth * 0.25));
         choice_C.setWidth((int)(displayWidth * 0.25));
+        completion_question.setWidth((int)(displayWidth * 0.7));
     }
 
     class CustomerListener implements View.OnClickListener{
@@ -221,6 +200,18 @@ public class MathActivity extends AppCompatActivity implements StudyInterface {
                     }
                     break;
                 case R.id.btnNextQuestion:
+                    if(btnNextQuestion.getText().toString().equals("我答完啦")){
+                        if(QuestionUtil.TRUE_ANSWER_COUNT == datalist.size())
+                            questionUtil.getWaterAndFertilizer();
+                        else {
+                            if(toast == null){
+                                toast = Toast.makeText(QuestionActivity.this,"你还没有答完哦！",Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.BOTTOM,0,0);
+                                toast.show();
+                                toast = null;
+                            }
+                        }
+                    }
                     switch (datalist.get(QuestionUtil.POSITION).getQuestionType().getId()){
                         case 1:
                             if(QuestionUtil.POSITION < datalist.size() - 1) {

@@ -205,15 +205,15 @@ public class PkActivity extends AppCompatActivity {
      * @return void
      */
     private void setCustomDialog(){
+//        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+//        DisplayMetrics ds = new DisplayMetrics();
+//        wm.getDefaultDisplay().getMetrics(ds);
+//        WindowManager.LayoutParams params = pkQuestionDialog.getWindow().getAttributes();
+//        params.width = (int)(0.7*ds.widthPixels);
+//        params.height = (int)(0.95*ds.heightPixels);
+//        pkQuestionDialog.getWindow().setAttributes(params);
+//        pkQuestionDialog.setCancelable(false);
         pkQuestionDialog.show();
-        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        WindowManager.LayoutParams params = pkQuestionDialog.getWindow().getAttributes();
-        params.width = (int)(0.7*ds.widthPixels);
-        params.height = (int)(0.95*ds.heightPixels);
-        pkQuestionDialog.getWindow().setAttributes(params);
-        pkQuestionDialog.setCancelable(false);
 //        pkQuestionDialog.getWindow().setAttributes();
     }
 
