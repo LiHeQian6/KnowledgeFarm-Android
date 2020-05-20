@@ -198,26 +198,6 @@ public class PkActivity extends AppCompatActivity {
     }
 
     /**
-     * @Description 设置自定义弹窗相关属性
-     * @Author 孙建旺
-     * @Date 下午5:25 2020/05/19
-     * @Param []
-     * @return void
-     */
-    private void setCustomDialog(){
-//        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-//        DisplayMetrics ds = new DisplayMetrics();
-//        wm.getDefaultDisplay().getMetrics(ds);
-//        WindowManager.LayoutParams params = pkQuestionDialog.getWindow().getAttributes();
-//        params.width = (int)(0.7*ds.widthPixels);
-//        params.height = (int)(0.95*ds.heightPixels);
-//        pkQuestionDialog.getWindow().setAttributes(params);
-//        pkQuestionDialog.setCancelable(false);
-        pkQuestionDialog.show();
-//        pkQuestionDialog.getWindow().setAttributes();
-    }
-
-    /**
      * @Description 自定义点击事件实现类
      * @Author 孙建旺
      * @Date 下午3:39 2020/05/19
@@ -233,7 +213,7 @@ public class PkActivity extends AppCompatActivity {
 //                    pkTimeLimit = new PetPkTimeLimit(time_limit);
 //                    pkTimeLimit.execute();
                     pkQuestionDialog.setQuestion(list.get(position));
-                    setCustomDialog();
+                    pkQuestionDialog.show();
                    // start_battle_btn.setVisibility(View.GONE);
                     break;
             }
