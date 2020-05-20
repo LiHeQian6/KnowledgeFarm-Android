@@ -3,16 +3,14 @@ package com.knowledge_farm.front.admin.controller;
 import com.knowledge_farm.entity.Admin;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.admin.service.AdminServiceImpl;
-import com.knowledge_farm.util.Md5Encode;
 import com.knowledge_farm.util.PageUtil;
-import com.knowledge_farm.util.RandomUtil;
+import com.knowledge_farm.util.RateRandomNumber;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -343,7 +341,7 @@ public class AdminController {
         String fileName = "";
         do{
             fileName = "";
-            fileName = RandomUtil.generateAccount() + ".png";
+            fileName = RateRandomNumber.generateAccount() + ".png";
         }while (isHavingFileName(fileName));
         String testCodeImageLocation = loginTestCodePhotoFileLocation + "/" + fileName;
         String testCodeImage = loginTestCodePhotoFolderName + "/" + fileName;
