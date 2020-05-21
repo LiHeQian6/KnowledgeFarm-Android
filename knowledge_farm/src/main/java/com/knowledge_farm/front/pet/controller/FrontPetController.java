@@ -157,29 +157,9 @@ public class FrontPetController {
                          @RequestParam("growHour1")Integer growHour1,
                          @RequestParam("growHour2")Integer growHour2,
                          @RequestParam("growHour3")Integer growHour3){
-        if(harvestHour1 != 0 && harvestHour2 != 0 && harvestHour3 != 0){
-            if(harvestHour1 <= harvestHour2){
-                return "宠物第一阶段n小时收获必须比第二阶段大";
-            }
-            if(harvestHour2 <= harvestHour3){
-                return "宠物第二阶段n小时收获必须比第三阶段大";
-            }
-        }else{
-            harvestHour1 = 0;
-            harvestHour2 = 0;
-            harvestHour3 = 0;
-        }
-        if(growHour1 != 0 && growHour2 != 0 && growHour3 != 0){
-            if(growHour1 <= growHour2){
-                return "宠物第一阶段n小时生长必须比第二阶段大";
-            }
-            if(growHour2 <= growHour3){
-                return "宠物第二阶段n小时生长必须比第三阶段大";
-            }
-        }else{
-            growHour1 = 0;
-            growHour2 = 0;
-            growHour3 = 0;
+        String result = validate(harvestHour1, harvestHour2, harvestHour3, growHour1, growHour2, growHour3);
+        if(result != Result.SUCCEED){
+            return result;
         }
         for(MultipartFile multipartFile : files) {
             if (multipartFile.getOriginalFilename().equals("")) {
@@ -214,6 +194,16 @@ public class FrontPetController {
     @PostMapping("/updatePet")
     @ResponseBody
     public String updatePet(Pet pet, PetFunction petFunction, @RequestParam("upload") MultipartFile files[]) {
+        Integer harvestHour1 = petFunction.getHarvestHour1();
+        Integer harvestHour2 = petFunction.getHarvestHour2();
+        Integer harvestHour3 = petFunction.getHarvestHour3();
+        Integer growHour1 = petFunction.getGrowHour1();
+        Integer growHour2 = petFunction.getGrowHour2();
+        Integer growHour3 = petFunction.getGrowHour3();
+        String result = validate(harvestHour1, harvestHour2, harvestHour3, growHour1, growHour2, growHour3);
+        if(result != Result.SUCCEED){
+            return result;
+        }
         Integer id = pet.getId();
         int count = 1;
         try {
@@ -259,6 +249,34 @@ public class FrontPetController {
             e.printStackTrace();
             return Result.FAIL;
         }
+    }
+
+    public String validate(Integer harvestHour1, Integer harvestHour2, Integer harvestHour3, Integer growHour1, Integer growHour2, Integer growHour3){
+        if(harvestHour1 != 0 && harvestHour2 != 0 && harvestHour3 != 0){
+            if(harvestHour1 <= harvestHour2){
+                return "宠物第一阶段n小时收获必须比第二阶段大";
+            }
+            if(harvestHour2 <= harvestHour3){
+                return "宠物第二阶段n小时收获必须比第三阶段大";
+            }
+        }else{
+            harvestHour1 = 0;
+            harvestHour2 = 0;
+            harvestHour3 = 0;
+        }
+        if(growHour1 != 0 && growHour2 != 0 && growHour3 != 0){
+            if(growHour1 <= growHour2){
+                return "宠物第一阶段n小时生长必须比第二阶段大";
+            }
+            if(growHour2 <= growHour3){
+                return "宠物第二阶段n小时生长必须比第三阶段大";
+            }
+        }else{
+            growHour1 = 0;
+            growHour2 = 0;
+            growHour3 = 0;
+        }
+        return Result.SUCCEED;
     }
 
 }

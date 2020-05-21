@@ -1,7 +1,5 @@
 package com.knowledge_farm.entity;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 /**
  * @ClassName Constant
  * @Description

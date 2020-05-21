@@ -49,12 +49,13 @@ public class PetService {
     }
 
     @Transactional(readOnly = false)
-        public String changePet(Integer userId, Integer willUsingPetId){
+        public int changePet(Integer userId, Integer willUsingPetId){
         User user = this.userService.findUserById(userId);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         int count = 0;
         int count1 = -1;
         int count2 = -1;
+        int result = 0;
 
         for(UserPetHouse userPetHouse : userPetHouses){
             if(userPetHouse.getIfUsing() == 1){
@@ -69,7 +70,7 @@ public class PetService {
             count++;
         }
         if(count1 == -1 || count2 == -1){
-            return Result.FALSE;
+            return 0;
         }
         count = 0;
         for(UserPetHouse userPetHouse : userPetHouses){
@@ -78,9 +79,10 @@ public class PetService {
             }
             if(count == count2){
                 userPetHouse.setIfUsing(1);
+                result = userPetHouse.getId();
             }
         }
-        return Result.TRUE;
+        return result;
     }
 
 //    @Transactional(readOnly = false)
