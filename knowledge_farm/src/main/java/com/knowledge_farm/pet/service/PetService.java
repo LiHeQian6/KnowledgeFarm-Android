@@ -88,11 +88,14 @@ public class PetService {
 //        return petFoodDao.saveAndFlush(petFood).getId();
 //    }
     @Transactional(readOnly = false)
-    public String updateData(Integer userId, Integer petId, Integer result) {
+    public String updateData(Integer userId, Integer result) {
         User user = this.userService.findUserById(userId);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         for(UserPetHouse userPetHouse : userPetHouses) {
-            if (userPetHouse.getPet().getId() == petId) {
+            if (userPetHouse.getIfUsing() == 1) {
+                if(userPetHouse.getPhysical() == 0){
+                    return Result.NOT_ENOUGH_PHYSICAL;
+                }
                 userPetHouse.setPhysical(userPetHouse.getPhysical()-1);
                 if(result == 1){
                     if(userPetHouse.getIntelligence()<userPetHouse.getPet().getIntelligence()*5){
