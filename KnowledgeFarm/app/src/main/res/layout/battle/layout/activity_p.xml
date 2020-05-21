@@ -160,6 +160,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/buy"
                 android:text="逃跑"
+                android:id="@+id/my_go_away"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"/>
         </RelativeLayout>
