@@ -93,13 +93,13 @@ public class PetService {
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         for(UserPetHouse userPetHouse : userPetHouses) {
             if (userPetHouse.getIfUsing() == 1) {
-                if(userPetHouse.getPhysical() == 0){
-                    return Result.NOT_ENOUGH_PHYSICAL;
-                }
-                userPetHouse.setPhysical(userPetHouse.getPhysical()-1);
+                Pet pet = userPetHouse.getPet();
                 if(result == 1){
-                    if(userPetHouse.getIntelligence()<userPetHouse.getPet().getIntelligence()*5){
+                    if(userPetHouse.getIntelligence()<pet.getIntelligence()*5){
                         userPetHouse.setIntelligence(userPetHouse.getIntelligence()+5);
+                        if(userPetHouse.getIntelligence()>=2*pet.getIntelligence()*2 && userPetHouse.getIntelligence()< 4*pet.getIntelligence()*2){
+                            return Result.UP;
+                        }
                         return Result.SUCCEED;
                     }
                     return Result.FULL;
