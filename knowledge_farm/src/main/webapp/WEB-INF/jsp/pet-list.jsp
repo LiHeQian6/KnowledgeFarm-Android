@@ -336,6 +336,12 @@
                     <th style="text-align:center;">生命值</th>
                     <th style="text-align:center;">智力值</th>
                     <th style="text-align:center;">体力值</th>
+                    <th style="text-align:center;">收获1</th>
+                    <th style="text-align:center;">收获2</th>
+                    <th style="text-align:center;">收获3</th>
+                    <th style="text-align:center;">生长1</th>
+                    <th style="text-align:center;">生长2</th>
+                    <th style="text-align:center;">生长3</th>
                     <th style="text-align:center;">状态</th>
                     <th style="text-align:center;">操作</th>
                 </tr>
@@ -354,6 +360,12 @@
                         <td>${petPage.life}</td>
                         <td>${petPage.intelligence}</td>
                         <td>${petPage.physical}</td>
+                        <td>${petPage.petFunction.harvestHour1}</td>
+                        <td>${petPage.petFunction.harvestHour2}</td>
+                        <td>${petPage.petFunction.harvestHour3}</td>
+                        <td>${petPage.petFunction.growHour1}</td>
+                        <td>${petPage.petFunction.growHour2}</td>
+                        <td>${petPage.petFunction.growHour3}</td>
                         <td class="td-status">
                             <span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
                         </td>

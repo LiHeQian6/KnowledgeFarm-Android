@@ -61,7 +61,7 @@
                 android:autoSizeTextType="uniform"/>
             <TextView
                 android:id="@+id/choice_A"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="19"
                 android:gravity="center"
@@ -87,7 +87,7 @@
                 android:autoSizeTextType="uniform"/>
             <TextView
                 android:id="@+id/choice_B"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="65"
                 android:gravity="center"
@@ -112,9 +112,10 @@
                 android:autoSizeMaxTextSize="35dp"
                 android:autoSizeTextType="uniform"/>
             <TextView
-                android:id="@+id/choice_C"                android:layout_width="wrap_content"
+                android:id="@+id/choice_C"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="39"
+                android:text="65"
                 android:gravity="center"
                 android:textColor="#ffffff"
                 android:maxLines="1"

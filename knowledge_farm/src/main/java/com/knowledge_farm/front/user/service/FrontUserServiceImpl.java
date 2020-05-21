@@ -3,7 +3,7 @@ package com.knowledge_farm.front.user.service;
 import com.knowledge_farm.entity.*;
 import com.knowledge_farm.pet.service.PetService;
 import com.knowledge_farm.user.dao.UserDao;
-import com.knowledge_farm.util.RandomUtil;
+import com.knowledge_farm.util.RateRandomNumber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -83,7 +83,7 @@ public class FrontUserServiceImpl {
         String account = "";
         do {
             account = "";
-            account = RandomUtil.generateAccount();
+            account = RateRandomNumber.generateAccount();
         } while (this.userDao.findUserByAccount(account) != null || account.charAt(0) == '0' || account.charAt(account.length() - 1) == '0');
         //构建User
         User user = new User();

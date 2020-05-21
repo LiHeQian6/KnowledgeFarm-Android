@@ -12,6 +12,21 @@ import java.util.List;
 public class RateRandomNumber {
 
     /**
+     * @Author 张帅华
+     * @Description 生成八位不同数字账号（首尾不能为0）
+     * @Date 10:11 2020/5/20 0020
+     * @Param []
+     * @return java.lang.String
+     **/
+    public static String generateAccount(){
+        String account = "";
+        for(int n = 1;n < 9;n++) {
+            account += (int)(Math.random()*10);
+        }
+        return account;
+    }
+
+    /**
      * 产生随机数
      *
      * @param min 最小值

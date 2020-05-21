@@ -10,47 +10,51 @@
         android:gravity="center"
         android:id="@+id/question_re">
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:text=" "/>
+        <TextView
             android:id="@+id/completion_Question"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textSize="50dp"
+            android:autoSizeMaxTextSize="35dp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
             android:textColor="#ffffff"
             android:gravity="center"
             android:text="5 + 8 - 3 = " />
-        <EditText
-            android:id="@+id/completion_Answer"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:textSize="50dp"
-            android:inputType="number"
-            android:imeOptions="flagNoExtractUi"
-            android:layout_toRightOf="@+id/completion_Question"
-            android:theme="@style/MyEditText"
-            android:textColor="#ffffff" />
     </RelativeLayout>
-    <ImageView
-        android:id="@+id/isTrue"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/question_re"
-        android:src="@drawable/duigou"
-        android:visibility="gone">
-    </ImageView>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_below="@+id/question_re">
-
+        android:layout_below="@id/question_re"
+        android:gravity="center">
         <TextView
-            android:id="@+id/isFalse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="你还差一点就答对了哦！"
-            android:textColor="@color/ShopTextColor"
-            android:visibility="invisible"
-            android:textSize="20sp">
-        </TextView>
+            android:text="你的答案："
+            android:textSize="30dp"
+            android:id="@+id/your_answer"
+            android:layout_centerInParent="true"
+            android:textColor="@color/ShopTextColor"/>
+        <EditText
+            android:id="@+id/completion_Answer"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:layout_toRightOf="@id/your_answer"
+            android:imeOptions="flagNoExtractUi"
+            android:theme="@style/MyEditText"
+            android:textColor="#ffffff" />
+        <ImageView
+            android:id="@+id/isTrue"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/completion_Answer"
+            android:src="@drawable/duigou"
+            android:visibility="gone">
+        </ImageView>
     </RelativeLayout>
 </RelativeLayout>

@@ -6,19 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 
-import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Study.GetSubjectQuestion.GetChineseQuestion;
 import com.li.knowledgefarm.Study.GetSubjectQuestion.GetEnglishQuestion;
 import com.li.knowledgefarm.Study.GetSubjectQuestion.GetMathQuestion;
-import com.li.knowledgefarm.Study.Subject.ChineseActivity;
-import com.li.knowledgefarm.Study.Subject.EnglishActivity;
-import com.li.knowledgefarm.Study.Subject.MathActivity;
-import com.li.knowledgefarm.Study.Util.StudyUtil;
+import com.li.knowledgefarm.Study.Subject.QuestionActivity;
 import com.li.knowledgefarm.Util.FullScreen;
 
 
@@ -61,19 +55,19 @@ public class SubjectListActivity extends AppCompatActivity {
                     break;
                 case R.id.iv_math:
                     Intent intent = new Intent();
-                    intent.setClass(SubjectListActivity.this, MathActivity.class);
+                    intent.setClass(SubjectListActivity.this, QuestionActivity.class);
                     GetMathQuestion getMathQuestion = new GetMathQuestion(SubjectListActivity.this,intent);
                     getMathQuestion.getQuestion();
 //                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.iv_english:
-                    Intent intent1 = new Intent(SubjectListActivity.this, MathActivity.class);
+                    Intent intent1 = new Intent(SubjectListActivity.this, QuestionActivity.class);
                     GetEnglishQuestion getEnglishQuestion = new GetEnglishQuestion(SubjectListActivity.this,intent1);
                     getEnglishQuestion.getQuestion();
 //                    Toast.makeText(getApplicationContext(),"答题中心正在维护",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.chinese:
-                    Intent intent2 = new Intent(SubjectListActivity.this, MathActivity.class);
+                    Intent intent2 = new Intent(SubjectListActivity.this, QuestionActivity.class);
                     GetChineseQuestion getChineseQuestion = new GetChineseQuestion(SubjectListActivity.this,intent2);
                     getChineseQuestion.getQuestion();
                     break;

@@ -62,9 +62,9 @@ public class QuestionUtil {
     private TextView btnNextQuestion; //上一题
     private TextView number_tip;//显示回答正确数量及题目总数
     private TextView finish_do; //获得奖励提示
+    private TextView your_answer;
     //填空题
     private TextView completion_question; //填空题问题
-    private TextView isFalse; //回答是否错误文字提示
     private ImageView isTrue; //回答是否正确图片提示
     private EditText completion_answer; //填空题答案输入框
 
@@ -116,7 +116,7 @@ public class QuestionUtil {
         completion_question = activity.findViewById(R.id.completion_Question); //填空题问题
         completion_answer = activity.findViewById(R.id.completion_Answer); //填空题答案输入框
         isTrue = activity.findViewById(R.id.isTrue); //是否正确文字提示
-        isFalse = activity.findViewById(R.id.isFalse); //是否正确图片提示
+//        isFalse = activity.findViewById(R.id.isFalse); //是否正确图片提示
         //选择题
         choice_question = activity.findViewById(R.id.choice_Question);
         choice_isTrue = activity.findViewById(R.id.choice_isTrue);
@@ -131,6 +131,7 @@ public class QuestionUtil {
         judge_isTrue = activity.findViewById(R.id.judge_isTrue);
         judge_A = activity.findViewById(R.id.judge_A);
         judge_B = activity.findViewById(R.id.judge_B);
+        your_answer = activity.findViewById(R.id.your_answer);
     }
 
     /**
@@ -216,17 +217,17 @@ public class QuestionUtil {
         btnPreQuestion.setClickable(true);
         btnNextQuestion.setClickable(true);
         if(datalist.get(POSITION).getIfDone() == 1) {
-            isFalse.setText(" ");
             isTrue.setVisibility(View.INVISIBLE);
             completion_answer.setVisibility(View.GONE);
+            your_answer.setVisibility(View.GONE);
             Completion completion = (Completion) datalist.get(POSITION);
             completion_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle()+ completion.getAnswer());
         }else{
             if(completion_answer.getVisibility() == View.INVISIBLE){
                 completion_answer.setVisibility(View.VISIBLE);
             }
-            isFalse.setText("");
             isTrue.setVisibility(View.INVISIBLE);
+            your_answer.setVisibility(View.VISIBLE);
             completion_answer.setVisibility(View.VISIBLE);
             completion_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
         }
@@ -369,8 +370,6 @@ public class QuestionUtil {
             TRUE_ANSWER_COUNT++;
             isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.duigou,null));
             isTrue.setVisibility(View.VISIBLE);
-            isFalse.setText("答对啦！获得了奖励哦！");
-            isFalse.setVisibility(View.VISIBLE);
             btnNextQuestion.setClickable(false);
             StudyUtil.PlayTrueSound(context);
             if((POSITION+1)<=datalist.size()-1) {
@@ -393,9 +392,7 @@ public class QuestionUtil {
             btnPreQuestion.setClickable(true);
             isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.cha,null));
             isTrue.setVisibility(View.VISIBLE);
-            isFalse.setText("你还差一点就答对了哦！");
             StudyUtil.PlayFalseSound(context);
-            isFalse.setVisibility(View.VISIBLE);
             completion_answer.setText("");
         }
     }

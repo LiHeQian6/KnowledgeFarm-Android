@@ -30,6 +30,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -146,8 +147,12 @@ public class SendNotifyAdapter extends BaseAdapter {
             @Override
             public void run() {
                 super.run();
+                FormBody formBody = new FormBody.Builder()
+                        .add("flag","1")
+                        .add("ids",ids).build();
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/notification/editNotificationReadStatus?flag="+"1"+"&ids="+ids).build();
+                        .post(formBody)
+                        .url(context.getResources().getString(R.string.URL)+"/notification/editNotificationReadStatus").build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
