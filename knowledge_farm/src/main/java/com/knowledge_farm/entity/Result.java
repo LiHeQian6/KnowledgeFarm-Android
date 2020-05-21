@@ -25,4 +25,5 @@ public class Result {
     public static String UP = "up";
     public static String START = "start";
     public static String OWN = "own";
+    public static String FULL = "intelligenceFull";
 }
