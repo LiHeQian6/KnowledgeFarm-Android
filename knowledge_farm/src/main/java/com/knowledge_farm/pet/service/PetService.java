@@ -27,26 +27,6 @@ public class PetService {
     private UserServiceImpl userService;
 
     public List<PetVO> showAllPetInStore(Integer userId){
-//        User user = userService.findUserById(userId);
-//        List<Pet> list0 =  petDao.findAllByExist(1);
-//        List<PetVO> petVOS = new ArrayList<>();
-//        for(int i = 0;i<list0.size();i++){
-//            petVOS.add(i,new PetVO(list0.get(i)));
-//        }
-//        Set<UserPetHouse> petHouses = user.getPetHouses();
-//        System.out.println(petHouses.toString());
-//        for(int j = 0;j<petVOS.size();j++){
-//            for(UserPetHouse petHouse : petHouses){
-//                if(petVOS.get(j).getId().equals(petHouse.getPet().getId())){
-//                    System.out.println(petVOS.get(j));
-//                    System.out.println(new PetVO(petHouse.getPet()));
-//                    petVOS.get(j).setOwn(1);
-//                }else {
-//                    petVOS.get(j).setOwn(0);
-//                }
-//            }
-//        }
-//        return petVOS;
         User user = this.userService.findUserById(userId);
         List<Pet> petList = this.petDao.findAllByExist(1);
         List<PetVO> petVOList = new ArrayList<>();
@@ -107,5 +87,25 @@ public class PetService {
 //    public int savePetFood(PetFood petFood){
 //        return petFoodDao.saveAndFlush(petFood).getId();
 //    }
-
+    @Transactional(readOnly = false)
+    public String updateData(Integer userId, Integer result) {
+        User user = this.userService.findUserById(userId);
+        Set<UserPetHouse> userPetHouses = user.getPetHouses();
+        for(UserPetHouse userPetHouse : userPetHouses) {
+            if (userPetHouse.getIfUsing() == 1) {
+                if(userPetHouse.getPhysical() == 0){
+                    return Result.NOT_ENOUGH_PHYSICAL;
+                }
+                userPetHouse.setPhysical(userPetHouse.getPhysical()-1);
+                if(result == 1){
+                    if(userPetHouse.getIntelligence()<userPetHouse.getPet().getIntelligence()*5){
+                        userPetHouse.setIntelligence(userPetHouse.getIntelligence()+5);
+                        return Result.SUCCEED;
+                    }
+                    return Result.FULL;
+                }
+            }
+        }
+        return Result.FAIL;
+    }
 }

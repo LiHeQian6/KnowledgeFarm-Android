@@ -71,5 +71,26 @@ public class PetController {
         }
         return Result.FALSE;
     }
+    @ApiOperation(value = "宠物对战结果", notes = "返回值：(String)fail ||(String)succeed || (String)false || (String)intelligenceFull")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "对战结果", value = "输或赢", dataType = "int", paramType = "query", required = true)
+    })
+    @GetMapping("/fightResult")
+    public String fightResult(@RequestParam("result") Integer result,HttpSession session, HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.petService.updateData(userId,result);
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.FALSE;
+    }
 
+    @RequestMapping("/test")
+    public String test(){
+        return this.petService.updateData(109, 1);
+    }
 }

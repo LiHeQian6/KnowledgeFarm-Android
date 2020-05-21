@@ -25,4 +25,6 @@ public class Result {
     public static String UP = "up";
     public static String START = "start";
     public static String OWN = "own";
+    public static String FULL = "intelligenceFull";
+    public static String NOT_ENOUGH_PHYSICAL = "not_enough_physical";
 }

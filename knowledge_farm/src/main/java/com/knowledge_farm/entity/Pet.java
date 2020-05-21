@@ -18,6 +18,7 @@ public class Pet {
     private Integer intelligence;       //智力值上限
     private Integer physical;         //体力值上限
     private Integer price;
+    private PetFunction petFunction;
     private String img1;
     private String img2;
     private String img3;
@@ -119,6 +120,16 @@ public class Pet {
         this.img3 = img3;
     }
 
+    @OneToOne(mappedBy = "pet",cascade = CascadeType.ALL)
+    @org.hibernate.annotations.ForeignKey(name = "none")
+    public PetFunction getPetFunction() {
+        return petFunction;
+    }
+
+    public void setPetFunction(PetFunction petFunction) {
+        this.petFunction = petFunction;
+    }
+
     @Column(columnDefinition = "1")
     public Integer getExist() {
         return exist;
@@ -126,6 +137,24 @@ public class Pet {
 
     public void setExist(Integer exist) {
         this.exist = exist;
+    }
+
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", life=" + life +
+                ", intelligence=" + intelligence +
+                ", physical=" + physical +
+                ", price=" + price +
+                ", petFunction=" + petFunction +
+                ", img1='" + img1 + '\'' +
+                ", img2='" + img2 + '\'' +
+                ", img3='" + img3 + '\'' +
+                ", exist=" + exist +
+                '}';
     }
 
 }

@@ -42,6 +42,8 @@
                         layer.msg('添加失败');
                     }else if(data == "null"){
                         layer.msg('图片不能为空');
+                    }else{
+                        layer.msg(data);
                     }
                 }
             })
@@ -119,6 +121,70 @@
                     </div>
                     <div class="layui-form-mid layui-word-aux">
                         *金币
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>几小时收获
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="harvestHour1" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第一阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="harvestHour2" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第二阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="harvestHour3" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第三阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>几小时生长
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="growHour1" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第一阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> </label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="growHour2" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第二阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="growHour3" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第三阶段
                     </div>
                 </div>
                 <div class="layui-form-item">

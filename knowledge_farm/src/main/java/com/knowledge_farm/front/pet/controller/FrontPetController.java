@@ -1,6 +1,7 @@
 package com.knowledge_farm.front.pet.controller;
 
 import com.knowledge_farm.entity.Pet;
+import com.knowledge_farm.entity.PetFunction;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.pet.service.FrontPetService;
 import com.knowledge_farm.util.PageUtil;
@@ -149,7 +150,37 @@ public class FrontPetController {
                          @RequestParam("life")Integer life,
                          @RequestParam("intelligence")Integer intelligence,
                          @RequestParam("physical")Integer physical,
-                         @RequestParam("upload") MultipartFile files[]){
+                         @RequestParam("upload") MultipartFile files[],
+                         @RequestParam("harvestHour1")Integer harvestHour1,
+                         @RequestParam("harvestHour2")Integer harvestHour2,
+                         @RequestParam("harvestHour3")Integer harvestHour3,
+                         @RequestParam("growHour1")Integer growHour1,
+                         @RequestParam("growHour2")Integer growHour2,
+                         @RequestParam("growHour3")Integer growHour3){
+        if(harvestHour1 != 0 && harvestHour2 != 0 && harvestHour3 != 0){
+            if(harvestHour1 <= harvestHour2){
+                return "宠物第一阶段n小时收获必须比第二阶段大";
+            }
+            if(harvestHour2 <= harvestHour3){
+                return "宠物第二阶段n小时收获必须比第三阶段大";
+            }
+        }else{
+            harvestHour1 = 0;
+            harvestHour2 = 0;
+            harvestHour3 = 0;
+        }
+        if(growHour1 != 0 && growHour2 != 0 && growHour3 != 0){
+            if(growHour1 <= growHour2){
+                return "宠物第一阶段n小时生长必须比第二阶段大";
+            }
+            if(growHour2 <= growHour3){
+                return "宠物第二阶段n小时生长必须比第三阶段大";
+            }
+        }else{
+            growHour1 = 0;
+            growHour2 = 0;
+            growHour3 = 0;
+        }
         for(MultipartFile multipartFile : files) {
             if (multipartFile.getOriginalFilename().equals("")) {
                 return Result.NULL;
@@ -170,6 +201,8 @@ public class FrontPetController {
             editPet.setImg1(img[0]);
             editPet.setImg2(img[1]);
             editPet.setImg3(img[2]);
+            PetFunction petFunction = new PetFunction(editPet, harvestHour1, harvestHour2, harvestHour3, growHour1, growHour2, growHour3);
+            editPet.setPetFunction(petFunction);
             frontPetService.updatePet(editPet);
             return Result.SUCCEED;
         }catch (Exception e){
@@ -180,9 +213,7 @@ public class FrontPetController {
 
     @PostMapping("/updatePet")
     @ResponseBody
-    public String updatePet(Pet pet, @RequestParam("upload") MultipartFile files[]) {
-        Pet findPetById = this.frontPetService.findPetById(pet.getId());
-        pet.setExist(findPetById.getExist());
+    public String updatePet(Pet pet, PetFunction petFunction, @RequestParam("upload") MultipartFile files[]) {
         Integer id = pet.getId();
         int count = 1;
         try {
@@ -220,6 +251,8 @@ public class FrontPetController {
                 }
                 count++;
             }
+            petFunction.setPet(pet);
+            pet.setPetFunction(petFunction);
             this.frontPetService.updatePet(pet);
             return Result.SUCCEED;
         }catch (Exception e){
@@ -227,4 +260,5 @@ public class FrontPetController {
             return Result.FAIL;
         }
     }
+
 }

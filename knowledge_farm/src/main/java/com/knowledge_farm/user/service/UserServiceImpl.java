@@ -12,8 +12,7 @@ import com.knowledge_farm.user_bag.service.UserBagServiceImpl;
 import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import com.knowledge_farm.user_pet_house.service.UserPetHouseService;
 import com.knowledge_farm.util.Email;
-import com.knowledge_farm.util.RandomUtil;
-import org.quartz.*;
+import com.knowledge_farm.util.RateRandomNumber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -25,7 +24,6 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -102,7 +100,7 @@ public class UserServiceImpl {
         String account = "";
         do{
             account = "";
-            account = RandomUtil.generateAccount();
+            account = RateRandomNumber.generateAccount();
         }while (this.userDao.findUserByAccount(account) != null || account.charAt(0) == '0' || account.charAt(account.length()-1) == '0');
         //构建User
         User user = new User();
@@ -180,7 +178,7 @@ public class UserServiceImpl {
         String account = "";
         do{
             account = "";
-            account = RandomUtil.generateAccount();
+            account = RateRandomNumber.generateAccount();
         }while (this.userDao.findUserByAccount(account) != null || account.charAt(0) == '0' || account.charAt(account.length()-1) == '0');
         //构建User
         User user = new User();

@@ -60,6 +60,8 @@
                 <input type="hidden" name="img1" value="${pet.img1}"/>
                 <input type="hidden" name="img2" value="${pet.img2}"/>
                 <input type="hidden" name="img3" value="${pet.img3}"/>
+                <input type="hidden" name="exist" value="${pet.exist}"/>
+                <input type="hidden" name="petFunctionId" value="${pet.petFunction.petFunctionId}"/>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
                         <font color="red">*</font>名称
@@ -115,6 +117,70 @@
                     </div>
                     <div class="layui-form-mid layui-word-aux">
                         *金币
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>几小时收获
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="harvestHour1" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input" value="${pet.petFunction.harvestHour1}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第一阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="harvestHour2" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input" value="${pet.petFunction.harvestHour2}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第二阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="harvestHour3" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input" value="${pet.petFunction.harvestHour3}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第三阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>几小时生长
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="growHour1" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input" value="${pet.petFunction.growHour1}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第一阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"> </label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="growHour2" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input" value="${pet.petFunction.growHour2}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第二阶段
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="growHour3" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input" value="${pet.petFunction.growHour3}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        *第三阶段
                     </div>
                 </div>
                 <div class="layui-form-item">

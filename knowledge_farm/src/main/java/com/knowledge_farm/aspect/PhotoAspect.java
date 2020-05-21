@@ -240,6 +240,10 @@ public class PhotoAspect {
         Iterator<UserPetHouse> iterator = user.getPetHouses().iterator();
         while(iterator.hasNext()){
             UserPetHouse userPetHouse = iterator.next();
+            if(userPetHouse.getIfUsing() != 1){
+                iterator.remove();
+                continue;
+            }
             Pet pet = userPetHouse.getPet();
             if((pet.getImg1().substring(0,4)).equals("http")){
                 continue;
@@ -247,9 +251,6 @@ public class PhotoAspect {
             pet.setImg1(photoUrl + pet.getImg1());
             pet.setImg2(photoUrl + pet.getImg2());
             pet.setImg3(photoUrl + pet.getImg3());
-            if(userPetHouse.getIfUsing() != 1){
-                iterator.remove();
-            }
         }
         return user;
     }
@@ -262,6 +263,10 @@ public class PhotoAspect {
         Iterator<UserPetHouse> iterator = user.getPetHouses().iterator();
         while(iterator.hasNext()){
             UserPetHouse userPetHouse = iterator.next();
+            if(userPetHouse.getIfUsing() != 1){
+                iterator.remove();
+                continue;
+            }
             Pet pet = userPetHouse.getPet();
             if((pet.getImg1().substring(0,4)).equals("http")){
                 continue;
@@ -269,9 +274,6 @@ public class PhotoAspect {
             pet.setImg1(photoUrl + pet.getImg1());
             pet.setImg2(photoUrl + pet.getImg2());
             pet.setImg3(photoUrl + pet.getImg3());
-            if(userPetHouse.getIfUsing() != 1){
-                iterator.remove();
-            }
         }
         return user;
     }
