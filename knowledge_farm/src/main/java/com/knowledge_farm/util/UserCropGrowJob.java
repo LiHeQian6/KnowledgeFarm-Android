@@ -35,10 +35,11 @@ public class UserCropGrowJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobExecutionContext) {
         CronTriggerImpl cronTrigger = (CronTriggerImpl) jobExecutionContext.getTrigger();
         long count = (new Date().getTime() - cronTrigger.getStartTime().getTime())/1000/60/60;
-        userId = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("userId");
-        userCropId = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("userCropId");
-        land = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("land");
-        try {
+        if(count != 0){
+            userId = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("userId");
+            userCropId = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("userCropId");
+            land = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("land");
+
             UserCrop userCrop = this.userCropService.findUserCropById(userCropId);
             Crop crop = userCrop.getCrop();
             int progress = userCrop.getProgress();
@@ -60,20 +61,18 @@ public class UserCropGrowJob extends QuartzJobBean {
                 return;
             }
             deleteJob("job" + userId + "_" + land, "group" + userId + "_" + land);
-        }catch (Exception e){
-            e.printStackTrace();
-            deleteJob("job" + userId + "_" + land, "group" + userId + "_" + land);
         }
     }
 
     public void deleteJob(String name, String group){
+        JobKey jobKey = new JobKey(name, group);
+        JobDetail jobDetail = null;
         try {
-            JobKey jobKey = new JobKey(name, group);
-            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            jobDetail = scheduler.getJobDetail(jobKey);
             if (jobDetail == null)
                 return;
             scheduler.deleteJob(jobKey);
-        }catch (SchedulerException e){
+        } catch (SchedulerException e) {
             e.printStackTrace();
         }
     }

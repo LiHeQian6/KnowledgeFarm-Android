@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -59,11 +60,16 @@ public class PetController {
             @ApiImplicitParam(name = "willUsingPetId", value = "将要使用的宠物Id", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/changePet")
-    public String changePet(@RequestParam("willUsingPetId") Integer willUsingPetId, HttpSession session, HttpServletResponse response){
+    public String changePet(@RequestParam("willUsingPetId") Integer willUsingPetId, HttpSession session, HttpServletResponse response, HttpServletRequest request){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
-                return this.petService.changePet(userId, willUsingPetId);
+                int result = this.petService.changePet(userId, willUsingPetId);
+                if(result != 0) {
+                    request.setAttribute("PetFunction", new Integer[]{userId, result});
+                    return Result.TRUE;
+                }
+                return Result.FALSE;
             }
             response.sendError(401);
         }catch (Exception e){
@@ -71,12 +77,13 @@ public class PetController {
         }
         return Result.FALSE;
     }
+
     @ApiOperation(value = "宠物对战结果", notes = "返回值：(String)fail ||(String)succeed || (String)false || (String)intelligenceFull")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "对战结果", value = "输或赢", dataType = "int", paramType = "query", required = true)
     })
     @GetMapping("/fightResult")
-    public String fightResult(@RequestParam("result") Integer result,HttpSession session, HttpServletResponse response){
+    public String fightResult(@RequestParam("result") Integer result, HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
             if(userId != null) {
