@@ -66,7 +66,7 @@ public class PetController {
             if(userId != null) {
                 int result = this.petService.changePet(userId, willUsingPetId);
                 if(result != 0) {
-                    request.setAttribute("PetHarvest", new Integer[]{userId, result});
+                    request.setAttribute("PetFunction", new Integer[]{userId, result});
                     return Result.TRUE;
                 }
                 return Result.FALSE;
