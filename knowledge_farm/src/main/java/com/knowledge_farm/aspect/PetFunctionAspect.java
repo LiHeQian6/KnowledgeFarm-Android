@@ -154,9 +154,9 @@ public class PetFunctionAspect {
             }catch (Exception e){
                 e.printStackTrace();
             }
-            return;
+        }else if(result == Result.FALSE){
+            logger.info("宠物智力值修改失败");
         }
-        logger.info("宠物智力值修改失败");
     }
 
     public void startJob1(Scheduler scheduler, String name, String group, Integer userId, Integer functionHour) throws SchedulerException {

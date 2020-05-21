@@ -49,7 +49,7 @@ public class PetService {
     }
 
     @Transactional(readOnly = false)
-        public int changePet(Integer userId, Integer willUsingPetId){
+    public int changePet(Integer userId, Integer willUsingPetId){
         User user = this.userService.findUserById(userId);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         int count = 0;
@@ -85,29 +85,56 @@ public class PetService {
         return result;
     }
 
-//    @Transactional(readOnly = false)
-//    public int savePetFood(PetFood petFood){
-//        return petFoodDao.saveAndFlush(petFood).getId();
-//    }
+    @Transactional(readOnly = false)
+    public String updatePhysical(Integer userId){
+        User user = this.userService.findUserById(userId);
+        for(UserPetHouse userPetHouse : user.getPetHouses()){
+            if(userPetHouse.getIfUsing() == 1){
+                Integer physical = userPetHouse.getPhysical();
+                if(physical > 0){
+                    userPetHouse.setPhysical(physical - 1);
+                    return Result.TRUE;
+                }
+                return Result.NOT_ENOUGH_PHYSICAL;
+            }
+        }
+        return Result.FALSE;
+    }
+
     @Transactional(readOnly = false)
     public String updateData(Integer userId, Integer result) {
         User user = this.userService.findUserById(userId);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         for(UserPetHouse userPetHouse : userPetHouses) {
-            if (userPetHouse.getIfUsing() == 1) {
-                Pet pet = userPetHouse.getPet();
-                if(result == 1){
-                    if(userPetHouse.getIntelligence()<pet.getIntelligence()*5){
-                        userPetHouse.setIntelligence(userPetHouse.getIntelligence()+5);
-                        if(userPetHouse.getIntelligence()>=2*pet.getIntelligence()*2 && userPetHouse.getIntelligence()< 4*pet.getIntelligence()*2){
+            if (userPetHouse.getIfUsing() == 1 && result == 1) {
+                Integer userPetIntelligence = userPetHouse.getIntelligence();
+                Integer petIntelligence = userPetHouse.getIntelligence();
+                userPetHouse.setIntelligence(userPetIntelligence + 5);
+                switch (userPetHouse.getGrowPeriod()){
+                    case 0:
+                        if(userPetIntelligence + 5 >= petIntelligence * 3){
                             return Result.UP;
                         }
-                        return Result.SUCCEED;
-                    }
-                    return Result.FULL;
+                    case 1:
+                        if(userPetIntelligence + 5 >= petIntelligence * 5){
+                            return Result.UP;
+                        }
                 }
+                return Result.TRUE;
+//                if(userPetHouse.getPhysical() == 0){
+//                    return Result.NOT_ENOUGH_PHYSICAL;
+//                }
+//                userPetHouse.setPhysical(userPetHouse.getPhysical()-1);
+//                if(result == 1){
+//                    if(userPetHouse.getIntelligence() < userPetHouse.getPet().getIntelligence()*5){
+//                        userPetHouse.setIntelligence(userPetHouse.getIntelligence()+5);
+//                        return Result.SUCCEED;
+//                    }
+//                    return Result.FULL;
+//                }
             }
         }
-        return Result.FAIL;
+        return Result.FALSE;
     }
+
 }
