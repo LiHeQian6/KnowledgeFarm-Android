@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
+        FullScreen.NavigationBarStatusBar(MainActivity.this,true);
     }
 
     @Override
@@ -184,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
 //        // 设置action
 //        intent.setAction(action);
 //        startService(intent);
+        FullScreen.NavigationBarStatusBar(MainActivity.this,true);
         getUserInfo();
         showUserInfo();
         haveNewNotifications();

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -208,10 +209,14 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent go = new Intent(context, PkActivity.class);
-                go.putExtra("friend", user);
-                context.startActivity(go);
-                dialog.dismiss();
+                if (user.getPetHouses().get(0).getPhysical()!=0){
+                    Intent go = new Intent(context, PkActivity.class);
+                    go.putExtra("friend", user);
+                    context.startActivity(go);
+                    dialog.dismiss();
+                }else{
+                    Toast.makeText(context,"宠物没有体力了，快去补充体力吧！",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         setDialogSize(view);

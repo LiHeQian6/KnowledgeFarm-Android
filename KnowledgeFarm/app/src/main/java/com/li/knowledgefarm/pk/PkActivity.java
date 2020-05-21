@@ -1,10 +1,15 @@
 package com.li.knowledgefarm.pk;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -14,11 +19,19 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.User;
+import com.li.knowledgefarm.entity.UserPkPet;
+
 
 public class PkActivity extends AppCompatActivity {
 
-    public static int ROUND_COUNT;//回合数计数器
+    public static int ROUND_COUNT=1;//回合数计数器
     private RelativeLayout my_pet; //我的宠物展示块
     private RelativeLayout other_pet; //对手宠物展示块
     private Button start_battle_btn;//开始PK按钮
@@ -40,13 +53,25 @@ public class PkActivity extends AppCompatActivity {
 
     private TextView time_limit;//时间限制文字
 
+
+    private UserPkPet friend_pet;
+    private UserPkPet user_pet;
+    private TextView center_text;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_p);
-
         getViews();
         setViewSize();
+        initData();
+        beginPK();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FullScreen.NavigationBarStatusBar(PkActivity.this,true);
     }
 
     /**
@@ -95,6 +120,7 @@ public class PkActivity extends AppCompatActivity {
         less_other_pet = findViewById(R.id.less_other_pet);
 
         time_limit = findViewById(R.id.time_limit);
+        center_text=findViewById(R.id.center_text);
 
         registerListener();
     }
@@ -122,11 +148,109 @@ public class PkActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.start_battle_btn:
-                    pkTimeLimit = new PetPkTimeLimit(time_limit);
-                    pkTimeLimit.execute();
+//                    pkTimeLimit = new PetPkTimeLimit(time_limit);
+//                    pkTimeLimit.execute();
                    // start_battle_btn.setVisibility(View.GONE);
                     break;
             }
         }
+    }
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 初始化数据
+     * @Date 12:25 2020/5/19
+     **/
+    private void initData(){
+        Intent intent = getIntent();
+        User friend = (User) intent.getSerializableExtra("friend");
+        User user = UserUtil.getUser();
+        friend_pet = new UserPkPet(friend.getPetHouses().get(0));
+        user_pet =new UserPkPet(user.getPetHouses().get(0));
+        friend_pet.setUser(friend);
+        user_pet.setUser(user);
+        showData();
+        Glide.with(this).load(user_pet.getPet().getImg1()).into(my_pet_image);
+        Glide.with(this).load(friend_pet.getPet().getImg1()).into(other_pet_image);
+    }
+
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 给布局设置数据
+     * @Date 12:26 2020/5/19
+     **/
+    private void showData() {
+        Glide.with(this).load(user_pet.getUser().getPhoto()).apply(new RequestOptions().circleCrop()).into(my_pet_small_image);
+        Glide.with(this).load(friend_pet.getUser().getPhoto()).apply(new RequestOptions().circleCrop()).into(other_pet_small_image);
+        my_pet_bar.setMax(user_pet.getLife());
+        other_pet_bar.setMax(friend_pet.getLife());
+        my_pet_bar.setProgress(user_pet.getNowLife());
+        other_pet_bar.setProgress(friend_pet.getNowLife());
+        my_pet_value.setText(user_pet.getNowLife()+"/"+user_pet.getLife());
+        other_pet_value.setText(friend_pet.getNowLife()+"/"+friend_pet.getLife());
+        my_pet_intelligence_value.setText("智力值:"+user_pet.getIntelligence());
+        other_pet_intelligence_value.setText("智力值:"+friend_pet.getIntelligence());
+        less_my_pet.setVisibility(View.INVISIBLE);
+        less_other_pet.setVisibility(View.INVISIBLE);
+    }
+
+    private void beginPK() {
+        //第几回合、开始倒计时3秒                    动画效果先由大变小
+        pkTimeLimit = new PetPkTimeLimit(time_limit, new PetPkTimeLimit.Stop() {
+            @Override
+            public void onStop() {
+                pkTimeLimit.cancel(true);
+                pkTimeLimit=null;
+                pkTimeLimit=new PetPkTimeLimit(time_limit,this);
+                //弹出答题框
+                AlertDialog show = new AlertDialog.Builder(PkActivity.this).setMessage("66666").show();
+//            PetPkQuestionPopUpWindow petPkQuestionPopUpWindow = new PetPkQuestionPopUpWindow(this);
+//            petPkQuestionPopUpWindow.showAtLocation(center_text, Gravity.CENTER,0,0);
+                //设置答对或错
+//            petPkQuestionPopUpWindow.setOnAnswerSelectListener(new PetPkQuestionPopUpWindow.OnAnswerSelectListener(){
+//                public void select(boolean isRight,int userTime){
+//
+//                }
+//            });
+                show.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        //展示攻击、被攻击动画
+
+                        //得到扣除的血量并设置
+                        int pk = user_pet.pk(friend_pet);
+                        if (pk==0){
+                            center_text.setVisibility(View.VISIBLE);
+                        }else if(pk>0){
+                            less_other_pet.setVisibility(View.VISIBLE);
+                            less_other_pet.setText("-"+pk);
+                        }else {
+                            less_my_pet.setVisibility(View.VISIBLE);
+                            less_my_pet.setText(""+pk);
+                        }
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                center_text.setVisibility(View.GONE);
+                                showData();
+                            }
+                        },2000);
+                        //判断是否结束
+                        ROUND_COUNT++;
+                        if (user_pet.getNowLife()>0&&friend_pet.getNowLife()>0){
+                            pkTimeLimit.execute();
+                        }else{
+                            //结束展示胜利动画
+                            //访问后台减少体力值、增加智力值
+                        }
+                    }
+                });
+            }
+        });
+        pkTimeLimit.execute();
+
     }
 }

@@ -6,9 +6,11 @@ import android.widget.TextView;
 public class PetPkTimeLimit extends AsyncTask<String,Integer,String> {
 
     private TextView time_limit;
+    private Stop stop;
 
-    public PetPkTimeLimit(TextView textView) {
+    public PetPkTimeLimit(TextView textView,Stop stop) {
         this.time_limit = textView;
+        this.stop=stop;
     }
 
     /**
@@ -20,9 +22,9 @@ public class PetPkTimeLimit extends AsyncTask<String,Integer,String> {
      */
     @Override
     protected String doInBackground(String... strings) {
-        int i = 5;
+        int i = 3;
         try {
-            while (i >= 0){
+            while (i >= 0&&!isCancelled()){
                 publishProgress(i--);
                 Thread.sleep(1000);
             }
@@ -44,7 +46,7 @@ public class PetPkTimeLimit extends AsyncTask<String,Integer,String> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        time_limit.setText("倒计时"+values[0]+"秒");
+        time_limit.setText(values[0]+"");
     }
 
     /**
@@ -58,5 +60,11 @@ public class PetPkTimeLimit extends AsyncTask<String,Integer,String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
         time_limit.setText("第"+PkActivity.ROUND_COUNT+"回合");
+        stop.onStop();
+
+    }
+
+    public interface Stop{
+        void onStop();
     }
 }
