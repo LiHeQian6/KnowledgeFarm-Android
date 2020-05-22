@@ -417,11 +417,13 @@ public class NotifyActivity extends AppCompatActivity {
                             it.remove();
                         }
                     }
-                    if(current_type.equals("2"))
-                        sendNotifyAdapter.notifyDataSetChanged();
-                    else
-                        otherNotifyAdapter.notifyDataSetChanged();
-                    Toast.makeText(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                    if(sendNotifyAdapter!=null && otherNotifyAdapter!=null) {
+                        if (current_type.equals("2"))
+                            sendNotifyAdapter.notifyDataSetChanged();
+                        else
+                            otherNotifyAdapter.notifyDataSetChanged();
+                        Toast.makeText(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                    }
                 }else {
                     Toast.makeText(NotifyActivity.this,"网络出了点问题",Toast.LENGTH_SHORT).show();
                 }
@@ -464,10 +466,12 @@ public class NotifyActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.all_have_read:
-                    if(current_type.equals("2"))
-                        sendNotifyAdapter.AllHaveRead();
-                    else
-                        otherNotifyAdapter.changeStatus();
+                    if(sendNotifyAdapter!=null && otherNotifyAdapter!=null) {
+                        if (current_type.equals("2"))
+                            sendNotifyAdapter.AllHaveRead();
+                        else
+                            otherNotifyAdapter.changeStatus();
+                    }
                     break;
             }
         }
