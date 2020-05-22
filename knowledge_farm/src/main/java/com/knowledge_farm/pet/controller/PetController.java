@@ -93,7 +93,7 @@ public class PetController {
         return Result.FALSE;
     }
 
-    @ApiOperation(value = "宠物对战结果", notes = "返回值：(String)true：成功 ||(String)up：宠物升级 || (String)false：失败")
+    @ApiOperation(value = "宠物对战结果", notes = "返回值：(String)true：成功 ||(String)up：宠物升级 || (String)false：失败|| (String)not_enough_physical：体力不足 ")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "对战结果", value = "输或赢", dataType = "int", paramType = "query", required = true)
     })

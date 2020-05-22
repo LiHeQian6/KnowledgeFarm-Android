@@ -90,12 +90,7 @@ public class PetService {
         User user = this.userService.findUserById(userId);
         for(UserPetHouse userPetHouse : user.getPetHouses()){
             if(userPetHouse.getIfUsing() == 1){
-                Integer physical = userPetHouse.getPhysical();
-                if(physical > 0){
-                    userPetHouse.setPhysical(physical - 1);
-                    return Result.TRUE;
-                }
-                return Result.NOT_ENOUGH_PHYSICAL;
+
             }
         }
         return Result.FALSE;
@@ -106,32 +101,34 @@ public class PetService {
         User user = this.userService.findUserById(userId);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         for(UserPetHouse userPetHouse : userPetHouses) {
-            if (userPetHouse.getIfUsing() == 1 && result == 1) {
+            if (userPetHouse.getIfUsing() == 1) {
+                //体力操作
+                Integer physical = userPetHouse.getPhysical();
+                if(physical > 0){
+                    userPetHouse.setPhysical(physical - 1);
+                }else {
+                    return Result.NOT_ENOUGH_PHYSICAL;
+                }
+                if(result == 0){
+                    return Result.TRUE;
+                }
+                //智力操作
                 Integer userPetIntelligence = userPetHouse.getIntelligence();
                 Integer petIntelligence = userPetHouse.getIntelligence();
                 userPetHouse.setIntelligence(userPetIntelligence + 5);
                 switch (userPetHouse.getGrowPeriod()){
                     case 0:
-                        if(userPetIntelligence + 5 >= petIntelligence * 3){
+                        if(userPetIntelligence < petIntelligence * 3 && userPetIntelligence + 5 >= petIntelligence * 3){
+                            userPetHouse.setGrowPeriod(1);
                             return Result.UP;
                         }
                     case 1:
-                        if(userPetIntelligence + 5 >= petIntelligence * 5){
+                        if(userPetIntelligence < petIntelligence * 5 && userPetIntelligence + 5 >= petIntelligence * 5){
+                            userPetHouse.setGrowPeriod(2);
                             return Result.UP;
                         }
                 }
                 return Result.TRUE;
-//                if(userPetHouse.getPhysical() == 0){
-//                    return Result.NOT_ENOUGH_PHYSICAL;
-//                }
-//                userPetHouse.setPhysical(userPetHouse.getPhysical()-1);
-//                if(result == 1){
-//                    if(userPetHouse.getIntelligence() < userPetHouse.getPet().getIntelligence()*5){
-//                        userPetHouse.setIntelligence(userPetHouse.getIntelligence()+5);
-//                        return Result.SUCCEED;
-//                    }
-//                    return Result.FULL;
-//                }
             }
         }
         return Result.FALSE;
