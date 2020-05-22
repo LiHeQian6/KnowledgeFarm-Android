@@ -11,7 +11,7 @@ import javax.persistence.*;
  * @Date 2020-05-20 15:22
  */
 @Entity
-@Table(name = "pet_funtion")
+@Table(name = "pet_function")
 public class PetFunction {
     private Integer petFunctionId;
     private Pet pet;

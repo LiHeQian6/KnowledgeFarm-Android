@@ -53,7 +53,9 @@ public class StartUserCropGrowJobAspect {
         if(result == Result.TRUE){
             Integer start[] = (Integer[]) request.getAttribute("StartUserCropGrowJob");
             try {
-                startJob(scheduler, start[0], start[1], start[2]);
+                if(start != null){
+                    startJob(scheduler, start[0], start[1], start[2]);
+                }
             }catch (SchedulerException e){
                 logger.info("种植作物后开启任务失败");
             }
@@ -135,11 +137,9 @@ public class StartUserCropGrowJobAspect {
         jobDataMap.put("land", land);
         // 基于表达式构建触发器
         Date date = new Date();
-        int hour = date.getHours();
         int minute = date.getMinutes();
         int second = date.getSeconds();
-        hour = ((hour + 1) == 24) ? 0 : (hour + 1);
-        String trigger = second + " " + minute + " " + hour + "/1 * * ?";
+        String trigger = second + " " + minute + " " + "0/1 * * ?";
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(trigger);
         // CronTrigger表达式触发器 继承于Trigger
         // TriggerBuilder 用于构建触发器实例

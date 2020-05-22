@@ -21,11 +21,7 @@ public class RewardCountJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) {
-        try {
-            this.userService.updateUserRewardCount();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        this.userService.updateUserRewardCount();
     }
 
     public UserServiceImpl getUserService() {

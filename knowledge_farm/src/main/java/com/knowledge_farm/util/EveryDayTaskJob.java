@@ -25,12 +25,8 @@ public class EveryDayTaskJob extends QuartzJobBean{
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        try {
-            this.taskService.updateTaskEveryDay();
-            this.jpushService.sendCustomPush("task", "", new HashMap<>(), "");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        this.taskService.updateTaskEveryDay();
+        this.jpushService.sendCustomPush("task", "", new HashMap<>(), "");
     }
 
 }
