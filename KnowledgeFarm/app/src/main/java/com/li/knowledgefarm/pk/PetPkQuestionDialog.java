@@ -98,6 +98,13 @@ public class PetPkQuestionDialog extends Dialog {
         setDialogSize();
     }
 
+    /**
+     * @Description 设置弹窗大小
+     * @Author 孙建旺
+     * @Date 下午5:20 2020/05/21
+     * @Param []
+     * @return void
+     */
     private void setDialogSize(){
         WindowManager wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics ds = new DisplayMetrics();

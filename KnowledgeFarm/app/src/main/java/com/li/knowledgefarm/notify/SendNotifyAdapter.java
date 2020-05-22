@@ -132,7 +132,9 @@ public class SendNotifyAdapter extends BaseAdapter {
      * @return void
      */
     public void AllHaveRead(){
-        ChangeReadStatus(notifyIds_str);
+        if(!notifyIds_str.equals("")){
+            ChangeReadStatus(notifyIds_str);
+        }
     }
 
     /**

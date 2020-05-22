@@ -74,6 +74,7 @@ public class NotifyActivity extends AppCompatActivity {
     public ImageView send_notify_red; //我发送的通知提示红点
     private ImageView other_notify_red; //其他通知提示红点
     private OkHttpClient okHttpClient;
+    private OtherNotifyAdapter otherNotifyAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,7 +105,10 @@ public class NotifyActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void UpdateRed(EventBean eventBean){
         if(eventBean.getIfRead()) {
-            send_notify_red.setVisibility(View.GONE);
+            if(current_type.equals("2"))
+                send_notify_red.setVisibility(View.GONE);
+            else
+                other_notify_red.setVisibility(View.GONE);
         }
     }
 
@@ -180,9 +184,8 @@ public class NotifyActivity extends AppCompatActivity {
                             break;
                         case "3":
                             MainActivity.notifyStatus.set(3,false);
-                            OtherNotifyAdapter otherNotifyAdapter = new OtherNotifyAdapter(notify_list,R.layout.other_notify_item,getApplicationContext());
+                            otherNotifyAdapter = new OtherNotifyAdapter(notify_list,R.layout.other_notify_item,getApplicationContext());
                             listView.setAdapter(otherNotifyAdapter);
-                            other_notify_red.setVisibility(View.INVISIBLE);
                             break;
                     }
                 }
@@ -376,7 +379,7 @@ public class NotifyActivity extends AppCompatActivity {
      * @Param [type, userId]
      * @return void
      */
-    private void Delete_All_Notify(final String type,final int userId){
+    private void delete_All_Notify(final String type,final int userId){
         new Thread(){
             @Override
             public void run() {
@@ -414,8 +417,13 @@ public class NotifyActivity extends AppCompatActivity {
                             it.remove();
                         }
                     }
-                    sendNotifyAdapter.notifyDataSetChanged();
-                    Toast.makeText(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                    if(sendNotifyAdapter!=null && otherNotifyAdapter!=null) {
+                        if (current_type.equals("2"))
+                            sendNotifyAdapter.notifyDataSetChanged();
+                        else
+                            otherNotifyAdapter.notifyDataSetChanged();
+                        Toast.makeText(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                    }
                 }else {
                     Toast.makeText(NotifyActivity.this,"网络出了点问题",Toast.LENGTH_SHORT).show();
                 }
@@ -447,18 +455,23 @@ public class NotifyActivity extends AppCompatActivity {
                     break;
                 case R.id.message_btn:
                     current_type = "3";
-                    delete_all_btn.setVisibility(View.INVISIBLE);
-                    all_have_read.setVisibility(View.INVISIBLE);
+                    delete_all_btn.setVisibility(View.VISIBLE);
+                    all_have_read.setVisibility(View.VISIBLE);
                     getNotify(current_type,1,4);
                     break;
                 case R.id.delete_all_btn:
-                    Delete_All_Notify(current_type,UserUtil.getUser().getId());
+                    delete_All_Notify(current_type,UserUtil.getUser().getId());
                     break;
                 case R.id.goBack_notify:
                     finish();
                     break;
                 case R.id.all_have_read:
-                    sendNotifyAdapter.AllHaveRead();
+                    if(sendNotifyAdapter!=null && otherNotifyAdapter!=null) {
+                        if (current_type.equals("2"))
+                            sendNotifyAdapter.AllHaveRead();
+                        else
+                            otherNotifyAdapter.changeStatus();
+                    }
                     break;
             }
         }

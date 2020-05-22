@@ -27,26 +27,6 @@ public class PetService {
     private UserServiceImpl userService;
 
     public List<PetVO> showAllPetInStore(Integer userId){
-//        User user = userService.findUserById(userId);
-//        List<Pet> list0 =  petDao.findAllByExist(1);
-//        List<PetVO> petVOS = new ArrayList<>();
-//        for(int i = 0;i<list0.size();i++){
-//            petVOS.add(i,new PetVO(list0.get(i)));
-//        }
-//        Set<UserPetHouse> petHouses = user.getPetHouses();
-//        System.out.println(petHouses.toString());
-//        for(int j = 0;j<petVOS.size();j++){
-//            for(UserPetHouse petHouse : petHouses){
-//                if(petVOS.get(j).getId().equals(petHouse.getPet().getId())){
-//                    System.out.println(petVOS.get(j));
-//                    System.out.println(new PetVO(petHouse.getPet()));
-//                    petVOS.get(j).setOwn(1);
-//                }else {
-//                    petVOS.get(j).setOwn(0);
-//                }
-//            }
-//        }
-//        return petVOS;
         User user = this.userService.findUserById(userId);
         List<Pet> petList = this.petDao.findAllByExist(1);
         List<PetVO> petVOList = new ArrayList<>();
@@ -69,12 +49,13 @@ public class PetService {
     }
 
     @Transactional(readOnly = false)
-        public String changePet(Integer userId, Integer willUsingPetId){
+    public int changePet(Integer userId, Integer willUsingPetId){
         User user = this.userService.findUserById(userId);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         int count = 0;
         int count1 = -1;
         int count2 = -1;
+        int result = 0;
 
         for(UserPetHouse userPetHouse : userPetHouses){
             if(userPetHouse.getIfUsing() == 1){
@@ -89,7 +70,7 @@ public class PetService {
             count++;
         }
         if(count1 == -1 || count2 == -1){
-            return Result.FALSE;
+            return 0;
         }
         count = 0;
         for(UserPetHouse userPetHouse : userPetHouses){
@@ -98,14 +79,59 @@ public class PetService {
             }
             if(count == count2){
                 userPetHouse.setIfUsing(1);
+                result = userPetHouse.getId();
             }
         }
-        return Result.TRUE;
+        return result;
     }
 
-//    @Transactional(readOnly = false)
-//    public int savePetFood(PetFood petFood){
-//        return petFoodDao.saveAndFlush(petFood).getId();
-//    }
+    @Transactional(readOnly = false)
+    public String updatePhysical(Integer userId){
+        User user = this.userService.findUserById(userId);
+        for(UserPetHouse userPetHouse : user.getPetHouses()){
+            if(userPetHouse.getIfUsing() == 1){
+
+            }
+        }
+        return Result.FALSE;
+    }
+
+    @Transactional(readOnly = false)
+    public String updateData(Integer userId, Integer result) {
+        User user = this.userService.findUserById(userId);
+        Set<UserPetHouse> userPetHouses = user.getPetHouses();
+        for(UserPetHouse userPetHouse : userPetHouses) {
+            if (userPetHouse.getIfUsing() == 1) {
+                //体力操作
+                Integer physical = userPetHouse.getPhysical();
+                if(physical > 0){
+                    userPetHouse.setPhysical(physical - 1);
+                }else {
+                    return Result.NOT_ENOUGH_PHYSICAL;
+                }
+                if(result == 0){
+                    return Result.TRUE;
+                }
+                //智力操作
+                Integer userPetIntelligence = userPetHouse.getIntelligence();
+                Integer petIntelligence = userPetHouse.getIntelligence();
+                userPetHouse.setIntelligence(userPetIntelligence + 5);
+                switch (userPetHouse.getGrowPeriod()){
+                    case 0:
+                        if(userPetIntelligence < petIntelligence * 3 && userPetIntelligence + 5 >= petIntelligence * 3){
+                            userPetHouse.setGrowPeriod(1);
+                            return Result.UP;
+                        }
+                    case 1:
+                        if(userPetIntelligence < petIntelligence * 5 && userPetIntelligence + 5 >= petIntelligence * 5){
+                            userPetHouse.setGrowPeriod(2);
+                            return Result.UP;
+                        }
+                }
+                return Result.TRUE;
+            }
+        }
+        return Result.FALSE;
+    }
 
 }

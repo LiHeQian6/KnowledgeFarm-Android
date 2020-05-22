@@ -5,6 +5,7 @@ import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,6 +23,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +31,8 @@ import android.os.Message;
 import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -59,6 +63,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.User;
@@ -78,6 +83,7 @@ public class PkActivity extends AppCompatActivity {
     private Handler resolveList;
     private Toast toast; //Toast
     private int position = 0; //题目位置
+    private AlertDialog alertDialog;//弹出框
     //我的宠物相关
     private ImageView my_pet_small_image;//我的宠物头像
     private ProgressBar my_pet_bar; //我的宠物进度条
@@ -109,6 +115,7 @@ public class PkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_p);
+
         getViews();
         setViewSize();
         getQuestion();
@@ -241,6 +248,32 @@ public class PkActivity extends AppCompatActivity {
     }
 
     /**
+     * @Description 询问是否确定逃跑弹窗
+     * @Author 孙建旺
+     * @Date 下午4:16 2020/05/21
+     * @Param []
+     * @return void
+     */
+    private void showAlertDialog(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(PkActivity.this);
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_dialog_layout,null);
+        Button cancel = view.findViewById(R.id.cancel_go_away);
+        Button sure = view.findViewById(R.id.sure_go_away);
+        cancel.setOnClickListener(new CustomOnclickListener());
+        sure.setOnClickListener(new CustomOnclickListener());
+        dialog.setView(view);
+        alertDialog = dialog.create();
+        alertDialog.show();
+        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
+        WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+        params.width = (int)(0.4*ds.widthPixels);
+        params.height = (int)(0.6*ds.heightPixels);
+        alertDialog.getWindow().setAttributes(params);
+    }
+
+    /**
      * @Description 自定义点击事件实现类
      * @Author 孙建旺
      * @Date 下午3:39 2020/05/19
@@ -260,6 +293,13 @@ public class PkActivity extends AppCompatActivity {
                    // start_battle_btn.setVisibility(View.GONE);
                     break;
                 case R.id.run_away:
+                    showAlertDialog();
+                    break;
+                case R.id.cancel_go_away:
+                    alertDialog.dismiss();
+                    break;
+                case R.id.sure_go_away:
+                    //ToDO 上传数据
                     finish();
                     break;
             }
@@ -488,4 +528,15 @@ public class PkActivity extends AppCompatActivity {
         };
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && position >= 1) {
+
+            showAlertDialog();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
