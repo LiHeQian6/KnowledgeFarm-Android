@@ -17,6 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.QuestionEntity.Completion;
 import com.li.knowledgefarm.entity.QuestionEntity.Judgment;
 import com.li.knowledgefarm.entity.QuestionEntity.Question;

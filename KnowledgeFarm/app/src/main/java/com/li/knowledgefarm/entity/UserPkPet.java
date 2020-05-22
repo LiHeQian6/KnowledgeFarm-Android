@@ -15,7 +15,7 @@ public class UserPkPet implements Comparable<UserPkPet>, Serializable {
     private Integer physical;         //体力值
     private Integer nowLife;
     private boolean right;  //是否答对当前题目
-    private double useTime;   //答对题目的用时 单位ms
+    private long useTime;   //答对题目的用时 单位ms
 
     public UserPkPet() {
     }
@@ -112,11 +112,11 @@ public class UserPkPet implements Comparable<UserPkPet>, Serializable {
         this.right = right;
     }
 
-    public double getUseTime() {
+    public long getUseTime() {
         return useTime;
     }
 
-    public void setUseTime(int useTime) {
+    public void setUseTime(long useTime) {
         this.useTime = useTime;
     }
 
@@ -158,7 +158,7 @@ public class UserPkPet implements Comparable<UserPkPet>, Serializable {
             right=true;
         }
         double i = (100000 - intelligence) / 100000.0;
-        useTime= new Random().nextDouble() * 5000+ i*10000;
+        useTime= (long) (new Random().nextDouble() * 5000+ i*10000);
     }
 
     /**

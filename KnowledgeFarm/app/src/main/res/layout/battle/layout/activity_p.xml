@@ -125,6 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/my_pet"
+            android:layout_marginRight="50dp"
             android:padding="10dp">
             <TextView
                 android:layout_width="wrap_content"
@@ -146,6 +147,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
             android:padding="10dp"
             android:layout_toRightOf="@+id/my_pet"
             android:id="@+id/other_pet">
@@ -168,9 +170,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/buy"
-                android:text="逃跑"
+                android:text="离开"
+                android:id="@+id/run_away"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"/>
         </RelativeLayout>
+        <ImageView
+            android:id="@+id/attack"
+            android:layout_centerInParent="true"
+            android:layout_width="400dp"
+            android:rotation="-10"
+            android:translationY="-50dp"
+            android:layout_height="300dp"/>
     </RelativeLayout>
 </RelativeLayout>

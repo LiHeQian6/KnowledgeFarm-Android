@@ -1,5 +1,7 @@
 package com.li.knowledgefarm.pk;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -10,17 +12,27 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Handler;
+import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,22 +42,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.BitmapCut;
 import com.li.knowledgefarm.Util.FromJson;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.QuestionEntity.Question;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.li.knowledgefarm.Util.FullScreen;
-import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
+import com.li.knowledgefarm.entity.UserPetHouse;
 import com.li.knowledgefarm.entity.UserPkPet;
 
 
@@ -80,9 +97,13 @@ public class PkActivity extends AppCompatActivity {
     private PetPkQuestionDialog pkQuestionDialog;//问题展示弹窗
 
 
-    private UserPkPet friend_pet;
-    private UserPkPet user_pet;
-    private TextView center_text;
+    private UserPkPet friend_pet;//朋友的宠物
+    private UserPkPet user_pet;//自己的宠物
+    private TextView center_text;//中部文字
+    private Button run_away_btn;//逃跑按钮
+    private ImageView attack;
+    private Bitmap attack_image;
+    private Handler result_handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +201,7 @@ public class PkActivity extends AppCompatActivity {
      */
     private void getViews() {
         start_battle_btn = findViewById(R.id.start_battle_btn);
+        run_away_btn=findViewById(R.id.run_away);
         my_pet = findViewById(R.id.my_pet);
         other_pet = findViewById(R.id.other_pet);
         my_pet_small_image = findViewById(R.id.my_dog_small_image);
@@ -198,10 +220,11 @@ public class PkActivity extends AppCompatActivity {
 
         time_limit = findViewById(R.id.time_limit);
         center_text=findViewById(R.id.center_text);
+        attack=findViewById(R.id.attack);
 
         okHttpClient = OkHttpUtils.getInstance(this);
         list = new ArrayList<>();
-        pkQuestionDialog = new PetPkQuestionDialog(PkActivity.this);
+
         registerListener();
     }
 
@@ -214,12 +237,7 @@ public class PkActivity extends AppCompatActivity {
      */
     private void registerListener(){
         start_battle_btn.setOnClickListener(new CustomOnclickListener());
-        pkQuestionDialog.setOnAnswerSelectListener(new PetPkQuestionDialog.OnAnswerSelectListener() {
-            @Override
-            public void select(boolean isRight, long time) {
-
-            }
-        });
+        run_away_btn.setOnClickListener(new CustomOnclickListener());
     }
 
     /**
@@ -241,6 +259,9 @@ public class PkActivity extends AppCompatActivity {
                     pkQuestionDialog.show();
                    // start_battle_btn.setVisibility(View.GONE);
                     break;
+                case R.id.run_away:
+                    finish();
+                    break;
             }
         }
     }
@@ -259,9 +280,14 @@ public class PkActivity extends AppCompatActivity {
         user_pet =new UserPkPet(user.getPetHouses().get(0));
         friend_pet.setUser(friend);
         user_pet.setUser(user);
+        attack_image = BitmapFactory.decodeResource(getResources(), R.drawable.attack);
+        ROUND_COUNT=1;
         showData();
-        Glide.with(this).load(user_pet.getPet().getImg1()).into(my_pet_image);
-        Glide.with(this).load(friend_pet.getPet().getImg1()).into(other_pet_image);
+        UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+        String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
+        Glide.with(this).load(url).into(my_pet_image);
+        String url2=friend_pet.getGrowPeriod() == 0 ? friend_pet.getPet().getImg1() : friend_pet.getGrowPeriod()==1? friend_pet.getPet().getImg2() : friend_pet.getPet().getImg3();
+        Glide.with(this).load(url2).into(other_pet_image);
     }
 
     /**
@@ -287,6 +313,16 @@ public class PkActivity extends AppCompatActivity {
     }
 
     private void beginPK() {
+        center_text.setVisibility(View.VISIBLE);
+        center_text.setText("准备就绪！");
+        new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                center_text.setVisibility(View.GONE);
+                center_text.setText("平局啦！");
+            }
+        }.postDelayed(null,1000);
         //第几回合、开始倒计时3秒                    动画效果先由大变小
         pkTimeLimit = new PetPkTimeLimit(time_limit, new PetPkTimeLimit.Stop() {
             @Override
@@ -295,51 +331,161 @@ public class PkActivity extends AppCompatActivity {
                 pkTimeLimit=null;
                 pkTimeLimit=new PetPkTimeLimit(time_limit,this);
                 //弹出答题框
-                AlertDialog show = new AlertDialog.Builder(PkActivity.this).setMessage("66666").show();
-//            PetPkQuestionPopUpWindow petPkQuestionPopUpWindow = new PetPkQuestionPopUpWindow(this);
-//            petPkQuestionPopUpWindow.showAtLocation(center_text, Gravity.CENTER,0,0);
-                //设置答对或错
-//            petPkQuestionPopUpWindow.setOnAnswerSelectListener(new PetPkQuestionPopUpWindow.OnAnswerSelectListener(){
-//                public void select(boolean isRight,int userTime){
-//
-//                }
-//            });
-                show.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                pkQuestionDialog = new PetPkQuestionDialog(PkActivity.this);
+                pkQuestionDialog.setOnAnswerSelectListener(new PetPkQuestionDialog.OnAnswerSelectListener() {
+                    @Override
+                    public void select(boolean isRight, long time) {
+                        user_pet.setRight(isRight);
+                        user_pet.setUseTime(time);
+                    }
+                });
+                pkQuestionDialog.setQuestion(list.get(position));
+                pkQuestionDialog.show();
+                pkQuestionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.P)
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
+                        position++;
+                        final int pk = user_pet.pk(friend_pet);
                         //展示攻击、被攻击动画
-
-                        //得到扣除的血量并设置
-                        int pk = user_pet.pk(friend_pet);
-                        if (pk==0){
-                            center_text.setVisibility(View.VISIBLE);
-                        }else if(pk>0){
-                            less_other_pet.setVisibility(View.VISIBLE);
-                            less_other_pet.setText("-"+pk);
-                        }else {
-                            less_my_pet.setVisibility(View.VISIBLE);
-                            less_my_pet.setText(""+pk);
+                        for (int i = 0; i < 5; i++) {
+                            final int finalI = i;
+                            new Handler(){
+                                @Override
+                                public void handleMessage(@NonNull Message msg) {
+                                    super.handleMessage(msg);
+                                    Bitmap bitmap = BitmapCut.cutBitmap(attack_image, finalI,5); //调用裁剪图片工具类进行裁剪
+                                    attack.setVisibility(View.VISIBLE);
+                                    attack.setScaleX(1);
+                                    if (pk<0){
+                                        attack.setScaleX(-1);
+                                    }else if (pk==0){
+                                        attack.setVisibility(View.GONE);
+                                    }
+                                    attack.setImageBitmap(bitmap);
+                                }
+                            }.postDelayed(null,200*i);
                         }
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                center_text.setVisibility(View.GONE);
-                                showData();
+                                //得到扣除的血量并设置
+                                attack.setVisibility(View.GONE);
+                                if (pk==0){
+                                    center_text.setVisibility(View.VISIBLE);
+                                }else if(pk>0){
+                                    less_other_pet.setVisibility(View.VISIBLE);
+                                    less_other_pet.setText("-"+pk);
+                                }else {
+                                    less_my_pet.setVisibility(View.VISIBLE);
+                                    less_my_pet.setText(""+pk);
+                                }
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        center_text.setVisibility(View.GONE);
+                                        showData();
+                                    }
+                                },1000);
+                                //判断是否结束
+                                ROUND_COUNT++;
+                                if (user_pet.getNowLife()>0&&friend_pet.getNowLife()>0){
+                                    pkTimeLimit.execute();
+                                }else{
+                                    //结束展示胜利动画
+//                                    center_text.setVisibility(View.VISIBLE);
+//                                    if(user_pet.getNowLife()>0) {
+//                                        center_text.setText("胜利啦！");
+//                                    } else{
+//                                        center_text.setText("要继续加油哦！");
+//                                    }
+                                    new Handler(){
+                                        @Override
+                                        public void handleMessage(@NonNull Message msg) {
+                                            super.handleMessage(msg);
+                                            finish();
+                                        }
+                                    }.postDelayed(null,2000);
+                                }
                             }
-                        },2000);
-                        //判断是否结束
-                        ROUND_COUNT++;
-                        if (user_pet.getNowLife()>0&&friend_pet.getNowLife()>0){
-                            pkTimeLimit.execute();
-                        }else{
-                            //结束展示胜利动画
-                            //访问后台减少体力值、增加智力值
-                        }
+                        },1000);
                     }
                 });
             }
         });
         pkTimeLimit.execute();
-
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (user_pet.getNowLife()>0&&friend_pet.getNowLife()>0)
+            sendResult(false);
+        if (user_pet.getNowLife()>0&&friend_pet.getNowLife()<=0){
+            sendResult(true);
+        }
+        pkTimeLimit.cancel(true);
+    }
+
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 发送对战结果到后台
+     * @Date 11:36 2020/5/21
+     **/
+    @SuppressLint("HandlerLeak")
+    public void sendResult(final boolean result){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/fightResult?result="+(result?1:0)).build();
+                okHttpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
+                        Message message = new Message();
+                        message.obj = response.body().string();
+                        message.what = response.code();
+                        result_handler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+        result_handler = new Handler(){
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                String data = (String)msg.obj;
+                if(msg.what == 200) {
+                    if (data.equals("true")){
+                        EventBean event = new EventBean();
+                        event.setMessage(result?"1":"0");
+                        EventBus.getDefault().post(event);
+                    }else if(data.equals("up")){
+                        EventBean event = new EventBean();
+                        event.setMessage("2");
+                        EventBus.getDefault().post(event);
+                    }else if(data.equals("false")){
+                        toast = Toast.makeText(PkActivity.this,"数据异常",Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,0);
+                        toast.show();
+                    }
+                }else {
+                    if(toast == null){
+                        toast = Toast.makeText(PkActivity.this,"网络异常",Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,0);
+                        toast.show();
+                    }
+                }
+            }
+        };
+    }
+
 }

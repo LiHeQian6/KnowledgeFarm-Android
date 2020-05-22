@@ -212,8 +212,8 @@ public class FriendsCustomerAdapter extends BaseAdapter {
                 if (user.getPetHouses().get(0).getPhysical()!=0){
                     Intent go = new Intent(context, PkActivity.class);
                     go.putExtra("friend", user);
-                    context.startActivity(go);
                     dialog.dismiss();
+                    context.startActivity(go);
                 }else{
                     Toast.makeText(context,"宠物没有体力了，快去补充体力吧！",Toast.LENGTH_SHORT).show();
                 }

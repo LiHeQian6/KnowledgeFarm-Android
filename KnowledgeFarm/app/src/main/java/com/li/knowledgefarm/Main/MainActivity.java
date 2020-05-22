@@ -272,7 +272,9 @@ public class MainActivity extends AppCompatActivity {
         experienceValue.setText("" + UserUtil.getUser().getExperience() + "/" + levelExperience[l]);
         List<UserPetHouse> petHouses = UserUtil.getUser().getPetHouses();
         if (petHouses.size()!=0) {
-            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
+            UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+            String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
+            Glide.with(this).load(url).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
         }else
             Glide.with(this).load(R.drawable.dog).into(dog);
     }
@@ -1206,6 +1208,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 获取是否有新消息
+     * @Date 21:16 2020/5/22
+     **/
     public void haveNewNotifications(){
         new Thread(){
             @Override
@@ -1243,7 +1252,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!message.equals("Fail")){
                     Type type = new TypeToken<List<Boolean>>(){}.getType();
                     notifyStatus= gson.fromJson(message,type);
-                    if (notifyStatus.subList(0,3).contains(true)){
+                    if (notifyStatus.subList(0,4).contains(true)){
                         notify_red.setVisibility(View.VISIBLE);
                     }
                     if(notifyStatus.get(4)){
@@ -1254,6 +1263,54 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void pkEnd(EventBean status) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.pk_end, null);
+        TextView text = layout.findViewById(R.id.text);
+        final ImageView pet = layout.findViewById(R.id.pet);
+        final UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+        final String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
+        Glide.with(this).load(url).into(pet);
+        switch (status.getMessage()){
+            case "0":
+                text.setText("要继续加油哦！");
+                break;
+            case "1":
+                text.setText("宠物智力值提升啦！");
+                break;
+            case "2":
+                new Handler(){
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        super.handleMessage(msg);
+                        UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+                        String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
+                        Glide.with(MainActivity.this).load(url).into(pet);
+                    }
+                }.postDelayed(null,1000);
+                text.setText("宠物进入下一成长阶段喽！");
+                break;
+        }
+        alertBuilder.setView(layout);
+        final AlertDialog upDiaLog = alertBuilder.create();
+        upDiaLog.show();
+        WindowManager.LayoutParams attrs = upDiaLog.getWindow().getAttributes();
+        if (upDiaLog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            upDiaLog.getWindow().setDimAmount(0f);//去除遮罩
+        }
+        attrs.gravity = Gravity.CENTER;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int) (300 * scale + 0.5f);
+        attrs.height = (int) (250 * scale + 0.5f);
+        upDiaLog.getWindow().setAttributes(attrs);
+        Window dialogWindow = upDiaLog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     /**
