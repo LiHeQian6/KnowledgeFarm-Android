@@ -59,7 +59,7 @@ import com.li.knowledgefarm.entity.UserPetHouse;
 import com.li.knowledgefarm.entity.UserPkPet;
 
 
-public class PkActivity extends AppCompatActivity {
+public class PkActivity extends AppCompatActivity{
 
     public static int ROUND_COUNT=1;//回合数计数器
     private RelativeLayout my_pet; //我的宠物展示块
@@ -343,15 +343,25 @@ public class PkActivity extends AppCompatActivity {
 
     private void beginPK() {
         center_text.setVisibility(View.VISIBLE);
-        center_text.setText("准备就绪！");
-        new Handler(){
+        center_text.setText("  准备就绪！\n  触摸开始");
+        run_away_btn.setVisibility(View.GONE);
+        center_text.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
+            public void onClick(View view) {
+                pkTimeLimit.execute();
                 center_text.setVisibility(View.GONE);
+                center_text.setOnClickListener(null);
                 center_text.setText("平局啦！");
+                run_away_btn.setVisibility(View.VISIBLE);
             }
-        }.postDelayed(null,1000);
+        });
+//        new Handler(){
+//            @Override
+//            public void handleMessage(@NonNull Message msg) {
+//                super.handleMessage(msg);
+//
+//            }
+//        }.postDelayed(null,1000);
         //第几回合、开始倒计时3秒                    动画效果先由大变小
         pkTimeLimit = new PetPkTimeLimit(time_limit, new PetPkTimeLimit.Stop() {
             @Override
@@ -442,7 +452,6 @@ public class PkActivity extends AppCompatActivity {
                 });
             }
         });
-        pkTimeLimit.execute();
     }
 
     @Override
