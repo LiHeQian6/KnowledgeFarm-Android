@@ -154,7 +154,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_account.setText("账号："+user.getAccount());
         user_nickName.setText("昵称："+user.getNickName());
         show_grade.setText(DoubleToString(user.getGrade()));
-        if(!("".equals(user.getEmail()))){
+        if(!(user.getEmail() == null)){
             user_Email.setText("已绑定"+user.getEmail());
             change_Email.setText("解绑");
         }else{

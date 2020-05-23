@@ -33,7 +33,7 @@
 	    			}else if(data == "notUser"){
 	    				layer.msg('该管理员账号不可用');
 	    			}else if(data == "false"){
-                        layer.msg('验证码输入错误');
+                        layer.msg('验证码错误');
                     }
 	    		}) 
     		}
@@ -41,14 +41,20 @@
 
     	//点击更换验证码
         function changeTestCode(){
-            $.post("${ctx}/admin/changeTestCode",{"test":"1"},function(data){
-                if(data == "fail"){
-                    layer.msg('验证码更换失败');
-                }else{
-                    console.log('data' + data);
-                    $("#testCodeImage").attr("src","${ctx}/photo/" + data);
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', "/admin/generateTestCode", true);
+            xhr.responseType = "blob";
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    var blob = this.response;
+                    var img = document.getElementById("testCodeImg");
+                    img.onload = function(e) {
+                        window.URL.revokeObjectURL(img.src);
+                    };
+                    img.src = window.URL.createObjectURL(blob);
                 }
-            });
+            }
+            xhr.send();
         }
     </script>
     
@@ -79,7 +85,7 @@
                     <div class="layui-input-inline">
                         <input id="testCode" type="text" name="testCode" lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input">
                     </div>
-                    <a href="javascript:changeTestCode()"><img id="testCodeImage" src="${ctx}/photo/${testCodeImage}" style="width: 53px;height: 35px;"></a>
+                    <a href="javascript:changeTestCode()"><img id="testCodeImg" src="${ctx}/admin/generateTestCode" style="width: 53px;height: 35px;"></a>
                 </div>
             </div>
             <div class="form-actions" style="margin-top:45px;">
