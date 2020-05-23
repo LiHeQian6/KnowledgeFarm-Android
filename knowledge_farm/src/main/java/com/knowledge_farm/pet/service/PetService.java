@@ -104,8 +104,8 @@ public class PetService {
             if (userPetHouse.getIfUsing() == 1) {
                 //体力操作
                 Integer physical = userPetHouse.getPhysical();
-                if(physical > 0){
-                    userPetHouse.setPhysical(physical - 1);
+                if(physical >= 10){
+                    userPetHouse.setPhysical(physical - 10);
                 }else {
                     return Result.NOT_ENOUGH_PHYSICAL;
                 }
