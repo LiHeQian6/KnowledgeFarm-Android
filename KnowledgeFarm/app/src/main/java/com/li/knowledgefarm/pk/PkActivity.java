@@ -19,24 +19,15 @@ import android.content.Intent;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -56,14 +47,11 @@ import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.QuestionEntity.Question;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.User;
@@ -293,7 +281,8 @@ public class PkActivity extends AppCompatActivity {
                    // start_battle_btn.setVisibility(View.GONE);
                     break;
                 case R.id.run_away:
-                    showAlertDialog();
+//                    showAlertDialog();
+                    finish();
                     break;
                 case R.id.cancel_go_away:
                     alertDialog.dismiss();
