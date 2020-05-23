@@ -184,11 +184,15 @@ public class FriendsPopUpWindow extends PopupWindow {
         friendsListView.setLayoutParams(params_listview);
         friendsListView.setDividerHeight((int)(displayHeight*0.015));
 
-        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
-        pre.setLayoutParams(params_pre);
-        next.setLayoutParams(params_pre);
-        now.setLayoutParams(params_pre);
+        //页码显示大小适配
+        LinearLayout.LayoutParams params_now = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.06));
+        now.setLayoutParams(params_now);
         now.setTextSize((int)(displayHeight*0.02));
+
+        //上一页下一页按钮适配
+        LinearLayout.LayoutParams nextAndPre = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.06));
+        next.setLayoutParams(nextAndPre);
+        pre.setLayoutParams(nextAndPre);
     }
 
     private void getViews(View view) {
