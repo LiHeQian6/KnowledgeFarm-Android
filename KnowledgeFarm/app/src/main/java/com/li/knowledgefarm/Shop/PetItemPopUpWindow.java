@@ -86,7 +86,7 @@ public class PetItemPopUpWindow extends PopupWindow {
 
     public PetItemPopUpWindow(Context context, PetVO pet) {
         super(context);
-        this.context = context;
+        this.context = context.getApplicationContext();
         this.pet = pet;
         this.setOutsideTouchable(false);
         this.setFocusable(true);
