@@ -124,7 +124,7 @@ public class PetItemPopUpWindow extends PopupWindow {
         pet_life.setText((int)(pet.getLife()*0.7)+"-"+pet.getLife());
         physical_value.setText(pet.getPhysical()+"");
         if(pet.getOwn() != 0){
-            buy_pet.setText("已拥有");
+            pet_name.setText(pet.getName()+"(已拥有)");
             buy_pet.setClickable(false);
         }
     }

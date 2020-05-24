@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="宠物名称"
-                    android:textSize="25dp"
+                    android:textSize="22dp"
                     android:textColor="@color/ShopTextColor"
                     android:id="@+id/pet_name"/>
             </LinearLayout>
