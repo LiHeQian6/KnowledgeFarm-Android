@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.tencent.tauth.Tencent;
@@ -47,10 +48,11 @@ public class IfDoPop extends PopupWindow {
             switch ((String)msg.obj){
                 case "true":
                     UserUtil.getUser().setEmail(null);
-                    Toast.makeText(context,"解绑邮箱成功",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context,"解绑邮箱成功",Toast.LENGTH_SHORT).show();
+                    dismiss();
                     break;
                 case "false":
-                    Toast.makeText(context,"解绑邮箱失败", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context,"解绑邮箱失败", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -79,11 +81,11 @@ public class IfDoPop extends PopupWindow {
      */
     private void showType() {
         if(type.equals("LogOut")){
-            show_text.setText("你确定要退出吗？");
+            show_text.setText("你确定要退出吗");
         }else if(type.equals("UnBindEmail")){
-            show_text.setText("你确定要解绑邮箱吗？");
+            show_text.setText("你确定要解绑邮箱吗");
         }else {
-            show_text.setText("你确定要解绑QQ吗？");
+            show_text.setText("你确定要解绑QQ吗");
         }
     }
 

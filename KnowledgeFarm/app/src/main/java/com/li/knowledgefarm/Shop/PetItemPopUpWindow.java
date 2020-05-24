@@ -89,6 +89,7 @@ public class PetItemPopUpWindow extends PopupWindow {
         this.context = context;
         this.pet = pet;
         this.setOutsideTouchable(false);
+        this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
         View contentView = LayoutInflater.from(context).inflate(R.layout.pet_pop_up,
