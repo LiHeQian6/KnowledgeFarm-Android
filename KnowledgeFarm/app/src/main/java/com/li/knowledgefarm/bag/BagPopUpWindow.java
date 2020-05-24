@@ -96,9 +96,9 @@ public class BagPopUpWindow extends PopupWindow {
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
-        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int) (displayWidth * 0.3), (int) (displayHeight * 0.8));
+        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int) (displayWidth * 0.32), (int) (displayHeight * 0.8));
         params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
-        params_gridview.setMargins((int) (displayWidth * 0.005), (int) (displayHeight * 0.08), 0, 0);
+        params_gridview.setMargins((int) (displayWidth * 0.008), (int) (displayHeight * 0.11), 0, 0);
         gridView.setColumnWidth((int) (displayWidth * 0.2));
         gridView.setLayoutParams(params_gridview);
         gridView.setVerticalSpacing((int) (displayHeight * 0.02));

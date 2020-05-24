@@ -73,7 +73,7 @@
                 android:text="1/16"
                 android:id="@+id/now"
                 android:gravity="center"
-                android:textSize="30sp"
+                android:textSize="25dp"
                 android:layout_height="wrap_content"/>
             <ImageView
                 android:layout_width="30dp"

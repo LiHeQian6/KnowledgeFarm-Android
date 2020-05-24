@@ -8,19 +8,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shopitem"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/diaback"
+            android:orientation="vertical">
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="2"
+                android:gravity="center">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/thisFlower"
@@ -33,9 +39,10 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -111,28 +118,24 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center">
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="3">
 
                 <Button
                     android:id="@+id/btnCancel"
-                    android:layout_width="100dp"
-                    android:textSize="22sp"
-                    android:paddingBottom="10dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/buttonbackground"
-                    android:text="取消"/>
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="-10dp"
+                    android:background="@drawable/diacancel" />
 
                 <Button
                     android:id="@+id/buy"
-                    android:layout_width="100dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
-                    android:textSize="22sp"
-                    android:background="@drawable/buttonbackground"
-                    android:text="购买"/>
+                    android:layout_width="60dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="-10dp"
+                    android:background="@drawable/diatuichu"/>
             </LinearLayout>
         </LinearLayout>
 

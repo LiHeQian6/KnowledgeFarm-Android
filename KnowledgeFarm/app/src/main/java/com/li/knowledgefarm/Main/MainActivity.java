@@ -1081,10 +1081,8 @@ public class MainActivity extends AppCompatActivity {
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
-        Log.e("midu",ds.density+"");
-        Log.e("高度，宽度",displayHeight/ds.density+","+displayWidth/ds.density);
         bagPopUpWindow.setWidth((int) (displayWidth * 0.40));
-        bagPopUpWindow.setHeight((int) (displayHeight * 0.95));
+        bagPopUpWindow.setHeight((int) (displayHeight));
         if (!isNavigationBarShow()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 bagPopUpWindow.setIsClippedToScreen(true);
@@ -1313,25 +1311,6 @@ public class MainActivity extends AppCompatActivity {
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
-    /**
-     * @Description 展示用户信息和设置弹窗
-     * @Author 孙建旺
-     * @Date 下午9:21 2020/04/28
-     * @Param []
-     * @return void
-     */
-    private void ShowSettingAndMessage(){
-//        SettingMessageActivity messagePopUp = new SettingMessageActivity(this,MainActivity.this,LoginActivity.user);
-//        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-//        DisplayMetrics ds = new DisplayMetrics();
-//        wm.getDefaultDisplay().getMetrics(ds);
-//        displayHeight = ds.heightPixels;
-//        displayWidth = ds.widthPixels;
-//        messagePopUp.setWidth((int) (displayWidth * 0.70));
-//        messagePopUp.setHeight((int) (displayHeight * 0.8));
-//        messagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
-//        planting(bagPopUpWindow.getGridView());
-    }
     /**
      * @Author li
      * @return null

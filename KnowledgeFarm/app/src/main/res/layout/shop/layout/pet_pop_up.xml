@@ -8,13 +8,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="4"/>
-    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/shopitem"
+        android:background="@drawable/diaback"
         android:orientation="vertical"
         android:layout_weight="1"
         android:gravity="center">
@@ -23,14 +19,12 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="7">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="宠物名称"
+                android:text=""
                 android:textSize="25dp"
-                android:textColor="@color/ShopTextColor"
-                android:id="@+id/pet_name"/>
+                android:textColor="@color/ShopTextColor" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,18 +33,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginLeft="40dp"
+                android:orientation="vertical">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="15dp"
                     android:id="@+id/this_pet_image"
+                    android:layout_weight="1"
                     android:src="@drawable/dog"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="宠物名称"
+                    android:textSize="25dp"
+                    android:textColor="@color/ShopTextColor"
+                    android:id="@+id/pet_name"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_marginRight="40dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -177,27 +182,19 @@
 
             <Button
                 android:id="@+id/pet_btnCancel"
-                android:layout_width="100dp"
-                android:textSize="22sp"
-                android:paddingBottom="10dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/buttonbackground"
-                android:text="取消"/>
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="-10dp"
+                android:background="@drawable/diacancel"/>
 
             <Button
                 android:id="@+id/buy_pet"
-                android:layout_width="100dp"
-                android:layout_marginLeft="10dp"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:textSize="22sp"
-                android:background="@drawable/buttonbackground"
-                android:text="购买"/>
+                android:layout_width="60dp"
+                android:layout_marginLeft="30dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="-10dp"
+                android:background="@drawable/diatuichu"/>
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="4"/>
 </LinearLayout>
