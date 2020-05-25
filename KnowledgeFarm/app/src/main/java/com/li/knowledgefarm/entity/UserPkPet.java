@@ -158,7 +158,7 @@ public class UserPkPet implements Comparable<UserPkPet>, Serializable {
             right=true;
         }
         double i = (100000 - intelligence) / 100000.0;
-        useTime= (long) (new Random().nextDouble() * 5000+ i*10000);
+        useTime= (long) (new Random().nextDouble() * 5000+ i*5000);
     }
 
     /**

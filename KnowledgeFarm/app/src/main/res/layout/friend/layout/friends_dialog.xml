@@ -29,7 +29,8 @@
             android:id="@+id/search"
             android:textAlignment="center"
             android:background="@drawable/buttonbackground"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
     <RadioGroup
         android:layout_width="wrap_content"
