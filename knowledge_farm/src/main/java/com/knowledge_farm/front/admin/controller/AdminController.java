@@ -87,7 +87,7 @@ public class AdminController {
         Color c = new Color(0, 128, 128);
         graphics.fillRect(0, 0, 50, 20);
         graphics.setColor(c);
-        graphics.drawString(code, 5, 15);
+        graphics.drawString(code, 1, 15);
         ImageIO.write(buffer, "png", byteArrayOutputStream);
         graphics.dispose();
         byteArrayOutputStream.flush();

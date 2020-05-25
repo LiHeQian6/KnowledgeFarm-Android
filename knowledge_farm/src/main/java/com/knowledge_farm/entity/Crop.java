@@ -15,6 +15,7 @@ import javax.persistence.*;
 public class Crop {
     private Integer id;
     private String name;
+    private String description;
     private Integer price;
     private String img1;
     private String img2;
@@ -46,6 +47,14 @@ public class Crop {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getPrice() {

@@ -147,6 +147,7 @@ public class FrontCropController {
     @PostMapping("/addCrop")
     @ResponseBody
     public String addCrop(@RequestParam("name") String name,
+                          @RequestParam("description") String description,
                           @RequestParam("price") Integer price,
                           @RequestParam("matureTime") Integer matureTime,
                           @RequestParam("value") Integer value,
@@ -161,6 +162,7 @@ public class FrontCropController {
         try {
             Crop crop = new Crop();
             crop.setName(name);
+            crop.setDescription(description);
             crop.setPrice(price);
             crop.setMatureTime(matureTime);
             crop.setValue(value);
@@ -193,8 +195,6 @@ public class FrontCropController {
     @PostMapping("/updateCrop")
     @ResponseBody
     public String updateCrop(Crop crop, @RequestParam("upload") MultipartFile files[]) {
-        Crop findCropById = this.frontCropService.findCropById(crop.getId());
-        crop.setExist(findCropById.getExist());
         Integer id = crop.getId();
         int count = 1;
         try {
