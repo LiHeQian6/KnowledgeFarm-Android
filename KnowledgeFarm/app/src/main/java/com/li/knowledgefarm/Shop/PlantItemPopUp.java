@@ -58,9 +58,8 @@ public class PlantItemPopUp extends PopupWindow {
     private Handler doAfterAdd;
     private TextView description;//植物描述
 
-    public PlantItemPopUp(Context context,Crop shopItemBean) {
+    public PlantItemPopUp(Context context) {
         this.context = context.getApplicationContext();
-        this.shopItemBean = shopItemBean;
         this.setOutsideTouchable(false);
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -70,17 +69,21 @@ public class PlantItemPopUp extends PopupWindow {
         this.setContentView(contentView);
         okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
-        showMessage();
     }
 
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
+        showMessage();
         setFocusable(false);
         super.showAtLocation(parent, gravity, x, y);
         final View view = getContentView();
         FullScreen.hideBottomUIMenu(view);
         setFocusable(true);
         update();
+    }
+
+    public void setShopItemBean(Crop shopItemBean) {
+        this.shopItemBean = shopItemBean;
     }
 
     /**

@@ -65,33 +65,45 @@
                     android:orientation="vertical"
                     android:layout_weight="2">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="价格"
-                        android:textSize="17dp"
+                        android:maxHeight="20dp"
+                        android:minHeight="20dp"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="20dp"
+                        android:autoSizeTextType="uniform"
                         android:id="@+id/this_util_price"
                         android:layout_marginTop="6dp"
                         android:textColor="@color/ShopTextColor"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="类型："
                         android:layout_marginTop="6dp"
                         android:id="@+id/this_util_type"
                         android:textColor="@color/ShopTextColor"
-                        android:textSize="17dp"/>
+                        android:maxHeight="20dp"
+                        android:minHeight="20dp"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="20dp"
+                        android:autoSizeTextType="uniform"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="描述:"
-                        android:textSize="17dp"
+                        android:maxHeight="20dp"
+                        android:minHeight="20dp"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="20dp"
+                        android:autoSizeTextType="uniform"
                         android:layout_marginTop="6dp"
                         android:textColor="@color/ShopTextColor"/>
                     <ScrollView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="描述"
                             android:textSize="17dp"

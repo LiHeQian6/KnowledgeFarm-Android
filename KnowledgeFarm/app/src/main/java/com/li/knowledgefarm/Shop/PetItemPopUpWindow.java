@@ -83,10 +83,9 @@ public class PetItemPopUpWindow extends PopupWindow {
         }
     };
 
-    public PetItemPopUpWindow(Context context, PetVO pet) {
+    public PetItemPopUpWindow(Context context) {
         super(context);
         this.context = context.getApplicationContext();
-        this.pet = pet;
         this.setOutsideTouchable(false);
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -96,7 +95,6 @@ public class PetItemPopUpWindow extends PopupWindow {
         this.setContentView(contentView);
         okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
-        showMessage();
     }
 
     @Override
@@ -131,12 +129,17 @@ public class PetItemPopUpWindow extends PopupWindow {
 
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
+        showMessage();
         setFocusable(false);
         super.showAtLocation(parent, gravity, x, y);
         final View view = getContentView();
         FullScreen.hideBottomUIMenu(view);
         setFocusable(true);
         update();
+    }
+
+    public void setPet(PetVO pet) {
+        this.pet = pet;
     }
 
     /**

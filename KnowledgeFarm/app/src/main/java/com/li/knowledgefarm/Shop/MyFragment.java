@@ -9,6 +9,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -181,10 +182,11 @@ public class MyFragment extends Fragment {
      */
     private void ShowSingleUtilPopUp(int position) {
         if(utilItemPopUp==null) {
-            utilItemPopUp = new UtilItemPopUp(getContext(), petUtils.get(position));
+            utilItemPopUp = new UtilItemPopUp(getContext());
+            utilItemPopUp.setHeight((int)(ds.heightPixels));
+            utilItemPopUp.setWidth((int)(ds.widthPixels*0.6));
         }
-        utilItemPopUp.setHeight((int)(ds.heightPixels));
-        utilItemPopUp.setWidth((int)(ds.widthPixels*0.6));
+        utilItemPopUp.setPetUtil(petUtils.get(position));
         utilItemPopUp.showAtLocation(gridView, Gravity.CENTER,0,0);
     }
 
@@ -211,10 +213,11 @@ public class MyFragment extends Fragment {
     @SuppressLint("ResourceType")
     private void showSinglePlantPopUp(int position){
         if(plantItemPopUp == null){
-            plantItemPopUp = new PlantItemPopUp(getContext(),shopList.get(position));
+            plantItemPopUp = new PlantItemPopUp(getContext());
+            plantItemPopUp.setHeight((int)(ds.heightPixels));
+            plantItemPopUp.setWidth((int)(0.6*ds.widthPixels));
         }
-        plantItemPopUp.setHeight((int)(ds.heightPixels));
-        plantItemPopUp.setWidth((int)(0.6*ds.widthPixels));
+        plantItemPopUp.setShopItemBean(shopList.get(position));
         plantItemPopUp.showAtLocation(gridView,Gravity.CENTER,0,0);
     }
 
@@ -227,10 +230,11 @@ public class MyFragment extends Fragment {
      */
     private void ShowSinglePetPopUp(final int position){
         if(petItemPopUpWindow == null) {
-            petItemPopUpWindow = new PetItemPopUpWindow(getContext(), pet_list.get(position));
+            petItemPopUpWindow = new PetItemPopUpWindow(getContext());
+            petItemPopUpWindow.setHeight((int)(ds.heightPixels));
+            petItemPopUpWindow.setWidth((int)(ds.widthPixels*0.6));
         }
-        petItemPopUpWindow.setHeight((int)(ds.heightPixels));
-        petItemPopUpWindow.setWidth((int)(ds.widthPixels*0.6));
+        petItemPopUpWindow.setPet(pet_list.get(position));
         petItemPopUpWindow.showAtLocation(gridView, Gravity.CENTER,0,0);
     }
 }
