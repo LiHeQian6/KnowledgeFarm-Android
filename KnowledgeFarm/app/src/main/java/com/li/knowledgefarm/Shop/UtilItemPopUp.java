@@ -81,10 +81,9 @@ public class UtilItemPopUp extends PopupWindow {
     };
     private OkHttpClient okHttpClient;
 
-    public UtilItemPopUp(Context context, PetUtil petUtil) {
+    public UtilItemPopUp(Context context) {
         super(context);
         this.context = context.getApplicationContext();
-        this.petUtil = petUtil;
         this.setOutsideTouchable(false);
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -94,18 +93,22 @@ public class UtilItemPopUp extends PopupWindow {
         this.setContentView(contentView);
         okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
-        showMessage();
         setShopNumber();
     }
 
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
+        showMessage();
         setFocusable(false);
         super.showAtLocation(parent, gravity, x, y);
         final View view = getContentView();
         FullScreen.hideBottomUIMenu(view);
         setFocusable(true);
         update();
+    }
+
+    public void setPetUtil(PetUtil petUtil) {
+        this.petUtil = petUtil;
     }
 
     /**

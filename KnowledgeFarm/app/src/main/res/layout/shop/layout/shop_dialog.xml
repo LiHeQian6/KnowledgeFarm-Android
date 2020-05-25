@@ -59,42 +59,53 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_marginRight="40dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/thisPrice"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="20dp"
+                            android:maxHeight="20dp"
+                            android:minHeight="20dp"
                             android:text="单价："
-                            android:layout_marginTop="10dp"
+                            android:maxLines="1"
+                            android:autoSizeMaxTextSize="20dp"
+                            android:autoSizeTextType="uniform"
+                            android:layout_marginTop="5dp"
                             android:textColor="@color/ShopTextColor"/>
 
                         <TextView
                             android:id="@+id/thisTime"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:maxHeight="20dp"
+                            android:minHeight="20dp"
+                            android:maxLines="1"
+                            android:autoSizeMaxTextSize="20dp"
+                            android:autoSizeTextType="uniform"
                             android:text="成熟时间："
-                            android:textSize="20dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="5dp"
                             android:textColor="@color/ShopTextColor"/>
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:maxHeight="20dp"
+                            android:minHeight="20dp"
                             android:text="描述："
-                            android:textSize="20dp"
-                            android:layout_marginTop="10dp"
+                            android:maxLines="1"
+                            android:autoSizeMaxTextSize="20dp"
+                            android:autoSizeTextType="uniform"
+                            android:layout_marginTop="5dp"
                             android:textColor="@color/ShopTextColor"/>
                         <ScrollView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:text="描述"
-                                android:textSize="18dp"
-                                android:layout_marginTop="10dp"
+                                android:textSize="17dp"
+                                android:layout_marginTop="5dp"
                                 android:id="@+id/this_crop_description"
                                 android:textColor="@color/ShopTextColor"/>
                         </ScrollView>
