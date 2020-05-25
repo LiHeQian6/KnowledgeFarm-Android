@@ -25,6 +25,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.Crop;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,7 @@ import okhttp3.Response;
 public class PlantItemPopUp extends PopupWindow {
 
     private Context context;
-    private ShopItemBean shopItemBean;
+    private Crop shopItemBean;
     private OkHttpClient okHttpClient;
     private Button button;
     private Button cancel;
@@ -54,8 +55,9 @@ public class PlantItemPopUp extends PopupWindow {
     private ImageView imgBtnPlus;
     private EditText shopNumber;
     private Handler doAfterAdd;
+    private TextView description;//植物描述
 
-    public PlantItemPopUp(Context context,ShopItemBean shopItemBean) {
+    public PlantItemPopUp(Context context,Crop shopItemBean) {
         this.context = context.getApplicationContext();
         this.shopItemBean = shopItemBean;
         this.setOutsideTouchable(false);
@@ -81,6 +83,7 @@ public class PlantItemPopUp extends PopupWindow {
         thisName.setText(shopItemBean.getName());
         thisPrice.setText("单价："+shopItemBean.getPrice()+"金币");
         thisTime.setText("成熟时间："+shopItemBean.getMatureTime()+"");
+        description.setText("\u3000\u3000"+shopItemBean.getDescription());
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.huancun2)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
@@ -104,6 +107,7 @@ public class PlantItemPopUp extends PopupWindow {
         imgBtnJian = contentView.findViewById(R.id.imgBtnJian);
         imgBtnPlus = contentView.findViewById(R.id.imgBtnPlus);
         shopNumber = contentView.findViewById(R.id.shopNum);
+        description = contentView.findViewById(R.id.this_crop_description);
 
         registerListener();
     }

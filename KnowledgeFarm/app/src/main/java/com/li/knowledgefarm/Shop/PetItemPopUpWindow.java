@@ -118,7 +118,7 @@ public class PetItemPopUpWindow extends PopupWindow {
         Glide.with(context).load(pet.getImg1()).apply(requestOptions).into(pet_image);
         pet_name.setText(pet.getName());
         pet_price.setText("宠物价格:"+pet.getPrice()+"金币");
-        pet_description.setText("    "+pet.getDescription());
+        pet_description.setText("\u3000\u3000"+pet.getDescription());
         pet_intelligence.setText((int)(pet.getIntelligence()*0.7)+"-"+pet.getIntelligence());
         pet_life.setText((int)(pet.getLife()*0.7)+"-"+pet.getLife());
         physical_value.setText(pet.getPhysical()+"");

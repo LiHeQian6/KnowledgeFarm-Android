@@ -119,7 +119,7 @@ public class UtilItemPopUp extends PopupWindow {
                 util_type.setText("作用：恢复体力"+petUtil.getValue()+"点");
                 break;
         }
-        util_description.setText("    "+petUtil.getDescription());
+        util_description.setText("\u3000\u3000"+petUtil.getDescription());
     }
 
     /**

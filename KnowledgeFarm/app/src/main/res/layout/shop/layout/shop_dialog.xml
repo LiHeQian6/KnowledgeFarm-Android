@@ -78,6 +78,13 @@
                             android:textSize="20dp"
                             android:layout_marginTop="10dp"
                             android:textColor="@color/ShopTextColor"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="描述："
+                            android:textSize="20dp"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/ShopTextColor"/>
                         <ScrollView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
@@ -85,9 +92,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:text="描述"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:layout_marginTop="10dp"
-                                android:id="@+id/this_util_description"
+                                android:id="@+id/this_crop_description"
                                 android:textColor="@color/ShopTextColor"/>
                         </ScrollView>
                     </LinearLayout>

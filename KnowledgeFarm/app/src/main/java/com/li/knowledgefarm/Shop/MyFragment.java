@@ -34,6 +34,7 @@ import com.li.knowledgefarm.Util.GuideHelper;
 import com.li.knowledgefarm.Util.GuideHelper.TipData;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.Crop;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.PetUtil;
@@ -62,7 +63,7 @@ import okhttp3.Response;
 public class MyFragment extends Fragment {
 
     private GridView gridView;
-    private List<ShopItemBean> shopList;
+    private List<Crop> shopList;
     private List<PetVO> pet_list;
     private List<PetUtil> petUtils;
     public static final String SHOP = "POSITION";
@@ -96,7 +97,7 @@ public class MyFragment extends Fragment {
         data = bundle.getInt(SHOP);
         switch (data){
             case 1:
-                shopList = (List<ShopItemBean>) bundle.getSerializable("plant");
+                shopList = (List<Crop>) bundle.getSerializable("plant");
                 adapter = new ShopItemAdapter(getContext(),shopList,R.layout.shopitem_girdview);
                 gridView.setAdapter(adapter);
                 break;

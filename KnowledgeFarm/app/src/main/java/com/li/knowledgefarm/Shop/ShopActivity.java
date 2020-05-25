@@ -29,6 +29,7 @@ import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.GuideHelper;
 import com.li.knowledgefarm.Util.GuideHelper.TipData;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.entity.Crop;
 import com.li.knowledgefarm.entity.PetUtil;
 import com.li.knowledgefarm.entity.PetVO;
 import com.li.knowledgefarm.entity.ShopItemBean;
@@ -56,7 +57,7 @@ public class ShopActivity extends AppCompatActivity {
 
     private OkHttpClient okHttpClient;
     private Gson gson;
-    private List<ShopItemBean> shopList;
+    private List<Crop> shopList;
     private List<PetVO> pet_list;
     private List<PetUtil> petUtils;
     private Map<String,List> itemList;
@@ -86,7 +87,7 @@ public class ShopActivity extends AppCompatActivity {
                     case 1:
                         String message = (String) msg.obj;
                         if (!message.equals("") && msg.arg1 == 200) {
-                            Type type = new TypeToken<List<ShopItemBean>>() {
+                            Type type = new TypeToken<List<Crop>>() {
                             }
                                     .getType();
                             shopList = gson.fromJson(message, type);
