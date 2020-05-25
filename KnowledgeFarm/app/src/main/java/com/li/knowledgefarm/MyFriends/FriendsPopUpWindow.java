@@ -188,7 +188,7 @@ public class FriendsPopUpWindow extends PopupWindow {
         //页码显示大小适配
         LinearLayout.LayoutParams params_now = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.06));
         now.setLayoutParams(params_now);
-        now.setTextSize((int)(displayHeight*0.02));
+        now.setTextSize((int)(displayWidth*0.008));
 
         //上一页下一页按钮适配
         LinearLayout.LayoutParams nextAndPre = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.06));
