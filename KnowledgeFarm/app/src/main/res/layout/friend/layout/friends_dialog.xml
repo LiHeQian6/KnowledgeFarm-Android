@@ -74,7 +74,9 @@
                 android:id="@+id/now"
                 android:gravity="center"
                 android:autoSizeMaxTextSize="25dp"
-                android:layout_height="wrap_content"/>
+                android:maxLines="1"
+                android:autoSizeTextType="uniform"
+                android:layout_height="match_parent"/>
             <ImageView
                 android:layout_width="30dp"
                 android:id="@+id/next"
