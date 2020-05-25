@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.BagPetUtilItem;
@@ -208,7 +209,7 @@ public class PetPopUpWindow extends PopupWindow {
                         });
                     }
                 }else {
-                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -310,9 +311,9 @@ public class PetPopUpWindow extends PopupWindow {
                         Collections.sort(pets);
                         adapter.notifyDataSetChanged();
                     }else
-                        Toast.makeText(context,"更换失败！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"更换失败！",Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -387,7 +388,7 @@ public class PetPopUpWindow extends PopupWindow {
                         });
                     }
                 }else {
-                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -447,9 +448,9 @@ public class PetPopUpWindow extends PopupWindow {
                         util_adapter.notifyDataSetChanged();
                         getPetInfo(petId);
                     }else
-                        Toast.makeText(context,"使用失败！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"使用失败！",Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -500,7 +501,7 @@ public class PetPopUpWindow extends PopupWindow {
                     pets.set(selectItem,userPetHouse);
                     setPetDetail(userPetHouse);
                 }else {
-                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };

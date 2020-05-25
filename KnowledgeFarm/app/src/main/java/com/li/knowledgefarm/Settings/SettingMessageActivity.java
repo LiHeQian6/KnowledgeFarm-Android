@@ -269,13 +269,13 @@ public class SettingMessageActivity extends AppCompatActivity {
                                 editor.putLong("start",new Date().getTime());
                                 editor.putInt("expires", Integer.parseInt(expires));
                                 editor.commit();
-                                Toast.makeText(getApplicationContext(),"绑定QQ成功",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"绑定QQ成功",Toast.LENGTH_SHORT).show();
                                 break;
                             case "false":
-                                Toast.makeText(getApplicationContext(),"绑定QQ失败",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"绑定QQ失败",Toast.LENGTH_SHORT).show();
                                 break;
                             case "already":
-                                Toast.makeText(getApplicationContext(),"该QQ号已被其他账号绑定",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"该QQ号已被其他账号绑定",Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         break;
@@ -288,10 +288,10 @@ public class SettingMessageActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.clear();
                                 editor.commit();
-                                Toast.makeText(getApplicationContext(),"解绑QQ成功",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"解绑QQ成功",Toast.LENGTH_SHORT).show();
                                 break;
                             case "false":
-                                Toast.makeText(getApplicationContext(),"解绑QQ失败",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"解绑QQ失败",Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         break;
@@ -299,10 +299,10 @@ public class SettingMessageActivity extends AppCompatActivity {
                         String aString = (String)msg.obj;
                         if(aString.equals("false") || aString.equals("")){
                             Log.e("photo","上传头像失败1");
-                            Toast.makeText(getApplicationContext(),"头像上传失败", Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(getApplicationContext(),"头像上传失败", Toast.LENGTH_SHORT).show();
                         }else if(aString.equals("null")){
                             Log.e("photo","上传头像失败2");
-                            Toast.makeText(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
                         }else{
                             UserUtil.getUser().setPhoto(aString);
                             RequestOptions options = new RequestOptions();
@@ -313,7 +313,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                                     .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
                             Glide.with(getApplicationContext()).load(UserUtil.getUser().getPhoto()).apply(options).into(user_photo);
                             Log.e("photo","上传头像成功");
-                            Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 5: // 修改年级判断

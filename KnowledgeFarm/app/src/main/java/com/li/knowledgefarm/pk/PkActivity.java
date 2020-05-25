@@ -40,6 +40,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.BitmapCut;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FromJson;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -156,11 +157,7 @@ public class PkActivity extends AppCompatActivity{
                 if(msg.what == 200) {
                     list = FromJson.JsonToEntity(data);
                 }else {
-                    if(toast == null){
-                        toast = Toast.makeText(PkActivity.this,"获取题目失败",Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM,0,0);
-                        toast.show();
-                    }
+                    CustomerToast.getInstance(PkActivity.this,"获取题目失败",Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -511,15 +508,11 @@ public class PkActivity extends AppCompatActivity{
                         event.setMessage("2");
                         EventBus.getDefault().post(event);
                     }else if(data.equals("false")){
-                        toast = Toast.makeText(PkActivity.this,"数据异常",Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM,0,0);
-                        toast.show();
+                        CustomerToast.getInstance(PkActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
                     }
                 }else {
                     if(toast == null){
-                        toast = Toast.makeText(PkActivity.this,"网络异常",Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM,0,0);
-                        toast.show();
+                        CustomerToast.getInstance(PkActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                     }
                 }
             }

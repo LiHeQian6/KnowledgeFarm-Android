@@ -57,6 +57,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.DisplayUtils;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.GuideHelper;
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     showUserInfo();
                 } else {
-                    Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -471,9 +472,9 @@ public class MainActivity extends AppCompatActivity {
                 String messages = (String) msg.obj;
                 if (!messages.equals("Fail")) {
                     if (messages.equals("false")) {
-                        Toast.makeText(MainActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(MainActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
                     }else {
-                        Toast.makeText(MainActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(MainActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
                         if (option == 1){
                             List<User> list = friendsPopUpWindow.friendsPage.getList();
                             for (int i = 0; i < list.size(); i++) {
@@ -486,8 +487,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -568,8 +568,7 @@ public class MainActivity extends AppCompatActivity {
                     cropList = gson.fromJson(messages, type);
                     showLand();
                 } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -721,7 +720,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (selected == 0) {
                                         selectedPlant = finalI;
                                         if (status == 1) {
-                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            CustomerToast.getInstance(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                             if (finalCrop.getStatus() == 0) {
                                                 land.setImageResource(R.drawable.land_gan);
                                             } else
@@ -733,7 +732,7 @@ public class MainActivity extends AppCompatActivity {
                                     } else if (selected == -1) {
                                         selectedPlant = finalI;
                                         if (status == 1) {
-                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            CustomerToast.getInstance(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                             if (finalCrop.getStatus() == 0) {
                                                 land.setImageResource(R.drawable.land_gan);
                                             } else
@@ -748,7 +747,7 @@ public class MainActivity extends AppCompatActivity {
                                             Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
                                             operating(-2);//成熟
                                         } else {
-                                            Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
+                                            CustomerToast.getInstance(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
                                             if (finalCrop.getStatus() == 0) {
                                                 land.setImageResource(R.drawable.land_gan);
                                             } else
@@ -763,7 +762,7 @@ public class MainActivity extends AppCompatActivity {
                                             if (!messages.equals("Fail")) {
                                                 if (messages.equals("false")) {
                                                     animation.setVisibility(View.VISIBLE);
-                                                    Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                                    CustomerToast.getInstance(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                                                     new Handler().postDelayed(new Runnable() {
                                                         @Override
                                                         public void run() {
@@ -771,7 +770,6 @@ public class MainActivity extends AppCompatActivity {
                                                         }
                                                     }, 1000);
                                                 } else {
-                                                    //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
                                                     animation.setVisibility(View.VISIBLE);
                                                     new Handler().postDelayed(new Runnable() {
                                                         @Override
@@ -788,7 +786,7 @@ public class MainActivity extends AppCompatActivity {
                                                 }
                                             } else {
                                                 animation.setVisibility(View.VISIBLE);
-                                                Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                                CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                                 new Handler().postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -938,14 +936,11 @@ public class MainActivity extends AppCompatActivity {
 //                    showLand();
                     getCrop();
                 } else if (message.equals("false")) {
-                    Toast toast = Toast.makeText(MainActivity.this, "没有扩建成功哦！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "没有扩建成功哦！", Toast.LENGTH_SHORT).show();
                 } else if (message.equals("notEnoughMoney")) {
-                    Toast toast = Toast.makeText(MainActivity.this, "你的钱不够了哦！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "你的钱不够了哦！", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "没有找到你的土地哦！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "没有找到你的土地哦！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -971,12 +966,12 @@ public class MainActivity extends AppCompatActivity {
                             String messages = (String) msg.obj;
                             Log.e("种植", messages);
                             if (messages.equals("Fail")) {
-                                Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                             } else if (messages.equals("true")) {
-                                Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
                                 getUserInfo();
                             } else
-                                Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                         }
                     };
                 }
@@ -1257,7 +1252,7 @@ public class MainActivity extends AppCompatActivity {
                         daytask_red.setVisibility(View.VISIBLE);
                     }
                 }else {
-                    Toast.makeText(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -1452,7 +1447,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            Toast.makeText(MainActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
+            CustomerToast.getInstance(MainActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
             finish();

@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
@@ -69,11 +70,11 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                     if(msg.obj.equals("already")){ //邮箱已被其他账号绑定
                         endAsync1(); //停止异步任务
                         endAsync2(); //停止异步任务
-                        Toast.makeText(context,"该邮箱已被其它账号绑定",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"该邮箱已被其它账号绑定",Toast.LENGTH_SHORT).show();
                     }else if(msg.obj.equals("fail")){ //发送邮箱失败
                         endAsync1(); //停止异步任务
                         endAsync1(); //停止异步任务
-                        Toast.makeText(context,"发送验证码失败",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"发送验证码失败",Toast.LENGTH_SHORT).show();
                     }else{ //获取到验证码
                         testCode = (String)msg.obj;
                     }
@@ -84,10 +85,10 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                         endAsync2(); //停止异步任务
                         UserUtil.getUser().setEmail(new_message.getText().toString().trim());
                         EventBus.getDefault().post("绑定邮箱成功");
-                        Toast.makeText(context,"绑定邮箱成功",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"绑定邮箱成功",Toast.LENGTH_SHORT).show();
                         dismiss();
                     }else{ //绑定失败
-                        Toast.makeText(context,"绑定邮箱失败",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"绑定邮箱失败",Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -256,21 +257,21 @@ public class ChangeEmailPopUpWindow extends PopupWindow {
                         if(vertical.getText().toString().trim().equals(testCode)){ //验证码正确
                             over();
                         }else{ //验证码错误
-                            Toast.makeText(context,"验证码输入错误",Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(context,"验证码输入错误",Toast.LENGTH_SHORT).show();
                         }
                     }else{ //验证码为空
-                        Toast.makeText(context,"验证码不能为空",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"验证码不能为空",Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.getVertical_btn:
-                    if("859684581@qq.com".equals("859684581@qq.com")){ //邮箱不为空
-                        if(isEmail("859684581@qq.com")){ //邮箱格式正确
+                    if(!new_message.getText().toString().trim().equals("")){ //邮箱不为空
+                        if(isEmail(new_message.getText().toString().trim())){ //邮箱格式正确
                             getTestCode();
                         }else{ //邮箱格式错误
-                            Toast.makeText(context,"邮箱格式错误",Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(context,"邮箱格式错误",Toast.LENGTH_SHORT).show();
                         }
                     }else { //邮箱为空
-                        Toast.makeText(context,"邮箱不能为空",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"邮箱不能为空",Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.cancel_btn:

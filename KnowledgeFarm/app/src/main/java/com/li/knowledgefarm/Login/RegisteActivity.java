@@ -3,6 +3,8 @@ package com.li.knowledgefarm.Login;
 import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.Md5Encode;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -64,7 +66,7 @@ public class RegisteActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 4:
-                    Toast.makeText(RegisteActivity.this,"注册成功，请登录",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(RegisteActivity.this,"注册成功，请登录",Toast.LENGTH_SHORT).show();
                     EventBean eventBean = new EventBean();
                     eventBean.setAccount(msg.obj.toString());
                     eventBus.post(eventBean);
@@ -76,7 +78,7 @@ public class RegisteActivity extends AppCompatActivity {
                     },1000);
                     break;
                 case 5:
-                    Toast.makeText(RegisteActivity.this,msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(RegisteActivity.this,msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -122,16 +124,16 @@ public class RegisteActivity extends AppCompatActivity {
                 password = pwd.getText().toString();
                 String config = configPwd.getText().toString();
                 if(rName.equals("")||password.equals("")||config.equals("")){
-                    Toast.makeText(RegisteActivity.this,"请完善注册信息！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(RegisteActivity.this,"请完善注册信息！",Toast.LENGTH_SHORT).show();
                     return;
                 }else if(!password.equals(config)){
-                    Toast.makeText(RegisteActivity.this,"密码输入不一致！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(RegisteActivity.this,"密码输入不一致！",Toast.LENGTH_SHORT).show();
                     return;
                 }else if(password.length()<8||password.length()>14){
-                    Toast.makeText(getApplicationContext(),"请输入8-14位字符",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"请输入8-14位字符",Toast.LENGTH_SHORT).show();
                     return;
                 }else if(password.contains(" ")){
-                    Toast.makeText(getApplicationContext(),"含有非法字符",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"含有非法字符",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else {

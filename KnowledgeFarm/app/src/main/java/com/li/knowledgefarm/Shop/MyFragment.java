@@ -74,10 +74,6 @@ public class MyFragment extends Fragment {
     private long lastClickTime = 0L;
     // 两次点击间隔不能少于1000ms
     private static final int FAST_CLICK_DELAY_TIME = 1000;
-    private AlertDialog alertDialog = null;
-    private Toast toast;
-    private OkHttpClient okHttpClient;
-    private Handler doAfterAdd;
     private PetItemPopUpWindow petItemPopUpWindow;
     private UtilItemPopUp utilItemPopUp;
     private PlantItemPopUp plantItemPopUp;
@@ -90,7 +86,6 @@ public class MyFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getViews();
-        okHttpClient = OkHttpUtils.getInstance(getContext());
         View view = inflater.inflate(R.layout.plant_gridview_layout,container,false);
         gridView = view.findViewById(R.id.plant_gird_view);
         Bundle bundle = getArguments();

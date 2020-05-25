@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.QuestionEntity.Completion;
@@ -358,10 +359,7 @@ public class QuestionUtil {
                 showQuestion();
             }else{
                 if(TRUE_ANSWER_COUNT < datalist.size()){
-                    if(toast!=null){
-                        toast = Toast.makeText(context,"你还没有答完哦",Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
+                    CustomerToast.getInstance(context,"你还没有答完哦",Toast.LENGTH_SHORT).show();
                 }
             }
             return;
@@ -458,11 +456,7 @@ public class QuestionUtil {
                             return;
                         }
                     }else{
-                        if(toast == null){
-                            toast = Toast.makeText(context,"服务器开小差了",Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.BOTTOM,0,0);
-                            toast.show();
-                        }
+                        CustomerToast.getInstance(context,"服务器开小差了",Toast.LENGTH_SHORT).show();
                     }
                 }
             }

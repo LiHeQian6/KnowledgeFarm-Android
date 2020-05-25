@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
@@ -50,13 +51,13 @@ public class ChangePasswordPop extends PopupWindow {
                 case "true":
                     UserUtil.getUser().setPassword(new_password.getText().toString().trim());
                     dismiss();
-                    Toast.makeText(context,"密码修改成功",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context,"密码修改成功",Toast.LENGTH_SHORT).show();
                     break;
                 case "PasswordError":
-                    Toast.makeText(context, "旧密码错误", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context, "旧密码错误", Toast.LENGTH_SHORT).show();
                     break;
                 case "false":
-                    Toast.makeText(context,"密码修改失败",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context,"密码修改失败",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -126,12 +127,12 @@ public class ChangePasswordPop extends PopupWindow {
         final String newPassword = new_password.getText().toString().trim();
         final String newPasswordTest = again_new_password.getText().toString().trim();
         if(oldPassword.equals("") || newPassword.equals("") || newPasswordTest.equals("")){
-            Toast.makeText(context,"您还有没填写的内容！",Toast.LENGTH_SHORT).show();
+            CustomerToast.getInstance(context,"您还有没填写的内容！",Toast.LENGTH_SHORT).show();
         }else {
             if (!newPassword.equals(newPasswordTest)) {
-                Toast.makeText(context, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
+                CustomerToast.getInstance(context, "两次输入密码不一致", Toast.LENGTH_SHORT).show();
             }else if(newPassword.equals(newPasswordTest) && newPassword.length() < 8){
-                Toast.makeText(context, "密码长度最低为8位", Toast.LENGTH_SHORT).show();
+                CustomerToast.getInstance(context, "密码长度最低为8位", Toast.LENGTH_SHORT).show();
             }
             else {
                 new Thread() {

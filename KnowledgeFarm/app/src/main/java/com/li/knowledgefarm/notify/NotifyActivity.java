@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -422,10 +423,10 @@ public class NotifyActivity extends AppCompatActivity {
                             sendNotifyAdapter.notifyDataSetChanged();
                         else
                             otherNotifyAdapter.notifyDataSetChanged();
-                        Toast.makeText(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(NotifyActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
                     }
                 }else {
-                    Toast.makeText(NotifyActivity.this,"网络出了点问题",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(NotifyActivity.this,"网络出了点问题",Toast.LENGTH_SHORT).show();
                 }
             }
         };

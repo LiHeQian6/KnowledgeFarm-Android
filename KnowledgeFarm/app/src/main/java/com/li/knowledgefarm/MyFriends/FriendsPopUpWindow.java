@@ -36,6 +36,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -129,7 +130,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                             searchSelectedItem = 0;
                             getFriendsInfo(1);
                         }else{
-                            Toast.makeText(context,"获取好友列表失败",Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(context,"获取好友列表失败",Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case R.id.all:
@@ -139,7 +140,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                             searchSelectedItem = 1;
                             getAllInfo(1);
                         }else{
-                            Toast.makeText(context,"获取好友列表失败",Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(context,"获取好友列表失败",Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }
@@ -282,8 +283,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                     friendsListView.setAdapter(customerAdapter);
                     customerAdapter.notifyDataSetChanged();
                 }else{
-                    Toast toast = Toast.makeText(context,"获取数据失败！",Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(context,"获取数据失败！",Toast.LENGTH_SHORT).show();
                 }
             }
         };

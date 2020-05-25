@@ -3,6 +3,7 @@ package com.li.knowledgefarm.bag;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.session.PlaybackState;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.BagCropNumber;
@@ -139,8 +141,7 @@ public class BagPopUpWindow extends PopupWindow {
                     BagCustomerAdapter customerAdapter = new BagCustomerAdapter(context, dataList, R.layout.gird_adapteritem);
                     gridView.setAdapter(customerAdapter);
                 } else {
-                    Toast toast = Toast.makeText(context, "获取数据失败！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(context, "获取数据失败！", Toast.LENGTH_SHORT).show();
                 }
             }
         };

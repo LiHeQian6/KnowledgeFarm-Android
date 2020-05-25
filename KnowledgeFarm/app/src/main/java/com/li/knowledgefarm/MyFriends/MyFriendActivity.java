@@ -46,6 +46,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.Main.bgsound.BgSoundService;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.DisplayUtils;
 import com.li.knowledgefarm.Util.GuideHelper;
 import com.li.knowledgefarm.Util.OkHttpUtils;
@@ -245,7 +246,7 @@ public class MyFriendActivity extends AppCompatActivity {
                 if(!messages.equals("Fail")){
                     showUserInfo();
                 }else{
-                    Toast.makeText(MyFriendActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(MyFriendActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -288,8 +289,7 @@ public class MyFriendActivity extends AppCompatActivity {
                     cropList = gson.fromJson(messages,type);
                     showLand();
                 }else{
-                    Toast toast = Toast.makeText(MyFriendActivity.this,"网络异常！",Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MyFriendActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -446,7 +446,7 @@ public class MyFriendActivity extends AppCompatActivity {
                                     if(selected==0) {
                                         selectedPlant=finalI;
                                         if(status==1) {
-                                            Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            CustomerToast.getInstance(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                             if(finalCrop.getStatus()==0){
                                                 land.setImageResource(R.drawable.land_gan);
                                             }else
@@ -459,7 +459,7 @@ public class MyFriendActivity extends AppCompatActivity {
                                     }else if(selected==-1){
                                         selectedPlant=finalI;
                                         if(status==1) {
-                                            Toast.makeText(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            CustomerToast.getInstance(MyFriendActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                             if(finalCrop.getStatus()==0){
                                                 land.setImageResource(R.drawable.land_gan);
                                             }else
@@ -493,7 +493,7 @@ public class MyFriendActivity extends AppCompatActivity {
                                             Log.e("Watering", messages);
                                             if (!messages.equals("Fail")) {
                                                 if (messages.equals("false")) {
-                                                    Toast.makeText(MyFriendActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                                    CustomerToast.getInstance(MyFriendActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
                                                     animation.setVisibility(View.VISIBLE);
@@ -511,7 +511,7 @@ public class MyFriendActivity extends AppCompatActivity {
 
                                                 }
                                             } else {
-                                                Toast.makeText(MyFriendActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                                CustomerToast.getInstance(MyFriendActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                             }
                                             if(finalCrop.getStatus()==0){
                                                 land.setImageResource(R.drawable.land_gan);
@@ -780,7 +780,7 @@ public class MyFriendActivity extends AppCompatActivity {
                         daytask_red.setVisibility(View.VISIBLE);
                     }
                 }else {
-                    Toast.makeText(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -951,9 +951,9 @@ public class MyFriendActivity extends AppCompatActivity {
                 String messages = (String) msg.obj;
                 if (!messages.equals("Fail")) {
                     if (messages.equals("false")) {
-                        Toast.makeText(MyFriendActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(MyFriendActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
                     }else {
-                        Toast.makeText(MyFriendActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(MyFriendActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
                         if (option == 1){
                             List<User> list = friendsPopUpWindow.friendsPage.getList();
                             for (int i = 0; i < list.size(); i++) {
@@ -966,8 +966,7 @@ public class MyFriendActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    Toast toast = Toast.makeText(MyFriendActivity.this, "网络异常！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MyFriendActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -1025,7 +1024,7 @@ public class MyFriendActivity extends AppCompatActivity {
 
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            Toast.makeText(MyFriendActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
+            CustomerToast.getInstance(MyFriendActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
             finish();

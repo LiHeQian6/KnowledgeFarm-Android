@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -104,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
         public void handleMessage(final Message msg) {
             switch (msg.what) {
                 case 1:       //第一次登录
-                    Toast.makeText(getApplicationContext(),"欢迎你，新用户",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"欢迎你，新用户",Toast.LENGTH_SHORT).show();
                     Intent intentFirst = new Intent(LoginActivity.this,QQFirstActivity.class);
                     intentFirst.putExtra("opId",openID);
                     intentFirst.putExtra("nick",Nickname);
@@ -112,11 +113,11 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intentFirst);
                     break;
                 case 2:       //账号失效
-                    Toast.makeText(getApplicationContext(),"账号已失效！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"账号已失效！",Toast.LENGTH_SHORT).show();
                     break;
                 case 3:
                     //自动登录
-                    Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
                     UserUtil.setUser((User) msg.obj);
                     Intent autoToStart = new Intent(LoginActivity.this,StartActivity.class);
                     autoToStart.setAction("autoLogin");
@@ -240,7 +241,7 @@ public class LoginActivity extends AppCompatActivity {
     //退出
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            Toast.makeText(LoginActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
+            CustomerToast.getInstance(LoginActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
             finish();

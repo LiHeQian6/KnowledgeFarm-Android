@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
@@ -205,7 +206,7 @@ class DayTaskAdapter extends BaseAdapter {
                 String message = (String)msg.obj;
                 if (!message.equals("Fail")){
                     if (message.equals("2")){
-                        Toast.makeText(context,"领取成功！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"领取成功！",Toast.LENGTH_SHORT).show();
                         for (int i = 0; i < list.size(); i++) {
                             if (list.get(i).getType().equals(taskName)){
                                 list.get(i).setStatus(2);
@@ -214,9 +215,9 @@ class DayTaskAdapter extends BaseAdapter {
                         }
                         notifyDataSetChanged();
                     }else
-                        Toast.makeText(context,"领取失败！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"领取失败！",Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };

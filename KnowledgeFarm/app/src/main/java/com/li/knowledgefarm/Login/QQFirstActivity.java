@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
@@ -71,14 +72,14 @@ public class QQFirstActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 4:
-                    Toast.makeText(getApplicationContext(),"注册成功！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"注册成功！",Toast.LENGTH_SHORT).show();
                     Intent autoToStart = new Intent(QQFirstActivity.this,StartActivity.class);
                     autoToStart.setAction("QQFirstLogin");
                     startActivity(autoToStart);
                     finish();
                     break;
                 case 5:
-                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -115,9 +116,9 @@ public class QQFirstActivity extends AppCompatActivity {
                 EditText configPwd = findViewById(R.id.configPwd);
                 config = configPwd.getText().toString();
                 if(password.equals("")||config.equals("")){
-                    Toast.makeText(getApplicationContext(),"请完善注册信息！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"请完善注册信息！",Toast.LENGTH_SHORT).show();
                 }else if(!password.equals(config)){
-                    Toast.makeText(getApplicationContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
                 }else {
                     new Thread(){
                         @Override

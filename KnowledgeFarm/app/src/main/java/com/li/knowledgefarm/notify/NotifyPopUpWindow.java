@@ -64,48 +64,6 @@ public class NotifyPopUpWindow extends PopupWindow {
         not_content = view.findViewById(R.id.not_content);
     }
 
-    /**
-     * @Description 删除通知
-     * @Author 孙建旺
-     * @Date 上午10:09 2020/04/28
-     * @Param []
-     * @return void
-     */
-    private void deleteThisNotify(){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                final Request request = new Request.Builder()
-                        .url("").build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Log.e("Error","网络错误");
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        OkHttpUtils.unauthorized(response.code());
-                        String messages = response.body().string();
-                        Message message = Message.obtain();
-                        message.obj = messages;
-                        if_delete_handler.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
-        if_delete_handler = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String message = (String)msg.obj;
-
-            }
-        };
-    }
-
     private void setText(){
         not_title.setText(notification.getTitle());
         not_content.setText("内容："+notification.getContent());

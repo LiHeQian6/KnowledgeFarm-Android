@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
@@ -189,9 +190,7 @@ public class SendNotifyAdapter extends BaseAdapter {
                     EventBus.getDefault().post(eventBean);
                 }else {
                     if(toast == null){
-                        toast = Toast.makeText(context,"操作失败",Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM,0,0);
-                        toast.show();
+                        CustomerToast.getInstance(context,"操作失败",Toast.LENGTH_SHORT).show();
                     }
                 }
             }

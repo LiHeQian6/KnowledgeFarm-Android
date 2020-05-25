@@ -3,6 +3,7 @@ package com.li.knowledgefarm.Util;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -22,18 +23,13 @@ public class CustomerToast extends Toast {
     }
 
     public static Toast getInstance(Context context,String toastText,int type){
-        synchronized (CustomerToast.class){
-            if(customerToast == null){
-                customerToast = Toast.makeText(context,toastText,type);
-                customerToast.setGravity(Gravity.BOTTOM,0,0);
+        synchronized (CustomerToast.class) {
+            if (customerToast == null) {
+                customerToast = Toast.makeText(context.getApplicationContext(), "", type);
+                customerToast.setGravity(Gravity.BOTTOM, 0, 0);
             }
+            customerToast.setText(toastText);
         }
         return customerToast;
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        customerToast = null;
     }
 }
