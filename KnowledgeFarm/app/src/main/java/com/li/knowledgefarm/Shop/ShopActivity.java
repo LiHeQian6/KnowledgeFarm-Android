@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.DisplayUtils;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.GuideHelper;
@@ -94,7 +95,7 @@ public class ShopActivity extends AppCompatActivity {
                                 setViewPagerAdapter();
                             }
                         } else {
-                            Toast.makeText(ShopActivity.this, "网络出了点问题", Toast.LENGTH_SHORT);
+                            CustomerToast.getInstance(ShopActivity.this,"网络出了点问题", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 2:
@@ -108,7 +109,7 @@ public class ShopActivity extends AppCompatActivity {
                                 setViewPagerAdapter();
                             }
                         } else {
-                            Toast.makeText(ShopActivity.this, "网络出了点问题", Toast.LENGTH_SHORT);
+                            CustomerToast.getInstance(ShopActivity.this,"网络出了点问题",Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 3:
@@ -192,7 +193,6 @@ public class ShopActivity extends AppCompatActivity {
         shopList = new ArrayList<>();
         pet_list = new ArrayList<>();
         petUtils = new ArrayList<>();
-//        gridView = findViewById(R.id.gird_view);
         tabLayout = findViewById(R.id.tab_layout);
         imageView = findViewById(R.id.goBack);
         viewPager = findViewById(R.id.pager_view);

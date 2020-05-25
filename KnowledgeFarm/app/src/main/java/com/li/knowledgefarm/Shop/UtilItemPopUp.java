@@ -82,7 +82,7 @@ public class UtilItemPopUp extends PopupWindow {
 
     public UtilItemPopUp(Context context, PetUtil petUtil) {
         super(context);
-        this.context = context;
+        this.context = context.getApplicationContext();
         this.petUtil = petUtil;
         this.setOutsideTouchable(false);
         this.setFocusable(true);

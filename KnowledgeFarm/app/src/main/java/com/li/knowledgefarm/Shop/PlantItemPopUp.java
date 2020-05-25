@@ -79,7 +79,7 @@ public class PlantItemPopUp extends PopupWindow {
      */
     private void showMessage() {
         thisName.setText(shopItemBean.getName());
-        thisPrice.setText("单价："+shopItemBean.getPrice()+"");
+        thisPrice.setText("单价："+shopItemBean.getPrice()+"金币");
         thisTime.setText("成熟时间："+shopItemBean.getMatureTime()+"");
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.huancun2)

@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
@@ -50,7 +51,6 @@ public class PetItemPopUpWindow extends PopupWindow {
     private Button cancel;//取消按钮
     private Button buy_pet;//购买按钮
     private OkHttpClient okHttpClient;
-    private Toast toast;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -72,9 +72,7 @@ public class PetItemPopUpWindow extends PopupWindow {
                         break;
                 }
             }
-            toast = Toast.makeText(context,result,Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.BOTTOM,0,0);
-            toast.show();
+            CustomerToast.getInstance(context,result,Toast.LENGTH_SHORT).show();
             if(result.equals("购买成功！")){
                 EventBean eventBean = new EventBean();
                 eventBean.setPetVO(pet);
