@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.CustomerToast;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.Crop;
@@ -70,6 +71,16 @@ public class PlantItemPopUp extends PopupWindow {
         okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
         showMessage();
+    }
+
+    @Override
+    public void showAtLocation(View parent, int gravity, int x, int y) {
+        setFocusable(false);
+        super.showAtLocation(parent, gravity, x, y);
+        final View view = getContentView();
+        FullScreen.hideBottomUIMenu(view);
+        setFocusable(true);
+        update();
     }
 
     /**

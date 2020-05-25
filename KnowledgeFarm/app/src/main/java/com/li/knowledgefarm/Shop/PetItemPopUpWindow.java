@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.CustomerToast;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
@@ -126,6 +127,16 @@ public class PetItemPopUpWindow extends PopupWindow {
             pet_name.setText(pet.getName()+"(已拥有)");
             buy_pet.setClickable(false);
         }
+    }
+
+    @Override
+    public void showAtLocation(View parent, int gravity, int x, int y) {
+        setFocusable(false);
+        super.showAtLocation(parent, gravity, x, y);
+        final View view = getContentView();
+        FullScreen.hideBottomUIMenu(view);
+        setFocusable(true);
+        update();
     }
 
     /**
