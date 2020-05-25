@@ -171,6 +171,13 @@ public class LoginActivity extends AppCompatActivity {
 //            });
     }
 
+    @Override
+    protected void onResume() {
+        setDensityLand.setDensity(getApplication());
+        setDensityLand.setOrientation(this, AppUtil.HEIGHT);
+        super.onResume();
+    }
+
     /**
      * 初始化视图
      */
