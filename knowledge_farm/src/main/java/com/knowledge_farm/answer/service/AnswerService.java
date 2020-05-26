@@ -37,27 +37,27 @@ public class AnswerService {
         switch (grade){
             case 1:
                 Collections.shuffle(questions);
-                questions.subList(0,12);
+                questions = questions.subList(0,12);
                 questions.addAll(getQuestion3OneUpMath().subList(0,5));
                 break;
             case 2:
                 Collections.shuffle(questions);
-                questions.subList(0,12);
+                questions = questions.subList(0,12);
                 questions.addAll(getQuestion3OneDownMath().subList(0,5));
                 break;
             case 5:
                 Collections.shuffle(questions);
-                questions.subList(0,12);
+                questions = questions.subList(0,12);
                 questions.addAll(get23Multiple().subList(0,5));
                 break;
             case 6:
                 Collections.shuffle(questions);
-                questions.subList(0,12);
+                questions = questions.subList(0,12);
                 questions.addAll(doubleMutiple().subList(0,5));
                 break;
             default:
                 Collections.shuffle(questions);
-                questions.subList(0,17);
+                questions = questions.subList(0,17);
         }
         return questions;
     }

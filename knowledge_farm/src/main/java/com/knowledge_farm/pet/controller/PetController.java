@@ -112,5 +112,27 @@ public class PetController {
         }
         return Result.FALSE;
     }
+    @RequestMapping("/test")
+    public String fightResult2(HttpServletRequest request){
+        try {
+            String editResult = this.petService.updateData(109, 1);
+            request.setAttribute("PetFunction", new Integer[]{109});
+            return editResult;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.FALSE;
+    }
+    @RequestMapping("/test2")
+    public String fightResult3(HttpServletRequest request){
+        try {
+            String editResult = this.petService.updateData(109, 0);
+            request.setAttribute("PetFunction", new Integer[]{109});
+            return editResult;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.FALSE;
+    }
 
 }
