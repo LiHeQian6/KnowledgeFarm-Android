@@ -459,6 +459,8 @@ public class PkActivity extends AppCompatActivity{
         if (user_pet.getNowLife()>0&&friend_pet.getNowLife()<=0){
             sendResult(true);
         }
+        if (user_pet.getNowLife()<=0&&friend_pet.getNowLife()>0)
+            sendResult(false);
         pkTimeLimit.cancel(true);
     }
 

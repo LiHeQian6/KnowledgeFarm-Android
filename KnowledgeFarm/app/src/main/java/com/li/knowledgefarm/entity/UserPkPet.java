@@ -158,7 +158,7 @@ public class UserPkPet implements Comparable<UserPkPet>, Serializable {
             right=true;
         }
         double i = (100000 - intelligence) / 100000.0;
-        useTime= (long) (new Random().nextDouble() * 5000+ i*10000);
+        useTime= (long) (new Random().nextDouble() * 5000+ i*5000);
     }
 
     /**
@@ -170,30 +170,30 @@ public class UserPkPet implements Comparable<UserPkPet>, Serializable {
      **/
     public int pk(UserPkPet pet){
         pet.autoAnswer();
-        int nowLife = pet.getNowLife() - intelligence;
+        int nowLife = pet.getNowLife() - intelligence/5;
         if (right&&!pet.isRight()){
             if (nowLife<0){
                 nowLife=0;
             }
             pet.setNowLife(nowLife); 
-            return intelligence;
+            return intelligence/5;
         }else if(!right&&pet.isRight()){
-            this.nowLife = this.nowLife -pet.getIntelligence();
+            this.nowLife = this.nowLife -pet.getIntelligence()/5;
             if (this.nowLife <0)
                 this.nowLife =0;
-            return -pet.getIntelligence();
+            return -pet.getIntelligence()/5;
         }else if(right&&pet.isRight()){
             if (useTime<pet.getUseTime()){
                 if (nowLife<0){
                     nowLife=0;
                 }
                 pet.setNowLife(nowLife);
-                return intelligence;
+                return intelligence/5;
             }else {
-                this.nowLife = this.nowLife -pet.getIntelligence();
+                this.nowLife = this.nowLife -pet.getIntelligence()/5;
                 if (this.nowLife <0)
                     this.nowLife =0;
-                return -pet.getIntelligence();
+                return -pet.getIntelligence()/5;
             }
         }
         return 0;
