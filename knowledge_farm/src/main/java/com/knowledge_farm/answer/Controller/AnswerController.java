@@ -44,7 +44,14 @@ public class AnswerController {
 
         return list;
     }
-    
+    @ResponseBody
+    @RequestMapping("/fightQuestions1/{grade}")
+    public List petFightingQuestions1(@PathVariable int grade){
+        List<Question> list = answerService.findByGrade(grade);
+
+        return list;
+    }
+
     /**
      * @description: 一年级数学上册
      * @author :景光赞
