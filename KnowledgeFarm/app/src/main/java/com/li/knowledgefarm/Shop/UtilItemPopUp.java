@@ -125,6 +125,7 @@ public class UtilItemPopUp extends PopupWindow {
         Glide.with(context).load(petUtil.getImg()).apply(requestOptions).into(util_image);
         util_name.setText(petUtil.getName());
         util_price.setText("价格："+petUtil.getPrice()+"");
+        util_Number.setText("1");
         switch (petUtil.getPetUtilType().getId()){
             case 1:
                 util_type.setText("作用：恢复生命值"+petUtil.getValue()+"点");
