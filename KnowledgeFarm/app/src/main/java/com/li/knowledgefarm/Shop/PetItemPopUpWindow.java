@@ -20,6 +20,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
@@ -50,7 +52,6 @@ public class PetItemPopUpWindow extends PopupWindow {
     private Button cancel;//取消按钮
     private Button buy_pet;//购买按钮
     private OkHttpClient okHttpClient;
-    private Toast toast;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -72,9 +73,7 @@ public class PetItemPopUpWindow extends PopupWindow {
                         break;
                 }
             }
-            toast = Toast.makeText(context,result,Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.BOTTOM,0,0);
-            toast.show();
+            CustomerToast.getInstance(context,result,Toast.LENGTH_SHORT).show();
             if(result.equals("购买成功！")){
                 EventBean eventBean = new EventBean();
                 eventBean.setPetVO(pet);
@@ -84,11 +83,11 @@ public class PetItemPopUpWindow extends PopupWindow {
         }
     };
 
-    public PetItemPopUpWindow(Context context, PetVO pet) {
+    public PetItemPopUpWindow(Context context) {
         super(context);
-        this.context = context;
-        this.pet = pet;
+        this.context = context.getApplicationContext();
         this.setOutsideTouchable(false);
+        this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
         View contentView = LayoutInflater.from(context).inflate(R.layout.pet_pop_up,
@@ -96,7 +95,6 @@ public class PetItemPopUpWindow extends PopupWindow {
         this.setContentView(contentView);
         okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
-        showMessage();
     }
 
     @Override
@@ -119,14 +117,29 @@ public class PetItemPopUpWindow extends PopupWindow {
         Glide.with(context).load(pet.getImg1()).apply(requestOptions).into(pet_image);
         pet_name.setText(pet.getName());
         pet_price.setText("宠物价格:"+pet.getPrice()+"金币");
-        pet_description.setText("    "+pet.getDescription());
+        pet_description.setText("\u3000\u3000"+pet.getDescription());
         pet_intelligence.setText((int)(pet.getIntelligence()*0.7)+"-"+pet.getIntelligence());
         pet_life.setText((int)(pet.getLife()*0.7)+"-"+pet.getLife());
         physical_value.setText(pet.getPhysical()+"");
         if(pet.getOwn() != 0){
-            buy_pet.setText("已拥有");
+            pet_name.setText(pet.getName()+"(已拥有)");
             buy_pet.setClickable(false);
         }
+    }
+
+    @Override
+    public void showAtLocation(View parent, int gravity, int x, int y) {
+        showMessage();
+        setFocusable(false);
+        super.showAtLocation(parent, gravity, x, y);
+        final View view = getContentView();
+        FullScreen.hideBottomUIMenu(view);
+        setFocusable(true);
+        update();
+    }
+
+    public void setPet(PetVO pet) {
+        this.pet = pet;
     }
 
     /**

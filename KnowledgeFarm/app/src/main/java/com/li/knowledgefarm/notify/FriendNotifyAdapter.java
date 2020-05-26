@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.FriendsPage;
 import com.li.knowledgefarm.entity.Notification;
@@ -55,14 +56,11 @@ public class FriendNotifyAdapter extends BaseAdapter {
                         tip = "已拒绝";
                         break;
                 }
-                toast = Toast.makeText(context,tip,Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM,0,0);
+                CustomerToast.getInstance(context,tip,Toast.LENGTH_SHORT).show();
                 notifyDataSetChanged();
             }else {
-                toast = Toast.makeText(context,tip,Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM,0,0);
+                CustomerToast.getInstance(context,tip,Toast.LENGTH_SHORT).show();
             }
-            toast.show();
         }
     };
     private OkHttpClient okHttpClient;

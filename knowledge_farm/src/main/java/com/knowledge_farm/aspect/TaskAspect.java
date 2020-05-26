@@ -50,33 +50,34 @@ public class TaskAspect {
         }
         User user = userService.findUserById((Integer) args[0]);
         Task task = user.getTask();
+        System.out.println(user.getAccount());
 
         Integer value = 0;
-        if(result instanceof String){
-            if(result == Result.FALSE){
-                value = -1;
-            }
+        if(result instanceof String && result == Result.FALSE){
+            value = -1;
         }else if(result instanceof Integer){
             value = (Integer) result;
         }
-        if (description.equals("water")&&task.getWater()==0 && -1!= value){
-            taskService.finishTask(user,"water");
-            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("fertilize")&&task.getFertilize()==0 && Result.TRUE.equals(result)){
-            taskService.finishTask(user,"fertilize");
-            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("crop")&&task.getCrop()==0&& -1!= value){
-            taskService.finishTask(user,"crop");
-            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("harvest")&&task.getHarvest()==0 && (Result.TRUE.equals(result)||Result.UP.equals(result))){
-            taskService.finishTask(user,"harvest");
-            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("help_water")&&task.getHelpWater()==0 && -1!= value){
-            taskService.finishTask(user,"help_water");
-            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
-        }else if(description.equals("help_fertilize")&&task.getHelpFertilize()==0 && Result.TRUE.equals(result)){
-            taskService.finishTask(user,"help_fertilize");
-            jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
+        if(value != -1) {
+            if (description.equals("water") && task.getWater() == 0) {
+                taskService.finishTask(user, "water");
+                jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
+            } else if (description.equals("fertilize") && task.getFertilize() == 0) {
+                taskService.finishTask(user, "fertilize");
+                jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
+            } else if (description.equals("crop") && task.getCrop() == 0) {
+                taskService.finishTask(user, "crop");
+                jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
+            } else if (description.equals("harvest") && task.getHarvest() == 0) {
+                taskService.finishTask(user, "harvest");
+                jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
+            } else if (description.equals("help_water") && task.getHelpWater() == 0) {
+                taskService.finishTask(user, "help_water");
+                jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
+            } else if (description.equals("help_fertilize") && task.getHelpFertilize() == 0) {
+                taskService.finishTask(user, "help_fertilize");
+                jpushService.sendCustomPush("task", "", new HashMap<>(), user.getAccount());
+            }
         }
         System.out.println("*****Task End*****");
         return result;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@drawable/bagbackground"
+    android:background="@drawable/friendbackground"
     android:layout_width="match_parent"
     android:padding="20dp"
     android:layout_height="match_parent">
@@ -29,7 +29,8 @@
             android:id="@+id/search"
             android:textAlignment="center"
             android:background="@drawable/buttonbackground"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
     <RadioGroup
         android:layout_width="wrap_content"
@@ -65,16 +66,18 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:layout_width="30dp"
-                android:src="@drawable/per"
+                android:src="@drawable/pre"
                 android:id="@+id/pre"
                 android:layout_height="30dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:text="1/16"
                 android:id="@+id/now"
                 android:gravity="center"
-                android:textSize="30sp"
-                android:layout_height="wrap_content"/>
+                android:autoSizeMaxTextSize="25dp"
+                android:maxLines="1"
+                android:autoSizeTextType="uniform"
+                android:layout_height="match_parent"/>
             <ImageView
                 android:layout_width="30dp"
                 android:id="@+id/next"

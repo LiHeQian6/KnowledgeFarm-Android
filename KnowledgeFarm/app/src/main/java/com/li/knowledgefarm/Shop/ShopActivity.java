@@ -23,11 +23,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.DisplayUtils;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.GuideHelper;
 import com.li.knowledgefarm.Util.GuideHelper.TipData;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.entity.Crop;
 import com.li.knowledgefarm.entity.PetUtil;
 import com.li.knowledgefarm.entity.PetVO;
 import com.li.knowledgefarm.entity.ShopItemBean;
@@ -55,7 +57,7 @@ public class ShopActivity extends AppCompatActivity {
 
     private OkHttpClient okHttpClient;
     private Gson gson;
-    private List<ShopItemBean> shopList;
+    private List<Crop> shopList;
     private List<PetVO> pet_list;
     private List<PetUtil> petUtils;
     private Map<String,List> itemList;
@@ -85,7 +87,7 @@ public class ShopActivity extends AppCompatActivity {
                     case 1:
                         String message = (String) msg.obj;
                         if (!message.equals("") && msg.arg1 == 200) {
-                            Type type = new TypeToken<List<ShopItemBean>>() {
+                            Type type = new TypeToken<List<Crop>>() {
                             }
                                     .getType();
                             shopList = gson.fromJson(message, type);
@@ -94,7 +96,7 @@ public class ShopActivity extends AppCompatActivity {
                                 setViewPagerAdapter();
                             }
                         } else {
-                            Toast.makeText(ShopActivity.this, "网络出了点问题", Toast.LENGTH_SHORT);
+                            CustomerToast.getInstance(ShopActivity.this,"网络出了点问题", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 2:
@@ -108,7 +110,7 @@ public class ShopActivity extends AppCompatActivity {
                                 setViewPagerAdapter();
                             }
                         } else {
-                            Toast.makeText(ShopActivity.this, "网络出了点问题", Toast.LENGTH_SHORT);
+                            CustomerToast.getInstance(ShopActivity.this,"网络出了点问题",Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 3:
@@ -192,7 +194,6 @@ public class ShopActivity extends AppCompatActivity {
         shopList = new ArrayList<>();
         pet_list = new ArrayList<>();
         petUtils = new ArrayList<>();
-//        gridView = findViewById(R.id.gird_view);
         tabLayout = findViewById(R.id.tab_layout);
         imageView = findViewById(R.id.goBack);
         viewPager = findViewById(R.id.pager_view);

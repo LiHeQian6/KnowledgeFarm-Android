@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.SubjectInterface;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FromJson;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -75,11 +76,7 @@ public class GetMathQuestion extends SubjectInterface {
                 super.run();
                 if (UserUtil.getUser().getMathRewardCount() <= 0) {
                     Looper.prepare();
-                    if(toast == null) {
-                        toast = Toast.makeText(context, "今天的任务做完了哦", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM,0,0);
-                        toast.show();
-                    }
+                    CustomerToast.getInstance(context, "今天的任务做完了哦", Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 } else {
                     Request request = null;
@@ -150,10 +147,10 @@ public class GetMathQuestion extends SubjectInterface {
                         intent.putExtra("question",(Serializable) list);
                         context.startActivity(intent);
                     }else{
-                        Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
                     }
                 }else{
-                    Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
                 }
             }
         };

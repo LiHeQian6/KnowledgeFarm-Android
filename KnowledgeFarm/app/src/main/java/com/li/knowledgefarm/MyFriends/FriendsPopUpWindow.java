@@ -36,6 +36,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -129,7 +130,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                             searchSelectedItem = 0;
                             getFriendsInfo(1);
                         }else{
-                            Toast.makeText(context,"获取好友列表失败",Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(context,"获取好友列表失败",Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case R.id.all:
@@ -139,7 +140,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                             searchSelectedItem = 1;
                             getAllInfo(1);
                         }else{
-                            Toast.makeText(context,"获取好友列表失败",Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(context,"获取好友列表失败",Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }
@@ -184,11 +185,14 @@ public class FriendsPopUpWindow extends PopupWindow {
         friendsListView.setLayoutParams(params_listview);
         friendsListView.setDividerHeight((int)(displayHeight*0.015));
 
-        LinearLayout.LayoutParams params_pre = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
-        pre.setLayoutParams(params_pre);
-        next.setLayoutParams(params_pre);
-        now.setLayoutParams(params_pre);
-        now.setTextSize((int)(displayHeight*0.02));
+        //页码显示大小适配
+        LinearLayout.LayoutParams params_now = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayWidth*0.1));
+        now.setLayoutParams(params_now);
+
+        //上一页下一页按钮适配
+        LinearLayout.LayoutParams nextAndPre = new LinearLayout.LayoutParams((int)(displayWidth*0.06),(int)(displayHeight*0.06));
+        next.setLayoutParams(nextAndPre);
+        pre.setLayoutParams(nextAndPre);
     }
 
     private void getViews(View view) {
@@ -278,8 +282,7 @@ public class FriendsPopUpWindow extends PopupWindow {
                     friendsListView.setAdapter(customerAdapter);
                     customerAdapter.notifyDataSetChanged();
                 }else{
-                    Toast toast = Toast.makeText(context,"获取数据失败！",Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(context,"获取数据失败！",Toast.LENGTH_SHORT).show();
                 }
             }
         };

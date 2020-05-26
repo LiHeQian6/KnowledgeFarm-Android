@@ -29,8 +29,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -119,7 +119,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.change_nickname);
+        setContentView(R.layout.user_message);
         okHttpClient = OkHttpUtils.getInstance(this);
         FullScreen.NavigationBarStatusBar(SettingMessageActivity.this,true);
         getViews();
@@ -142,6 +142,13 @@ public class SettingMessageActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * @Description 展示用户信息
+     * @Author 孙建旺
+     * @Date 下午5:44 2020/05/24
+     * @Param []
+     * @return void
+     */
     private void ShowUserMessage(){
         user = UserUtil.getUser();
         RequestOptions requestOptions = new RequestOptions()
@@ -154,7 +161,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_account.setText("账号："+user.getAccount());
         user_nickName.setText("昵称："+user.getNickName());
         show_grade.setText(DoubleToString(user.getGrade()));
-        if(!("".equals(user.getEmail()))){
+        if(!(user.getEmail() == null || user.getEmail().equals(""))){
             user_Email.setText("已绑定"+user.getEmail());
             change_Email.setText("解绑");
         }else{
@@ -169,6 +176,13 @@ public class SettingMessageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @Description 注册监听器
+     * @Author 孙建旺
+     * @Date 下午5:45 2020/05/24
+     * @Param []
+     * @return void
+     */
     private void registListener(){
         my_message.setOnClickListener(new CustomerOnclickListener());
         system_setting.setOnClickListener(new CustomerOnclickListener());
@@ -231,6 +245,13 @@ public class SettingMessageActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * @Description 线程服务端返回处理
+     * @Author 孙建旺
+     * @Date 下午5:19 2020/05/24
+     * @Param []
+     * @return void
+     */
     private void resultHandler(){
         /** 线程服务端返回处理*/
         handler = new Handler(){
@@ -248,13 +269,13 @@ public class SettingMessageActivity extends AppCompatActivity {
                                 editor.putLong("start",new Date().getTime());
                                 editor.putInt("expires", Integer.parseInt(expires));
                                 editor.commit();
-                                Toast.makeText(getApplicationContext(),"绑定QQ成功",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"绑定QQ成功",Toast.LENGTH_SHORT).show();
                                 break;
                             case "false":
-                                Toast.makeText(getApplicationContext(),"绑定QQ失败",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"绑定QQ失败",Toast.LENGTH_SHORT).show();
                                 break;
                             case "already":
-                                Toast.makeText(getApplicationContext(),"该QQ号已被其他账号绑定",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"该QQ号已被其他账号绑定",Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         break;
@@ -267,10 +288,10 @@ public class SettingMessageActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.clear();
                                 editor.commit();
-                                Toast.makeText(getApplicationContext(),"解绑QQ成功",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"解绑QQ成功",Toast.LENGTH_SHORT).show();
                                 break;
                             case "false":
-                                Toast.makeText(getApplicationContext(),"解绑QQ失败",Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(getApplicationContext(),"解绑QQ失败",Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         break;
@@ -278,10 +299,10 @@ public class SettingMessageActivity extends AppCompatActivity {
                         String aString = (String)msg.obj;
                         if(aString.equals("false") || aString.equals("")){
                             Log.e("photo","上传头像失败1");
-                            Toast.makeText(getApplicationContext(),"头像上传失败", Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(getApplicationContext(),"头像上传失败", Toast.LENGTH_SHORT).show();
                         }else if(aString.equals("null")){
                             Log.e("photo","上传头像失败2");
-                            Toast.makeText(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
                         }else{
                             UserUtil.getUser().setPhoto(aString);
                             RequestOptions options = new RequestOptions();
@@ -292,7 +313,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                                     .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
                             Glide.with(getApplicationContext()).load(UserUtil.getUser().getPhoto()).apply(options).into(user_photo);
                             Log.e("photo","上传头像成功");
-                            Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 5: // 修改年级判断
@@ -302,9 +323,9 @@ public class SettingMessageActivity extends AppCompatActivity {
                             show_grade.setVisibility(View.VISIBLE);
                             show_grade.setText(DoubleToString(UserUtil.getUser().getGrade()));
                             select_grade.setVisibility(View.GONE);
-                            Toast.makeText(SettingMessageActivity.this,"年级修改成功",Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(SettingMessageActivity.this,"年级修改成功",Toast.LENGTH_SHORT).show();
                         }else{
-                            Toast.makeText(SettingMessageActivity.this,"年级修改失败",Toast.LENGTH_SHORT).show();
+                            CustomerToast.getInstance(SettingMessageActivity.this,"年级修改失败",Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }
@@ -590,8 +611,8 @@ public class SettingMessageActivity extends AppCompatActivity {
      */
     private void ShowIfDoPop(String type){
         ifDoPop = new IfDoPop(this,type);
-        ifDoPop.setHeight((int)(ds.heightPixels*0.7));
-        ifDoPop.setWidth((int)(ds.widthPixels*0.5));
+        ifDoPop.setHeight((int)(ds.heightPixels*0.55));
+        ifDoPop.setWidth((int)(ds.widthPixels*0.35));
         ifDoPop.showAtLocation(change_Email, Gravity.CENTER,0,0);
         ifDoPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override

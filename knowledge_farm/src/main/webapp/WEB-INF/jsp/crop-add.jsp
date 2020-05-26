@@ -68,6 +68,15 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
+                        <font color="red">*</font>描述
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="description" name="description" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
                         <font color="red">*</font>价格
                     </label>
                     <div class="layui-input-inline">

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 //import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 //import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 //import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.Md5Encode;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -102,15 +103,15 @@ public class LoginByAccountActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 4:
-                    Toast.makeText(getApplicationContext(),"账号或密码错误",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"账号或密码错误",Toast.LENGTH_SHORT).show();
                     recovery();
                     break;
                 case 6:
-                    Toast.makeText(getApplicationContext(),"账号不存在！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"账号不存在！",Toast.LENGTH_SHORT).show();
                     recovery();
                     break;
                 case 7:
-                    Toast.makeText(getApplicationContext(),"账号已失效",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"账号已失效",Toast.LENGTH_SHORT).show();
                     recovery();
                     break;
                 case 5:
@@ -208,7 +209,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                 accountStr = edtCount.getText().toString();
                 pwdStr = pwd.getText().toString();
                 if(accountStr.equals("")||pwdStr.equals("")){
-                    Toast.makeText(getApplicationContext(),"账号或密码为空！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"账号或密码为空！",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 // 计算出控件的高与宽
@@ -233,7 +234,7 @@ public class LoginByAccountActivity extends AppCompatActivity {
                             public void run() {
                                 if(!isConnByHttp()){
                                     Looper.prepare();
-                                    Toast.makeText(getApplicationContext(),"未连接服务器",Toast.LENGTH_SHORT).show();
+                                    CustomerToast.getInstance(getApplicationContext(),"未连接服务器",Toast.LENGTH_SHORT).show();
                                     Message message = new Message();
                                     message.what = 8;
                                     handler.sendMessage(message);

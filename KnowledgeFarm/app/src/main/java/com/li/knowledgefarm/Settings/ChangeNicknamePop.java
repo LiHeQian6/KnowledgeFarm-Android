@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -45,12 +46,10 @@ public class ChangeNicknamePop extends PopupWindow {
             super.handleMessage(msg);
             if(msg.obj.equals("true") && msg.what == 200){
                 UserUtil.getUser().setNickName(new_nickname.getText().toString().trim());
-                Toast toast = Toast.makeText(context,"修改成功！",Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM,0,0);
-                toast.show();
+                CustomerToast.getInstance(context,"修改成功！",Toast.LENGTH_SHORT).show();
                 dismiss();
             }else{
-                Toast.makeText(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
+                CustomerToast.getInstance(context,"网络出了点问题",Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -80,7 +79,7 @@ public class ChangeNicknamePop extends PopupWindow {
     private void save(){
         final String nickName = new_nickname.getText().toString().trim();
         if(new_nickname.getText().toString().trim().equals("")){
-            Toast.makeText(context,"您还没有填写昵称呢！",Toast.LENGTH_SHORT).show();
+            CustomerToast.getInstance(context,"您还没有填写昵称呢！",Toast.LENGTH_SHORT).show();
         }else{
             new Thread(){
                 @Override

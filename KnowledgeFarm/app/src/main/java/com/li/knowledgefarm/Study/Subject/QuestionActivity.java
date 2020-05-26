@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Interface.StudyInterface;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
@@ -204,12 +205,7 @@ public class QuestionActivity extends AppCompatActivity implements StudyInterfac
                         if(QuestionUtil.TRUE_ANSWER_COUNT == datalist.size())
                             questionUtil.getWaterAndFertilizer();
                         else {
-                            if(toast == null){
-                                toast = Toast.makeText(QuestionActivity.this,"你还没有答完哦！",Toast.LENGTH_SHORT);
-                                toast.setGravity(Gravity.BOTTOM,0,0);
-                                toast.show();
-                                toast = null;
-                            }
+                            CustomerToast.getInstance(QuestionActivity.this,"你还没有答完哦！",Toast.LENGTH_SHORT).show();
                         }
                     }
                     switch (datalist.get(QuestionUtil.POSITION).getQuestionType().getId()){

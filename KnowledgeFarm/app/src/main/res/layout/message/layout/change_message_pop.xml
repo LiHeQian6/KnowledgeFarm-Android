@@ -21,14 +21,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="5"/>
+                android:layout_weight="7"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@drawable/logindialogbac">
+                android:background="@drawable/diaback">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -39,9 +39,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="修改邮箱"
-                        android:textSize="30dp"
-                        android:id="@+id/show_title"
+                        android:text=""
+                        android:textSize="20dp"
                         android:textColor="@color/ShopTextColor"/>
                 </LinearLayout>
                 <LinearLayout
@@ -52,13 +51,21 @@
                     android:id="@+id/input_li"
                     android:visibility="visible"
                     android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="修改邮箱"
+                        android:textSize="30dp"
+                        android:id="@+id/show_title"
+                        android:textColor="@color/ShopTextColor"/>
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:layout_marginTop="15dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginRight="60dp"
                         android:gravity="center_horizontal"
                         android:imeOptions="flagNoExtractUi"
                         android:id="@+id/new_message"
@@ -66,7 +73,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
                         android:visibility="visible"
                         android:id="@+id/getVertical_li"
                         android:gravity="center">
@@ -99,21 +105,18 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal">
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="10dp">
                         <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/buy"
-                            android:text="取消"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/diacancel"
                             android:id="@+id/cancel_btn"/>
                         <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/buy"
-                            android:text="提交"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="40dp"
+                            android:background="@drawable/diatuichu"
                             android:id="@+id/commit_btn"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -121,7 +124,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="5"/>
+                android:layout_weight="7"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

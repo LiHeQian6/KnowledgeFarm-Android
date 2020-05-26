@@ -8,13 +8,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="4"/>
-    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/shopitem"
+        android:background="@drawable/diaback"
         android:orientation="vertical"
         android:layout_weight="1"
         android:gravity="center">
@@ -27,10 +23,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="道具名称"
+                android:text=""
                 android:textSize="25dp"
-                android:textColor="@color/ShopTextColor"
-                android:id="@+id/util_name"/>
+                android:textColor="@color/ShopTextColor" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,18 +34,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginLeft="40dp"
+                android:orientation="vertical">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="15dp"
                     android:id="@+id/this_util_image"
-                    android:src="@drawable/meat"/>
+                    android:src="@drawable/meat"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="道具名称"
+                    android:textSize="25dp"
+                    android:textColor="@color/ShopTextColor"
+                    android:id="@+id/util_name"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_marginRight="40dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -59,33 +65,45 @@
                     android:orientation="vertical"
                     android:layout_weight="2">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="价格"
-                        android:textSize="17dp"
+                        android:maxHeight="20dp"
+                        android:minHeight="20dp"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="20dp"
+                        android:autoSizeTextType="uniform"
                         android:id="@+id/this_util_price"
                         android:layout_marginTop="6dp"
                         android:textColor="@color/ShopTextColor"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="类型："
                         android:layout_marginTop="6dp"
                         android:id="@+id/this_util_type"
                         android:textColor="@color/ShopTextColor"
-                        android:textSize="17dp"/>
+                        android:maxHeight="20dp"
+                        android:minHeight="20dp"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="20dp"
+                        android:autoSizeTextType="uniform"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="描述:"
-                        android:textSize="17dp"
+                        android:maxHeight="20dp"
+                        android:minHeight="20dp"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="20dp"
+                        android:autoSizeTextType="uniform"
                         android:layout_marginTop="6dp"
                         android:textColor="@color/ShopTextColor"/>
                     <ScrollView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="描述"
                             android:textSize="17dp"
@@ -140,27 +158,19 @@
 
             <Button
                 android:id="@+id/util_btnCancel"
-                android:layout_width="100dp"
-                android:textSize="22sp"
-                android:paddingBottom="10dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/buttonbackground"
-                android:text="取消"/>
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="-10dp"
+                android:background="@drawable/diacancel" />
 
             <Button
                 android:id="@+id/buy_util"
-                android:layout_width="100dp"
-                android:layout_marginLeft="10dp"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:textSize="22sp"
-                android:background="@drawable/buttonbackground"
-                android:text="购买"/>
+                android:layout_width="60dp"
+                android:layout_marginLeft="30dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="-10dp"
+                android:background="@drawable/diatuichu" />
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="4"/>
 </LinearLayout>

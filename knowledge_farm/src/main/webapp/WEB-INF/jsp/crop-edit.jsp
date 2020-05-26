@@ -50,6 +50,7 @@
             <!-- 右侧内容框架，更改从这里开始 -->
             <form id="form1" class="layui-form" enctype="multipart/form-data" action="javascript:updateCrop()" method="post">
             	<input type="hidden" name="id" value="${crop.id}"/>
+                <input type="hidden" name="exist" value="${crop.exist}"/>
             	<input type="hidden" name="img1" value="${crop.img1}"/>
             	<input type="hidden" name="img2" value="${crop.img2}"/>
             	<input type="hidden" name="img3" value="${crop.img3}"/>
@@ -61,6 +62,15 @@
                     <div class="layui-input-inline">
                         <input type="text" id="name" name="name" required="" lay-verify="pass"
                         autocomplete="off" class="layui-input" value="${crop.name}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>描述
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="description" name="description" required="" lay-verify="pass"
+                               autocomplete="off" class="layui-input" value="${crop.description}">
                     </div>
                 </div>
                 <div class="layui-form-item">

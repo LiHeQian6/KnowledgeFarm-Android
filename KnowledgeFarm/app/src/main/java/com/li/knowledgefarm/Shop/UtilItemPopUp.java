@@ -24,6 +24,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.PetUtil;
 
@@ -80,11 +81,11 @@ public class UtilItemPopUp extends PopupWindow {
     };
     private OkHttpClient okHttpClient;
 
-    public UtilItemPopUp(Context context, PetUtil petUtil) {
+    public UtilItemPopUp(Context context) {
         super(context);
-        this.context = context;
-        this.petUtil = petUtil;
+        this.context = context.getApplicationContext();
         this.setOutsideTouchable(false);
+        this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setAnimationStyle(R.style.notify_pop_animation);
         View contentView = LayoutInflater.from(context).inflate(R.layout.util_pop_up,
@@ -92,8 +93,22 @@ public class UtilItemPopUp extends PopupWindow {
         this.setContentView(contentView);
         okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);
-        showMessage();
         setShopNumber();
+    }
+
+    @Override
+    public void showAtLocation(View parent, int gravity, int x, int y) {
+        showMessage();
+        setFocusable(false);
+        super.showAtLocation(parent, gravity, x, y);
+        final View view = getContentView();
+        FullScreen.hideBottomUIMenu(view);
+        setFocusable(true);
+        update();
+    }
+
+    public void setPetUtil(PetUtil petUtil) {
+        this.petUtil = petUtil;
     }
 
     /**
@@ -118,7 +133,7 @@ public class UtilItemPopUp extends PopupWindow {
                 util_type.setText("作用：恢复体力"+petUtil.getValue()+"点");
                 break;
         }
-        util_description.setText("    "+petUtil.getDescription());
+        util_description.setText("\u3000\u3000"+petUtil.getDescription());
     }
 
     /**

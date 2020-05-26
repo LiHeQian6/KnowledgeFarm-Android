@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.entity.Crop;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.ShopItemBean;
 
@@ -24,10 +25,10 @@ import java.util.List;
 public class ShopItemAdapter extends BaseAdapter {
 
     private Context context;
-    private List<ShopItemBean> list;
+    private List<Crop> list;
     private int resource;
 
-    public ShopItemAdapter(Context context, List<ShopItemBean> list, int resource) {
+    public ShopItemAdapter(Context context, List<Crop> list, int resource) {
         this.context = context;
         this.list = list;
         this.resource = resource;
@@ -65,9 +66,8 @@ public class ShopItemAdapter extends BaseAdapter {
                     .placeholder(R.drawable.loading)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
             Glide.with(context).load(list.get(position).getImg4()).apply(requestOptions).into(holder.imageView);
-            ShopItemBean bean = list.get(position);
-            holder.name.setText(bean.getName());
-            holder.price.setText(bean.getPrice() + "金币");
+            holder.name.setText(list.get(position).getName());
+            holder.price.setText(list.get(position).getPrice() + "金币");
         if(!MyFragment.mIsScroll) {
             notifyDataSetChanged();
         }
@@ -75,8 +75,8 @@ public class ShopItemAdapter extends BaseAdapter {
     }
 
     private class ViewHolder{
-        TextView name;
-        ImageView imageView;
-        TextView price;
+        private TextView name;
+        private ImageView imageView;
+        private TextView price;
     }
 }

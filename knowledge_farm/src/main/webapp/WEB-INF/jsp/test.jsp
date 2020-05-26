@@ -9,30 +9,30 @@
 <html>
 <head>
     <title>Title</title>
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.jquery.min.js"></script>
+
+    <script>
+        function test(){
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', "/admin/test", true);
+            xhr.responseType = "blob";
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    var blob = this.response;
+                    var img = document.getElementById("testCodeImg");
+                    img.onload = function(e) {
+                        window.URL.revokeObjectURL(img.src);
+                    };
+                    img.src = window.URL.createObjectURL(blob);
+                }
+            }
+            xhr.send();
+        }
+    </script>
 </head>
 <body>
-    ===============<br>
-
-    <a href="/admin/question/exportExcelModel">导出Excel表头</a><br>
-
-    ===============<br>
-
-    <a href="/admin/question/exportExcelData">导出Excel数据</a><br>
-
-    ===============<br>
-
-    <form action="/admin/question/importExcelToEdit" method="post" enctype="multipart/form-data">
-        <p>Excel批量修改</p>
-        <input type="file" name="file">
-        <p><input type="submit" value="提交"></p>
-    </form>
-
-    ===============<br>
-
-    <form action="/admin/question/importExcelToAdd" method="post" enctype="multipart/form-data">
-        <p>Excel批量添加</p>
-        <input type="file" name="file">
-        <p><input type="submit" value="提交"></p>
-    </form>
+<div id="testCodeImgDiv" onclick="javascript:test()"><img id="testCodeImg" src="/admin/test"></div>
 </body>
 </html>

@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 
@@ -82,31 +83,31 @@ public class FindPassword extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 5:
-                    Toast.makeText(getApplicationContext(),"验证码已发送，请在邮箱查收",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"验证码已发送，请在邮箱查收",Toast.LENGTH_SHORT).show();
                     identyCode = (String) msg.obj;
                     availableCode();
                     startCode();
                     break;
                 case 6:
-                    Toast.makeText(getApplicationContext(),"未绑定邮箱！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"未绑定邮箱！",Toast.LENGTH_SHORT).show();
                     break;
                 case 7:
-                    Toast.makeText(getApplicationContext(),"邮箱错误！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"邮箱错误！",Toast.LENGTH_SHORT).show();
                     break;
                 case 4:
-                    Toast.makeText(getApplicationContext(),"账号不存在！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"账号不存在！",Toast.LENGTH_SHORT).show();
                     break;
                 case 8:
-                    Toast.makeText(getApplicationContext(),"密码修改成功！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"密码修改成功！",Toast.LENGTH_SHORT).show();
                     Intent intentToAccountLogin = new Intent(FindPassword.this,LoginByAccountActivity.class);
                     startActivity(intentToAccountLogin);
                     finish();
                     break;
                 case 9:
-                    Toast.makeText(getApplicationContext(),"密码修改失败！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"密码修改失败！",Toast.LENGTH_SHORT).show();
                     break;
                 case 10:
-                    Toast.makeText(getApplicationContext(),"发送失败！",Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplicationContext(),"发送失败！",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -214,10 +215,10 @@ public class FindPassword extends AppCompatActivity {
             switch (view.getId()){
                 case R.id.getCode:
                     if(account.equals("")||email.equals("")){
-                        Toast.makeText(getApplicationContext(),"账号或邮箱为空！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"账号或邮箱为空！",Toast.LENGTH_SHORT).show();
                         return;
                     }else if(!isEmail(email)){
-                        Toast.makeText(getApplicationContext(),"邮箱格式输入错误！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"邮箱格式输入错误！",Toast.LENGTH_SHORT).show();
                         return;
                     }
                     getCodeFromServer(getResources().getString(R.string.URL)+"/user/sendTestCodePassword");
@@ -225,28 +226,28 @@ public class FindPassword extends AppCompatActivity {
                     break;
                 case R.id.btnSubmit:
                     if(account.equals("")||email.equals("")||code.equals("")){
-                        Toast.makeText(getApplicationContext(),"请完善所有信息！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"请完善所有信息！",Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if(!identyCode.equals("")&&code.equals(identyCode)){
                         linearCode.setVisibility(View.GONE);
                         linearPwd.setVisibility(View.VISIBLE);
                     }else if (!code.equals(identyCode)&&!identyCode.equals("")){
-                        Toast.makeText(getApplicationContext(),"验证码输入错误",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"验证码输入错误",Toast.LENGTH_SHORT).show();
                     }else if(identyCode.equals("")){
-                        Toast.makeText(getApplicationContext(),"验证码已失效",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"验证码已失效",Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.btnFindPwd:
                     if(newPwd.equals("")){
-                        Toast.makeText(getApplicationContext(),"密码输入为空！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"密码输入为空！",Toast.LENGTH_SHORT).show();
                     }else if(!newPwd.equals(configPwd)){
-                        Toast.makeText(getApplicationContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"密码输入不一致！",Toast.LENGTH_SHORT).show();
                     }else if(newPwd.length()<8||newPwd.length()>14){
-                        Toast.makeText(getApplicationContext(),"请输入8-14位字符",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"请输入8-14位字符",Toast.LENGTH_SHORT).show();
                         return;
                     }else if(newPwd.contains(" ")){
-                        Toast.makeText(getApplicationContext(),"含有非法字符",Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(getApplicationContext(),"含有非法字符",Toast.LENGTH_SHORT).show();
                         return;
                     }else {
                         resetPwdToServer(getResources().getString(R.string.URL)+"/user/resetUserPassword");

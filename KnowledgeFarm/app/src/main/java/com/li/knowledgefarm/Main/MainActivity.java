@@ -57,6 +57,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.DisplayUtils;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.GuideHelper;
@@ -167,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
+        FullScreen.NavigationBarStatusBar(MainActivity.this,true);
     }
 
     @Override
@@ -184,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 //        // 设置action
 //        intent.setAction(action);
 //        startService(intent);
+        FullScreen.NavigationBarStatusBar(MainActivity.this,true);
         getUserInfo();
         showUserInfo();
         haveNewNotifications();
@@ -240,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     showUserInfo();
                 } else {
-                    Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -270,7 +273,9 @@ public class MainActivity extends AppCompatActivity {
         experienceValue.setText("" + UserUtil.getUser().getExperience() + "/" + levelExperience[l]);
         List<UserPetHouse> petHouses = UserUtil.getUser().getPetHouses();
         if (petHouses.size()!=0) {
-            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
+            UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+            String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
+            Glide.with(this).load(url).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
         }else
             Glide.with(this).load(R.drawable.dog).into(dog);
     }
@@ -467,9 +472,9 @@ public class MainActivity extends AppCompatActivity {
                 String messages = (String) msg.obj;
                 if (!messages.equals("Fail")) {
                     if (messages.equals("false")) {
-                        Toast.makeText(MainActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(MainActivity.this, option == 0 ? "申请失败！" : "删除失败！", Toast.LENGTH_SHORT).show();
                     }else {
-                        Toast.makeText(MainActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
+                        CustomerToast.getInstance(MainActivity.this, option == 0 ? "申请成功！" : "删除成功！", Toast.LENGTH_SHORT).show();
                         if (option == 1){
                             List<User> list = friendsPopUpWindow.friendsPage.getList();
                             for (int i = 0; i < list.size(); i++) {
@@ -482,8 +487,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -564,8 +568,7 @@ public class MainActivity extends AppCompatActivity {
                     cropList = gson.fromJson(messages, type);
                     showLand();
                 } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -717,7 +720,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (selected == 0) {
                                         selectedPlant = finalI;
                                         if (status == 1) {
-                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            CustomerToast.getInstance(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                             if (finalCrop.getStatus() == 0) {
                                                 land.setImageResource(R.drawable.land_gan);
                                             } else
@@ -729,7 +732,7 @@ public class MainActivity extends AppCompatActivity {
                                     } else if (selected == -1) {
                                         selectedPlant = finalI;
                                         if (status == 1) {
-                                            Toast.makeText(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
+                                            CustomerToast.getInstance(MainActivity.this, "植物已经成熟哦！", Toast.LENGTH_SHORT).show();
                                             if (finalCrop.getStatus() == 0) {
                                                 land.setImageResource(R.drawable.land_gan);
                                             } else
@@ -744,7 +747,7 @@ public class MainActivity extends AppCompatActivity {
                                             Glide.with(MainActivity.this).asGif().load(R.drawable.shouhuog).into(animation);
                                             operating(-2);//成熟
                                         } else {
-                                            Toast.makeText(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
+                                            CustomerToast.getInstance(MainActivity.this, "植物还没有成熟哦！", Toast.LENGTH_SHORT).show();
                                             if (finalCrop.getStatus() == 0) {
                                                 land.setImageResource(R.drawable.land_gan);
                                             } else
@@ -759,7 +762,7 @@ public class MainActivity extends AppCompatActivity {
                                             if (!messages.equals("Fail")) {
                                                 if (messages.equals("false")) {
                                                     animation.setVisibility(View.VISIBLE);
-                                                    Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                                    CustomerToast.getInstance(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                                                     new Handler().postDelayed(new Runnable() {
                                                         @Override
                                                         public void run() {
@@ -767,7 +770,6 @@ public class MainActivity extends AppCompatActivity {
                                                         }
                                                     }, 1000);
                                                 } else {
-                                                    //Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
                                                     animation.setVisibility(View.VISIBLE);
                                                     new Handler().postDelayed(new Runnable() {
                                                         @Override
@@ -784,7 +786,7 @@ public class MainActivity extends AppCompatActivity {
                                                 }
                                             } else {
                                                 animation.setVisibility(View.VISIBLE);
-                                                Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                                CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                                                 new Handler().postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -934,14 +936,11 @@ public class MainActivity extends AppCompatActivity {
 //                    showLand();
                     getCrop();
                 } else if (message.equals("false")) {
-                    Toast toast = Toast.makeText(MainActivity.this, "没有扩建成功哦！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "没有扩建成功哦！", Toast.LENGTH_SHORT).show();
                 } else if (message.equals("notEnoughMoney")) {
-                    Toast toast = Toast.makeText(MainActivity.this, "你的钱不够了哦！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "你的钱不够了哦！", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "没有找到你的土地哦！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(MainActivity.this, "没有找到你的土地哦！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -967,12 +966,12 @@ public class MainActivity extends AppCompatActivity {
                             String messages = (String) msg.obj;
                             Log.e("种植", messages);
                             if (messages.equals("Fail")) {
-                                Toast.makeText(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(MainActivity.this, "网络异常！", Toast.LENGTH_SHORT).show();
                             } else if (messages.equals("true")) {
-                                Toast.makeText(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(MainActivity.this, "操作成功！", Toast.LENGTH_SHORT).show();
                                 getUserInfo();
                             } else
-                                Toast.makeText(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
+                                CustomerToast.getInstance(MainActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                         }
                     };
                 }
@@ -1077,10 +1076,8 @@ public class MainActivity extends AppCompatActivity {
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
-        Log.e("midu",ds.density+"");
-        Log.e("高度，宽度",displayHeight/ds.density+","+displayWidth/ds.density);
         bagPopUpWindow.setWidth((int) (displayWidth * 0.40));
-        bagPopUpWindow.setHeight((int) (displayHeight * 0.95));
+        bagPopUpWindow.setHeight((int) (displayHeight));
         if (!isNavigationBarShow()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 bagPopUpWindow.setIsClippedToScreen(true);
@@ -1204,6 +1201,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @Author li
+     * @param
+     * @return void
+     * @Description 获取是否有新消息
+     * @Date 21:16 2020/5/22
+     **/
     public void haveNewNotifications(){
         new Thread(){
             @Override
@@ -1241,38 +1245,67 @@ public class MainActivity extends AppCompatActivity {
                 if (!message.equals("Fail")){
                     Type type = new TypeToken<List<Boolean>>(){}.getType();
                     notifyStatus= gson.fromJson(message,type);
-                    if (notifyStatus.subList(0,3).contains(true)){
+                    if (notifyStatus.subList(0,4).contains(true)){
                         notify_red.setVisibility(View.VISIBLE);
                     }
                     if(notifyStatus.get(4)){
                         daytask_red.setVisibility(View.VISIBLE);
                     }
                 }else {
-                    Toast.makeText(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(getApplication(), "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };
     }
 
-    /**
-     * @Description 展示用户信息和设置弹窗
-     * @Author 孙建旺
-     * @Date 下午9:21 2020/04/28
-     * @Param []
-     * @return void
-     */
-    private void ShowSettingAndMessage(){
-//        SettingMessageActivity messagePopUp = new SettingMessageActivity(this,MainActivity.this,LoginActivity.user);
-//        WindowManager wm = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
-//        DisplayMetrics ds = new DisplayMetrics();
-//        wm.getDefaultDisplay().getMetrics(ds);
-//        displayHeight = ds.heightPixels;
-//        displayWidth = ds.widthPixels;
-//        messagePopUp.setWidth((int) (displayWidth * 0.70));
-//        messagePopUp.setHeight((int) (displayHeight * 0.8));
-//        messagePopUp.showAtLocation(photo,Gravity.CENTER,0,0);
-//        planting(bagPopUpWindow.getGridView());
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void pkEnd(EventBean status) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.pk_end, null);
+        TextView text = layout.findViewById(R.id.text);
+        final ImageView pet = layout.findViewById(R.id.pet);
+        final UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+        final String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
+        Glide.with(this).load(url).into(pet);
+        switch (status.getMessage()){
+            case "0":
+                text.setText("要继续加油哦！");
+                break;
+            case "1":
+                text.setText("宠物智力值提升啦！");
+                break;
+            case "2":
+                new Handler(){
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        super.handleMessage(msg);
+                        UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+                        String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
+                        Glide.with(MainActivity.this).load(url).into(pet);
+                    }
+                }.postDelayed(null,1000);
+                text.setText("宠物进入下一成长阶段喽！");
+                break;
+        }
+        alertBuilder.setView(layout);
+        final AlertDialog upDiaLog = alertBuilder.create();
+        upDiaLog.show();
+        WindowManager.LayoutParams attrs = upDiaLog.getWindow().getAttributes();
+        if (upDiaLog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            upDiaLog.getWindow().setDimAmount(0f);//去除遮罩
+        }
+        attrs.gravity = Gravity.CENTER;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        attrs.width = (int) (300 * scale + 0.5f);
+        attrs.height = (int) (250 * scale + 0.5f);
+        upDiaLog.getWindow().setAttributes(attrs);
+        Window dialogWindow = upDiaLog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
+
     /**
      * @Author li
      * @return null
@@ -1414,7 +1447,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            Toast.makeText(MainActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
+            CustomerToast.getInstance(MainActivity.this, "再按一次退出游戏", Toast.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
             finish();

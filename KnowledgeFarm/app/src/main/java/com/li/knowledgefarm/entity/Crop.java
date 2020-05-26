@@ -1,6 +1,8 @@
 package com.li.knowledgefarm.entity;
 
-public class Crop {
+import java.io.Serializable;
+
+public class Crop implements Serializable {
 
     private int exist;
     private String img3;
@@ -14,6 +16,16 @@ public class Crop {
     private int value;
     private String img2;
     private String img1;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setExist(int exist) {
          this.exist = exist;
      }

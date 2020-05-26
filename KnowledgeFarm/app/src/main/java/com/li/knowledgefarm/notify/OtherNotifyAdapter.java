@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.FriendsPage;
@@ -138,12 +139,7 @@ public class OtherNotifyAdapter extends BaseAdapter {
                     eventBean.setIfRead(true);
                     EventBus.getDefault().post(eventBean);
                 }else {
-                    if(toast == null){
-                        toast = Toast.makeText(context,"操作失败",Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM,0,0);
-                        toast.show();
-                        toast = null;
-                    }
+                    CustomerToast.getInstance(context,"操作失败",Toast.LENGTH_SHORT).show();
                 }
             }
         };

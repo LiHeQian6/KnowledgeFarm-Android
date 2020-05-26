@@ -3,6 +3,7 @@ package com.li.knowledgefarm.bag;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.session.PlaybackState;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.BagCropNumber;
@@ -96,9 +98,9 @@ public class BagPopUpWindow extends PopupWindow {
         wm.getDefaultDisplay().getMetrics(ds);
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
-        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int) (displayWidth * 0.3), (int) (displayHeight * 0.8));
+        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int) (displayWidth * 0.32), (int) (displayHeight * 0.8));
         params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
-        params_gridview.setMargins((int) (displayWidth * 0.005), (int) (displayHeight * 0.08), 0, 0);
+        params_gridview.setMargins((int) (displayWidth * 0.008), (int) (displayHeight * 0.11), 0, 0);
         gridView.setColumnWidth((int) (displayWidth * 0.2));
         gridView.setLayoutParams(params_gridview);
         gridView.setVerticalSpacing((int) (displayHeight * 0.02));
@@ -139,8 +141,7 @@ public class BagPopUpWindow extends PopupWindow {
                     BagCustomerAdapter customerAdapter = new BagCustomerAdapter(context, dataList, R.layout.gird_adapteritem);
                     gridView.setAdapter(customerAdapter);
                 } else {
-                    Toast toast = Toast.makeText(context, "获取数据失败！", Toast.LENGTH_SHORT);
-                    toast.show();
+                    CustomerToast.getInstance(context, "获取数据失败！", Toast.LENGTH_SHORT).show();
                 }
             }
         };

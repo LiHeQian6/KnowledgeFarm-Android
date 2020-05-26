@@ -103,11 +103,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/show_battle_title">
+        <TextView
+            android:text="平局啦！"
+            android:layout_centerInParent="true"
+            android:textSize="36sp"
+            android:id="@+id/center_text"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="开始"
             android:background="@drawable/buy"
+            android:visibility="gone"
             android:layout_centerInParent="true"
             android:textSize="20dp"
             android:id="@+id/start_battle_btn"
@@ -116,6 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/my_pet"
+            android:layout_marginRight="50dp"
             android:padding="10dp">
             <TextView
                 android:layout_width="wrap_content"
@@ -137,6 +147,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
             android:padding="10dp"
             android:layout_toRightOf="@+id/my_pet"
             android:id="@+id/other_pet">
@@ -159,10 +170,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/buy"
-                android:text="逃跑"
-                android:id="@+id/my_go_away"
+                android:text="离开"
+                android:id="@+id/run_away"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"/>
         </RelativeLayout>
+        <ImageView
+            android:id="@+id/attack"
+            android:layout_centerInParent="true"
+            android:layout_width="400dp"
+            android:rotation="-10"
+            android:translationY="-50dp"
+            android:layout_height="300dp"/>
     </RelativeLayout>
 </RelativeLayout>

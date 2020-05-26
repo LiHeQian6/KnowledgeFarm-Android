@@ -81,6 +81,7 @@ public class PetService {
                 userPetHouse.setIfUsing(1);
                 result = userPetHouse.getId();
             }
+            count++;
         }
         return result;
     }
@@ -114,19 +115,21 @@ public class PetService {
                 }
                 //智力操作
                 Integer userPetIntelligence = userPetHouse.getIntelligence();
-                Integer petIntelligence = userPetHouse.getIntelligence();
+                Integer petIntelligence = userPetHouse.getPet().getIntelligence();
                 userPetHouse.setIntelligence(userPetIntelligence + 5);
-                switch (userPetHouse.getGrowPeriod()){
-                    case 0:
-                        if(userPetIntelligence < petIntelligence * 3 && userPetIntelligence + 5 >= petIntelligence * 3){
-                            userPetHouse.setGrowPeriod(1);
-                            return Result.UP;
-                        }
-                    case 1:
-                        if(userPetIntelligence < petIntelligence * 5 && userPetIntelligence + 5 >= petIntelligence * 5){
-                            userPetHouse.setGrowPeriod(2);
-                            return Result.UP;
-                        }
+                if(userPetHouse.getGrowPeriod() <= 1) {
+                    switch (userPetHouse.getGrowPeriod()) {
+                        case 0:
+                            if (userPetHouse.getIntelligence() >= petIntelligence * 3) {
+                                userPetHouse.setGrowPeriod(1);
+                                return Result.UP;
+                            }
+                        case 1:
+                            if (userPetHouse.getIntelligence() >= petIntelligence * 5) {
+                                userPetHouse.setGrowPeriod(2);
+                                return Result.UP;
+                            }
+                    }
                 }
                 return Result.TRUE;
             }

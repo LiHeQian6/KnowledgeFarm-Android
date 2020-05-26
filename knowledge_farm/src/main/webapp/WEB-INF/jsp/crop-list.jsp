@@ -321,6 +321,7 @@
                         <th></th>
                         <th style="text-align:center;">作物ID</th>
                         <th style="text-align:center;">名称</th>
+						<th style="text-align:center;">描述</th>
                         <th style="text-align:center;">价格</th>
                         <th style="text-align:center;">img1</th>
                         <th style="text-align:center;">img2</th>
@@ -339,6 +340,7 @@
 	                        <td><input type="checkbox" value="${cropPage.id}" name="checkBox"></td>
 	                        <td>${cropPage.id}</td>
 	                        <td>${cropPage.name}</td>
+							<td>${cropPage.description}</td>
 	                        <td>${cropPage.price}</td>
 	                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${cropPage.img1}"/></td>
 	                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${cropPage.img2}"/></td>

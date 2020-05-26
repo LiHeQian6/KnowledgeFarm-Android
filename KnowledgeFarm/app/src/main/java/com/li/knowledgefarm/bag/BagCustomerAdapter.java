@@ -65,10 +65,10 @@ public class BagCustomerAdapter extends BaseAdapter {
             wm.getDefaultDisplay().getMetrics(ds);
             displayHeight = ds.heightPixels;
             displayWidth = ds.widthPixels;
-            LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.09), ViewGroup.LayoutParams.WRAP_CONTENT);
-            params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
-            params_gridview.setMargins(0,(int)(displayHeight*0.05),0,0);
+            LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.09), (int)(displayWidth*0.1));
+            params_gridview.gravity = Gravity.CENTER;
             convertView.setLayoutParams(params_gridview);
+
             viewHolder = new ViewHolder();
             viewHolder.flowerImg = convertView.findViewById(R.id.bag_flower_img);
             viewHolder.name = convertView.findViewById(R.id.bag_flower_name);

@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.Task;
@@ -154,7 +155,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
                     initTask(myTask);
                     task.setAdapter(new DayTaskAdapter(context,R.layout.daytask_item_layout,tasks));
                 }else {
-                    Toast.makeText(context, "网络异常！", Toast.LENGTH_SHORT).show();
+                    CustomerToast.getInstance(context, "网络异常！", Toast.LENGTH_SHORT).show();
                 }
             }
         };

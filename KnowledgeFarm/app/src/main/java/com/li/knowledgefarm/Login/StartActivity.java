@@ -28,6 +28,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.dialog.NotifyAccountDialog;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Study.Util.AppUtil;
+import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
@@ -46,6 +48,8 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setDensityLand.setDensity(getApplication());
+        setDensityLand.setOrientation(this, AppUtil.HEIGHT);
         setContentView(R.layout.activity_start);
         //设置横屏
 //        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {

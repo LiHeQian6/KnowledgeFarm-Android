@@ -9,6 +9,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.li.knowledgefarm.Util.GuideHelper;
 import com.li.knowledgefarm.Util.GuideHelper.TipData;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
+import com.li.knowledgefarm.entity.Crop;
 import com.li.knowledgefarm.entity.EventBean;
 import com.li.knowledgefarm.entity.Pet;
 import com.li.knowledgefarm.entity.PetUtil;
@@ -62,7 +64,7 @@ import okhttp3.Response;
 public class MyFragment extends Fragment {
 
     private GridView gridView;
-    private List<ShopItemBean> shopList;
+    private List<Crop> shopList;
     private List<PetVO> pet_list;
     private List<PetUtil> petUtils;
     public static final String SHOP = "POSITION";
@@ -73,15 +75,9 @@ public class MyFragment extends Fragment {
     private long lastClickTime = 0L;
     // 两次点击间隔不能少于1000ms
     private static final int FAST_CLICK_DELAY_TIME = 1000;
-    private AlertDialog alertDialog = null;
-    private ImageView imgBtnJian;
-    private ImageView imgBtnPlus;
-    private EditText shopNumber;
-    private Toast toast;
-    private OkHttpClient okHttpClient;
-    private Handler doAfterAdd;
     private PetItemPopUpWindow petItemPopUpWindow;
     private UtilItemPopUp utilItemPopUp;
+    private PlantItemPopUp plantItemPopUp;
     private WindowManager wm;
     private DisplayMetrics ds;
     private int data;
@@ -91,14 +87,13 @@ public class MyFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getViews();
-        okHttpClient = OkHttpUtils.getInstance(getContext());
         View view = inflater.inflate(R.layout.plant_gridview_layout,container,false);
         gridView = view.findViewById(R.id.plant_gird_view);
         Bundle bundle = getArguments();
         data = bundle.getInt(SHOP);
         switch (data){
             case 1:
-                shopList = (List<ShopItemBean>) bundle.getSerializable("plant");
+                shopList = (List<Crop>) bundle.getSerializable("plant");
                 adapter = new ShopItemAdapter(getContext(),shopList,R.layout.shopitem_girdview);
                 gridView.setAdapter(adapter);
                 break;
@@ -122,7 +117,7 @@ public class MyFragment extends Fragment {
                 lastClickTime = System.currentTimeMillis();
                 switch (data){
                     case 1:
-                        showSingleAlertDialog(position);
+                        showSinglePlantPopUp(position);
                         break;
                     case 2:
                         ShowSinglePetPopUp(position);
@@ -186,9 +181,12 @@ public class MyFragment extends Fragment {
      * @return void
      */
     private void ShowSingleUtilPopUp(int position) {
-        utilItemPopUp = new UtilItemPopUp(getContext(),petUtils.get(position));
-        utilItemPopUp.setHeight((int)(ds.heightPixels));
-        utilItemPopUp.setWidth((int)(ds.widthPixels*0.6));
+        if(utilItemPopUp==null) {
+            utilItemPopUp = new UtilItemPopUp(getContext());
+            utilItemPopUp.setHeight((int)(ds.heightPixels));
+            utilItemPopUp.setWidth((int)(ds.widthPixels*0.6));
+        }
+        utilItemPopUp.setPetUtil(petUtils.get(position));
         utilItemPopUp.showAtLocation(gridView, Gravity.CENTER,0,0);
     }
 
@@ -213,193 +211,14 @@ public class MyFragment extends Fragment {
      * @return void
      */
     @SuppressLint("ResourceType")
-    private void showSingleAlertDialog(final int position){
-        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext(),R.style.dialog_soft_input);
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.shop_dialog, null);
-        FullScreen.hideBottomUIMenu(layout);
-        button = layout.findViewById(R.id.buy);
-        Button cancel = layout.findViewById(R.id.btnCancel);
-        TextView thisName = layout.findViewById(R.id.thisName);
-        TextView thisPrice = layout.findViewById(R.id.thisPrice);
-        TextView thisTime = layout.findViewById(R.id.thisTime);
-        ImageView thisFlower = layout.findViewById(R.id.thisFlower);
-        imgBtnJian = layout.findViewById(R.id.imgBtnJian);
-        imgBtnPlus = layout.findViewById(R.id.imgBtnPlus);
-        shopNumber = layout.findViewById(R.id.shopNum);
-        setShopNumber();
-        shopNumber.setText("1");
-        alertBuilder.setView(layout);
-        thisName.setText("名称："+shopList.get(position).getName());
-        thisPrice.setText("单价："+shopList.get(position).getPrice()+"");
-        thisTime.setText("成熟时间："+shopList.get(position).getMatureTime()+"");
-        RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.huancun2)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(alertBuilder.getContext()).load(shopList.get(position).getImg4()).apply(requestOptions).into(thisFlower);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(shopNumber.getText().toString().equals("")){
-                    Toast.makeText(getContext(),"购买数量不能为空哦！",Toast.LENGTH_SHORT).show();
-                }else{
-                    buyFlowers(
-                            UserUtil.getUser().getId(),
-                            shopList.get(position).getId(),
-                            Integer.parseInt(shopNumber.getText().toString().trim())
-                    );
-                }
-
-            }
-        });
-        doAfterAdd = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                String addCallBack = (String)msg.obj;
-                if(addCallBack.equals("true")){
-                    int newMoney = UserUtil.getUser().getMoney() - Integer.parseInt(shopNumber.getText().toString().trim())*shopList.get(position).getPrice();
-                    UserUtil.getUser().setMoney(newMoney);
-                    if(toast != null) {
-                        toast.cancel();
-                        toast = Toast.makeText(alertBuilder.getContext(), "购买成功！", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }else{
-                        toast = Toast.makeText(alertBuilder.getContext(), "购买成功！", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                    alertDialog.dismiss();
-                }else if(addCallBack.equals("notEnoughMoney")){
-                    Toast toast = Toast.makeText(alertBuilder.getContext(),"你的钱不够了哦！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }else{
-                    Toast toast = Toast.makeText(alertBuilder.getContext(),"添加失败！",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        };
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog = alertBuilder.create();
-        alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-        alertDialog.show();
-        alertDialog.getWindow().getDecorView().post(new Runnable() {
-            @Override
-            public void run() {
-                alertDialog.getWindow().setFlags(~WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-            }
-        });
-        WindowManager.LayoutParams attrs = alertDialog.getWindow().getAttributes();
-        attrs.gravity = Gravity.CENTER;
-        final float scale = this.getResources().getDisplayMetrics().density;
-        attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(300*scale+0.5f);
-        Window dialogWindow = alertDialog.getWindow();
-        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.getWindow().setAttributes(attrs);
-    }
-
-    /**
-     * @Description 设置加减数量选择器
-     * @Auther 孙建旺
-     * @Date 下午 6:56 2019/12/07
-     * @Param []
-     * @return void
-     */
-    private void setShopNumber(){
-        shopNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @SuppressLint("ResourceType")
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) >= 1)
-                        imgBtnJian.setImageDrawable(getContext().getDrawable(R.drawable.jian));
-                    if (Integer.parseInt(shopNumber.getText().toString()) <= 999)
-                        imgBtnPlus.setImageDrawable(getContext().getDrawable(R.drawable.plus));
-                }
-                if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) <= 0)
-                        shopNumber.setText(1+"");
-                    if (Integer.parseInt(shopNumber.getText().toString()) > 999)
-                        shopNumber.setText(999+"");
-                }
-            }
-        });
-
-        imgBtnJian.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) >= 2) {
-                        int num = Integer.parseInt(shopNumber.getText().toString()) - 1;
-                        shopNumber.setText(num+"");
-                    }
-                }
-            }
-        });
-
-        imgBtnPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) < 999) {
-                        int num = Integer.parseInt(shopNumber.getText().toString()) + 1;
-                        shopNumber.setText(num+"");
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * @Description 上传购买种子信息
-     * @Auther 孙建旺
-     * @Date 下午 3:08 2019/12/09
-     * @Param []
-     * @return void
-     */
-    private void buyFlowers(final int userID, final int cropId, final int num){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/user/buyCrop?cropId="+cropId+"&number="+num).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        String addCallback = "Fail";
-                        Message message = Message.obtain();
-                        message.obj = addCallback;
-                        doAfterAdd.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        OkHttpUtils.unauthorized(response.code());
-                        String addCallback = response.body().string();
-                        Message message = Message.obtain();
-                        message.obj = addCallback;
-                        doAfterAdd.sendMessage(message);
-                    }
-                });
-            }
-        }.start();
+    private void showSinglePlantPopUp(int position){
+        if(plantItemPopUp == null){
+            plantItemPopUp = new PlantItemPopUp(getContext());
+            plantItemPopUp.setHeight((int)(ds.heightPixels));
+            plantItemPopUp.setWidth((int)(0.6*ds.widthPixels));
+        }
+        plantItemPopUp.setShopItemBean(shopList.get(position));
+        plantItemPopUp.showAtLocation(gridView,Gravity.CENTER,0,0);
     }
 
     /**
@@ -410,9 +229,12 @@ public class MyFragment extends Fragment {
      * @return void
      */
     private void ShowSinglePetPopUp(final int position){
-        petItemPopUpWindow = new PetItemPopUpWindow(getContext(),pet_list.get(position));
-        petItemPopUpWindow.setHeight((int)(ds.heightPixels));
-        petItemPopUpWindow.setWidth((int)(ds.widthPixels*0.6));
+        if(petItemPopUpWindow == null) {
+            petItemPopUpWindow = new PetItemPopUpWindow(getContext());
+            petItemPopUpWindow.setHeight((int)(ds.heightPixels));
+            petItemPopUpWindow.setWidth((int)(ds.widthPixels*0.6));
+        }
+        petItemPopUpWindow.setPet(pet_list.get(position));
         petItemPopUpWindow.showAtLocation(gridView, Gravity.CENTER,0,0);
     }
 }
