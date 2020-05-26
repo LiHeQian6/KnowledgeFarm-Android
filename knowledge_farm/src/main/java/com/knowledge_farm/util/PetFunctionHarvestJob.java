@@ -30,18 +30,20 @@ public class PetFunctionHarvestJob extends QuartzJobBean {
     private Integer experienceList[];
     Logger logger = LoggerFactory.getLogger(getClass());
     private Integer userId;
-    private Integer harvestHour;
+    private Integer harvestHour; //数据库内宠物功能
+    private Integer functionHour; //当前任务调度的时间策略
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) {
         Date date = new Date();
         int hour = date.getHours();
-        int minute = date.getMinutes();
-        int second = date.getSeconds();
-        String trigger = "";
+        String name = "job" + userId + "_petFunctionHarvest";
+        String group = "group" + userId + "_petFunctionHarvest";
         userId = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("userId");
+        functionHour = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("functionHour");
         User user = this.userService.findUserById(userId);
         List<UserCrop> userCropList = findUserCropListByLand(user.getLand());
+        //收获
         for(UserCrop userCrop : userCropList){
             Crop crop = userCrop.getCrop();
             if(userCrop.getProgress() >= crop.getMatureTime()){
@@ -70,6 +72,7 @@ public class PetFunctionHarvestJob extends QuartzJobBean {
                 user.setMoney(userMoney + value);
             }
         }
+        //获得宠物功能值
         for(UserPetHouse userPetHouse : user.getPetHouses()){
             if(userPetHouse.getIfUsing() == 1){
                 switch (userPetHouse.getGrowPeriod()){
@@ -86,26 +89,41 @@ public class PetFunctionHarvestJob extends QuartzJobBean {
                 break;
             }
         }
-        if(hour + harvestHour >= 24){
-            String name = "job" + userId + "_petFunctionHarvest";
-            String group = "group" + userId + "_petFunctionHarvest";
+        //正常执行
+        if(functionHour == harvestHour && (hour + harvestHour < 24)){
+            return;
+        }
+        //跨越0点
+        if(functionHour == harvestHour && (hour + harvestHour >= 24)){
             deleteJob(name, group);
-            trigger = second + " " + minute + " " + (hour + harvestHour - 24) + "/" + harvestHour + " * * ?";
-            try {
-                startJob(scheduler, name, group, userId, trigger);
-            } catch (SchedulerException e) {
-                e.printStackTrace();
-                logger.info("宠物收获作物功能开启新任务调度失败");
-            }
+        }
+        try {
+            startJob(scheduler, name, group, userId, harvestHour);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            logger.info("宠物收获作物功能开启新任务调度失败");
         }
     }
 
-    public void startJob(Scheduler scheduler, String name, String group, Integer userId, String trigger) throws SchedulerException {
+    public void startJob(Scheduler scheduler, String name, String group, Integer userId, Integer functionHour) throws SchedulerException {
         // 通过JobBuilder构建JobDetail实例，JobDetail规定只能是实现Job接口的实例
         // JobDetail 是具体Job实例
         JobDetail jobDetail = JobBuilder.newJob(PetFunctionHarvestJob.class).withIdentity(name, group).build();
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
         jobDataMap.put("userId", userId);
+        jobDataMap.put("functionHour", functionHour);
+        Date date = new Date();
+        int hour = date.getHours();int minute = date.getMinutes();int second = date.getSeconds();
+        String trigger = "";
+        int result = hour + functionHour;
+        if(result < 24){
+            hour = result;
+        }else if(result == 24){
+            hour = 0;
+        }else{
+            hour = hour + functionHour - 24;
+        }
+        trigger = second + " " + minute + " " + hour + "/" + functionHour + " * * ?";
         // 基于表达式构建触发器
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(trigger);
         // CronTrigger表达式触发器 继承于Trigger

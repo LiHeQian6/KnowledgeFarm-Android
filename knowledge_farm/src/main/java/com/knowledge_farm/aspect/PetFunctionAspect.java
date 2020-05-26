@@ -50,90 +50,45 @@ public class PetFunctionAspect {
     }
 
     @AfterReturning(pointcut = "changePet()", returning="result")
-    public void changePet(JoinPoint joinPoint, Object result) {
+    public void changePet(JoinPoint joinPoint, Object result){
         if(result == Result.TRUE){
             try {
                 ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
                 HttpServletRequest request = attributes.getRequest();
                 Integer start[] = (Integer[]) request.getAttribute("PetFunction");
-                String name1 = "job" + start[0] + "_petFunctionHarvest", name2 = "job" + start[0] + "_petFunctionGrow";
-                String group1 = "group" + start[0] + "_petFunctionHarvest", group2 = "group" + start[0] + "_petFunctionGrow";
-                deleteJob(name1, group1);
-                deleteJob(name2, group2);
                 UserPetHouse userPetHouse = this.userPetHouseService.findUserPetHouseById(start[1]);
                 Pet pet = userPetHouse.getPet();
                 Integer harvestHour = pet.getPetFunction().getHarvestHour1();
                 Integer growHour = pet.getPetFunction().getGrowHour1();
-                if(harvestHour != 0){
-                    switch (userPetHouse.getGrowPeriod()){
-                        case 0:
-                            harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour1();
-                            break;
-                        case 1:
-                            harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour2();
-                            break;
-                        case 2:
-                            harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour3();
-                            break;
-                    }
-                    startJob1(scheduler, name1, group1, start[0], harvestHour);
-                }
-                if(growHour != 0){
-                    switch (userPetHouse.getGrowPeriod()){
-                        case 0:
-                            growHour = userPetHouse.getPet().getPetFunction().getGrowHour1();
-                            break;
-                        case 1:
-                            growHour = userPetHouse.getPet().getPetFunction().getGrowHour2();
-                            break;
-                        case 2:
-                            growHour = userPetHouse.getPet().getPetFunction().getGrowHour3();
-                            break;
-                    }
-                    startJob2(scheduler, name2, group2, start[0], growHour);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return;
-        }
-        logger.info("切换宠物失败");
-    }
-
-    @AfterReturning(pointcut = "fightResult()", returning="result")
-    public void fightResult(JoinPoint joinPoint, Object result){
-        if(result == Result.UP){
-            try {
-                ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-                HttpServletRequest request = attributes.getRequest();
-                Integer start[] = (Integer[]) request.getAttribute("PetFunction");
                 String name1 = "job" + start[0] + "_petFunctionHarvest", name2 = "job" + start[0] + "_petFunctionGrow";
                 String group1 = "group" + start[0] + "_petFunctionHarvest", group2 = "group" + start[0] + "_petFunctionGrow";
-                deleteJob(name1, group1);
-                deleteJob(name2, group2);
-                User user = this.userService.findUserById(start[0]);
-                Integer harvestHour = 0;
-                Integer growHour = 0;
-                int flag1 = 0, flag2 = 0;
-                for(UserPetHouse userPetHouse : user.getPetHouses()){
-                    Pet pet = userPetHouse.getPet();
-                    if(userPetHouse.getIfUsing() == 1 && pet.getPetFunction().getHarvestHour1() != 0){
+                if(harvestHour == 0){
+                    deleteJob(name1, group1);
+                }else{
+                    JobKey jobKey = new JobKey(name1, group1);
+                    JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+                    if(jobDetail == null){
                         switch (userPetHouse.getGrowPeriod()){
                             case 0:
-                                 harvestHour = userPetHouse.getPet().getPetFunction().getGrowHour1();
+                                harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour1();
                                 break;
                             case 1:
-                                harvestHour = userPetHouse.getPet().getPetFunction().getGrowHour2();
+                                harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour2();
                                 break;
                             case 2:
-                                harvestHour = userPetHouse.getPet().getPetFunction().getGrowHour3();
+                                harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour3();
                                 break;
                         }
-                        flag1 = 1;
                         startJob1(scheduler, name1, group1, start[0], harvestHour);
                     }
-                    if(userPetHouse.getIfUsing() == 1 && pet.getPetFunction().getGrowHour1() != 0){
-                        switch (userPetHouse.getGrowPeriod()){
+                }
+                if(growHour == 0){
+                    deleteJob(name2, group2);
+                }else{
+                    JobKey jobKey = new JobKey(name2, group2);
+                    JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+                    if(jobDetail == null) {
+                        switch (userPetHouse.getGrowPeriod()) {
                             case 0:
                                 growHour = userPetHouse.getPet().getPetFunction().getGrowHour1();
                                 break;
@@ -144,19 +99,15 @@ public class PetFunctionAspect {
                                 growHour = userPetHouse.getPet().getPetFunction().getGrowHour3();
                                 break;
                         }
-                        flag2 = 1;
                         startJob2(scheduler, name2, group2, start[0], growHour);
-                    }
-                    if(flag1 == 1 && flag2 == 1){
-                        break;
                     }
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }else if(result == Result.FALSE){
-            logger.info("宠物智力值修改失败");
+            return;
         }
+        logger.info("切换宠物失败");
     }
 
     public void startJob1(Scheduler scheduler, String name, String group, Integer userId, Integer functionHour) throws SchedulerException {
@@ -165,6 +116,7 @@ public class PetFunctionAspect {
         JobDetail jobDetail = JobBuilder.newJob(PetFunctionHarvestJob.class).withIdentity(name, group).build();
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
         jobDataMap.put("userId", userId);
+        jobDataMap.put("functionHour", functionHour);
         Date date = new Date();
         int hour = date.getHours();int minute = date.getMinutes();int second = date.getSeconds();
         String trigger = "";
@@ -191,6 +143,7 @@ public class PetFunctionAspect {
         JobDetail jobDetail = JobBuilder.newJob(PetFunctionGrowJob.class).withIdentity(name, group).build();
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
         jobDataMap.put("userId", userId);
+        jobDataMap.put("functionHour", functionHour);
         Date date = new Date();
         int hour = date.getHours();int minute = date.getMinutes();int second = date.getSeconds();
         String trigger = "";
@@ -218,5 +171,115 @@ public class PetFunctionAspect {
             return;
         scheduler.deleteJob(jobKey);
     }
+
+//    @AfterReturning(pointcut = "changePet()", returning="result")
+//    public void changePet1(JoinPoint joinPoint, Object result) {
+//        if(result == Result.TRUE){
+//            try {
+//                ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//                HttpServletRequest request = attributes.getRequest();
+//                Integer start[] = (Integer[]) request.getAttribute("PetFunction");
+//                String name1 = "job" + start[0] + "_petFunctionHarvest", name2 = "job" + start[0] + "_petFunctionGrow";
+//                String group1 = "group" + start[0] + "_petFunctionHarvest", group2 = "group" + start[0] + "_petFunctionGrow";
+//                deleteJob(name1, group1);
+//                deleteJob(name2, group2);
+//                UserPetHouse userPetHouse = this.userPetHouseService.findUserPetHouseById(start[1]);
+//                Pet pet = userPetHouse.getPet();
+//                Integer harvestHour = pet.getPetFunction().getHarvestHour1();
+//                Integer growHour = pet.getPetFunction().getGrowHour1();
+//                if(harvestHour != 0){
+//                    switch (userPetHouse.getGrowPeriod()){
+//                        case 0:
+//                            harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour1();
+//                            break;
+//                        case 1:
+//                            harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour2();
+//                            break;
+//                        case 2:
+//                            harvestHour = userPetHouse.getPet().getPetFunction().getHarvestHour3();
+//                            break;
+//                    }
+//                    startJob1(scheduler, name1, group1, start[0], harvestHour);
+//                }
+//                if(growHour != 0){
+//                    switch (userPetHouse.getGrowPeriod()){
+//                        case 0:
+//                            growHour = userPetHouse.getPet().getPetFunction().getGrowHour1();
+//                            break;
+//                        case 1:
+//                            growHour = userPetHouse.getPet().getPetFunction().getGrowHour2();
+//                            break;
+//                        case 2:
+//                            growHour = userPetHouse.getPet().getPetFunction().getGrowHour3();
+//                            break;
+//                    }
+//                    startJob2(scheduler, name2, group2, start[0], growHour);
+//                }
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//            return;
+//        }
+//        logger.info("切换宠物失败");
+//    }
+
+//    @AfterReturning(pointcut = "fightResult()", returning="result")
+//    public void fightResult1(JoinPoint joinPoint, Object result){
+//        if(result == Result.UP){
+//            try {
+//                ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//                HttpServletRequest request = attributes.getRequest();
+//                Integer start[] = (Integer[]) request.getAttribute("PetFunction");
+//                String name1 = "job" + start[0] + "_petFunctionHarvest", name2 = "job" + start[0] + "_petFunctionGrow";
+//                String group1 = "group" + start[0] + "_petFunctionHarvest", group2 = "group" + start[0] + "_petFunctionGrow";
+//                deleteJob(name1, group1);
+//                deleteJob(name2, group2);
+//                User user = this.userService.findUserById(start[0]);
+//                Integer harvestHour = 0;
+//                Integer growHour = 0;
+//                int flag1 = 0, flag2 = 0;
+//                for(UserPetHouse userPetHouse : user.getPetHouses()){
+//                    Pet pet = userPetHouse.getPet();
+//                    if(userPetHouse.getIfUsing() == 1 && pet.getPetFunction().getHarvestHour1() != 0){
+//                        switch (userPetHouse.getGrowPeriod()){
+//                            case 0:
+//                                harvestHour = userPetHouse.getPet().getPetFunction().getGrowHour1();
+//                                break;
+//                            case 1:
+//                                harvestHour = userPetHouse.getPet().getPetFunction().getGrowHour2();
+//                                break;
+//                            case 2:
+//                                harvestHour = userPetHouse.getPet().getPetFunction().getGrowHour3();
+//                                break;
+//                        }
+//                        flag1 = 1;
+//                        startJob1(scheduler, name1, group1, start[0], harvestHour);
+//                    }
+//                    if(userPetHouse.getIfUsing() == 1 && pet.getPetFunction().getGrowHour1() != 0){
+//                        switch (userPetHouse.getGrowPeriod()){
+//                            case 0:
+//                                growHour = userPetHouse.getPet().getPetFunction().getGrowHour1();
+//                                break;
+//                            case 1:
+//                                growHour = userPetHouse.getPet().getPetFunction().getGrowHour2();
+//                                break;
+//                            case 2:
+//                                growHour = userPetHouse.getPet().getPetFunction().getGrowHour3();
+//                                break;
+//                        }
+//                        flag2 = 1;
+//                        startJob2(scheduler, name2, group2, start[0], growHour);
+//                    }
+//                    if(flag1 == 1 && flag2 == 1){
+//                        break;
+//                    }
+//                }
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }else if(result == Result.FALSE){
+//            logger.info("宠物智力值修改失败");
+//        }
+//    }
 
 }
