@@ -17,6 +17,7 @@ public class EventBean {
     private Boolean ifRead = false;
     private String message;
     private String notifyType;
+    private String result;
 
     public Boolean getIfRead() {
         return ifRead;
@@ -63,5 +64,13 @@ public class EventBean {
 
     public void setNotifyType(String notifyType) {
         this.notifyType = notifyType;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }

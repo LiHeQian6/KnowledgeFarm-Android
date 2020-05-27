@@ -131,7 +131,7 @@ public class PkActivity extends AppCompatActivity{
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/answer/fightQuestions?grade="+ UserUtil.getUser().getId()).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/answer/fightQuestions?grade="+ UserUtil.getUser().getGrade()).build();
                 okHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -382,6 +382,10 @@ public class PkActivity extends AppCompatActivity{
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
                         position++;
+                        if (position==list.size()){
+                            position=0;
+                            getQuestion();
+                        }
                         final int pk = user_pet.pk(friend_pet);
                         //展示攻击、被攻击动画
                         for (int i = 0; i < 5; i++) {
@@ -503,11 +507,11 @@ public class PkActivity extends AppCompatActivity{
                 if(msg.what == 200) {
                     if (data.equals("true")){
                         EventBean event = new EventBean();
-                        event.setMessage(result?"1":"0");
+                        event.setResult(result?"1":"0");
                         EventBus.getDefault().post(event);
                     }else if(data.equals("up")){
                         EventBean event = new EventBean();
-                        event.setMessage("2");
+                        event.setResult("2");
                         EventBus.getDefault().post(event);
                     }else if(data.equals("false")){
                         CustomerToast.getInstance(PkActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
