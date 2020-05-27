@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Administrator
+  Date: 2020/5/27 0027
+  Time: 18:34
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
@@ -16,10 +23,30 @@
     <script src="${ctx}/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
 
+    <style>
+        .page{
+            margin-right:25px;
+        }
+    </style>
+
+    <script>
+        //初始化左侧菜单（作物管理）
+        window.onload = function(){
+            $("#initUserPetHouseManager").attr("class","sub-menu opened");
+            $("#initUserPetHouseManager1").attr("class","current");
+        }
+
+        //修改作物信息
+        function updateUserPetHouse(title,url,w,h) {
+            x_admin_show(title,url,w,h);
+        }
+
+    </script>
+
 </head>
 <body>
 <!-- 顶部开始 -->
-<%--<%@ include file="/layout/header.jsp"%>--%>
+<%--    	<%@ include file="/layout/header.jsp"%>--%>
 <div class="container">
     <div class="logo"><a href="${ctx}/admin/toIndex">知识农场后台管理系统</a></div>
     <div class="open-nav"><i class="iconfont">&#xe699;</i></div>
@@ -37,7 +64,7 @@
 <!-- 中部开始 -->
 <div class="wrapper">
     <!-- 左侧菜单开始 -->
-<%--    <%@ include file="/layout/menuLeft.jsp"%>--%>
+    <%--        	<%@ include file="/layout/menuLeft.jsp"%>--%>
     <div class="left-nav">
         <div id="side-nav">
             <ul id="nav">
@@ -239,67 +266,100 @@
     <div class="page-content">
         <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
-            <blockquote class="layui-elem-quote">
-                欢迎登陆知识农场后台管理系统<span class="f-14"></span>
-            </blockquote>
-            <fieldset class="layui-elem-field layui-field-title site-title">
-                <legend><a name="default">服务器</a></legend>
-            </fieldset>
+            <form class="layui-form xbs" action="${ctx}/admin/user_pet_house/findUserPetHousePage">
+                <div class="layui-form-pane" style="text-align: center;">
+                    <div class="layui-form-item" style="display: inline-block;">
+                        <div class="layui-input-inline">
+                            <input type="text" name="account" placeholder="请输入用户账号" autocomplete="off" class="layui-input" value="${param.account}">
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="petId">
+                                <option value="0" selected="">请选择宠物</option>
+                                <c:forEach var="pet" items="${petList}">
+                                    <c:if test="${pet.id == param.petId}">
+                                        <option value="${pet.id}" selected>${pet.name}</option>
+                                    </c:if>
+                                    <c:if test="${pet.id != param.petId}">
+                                        <option value="${pet.id}">${pet.name}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width:80px">
+                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <xblock>
+                <a href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.currentPageNum}&&pageSize=${userPetHousePage.pageSize}">
+                    <button class="layui-btn" style="margin-left:11px;">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/save.png"/>
+                        </i>刷新
+                    </button>
+                </a>
+                <span class="x-right" style="line-height:40px">共有数据：${userPetHousePage.totalCount} 条</span>
+            </xblock>
             <table class="layui-table">
-                <thead>
+                <thead >
                 <tr>
-                    <th colspan="2" scope="col">服务器信息</th>
+                    <th></th>
+                    <th style="text-align:center;">用户ID</th>
+                    <th style="text-align:center;">用户账号</th>
+                    <th style="text-align:center;">宠物昵称</th>
+                    <th style="text-align:center;">生长阶段</th>
+                    <th style="text-align:center;">生命值</th>
+                    <th style="text-align:center;">智力值</th>
+                    <th style="text-align:center;">体力值</th>
+                    <th style="text-align:center;">状态</th>
+                    <th style="text-align:center;">操作</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <th width="30%">服务器计算机名</th>
-                    <td><span id="lbServerName">ROOT</span></td>
-                </tr>
-                <tr>
-                    <td>服务器IP地址</td>
-                    <td>39.106.18.238</td>
-                </tr>
-                <tr>
-                    <td>服务器域名</td>
-                    <td>www.knowledgefarm.com</td>
-                </tr>
-                <tr>
-                    <td>服务器端口 </td>
-                    <td>8080</td>
-                </tr>
-                <tr>
-                    <td>服务器版本 </td>
-                    <td>apache-tomcat-8.5.39</td>
-                </tr>
-                <tr>
-                    <td>本文件所在文件夹 </td>
-                    <td>/home/admin/Tomcat/apache-tomcat-8.5.39/webapps/FarmKnowledge/</td>
-                </tr>
-                <tr>
-                    <td>服务器操作系统 </td>
-                    <td>Ubuntu16.04</td>
-                </tr>
-                <tr>
-                    <td>服务器的语言种类 </td>
-                    <td>Chinese (People's Republic of China)</td>
-                </tr>
-                <tr>
-                    <td>CPU 总数 </td>
-                    <td>1</td>
-                </tr>
-                <tr>
-                    <td>虚拟内存 </td>
-                    <td>2048M</td>
-                </tr>
-                <tr>
-                    <td>当前系统用户名 </td>
-                    <td>ROOT</td>
-                </tr>
+                <tbody align="center">
+                <c:forEach var="userPetHouse" items="${userPetHousePage.list}">
+                    <tr>
+                        <td><input type="checkbox" value="${userPetHouse.id}" name="checkBox"></td>
+                        <td>${userPetHouse.user.id}</td>
+                        <td>${userPetHouse.user.account}</td>
+                        <td>${userPetHouse.pet.name}</td>
+                        <td>${userPetHouse.growPeriod}</td>
+                        <td>${userPetHouse.life}</td>
+                        <td>${userPetHouse.intelligence}</td>
+                        <td>${userPetHouse.physical}</td>
+                        <td class="td-status">
+                            <c:if test="${userPetHouse.ifUsing == 1}">
+                                <span class="layui-btn layui-btn-normal layui-btn-mini">正在使用</span>
+                            </c:if>
+                            <c:if test="${userPetHouse.ifUsing == 0}">
+                                <span class="layui-btn layui-btn-danger layui-btn-mini">未使用</span>
+                            </c:if>
+                        </td>
+                        <td class="td-manage" align="center">
+                            <a style="text-decoration:none"  onclick="updateUserPetHouse('编辑','${ctx}/admin/user_pet_house/toEdit?id=${userPetHouse.id}','600','400')" href="javascript:;" title="编辑">
+                                <i class="layui-icon">&#xe642;</i>
+                            </a>
+                        </td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
             <!-- 右侧内容框架，更改从这里结束 -->
         </div>
+        <!-- 分页处理开始 -->
+        <div align="center">
+            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=1&&pageSize=${userPetHousePage.pageSize}">首页</a>
+            <a  class="page" href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.prePageNum}&&pageSize=${userPetHousePage.pageSize}">上一页</a>
+            <a  class="page" href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.nextPageNum}&&pageSize=${userPetHousePage.pageSize}">下一页</a>
+            <a  class="page" href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.totalPageNum}&&pageSize=${userPetHousePage.pageSize}">末页</a>
+        </div>
+        <div align="center" style="margin-top:20px;">
+            <span style="margin-right:10px;">${userPetHousePage.currentPageNum}</span>
+            <span>/</span>
+            <span style="margin-left:10px;">${userPetHousePage.totalPageNum}</span>
+        </div>
+        <!-- 分页处理结束 -->
     </div>
     <!-- 右侧主体结束 -->
 </div>
@@ -307,7 +367,7 @@
 <!-- 底部开始 -->
 <!-- 底部结束 -->
 <!-- 背景切换开始 -->
-<%--<%@ include file="/layout/background.jsp"%>--%>
+<%--    	<%@ include file="/layout/background.jsp"%>--%>
 <div class="bg-changer">
     <div class="swiper-container changer-list">
         <div class="swiper-wrapper">
@@ -330,4 +390,5 @@
 </div>
 <!-- 背景切换结束 -->
 </body>
+</html>
 </html>
