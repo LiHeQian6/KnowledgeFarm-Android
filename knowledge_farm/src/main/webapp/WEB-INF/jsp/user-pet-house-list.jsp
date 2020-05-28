@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2020/5/2 0002
-  Time: 18:29
+  Date: 2020/5/27 0027
+  Time: 18:34
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -32,59 +32,15 @@
     <script>
         //初始化左侧菜单（作物管理）
         window.onload = function(){
-            $("#initPetManager").attr("class","sub-menu opened");
-            $("#initPetManager2").attr("class","current");
+            $("#initUserPetHouseManager").attr("class","sub-menu opened");
+            $("#initUserPetHouseManager1").attr("class","current");
         }
 
-        //恢复单个作物信息
-        function recoveryOnePet(id){
-            layer.confirm('确认要恢复吗？',function(index){
-                $.post("${ctx}/admin/pet/recoveryOnePet",{"id":id},function(data){
-                    if(data == "succeed"){
-                        window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}";
-                    }else if(data == "fail"){
-                        layer.msg('恢复失败');
-                    }
-                })
-            });
+        //修改作物信息
+        function updateUserPetHouse(title,url,w,h) {
+            x_admin_show(title,url,w,h);
         }
 
-        //恢复批量作物信息
-        function recoveryMultiPet() {
-            var arrRecovery = document.getElementsByName("checkBox");
-            var recoveryStr="";
-            for(i in arrRecovery){
-                if(arrRecovery[i].checked){
-                    recoveryStr = recoveryStr + arrRecovery[i].value + ",";
-                }
-            }
-            layer.confirm('确认要批量恢复吗？',function(index){
-                if(recoveryStr != ""){
-                    $.post("${ctx}/admin/pet/recoveryMultiPet",{"recoveryStr":recoveryStr},function(data){
-                        if(data == "succeed"){
-                            window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}";
-                        }else if(data == "fail"){
-                            layer.msg('恢复失败');
-                        }
-                    })
-                }else{
-                    layer.msg('恢复不能为空');
-                }
-            });
-        }
-
-        //彻底删除作物信息
-        function deleteThoroughPet(id){
-            layer.confirm('彻底删除无法恢复，确认要删除数据吗？',function(index){
-                $.post("${ctx}/admin/pet/deleteThoroughPet",{"id":id},function(data){
-                    if(data == "succeed"){
-                        window.location.href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.currentPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}";
-                    }else if(data == "fail"){
-                        layer.msg('删除失败');
-                    }
-                })
-            });
-        }
     </script>
 
 </head>
@@ -310,12 +266,24 @@
     <div class="page-content">
         <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
-            <form class="layui-form xbs" action="${ctx}/admin/pet/findPetPage">
+            <form class="layui-form xbs" action="${ctx}/admin/user_pet_house/findUserPetHousePage">
                 <div class="layui-form-pane" style="text-align: center;">
                     <div class="layui-form-item" style="display: inline-block;">
                         <div class="layui-input-inline">
-                            <input type="text" name="name" placeholder="请输入宠物名称" autocomplete="off" class="layui-input" value="${param.name}">
-                            <input type="hidden" name="exist" value="0"/>
+                            <input type="text" name="account" placeholder="请输入用户账号" autocomplete="off" class="layui-input" value="${param.account}">
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="petId">
+                                <option value="0" selected="">请选择宠物</option>
+                                <c:forEach var="pet" items="${petList}">
+                                    <c:if test="${pet.id == param.petId}">
+                                        <option value="${pet.id}" selected>${pet.name}</option>
+                                    </c:if>
+                                    <c:if test="${pet.id != param.petId}">
+                                        <option value="${pet.id}">${pet.name}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
                         </div>
                         <div class="layui-input-inline" style="width:80px">
                             <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
@@ -323,65 +291,56 @@
                     </div>
                 </div>
             </form>
+
             <xblock>
-                <button class="layui-btn layui-btn-danger" onclick="recoveryMultiPet()">
-                    <i class="layui-icon">&#xe640;</i>批量恢复
-                </button>
-                <span class="x-right" style="line-height:40px">共有数据：${petPage.totalCount} 条</span>
+                <a href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.currentPageNum}&&pageSize=${userPetHousePage.pageSize}">
+                    <button class="layui-btn" style="margin-left:11px;">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/save.png"/>
+                        </i>刷新
+                    </button>
+                </a>
+                <span class="x-right" style="line-height:40px">共有数据：${userPetHousePage.totalCount} 条</span>
             </xblock>
             <table class="layui-table">
                 <thead >
                 <tr>
                     <th></th>
-                    <th style="text-align:center;">宠物ID</th>
-                    <th style="text-align:center;">名称</th>
-                    <th style="text-align:center;">描述</th>
-                    <th style="text-align:center;">img1</th>
-                    <th style="text-align:center;">img2</th>
-                    <th style="text-align:center;">img3</th>
-                    <th style="text-align:center;">价格</th>
+                    <th style="text-align:center;">用户ID</th>
+                    <th style="text-align:center;">用户账号</th>
+                    <th style="text-align:center;">宠物昵称</th>
+                    <th style="text-align:center;">img</th>
+                    <th style="text-align:center;">生长阶段</th>
                     <th style="text-align:center;">生命值</th>
                     <th style="text-align:center;">智力值</th>
                     <th style="text-align:center;">体力值</th>
-                    <th style="text-align:center;">收获1</th>
-                    <th style="text-align:center;">收获2</th>
-                    <th style="text-align:center;">收获3</th>
-                    <th style="text-align:center;">生长1</th>
-                    <th style="text-align:center;">生长2</th>
-                    <th style="text-align:center;">生长3</th>
                     <th style="text-align:center;">状态</th>
                     <th style="text-align:center;">操作</th>
                 </tr>
                 </thead>
                 <tbody align="center">
-                <c:forEach var="petPage" items="${petPage.list}">
+                <c:forEach var="userPetHouse" items="${userPetHousePage.list}">
                     <tr>
-                        <td><input type="checkbox" value="${petPage.id}" name="checkBox"></td>
-                        <td>${petPage.id}</td>
-                        <td>${petPage.name}</td>
-                        <td>${petPage.description}</td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img1}"/></td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img2}"/></td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img3}"/></td>
-                        <td>${petPage.price}金币</td>
-                        <td>${petPage.life}</td>
-                        <td>${petPage.intelligence}</td>
-                        <td>${petPage.physical}</td>
-                        <td>${petPage.petFunction.harvestHour1}</td>
-                        <td>${petPage.petFunction.harvestHour2}</td>
-                        <td>${petPage.petFunction.harvestHour3}</td>
-                        <td>${petPage.petFunction.growHour1}</td>
-                        <td>${petPage.petFunction.growHour2}</td>
-                        <td>${petPage.petFunction.growHour3}</td>
+                        <td><input type="checkbox" value="${userPetHouse.id}" name="checkBox"></td>
+                        <td>${userPetHouse.user.id}</td>
+                        <td>${userPetHouse.user.account}</td>
+                        <td>${userPetHouse.pet.name}</td>
+                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${userPetHouse.pet.img1}"/></td>
+                        <td>${userPetHouse.growPeriod}</td>
+                        <td>${userPetHouse.life}</td>
+                        <td>${userPetHouse.intelligence}</td>
+                        <td>${userPetHouse.physical}</td>
                         <td class="td-status">
-                            <span class="layui-btn layui-btn-danger layui-btn-mini">已删除</span>
+                            <c:if test="${userPetHouse.ifUsing == 1}">
+                                <span class="layui-btn layui-btn-normal layui-btn-mini">正在使用</span>
+                            </c:if>
+                            <c:if test="${userPetHouse.ifUsing == 0}">
+                                <span class="layui-btn layui-btn-danger layui-btn-mini">未使用</span>
+                            </c:if>
                         </td>
                         <td class="td-manage" align="center">
-                            <a style="text-decoration:none" onclick="recoveryOnePet(${petPage.id})" href="javascript:;" title="恢复">
-                                <i class="layui-icon">&#xe618;</i>
-                            </a>
-                            <a title="彻底删除" href="javascript:;" onclick="deleteThoroughPet(${petPage.id})" style="text-decoration:none">
-                                <i class="layui-icon">&#xe640;</i>
+                            <a style="text-decoration:none"  onclick="updateUserPetHouse('编辑','${ctx}/admin/user_pet_house/toEdit?id=${userPetHouse.id}','600','400')" href="javascript:;" title="编辑">
+                                <i class="layui-icon">&#xe642;</i>
                             </a>
                         </td>
                     </tr>
@@ -392,15 +351,15 @@
         </div>
         <!-- 分页处理开始 -->
         <div align="center">
-            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=1&&pageSize=${petPage.pageSize}&&exist=${param.exist}">首页</a>
-            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.prePageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}">上一页</a>
-            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.nextPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}">下一页</a>
-            <a  class="page" href="${ctx}/admin/pet/findPetPage?name=${param.name}&&pageNumber=${petPage.totalPageNum}&&pageSize=${petPage.pageSize}&&exist=${param.exist}">末页</a>
+            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=1&&pageSize=${userPetHousePage.pageSize}">首页</a>
+            <a  class="page" href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.prePageNum}&&pageSize=${userPetHousePage.pageSize}">上一页</a>
+            <a  class="page" href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.nextPageNum}&&pageSize=${userPetHousePage.pageSize}">下一页</a>
+            <a  class="page" href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.totalPageNum}&&pageSize=${userPetHousePage.pageSize}">末页</a>
         </div>
         <div align="center" style="margin-top:20px;">
-            <span style="margin-right:10px;">${petPage.currentPageNum}</span>
+            <span style="margin-right:10px;">${userPetHousePage.currentPageNum}</span>
             <span>/</span>
-            <span style="margin-left:10px;">${petPage.totalPageNum}</span>
+            <span style="margin-left:10px;">${userPetHousePage.totalPageNum}</span>
         </div>
         <!-- 分页处理结束 -->
     </div>

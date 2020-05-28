@@ -1269,7 +1269,7 @@ public class MainActivity extends AppCompatActivity {
         final UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
         final String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
         Glide.with(this).load(url).into(pet);
-        switch (status.getMessage()){
+        switch (status.getResult()){
             case "0":
                 text.setText("要继续加油哦！");
                 break;

@@ -215,6 +215,21 @@
                 <li class="list">
                     <a href="javascript:;">
                         <i class="iconfont">&#xe6a3;</i>
+                        用户宠物管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initUserPetHouseManager" class="sub-menu">
+                        <li id="initUserPetHouseManager1">
+                            <a href="${ctx}/admin/user_pet_house/findUserPetHousePage">
+                                <i class="iconfont">&#xe6a7;</i>
+                                用户宠物列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list">
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
                         土地管理
                         <i class="iconfont nav_right">&#xe697;</i>
                     </a>
@@ -385,7 +400,6 @@
                     <th style="text-align:center;">学科</th>
                     <th style="text-align:center;">年级</th>
                     <th style="text-align:center;">答案</th>
-                    <th style="text-align:center;">选项</th>
                     <th style="text-align:center;">操作</th>
                 </tr>
                 </thead>
@@ -402,7 +416,6 @@
                             </c:if>
                         </c:forEach>
                         <td>${(questionPage.answer == 1) ? "正确" : "错误"}</td>
-                        <td>${(questionPage.choice == 1) ? "正确" : "错误"}</td>
                         <td class="td-manage" align="center">
                             <a style="text-decoration:none"  onclick="updateQuestion('编辑','${ctx}/admin/question/toEdit?id=${questionPage.id}','600','400')" href="javascript:;" title="编辑">
                                 <i class="layui-icon">&#xe642;</i>

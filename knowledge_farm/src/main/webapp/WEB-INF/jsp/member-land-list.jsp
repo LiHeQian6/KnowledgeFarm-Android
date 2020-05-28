@@ -153,6 +153,21 @@
 					<li class="list">
 						<a href="javascript:;">
 							<i class="iconfont">&#xe6a3;</i>
+							用户宠物管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initUserPetHouseManager" class="sub-menu">
+							<li id="initUserPetHouseManager1">
+								<a href="${ctx}/admin/user_pet_house/findUserPetHousePage">
+									<i class="iconfont">&#xe6a7;</i>
+									用户宠物列表
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="list">
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
 							土地管理
 							<i class="iconfont nav_right">&#xe697;</i>
 						</a>
@@ -271,7 +286,6 @@
                     <tr>
                         <th style="text-align:center;">用户ID</th>
                         <th style="text-align:center;">用户账号</th>
-                        <th style="text-align:center;">用户名称</th>
                         <th style="text-align:center;">1</th>
                         <th style="text-align:center;">2</th>
                         <th style="text-align:center;">3</th>
@@ -299,7 +313,6 @@
 						<tr>
 							<td>${landPage.user.id}</td>
 							<td>${landPage.user.account}</td>
-							<td>${landPage.user.nickName}</td>
 							<td>${(empty landPage.userCrop1) ? '未开垦' : ((empty landPage.userCrop1.crop) ? '已开垦' : landPage.userCrop1.crop.name)}</td>
 							<td>${(empty landPage.userCrop2) ? '未开垦' : ((empty landPage.userCrop2.crop) ? '已开垦' : landPage.userCrop2.crop.name)}</td>
 							<td>${(empty landPage.userCrop3) ? '未开垦' : ((empty landPage.userCrop3.crop) ? '已开垦' : landPage.userCrop3.crop.name)}</td>

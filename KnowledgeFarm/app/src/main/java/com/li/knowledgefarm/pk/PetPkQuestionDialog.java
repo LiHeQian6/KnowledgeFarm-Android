@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,6 +43,7 @@ public class PetPkQuestionDialog extends Dialog {
     private View completion_layout; //填空题布局
     private View judgement_layout; //判断题布局
     private View choice_layout; //选择题布局
+    private TextView battle_tip;//提示信息
     //填空题
     private TextView completion_question; //填空题问题
     private TextView isFalse; //回答是否错误文字提示
@@ -149,13 +152,31 @@ public class PetPkQuestionDialog extends Dialog {
         if(checkBox_C.isChecked())
             choose_answer = choice_C.getText().toString();
         if(choose_answer.equals(((SingleChoice)question).getAnswer())){
+            battle_tip.setText("恭喜你答对了");
+            battle_tip.setVisibility(View.VISIBLE);
             listener.select(true,System.currentTimeMillis()-startTime);
             timeLimit.cancel(true);
-            dismiss();
+            new Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            dismiss();
+                        }
+                    }
+                    ,600);
         }else {
+            battle_tip.setText("你答错了哦");
+            battle_tip.setVisibility(View.VISIBLE);
             listener.select(false,System.currentTimeMillis()-startTime);
             timeLimit.cancel(true);
-            dismiss();
+            new Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            dismiss();
+                        }
+                    }
+                    ,600);
         }
     }
 
@@ -169,13 +190,31 @@ public class PetPkQuestionDialog extends Dialog {
     private void completionIfTrue(){
         String your_answer = completion_answer.getText().toString().trim();
         if(your_answer.equals(((Completion)question).getAnswer())){
+            battle_tip.setText("恭喜你答对了");
+            battle_tip.setVisibility(View.VISIBLE);
             listener.select(true,System.currentTimeMillis()-startTime);
             timeLimit.cancel(true);
-            dismiss();
+            new Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            dismiss();
+                        }
+                    }
+                    ,600);
         }else{
+            battle_tip.setText("你答错了哦");
+            battle_tip.setVisibility(View.VISIBLE);
             listener.select(false,System.currentTimeMillis()-startTime);
             timeLimit.cancel(true);
-            dismiss();
+            new Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            dismiss();
+                        }
+                    }
+                    ,600);
         }
     }
 
@@ -252,12 +291,14 @@ public class PetPkQuestionDialog extends Dialog {
                 choice_layout.setVisibility(View.VISIBLE);
                 completion_layout.setVisibility(View.GONE);
                 judgement_layout.setVisibility(View.GONE);
+                battle_tip.setVisibility(View.GONE);
                 showChoice();
                 break;
             case 2:
                 choice_layout.setVisibility(View.GONE);
                 completion_layout.setVisibility(View.VISIBLE);
                 judgement_layout.setVisibility(View.GONE);
+                battle_tip.setVisibility(View.GONE);
                 showCompletion();
                 break;
 //            case 3:
@@ -280,6 +321,7 @@ public class PetPkQuestionDialog extends Dialog {
 
         battle = findViewById(R.id.commit_battle);
         time_limit = findViewById(R.id.time_limit);
+        battle_tip = findViewById(R.id.battle_tip);
         //填空题布局
         completion_layout = findViewById(R.id.battle_completion_layout);
         //选择题布局

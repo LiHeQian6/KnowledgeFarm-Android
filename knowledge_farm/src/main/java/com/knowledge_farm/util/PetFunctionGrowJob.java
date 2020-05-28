@@ -27,23 +27,26 @@ public class PetFunctionGrowJob extends QuartzJobBean {
     private Scheduler scheduler;
     Logger logger = LoggerFactory.getLogger(getClass());
     private Integer userId;
-    private Integer growHour;
+    private Integer growHour; //数据库内宠物功能
+    private Integer functionHour; //当前任务调度的时间策略
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) {
         Date date = new Date();
         int hour = date.getHours();
-        int minute = date.getMinutes();
-        int second = date.getSeconds();
-        String trigger = "";
+        String name = "job" + userId + "_petFunctionGrow";
+        String group = "group" + userId + "_petFunctionGrow";
         userId = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("userId");
+        functionHour = (Integer) jobExecutionContext.getJobDetail().getJobDataMap().get("functionHour");
         User user = this.userService.findUserById(userId);
         List<UserCrop> userCropList = findUserCropListByLand(user.getLand());
+        //生长
         for(UserCrop userCrop : userCropList){
             if(userCrop.getProgress() < userCrop.getCrop().getMatureTime() && userCrop.getStatus() != 0){
                 userCrop.setProgress(userCrop.getProgress() + 1);
             }
         }
+        //获得宠物功能值
         for(UserPetHouse userPetHouse : user.getPetHouses()){
             if(userPetHouse.getIfUsing() == 1){
                 switch (userPetHouse.getGrowPeriod()){
@@ -60,26 +63,41 @@ public class PetFunctionGrowJob extends QuartzJobBean {
                 break;
             }
         }
-        if(hour + growHour >= 24){
-            String name = "job" + userId + "_petFunctionGrow";
-            String group = "group" + userId + "_petFunctionGrow";
+        //正常执行
+        if(functionHour == growHour && (hour + growHour < 24)){
+            return;
+        }
+        //跨越0点
+        if(functionHour == growHour && (hour + growHour >= 24)){
             deleteJob(name, group);
-            trigger = second + " " + minute + " " + (hour + growHour - 24) + "/" + growHour + " * * ?";
-            try {
-                startJob(scheduler, name, group, userId, trigger);
-            } catch (SchedulerException e) {
-                e.printStackTrace();
-                logger.info("宠物促进作物生长功能开启新任务调度失败");
-            }
+        }
+        try {
+            startJob(scheduler, name, group, userId, growHour);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            logger.info("宠物促进作物生长功能开启新任务调度失败");
         }
     }
 
-    public void startJob(Scheduler scheduler, String name, String group, Integer userId, String trigger) throws SchedulerException {
+    public void startJob(Scheduler scheduler, String name, String group, Integer userId, Integer functionHour) throws SchedulerException {
         // 通过JobBuilder构建JobDetail实例，JobDetail规定只能是实现Job接口的实例
         // JobDetail 是具体Job实例
         JobDetail jobDetail = JobBuilder.newJob(PetFunctionGrowJob.class).withIdentity(name, group).build();
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
         jobDataMap.put("userId", userId);
+        jobDataMap.put("functionHour", functionHour);
+        Date date = new Date();
+        int hour = date.getHours();int minute = date.getMinutes();int second = date.getSeconds();
+        String trigger = "";
+        int result = hour + functionHour;
+        if(result < 24){
+            hour = result;
+        }else if(result == 24){
+            hour = 0;
+        }else{
+            hour = hour + functionHour - 24;
+        }
+        trigger = second + " " + minute + " " + hour + "/" + functionHour + " * * ?";
         // 基于表达式构建触发器
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(trigger);
         // CronTrigger表达式触发器 继承于Trigger

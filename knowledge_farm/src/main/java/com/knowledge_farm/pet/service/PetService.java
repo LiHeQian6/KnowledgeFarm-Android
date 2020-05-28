@@ -44,6 +44,10 @@ public class PetService {
         return petVOList;
     }
 
+    public List<Pet> findAllPet(){
+        return this.petDao.findAll();
+    }
+
     public Pet findPetById(int petId){
         return petDao.findPetById(petId);
     }

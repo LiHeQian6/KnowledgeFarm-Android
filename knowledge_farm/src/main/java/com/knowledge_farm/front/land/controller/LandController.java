@@ -37,10 +37,6 @@ public class LandController {
             Page<Land> page = (Page) obj;
             PageUtil<Land> pageUtil = new PageUtil(pageNumber, pageSize);
             pageUtil.setTotalCount((int) ((Page) obj).getTotalElements());
-//            for(Land land : page.getContent()){
-//                User user = land.getUser();
-//                user.setPassword("");
-//            }
             pageUtil.setList(page.getContent());
             request.setAttribute("landPage", pageUtil);
             return "member-land-list";
@@ -54,8 +50,6 @@ public class LandController {
         Land land = this.landService.findLandById(id);
         List<Crop> crops = this.landService.findAllCrop();
         if(land != null){
-//            User user = land.getUser();
-//            user.setPassword("");
             request.setAttribute("land", land);
             request.setAttribute("crops", crops);
         }

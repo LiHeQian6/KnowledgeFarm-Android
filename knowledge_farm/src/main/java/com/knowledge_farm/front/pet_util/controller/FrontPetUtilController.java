@@ -37,6 +37,8 @@ public class FrontPetUtilController {
     private PetUtilTypeService petUtilTypeService;
     @Resource
     private EntityManager entityManager;
+    @Value("${file.photoLocation}")
+    private String photoLocation;
     @Value("${file.petUtilPhotoFolderName}")
     private String petUtilPhotoFolderName;
     @Value("${file.petUtilPhotoFileLocation}")
@@ -194,7 +196,7 @@ public class FrontPetUtilController {
             PetUtil petUtil = this.frontPetUtilService.findPetUtilById(id);
             PetUtilType petUtilType = this.petUtilTypeService.findPetUtilTypeById(type);
             if(!file.getOriginalFilename().equals("")){
-                File file1 = new File(this.petUtilPhotoFileLocation + "/" + petUtil.getImg());
+                File file1 = new File(this.photoLocation + "/" + petUtil.getImg());
                 if (file1.exists()) {
                     file1.delete();
                 }

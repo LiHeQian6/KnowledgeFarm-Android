@@ -210,8 +210,7 @@ public class FrontQuestionController {
     public String addJudgmentQuestion(@RequestParam("questionTitle") String questionTitle,
                                       @RequestParam("subject") String subject,
                                       @RequestParam("grade") Integer grade,
-                                      @RequestParam("answer") Integer answer,
-                                      @RequestParam("choice") Integer choice){
+                                      @RequestParam("answer") Integer answer){
         try {
             Judgment judgment = new Judgment();
             QuestionType questionType = this.frontQuestionService.findQuestionTypeById(3);
@@ -221,7 +220,6 @@ public class FrontQuestionController {
             judgment.setSubject(subject);
             judgment.setGrade(grade);
             judgment.setAnswer(answer);
-            judgment.setChoice(choice);
             judgment.setQuestionTitle(title);
             title.setQuestion(judgment);
             this.frontQuestionService.save(judgment);
@@ -281,14 +279,12 @@ public class FrontQuestionController {
     public String editJudgmentQuestion(@RequestParam("id") Integer id,
                                        @RequestParam("questionTitle") String questionTitle,
                                        @RequestParam("grade") Integer grade,
-                                       @RequestParam("answer") Integer answer,
-                                       @RequestParam("choice") Integer choice){
+                                       @RequestParam("answer") Integer answer){
         try {
             Judgment judgment = (Judgment) this.frontQuestionService.findQuestionById(id);
             judgment.getQuestionTitle().setTitle(questionTitle);;
             judgment.setGrade(grade);
             judgment.setAnswer(answer);
-            judgment.setChoice(choice);
             this.frontQuestionService.save(judgment);
             return Result.SUCCEED;
         }catch (Exception e){
