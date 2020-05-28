@@ -289,7 +289,7 @@ public class AnswerController {
     public List<Question> englishOneUp() {
         int pageNumber = new Random().nextInt(5);
         Page<Question> page =  answerService.findQuestion(1,"English",PageRequest.of(pageNumber, 10));
-        List<Question> list = new ArrayList(page.getContent());
+        List<Question> list = getEnglishTk(new ArrayList(page.getContent()));
         Collections.shuffle(list);
         return list;
     }
@@ -305,7 +305,7 @@ public class AnswerController {
     public List<Question> englishOneDown() {
         int pageNumber = new Random().nextInt(5);
         Page<Question> page =  answerService.findQuestion(2,"English",PageRequest.of(pageNumber, 9));
-        List<Question> list = new ArrayList(page.getContent());
+        List<Question> list = getEnglishTk(new ArrayList(page.getContent()));
         Collections.shuffle(list);
         return list;
     }
@@ -321,7 +321,7 @@ public class AnswerController {
     public List<Question> englishTwoUp() {
         int pageNumber = new Random().nextInt(5);
         Page<Question> page =  answerService.findQuestion(3,"English",PageRequest.of(pageNumber, 11));
-        List<Question> list = new ArrayList(page.getContent());
+        List<Question> list = getEnglishTk(new ArrayList(page.getContent()));
         Collections.shuffle(list);
         return list;
     }
@@ -337,7 +337,7 @@ public class AnswerController {
     public List<Question> englishTwoDown() {
         int pageNumber = new Random().nextInt(5);
         Page<Question> page =  answerService.findQuestion(4,"English",PageRequest.of(pageNumber, 11));
-        List<Question> list = new ArrayList(page.getContent());
+        List<Question> list = getEnglishTk(new ArrayList(page.getContent()));
         Collections.shuffle(list);
         return list;
     }
@@ -353,7 +353,7 @@ public class AnswerController {
     public List<Question> englishThreeUp() {
         int pageNumber = new Random().nextInt(5);
         Page<Question> page =  answerService.findQuestion(5,"English",PageRequest.of(pageNumber, 10));
-        List<Question> list = new ArrayList(page.getContent());
+        List<Question> list = getEnglishTk(new ArrayList(page.getContent()));
         Collections.shuffle(list);
         return list;
     }
@@ -369,7 +369,7 @@ public class AnswerController {
     public List<Question> englishThreeDown() {
         int pageNumber = new Random().nextInt(9);
         Page<Question> page =  answerService.findQuestion(6,"English",PageRequest.of(pageNumber, 12));
-        List<Question> list = new ArrayList(page.getContent());
+        List<Question> list = getEnglishTk(new ArrayList(page.getContent()));
         Collections.shuffle(list);
         return list;
     }
