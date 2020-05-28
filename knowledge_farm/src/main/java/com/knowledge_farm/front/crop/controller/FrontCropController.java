@@ -38,6 +38,8 @@ public class FrontCropController {
     private FrontCropService frontCropService;
     @Resource
     private EntityManager entityManager;
+    @Value("${file.photoLocation}")
+    private String photoLocation;
     @Value("${file.cropPhotoFolderName}")
     private String cropPhotoFolderName;
     @Value("${file.cropPhotoFileLocation}")
@@ -202,7 +204,7 @@ public class FrontCropController {
                 if (!multipartFile.getOriginalFilename().equals("")) {
                     switch (count) {
                         case 1:
-                            File file = new File(this.cropPhotoFileLocation + "/" + crop.getImg1());
+                            File file = new File(this.photoLocation + "/" + crop.getImg1());
                             if (file.exists()) {
                                 file.delete();
                             }
@@ -211,7 +213,7 @@ public class FrontCropController {
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName));
                             break;
                         case 2:
-                            File file2 = new File(this.cropPhotoFileLocation + "/" + crop.getImg2());
+                            File file2 = new File(this.photoLocation + "/" + crop.getImg2());
                             if (file2.exists()) {
                                 file2.delete();
                             }
@@ -220,7 +222,7 @@ public class FrontCropController {
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.cropPhotoFileLocation, fileName2));
                             break;
                         case 3:
-                            File file3 = new File(this.cropPhotoFileLocation + "/" + crop.getImg3());
+                            File file3 = new File(this.photoLocation + "/" + crop.getImg3());
                             if (file3.exists()) {
                                 file3.delete();
                             }

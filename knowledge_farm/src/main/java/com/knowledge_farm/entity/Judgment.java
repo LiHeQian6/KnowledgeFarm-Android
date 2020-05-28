@@ -15,7 +15,6 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "judgment_id")
 public class Judgment extends Question{
     private Integer answer;
-    private Integer choice;
 
     public Integer getAnswer() {
         return answer;
@@ -23,14 +22,6 @@ public class Judgment extends Question{
 
     public void setAnswer(Integer answer) {
         this.answer = answer;
-    }
-
-    public Integer getChoice() {
-        return choice;
-    }
-
-    public void setChoice(Integer choice) {
-        this.choice = choice;
     }
 
 }

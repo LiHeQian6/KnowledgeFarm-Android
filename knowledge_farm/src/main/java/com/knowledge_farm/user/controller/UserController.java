@@ -57,7 +57,7 @@ public class UserController {
             @ApiImplicitParam(name = "openId", value = "openId", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/loginByOpenId")
-    public Object loginByOpenId(@RequestParam("openId") String openId, HttpSession session, HttpServletResponse response){
+    public Object loginByOpenId(@RequestParam("openId") String openId, HttpSession session){
         Object obj = this.userService.loginByOpenId(openId);
         if(obj instanceof User){
             session.setAttribute("userId", ((User) obj).getId());

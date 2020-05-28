@@ -391,7 +391,6 @@ public class FrontQuestionService {
             cellList.get(3).setCellValue(judgment.getQuestionType().getName());
             cellList.get(4).setCellValue(changeGrade1(judgment.getGrade()));
             cellList.get(5).setCellValue((judgment.getAnswer() == 1 ? "正确" : "错误"));
-            cellList.get(6).setCellValue((judgment.getChoice() == 1 ? "正确" : "错误"));
             rowNum++;
         }
     }
@@ -542,7 +541,6 @@ public class FrontQuestionService {
         question.getQuestionTitle().setTitle(cellList.get(1).getStringCellValue());
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer((cellList.get(5).getStringCellValue().equals("正确") ? 1 : 0));
-        question.setChoice((cellList.get(6).getStringCellValue().equals("正确") ? 1 : 0));
     }
 
     public String importSingleChoiceToAdd(Sheet sheet, Integer questionTypeId){
@@ -715,7 +713,6 @@ public class FrontQuestionService {
         question.setQuestionType(questionType);
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer((cellList.get(5).getStringCellValue().equals("正确") ? 1 : 0));
-        question.setChoice((cellList.get(6).getStringCellValue().equals("正确") ? 1 : 0));
         question.setQuestionTitle(questionTitle);
         questionTitle.setQuestion(question);
         return question;
@@ -794,11 +791,6 @@ public class FrontQuestionService {
         if(result == -3){
             switch (no){
                 case 5:
-                    if(value == null || value.equals("")){
-                        return -2;
-                    }
-                    return (value.equals("正确") || value.equals("错误")) ? 1 : -1;
-                case 6:
                     if(value == null || value.equals("")){
                         return -2;
                     }

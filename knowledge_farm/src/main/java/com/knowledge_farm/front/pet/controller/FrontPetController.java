@@ -36,6 +36,8 @@ public class FrontPetController {
     private FrontPetService frontPetService;
     @Resource
     private EntityManager entityManager;
+    @Value("${file.photoLocation}")
+    private String photoLocation;
     @Value("${file.petPhotoFolderName}")
     private String petPhotoFolderName;
     @Value("${file.petPhotoFileLocation}")
@@ -211,7 +213,7 @@ public class FrontPetController {
                 if (!multipartFile.getOriginalFilename().equals("")) {
                     switch (count) {
                         case 1:
-                            File file = new File(this.petPhotoFileLocation + "/" + pet.getImg1());
+                            File file = new File(this.photoLocation + "/" + pet.getImg1());
                             if (file.exists()) {
                                 file.delete();
                             }
@@ -220,7 +222,7 @@ public class FrontPetController {
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName));
                             break;
                         case 2:
-                            File file2 = new File(this.petPhotoFileLocation + "/" + pet.getImg2());
+                            File file2 = new File(this.photoLocation + "/" + pet.getImg2());
                             if (file2.exists()) {
                                 file2.delete();
                             }
@@ -229,7 +231,7 @@ public class FrontPetController {
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName2));
                             break;
                         case 3:
-                            File file3 = new File(this.petPhotoFileLocation + "/" + pet.getImg3());
+                            File file3 = new File(this.photoLocation + "/" + pet.getImg3());
                             if (file3.exists()) {
                                 file3.delete();
                             }

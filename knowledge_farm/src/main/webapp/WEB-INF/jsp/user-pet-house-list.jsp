@@ -309,6 +309,7 @@
                     <th style="text-align:center;">用户ID</th>
                     <th style="text-align:center;">用户账号</th>
                     <th style="text-align:center;">宠物昵称</th>
+                    <th style="text-align:center;">img</th>
                     <th style="text-align:center;">生长阶段</th>
                     <th style="text-align:center;">生命值</th>
                     <th style="text-align:center;">智力值</th>
@@ -324,6 +325,7 @@
                         <td>${userPetHouse.user.id}</td>
                         <td>${userPetHouse.user.account}</td>
                         <td>${userPetHouse.pet.name}</td>
+                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${userPetHouse.pet.img1}"/></td>
                         <td>${userPetHouse.growPeriod}</td>
                         <td>${userPetHouse.life}</td>
                         <td>${userPetHouse.intelligence}</td>

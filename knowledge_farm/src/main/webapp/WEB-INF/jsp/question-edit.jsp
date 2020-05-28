@@ -168,40 +168,29 @@
             "                            <option value=\"0\" ${(judgment.answer == 0) ? "selected" : ""}>错误</option>\n" +
             "                        </select>\n" +
             "                    </div>\n" +
-            "                </div>\n" +
-            "                <div id=\"judgment\" class=\"layui-form-item\">\n" +
-            "                    <label class=\"layui-form-label\">\n" +
-            "                        <font color=\"red\">*</font>选项\n" +
-            "                    </label>\n" +
-            "                    <div class=\"layui-input-inline\">\n" +
-            "                        <select id=\"choiceSelect\" name=\"choice\" lay-filter=\"choice\">\n" +
-            "                            <option value=\"1\" ${(judgment.choice == 1) ? "selected" : ""}>正确</option>\n" +
-            "                            <option value=\"0\" ${(judgment.choice == 0) ? "selected" : ""}>错误</option>\n" +
-            "                        </select>\n" +
-            "                    </div>\n" +
             "                </div>";
     }
     form1.insertBefore(div, btnSave);
 
-    layui.use(['form'], function(){
-        var form = layui.form();
-        form.on('select(answer)',function(data){
-            if(data.value == 0){
-                $("#choiceSelect").find("option[value="+1+"]").prop("selected",true);
-            }else if(data.value == 1){
-                $("#choiceSelect").find("option[value="+0+"]").prop("selected",true);
-            }
-            form.render();
-        });
-        form.on('select(choice)',function(data){
-            if(data.value == 0){
-                $("#answerSelect").find("option[value="+1+"]").prop("selected",true);
-            }else if(data.value == 1){
-                $("#answerSelect").find("option[value="+0+"]").prop("selected",true);
-            }
-            form.render();
-        });
-    });
+    // layui.use(['form'], function(){
+    //     var form = layui.form();
+    //     form.on('select(answer)',function(data){
+    //         if(data.value == 0){
+    //             $("#choiceSelect").find("option[value="+1+"]").prop("selected",true);
+    //         }else if(data.value == 1){
+    //             $("#choiceSelect").find("option[value="+0+"]").prop("selected",true);
+    //         }
+    //         form.render();
+    //     });
+    //     form.on('select(choice)',function(data){
+    //         if(data.value == 0){
+    //             $("#answerSelect").find("option[value="+1+"]").prop("selected",true);
+    //         }else if(data.value == 1){
+    //             $("#answerSelect").find("option[value="+0+"]").prop("selected",true);
+    //         }
+    //         form.render();
+    //     });
+    // });
 
 </script>
 </body>
