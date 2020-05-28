@@ -4,7 +4,10 @@ import com.knowledge_farm.answer.entity.Mix;
 import com.knowledge_farm.answer.entity.Multiple;
 import com.knowledge_farm.answer.entity.Question3Num;
 import com.knowledge_farm.answer.service.AnswerService;
+import com.knowledge_farm.entity.Completion;
 import com.knowledge_farm.entity.Question;
+import com.knowledge_farm.entity.QuestionTitle;
+import com.knowledge_farm.entity.QuestionType;
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,7 +66,9 @@ public class AnswerController {
     @GetMapping("/mathOneUp")
     public List OneUpMath() {
         List<Question> list = answerService.getQuestion3OneUpMath();
-        
+        list.addAll(answerService.findQuestion2(1,"Math",new QuestionType(1,"单选题")));
+        list.addAll(answerService.findQuestion2(1,"Math",new QuestionType(3,"判断题")));
+        Collections.shuffle(list);
         return list;
     }
     /**
@@ -77,7 +82,9 @@ public class AnswerController {
     @GetMapping("/mathOneDown")
     public List OneDownMath() {
         List<Question> list = answerService.getQuestion3OneDownMath();
-
+        list.addAll(answerService.findQuestion2(2,"Math",new QuestionType(1,"单选题")));
+        list.addAll(answerService.findQuestion2(2,"Math",new QuestionType(3,"判断题")));
+        Collections.shuffle(list);
         return list;
     }
     /**
@@ -136,7 +143,11 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/mathThreeUp")
     public List<Question> mathThreeUp23Num(){
-        return answerService.get23Multiple();
+        List<Question> list = answerService.get23Multiple();
+        list.addAll(answerService.findQuestion2(5,"Math",new QuestionType(1,"单选题")));
+        list.addAll(answerService.findQuestion2(5,"Math",new QuestionType(3,"判断题")));
+        Collections.shuffle(list);
+        return list;
     }
 
     /**
@@ -149,7 +160,11 @@ public class AnswerController {
     @ResponseBody
     @GetMapping("/mathThreeDown")
     public List<Question> mathThreeDown(){
-        return answerService.doubleMutiple();
+        List<Question> list = answerService.doubleMutiple();
+        list.addAll(answerService.findQuestion2(6,"Math",new QuestionType(1,"单选题")));
+        list.addAll(answerService.findQuestion2(6,"Math",new QuestionType(3,"判断题")));
+        Collections.shuffle(list);
+        return list;
     }
 
     /**
@@ -249,6 +264,19 @@ public class AnswerController {
         return list;
     }
 
+    @ResponseBody
+    @GetMapping("/englishTk")
+    public List<Question> getEnglishTk(List<Question> list){
+        int i = 3;
+        while (i-->0){
+            String question_title = list.get(i).getQuestionTitle().getTitle();
+            int size = question_title.length();
+            int grade = list.get(i).getGrade();
+            Question question = new Completion(new QuestionTitle(question_title),"English",new QuestionType(2,"填空题"),grade,new Random().nextInt(size)+1+"");
+            list.set(i,question);
+        }
+        return list;
+    }
     /**
      * @Description: 英语一年级上册
      * @Param:

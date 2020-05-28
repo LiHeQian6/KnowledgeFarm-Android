@@ -59,10 +59,11 @@ public class AnswerService {
                 Collections.shuffle(questions);
                 questions = questions.subList(0,17);
         }
+        Collections.shuffle(questions);
         return questions;
     }
 
-    //查询语文,英语,数学2年级题
+    //查询语文,英语,数学题
     public Page<Question> findQuestion(int grade,String subject,Pageable pageable){
         return questionRepository.findByGradeAndSubject(grade,subject,pageable);
     }
@@ -70,14 +71,14 @@ public class AnswerService {
     public List<Question> findQuestion2(int grade,String subject,QuestionType type){
         List<Question> list = questionRepository.findByGradeAndSubjectAndQuestionType(grade,subject,type);
         Collections.shuffle(list);
-        return list.subList(0,2);
+        return list.subList(0,1);
     }
 
     //一年级上册数学
     public List<Question> getQuestion3OneUpMath(){
         Random random = new Random();
         List<Question> list  = new ArrayList<Question>();
-        int i = 10;
+        int i = 8;
         while(i-->0) {
             String signal1 = random.nextBoolean()? "+": "-";
             String s = random.nextBoolean()? "+": "-";
@@ -127,7 +128,6 @@ public class AnswerService {
             Question question = new Completion(new QuestionTitle(question_title),"Math",new QuestionType(2,"填空题"),1,result+"");
             list.add(question);
         }
-        list.addAll(findQuestion2(1,"Math",new QuestionType(1,"单选题")));
         return list;
     }
 
@@ -185,7 +185,6 @@ public class AnswerService {
             Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 1, result + "");
             list.add(question);
         }
-        list.addAll(findQuestion2(2,"Math", new QuestionType(1,"单选题")));
         return list;
     }
 
@@ -201,13 +200,13 @@ public class AnswerService {
             }
         }
         Collections.shuffle(list);
-        return list.subList(0,5);
+        return list.subList(0,2);
     }
     //数学乘除法——2,3位数乘以一位数，除以一位数
     public List<Question> get23Multiple(){
         Random random = new Random();
         List<Question> list  = new ArrayList<Question>();
-        int i = 10;
+        int i = 5;
         while (i-->0){
             String signal = random.nextBoolean()?"×":"÷";
             int doubleNum = random.nextInt(390)+10;
@@ -227,9 +226,7 @@ public class AnswerService {
             Question question = new Completion(new QuestionTitle(question_title), "Math", new QuestionType(2,"填空题"), 5, num + "");
             list.add(question);
         }
-        Collections.shuffle(list);
         list.addAll(getMix());
-        list.addAll(findQuestion2(5,"Math",new QuestionType(1,"单选题")));
         return list;
     }
 
@@ -237,7 +234,7 @@ public class AnswerService {
     public List<Question> getMix() {
         Random random = new Random();
         List<Question> list = new ArrayList<Question>();
-        int i = 10;
+        int i = 5;
         while(i-->0){
             int num1 = random.nextInt(290)+10;
             int num2 = 0;
@@ -390,7 +387,7 @@ public class AnswerService {
     public List<Question> doubleMutiple(){
         Random random = new Random();
         List<Question> list  = new ArrayList<Question>();
-        int i = 10;
+        int i = 5;
         while (i-->0){
             String signal = "×";
             int num1 = random.nextInt(90)+10;
@@ -401,8 +398,6 @@ public class AnswerService {
             list.add(question);
         }
         list.addAll(getMix());
-        list.addAll(findQuestion2(6,"Math", new QuestionType(1,"单选题")));
-        Collections.shuffle(list);
         return list;
     }
 
