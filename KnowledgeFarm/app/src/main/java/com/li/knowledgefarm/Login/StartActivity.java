@@ -55,6 +55,7 @@ public class StartActivity extends AppCompatActivity {
 //        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 //            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 //        }
+        System.out.println("用户信息："+user.toString());
         FullScreen.NavigationBarStatusBar(StartActivity.this,true);
         getViews();
         registListener();
@@ -68,7 +69,7 @@ public class StartActivity extends AppCompatActivity {
         if(getInfo.getAction().equals("QQFirstLogin")&&user!=null){
             nickName.setText(user.getNickName());
             Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(photo);
-            showNotifyDialog();
+            //showNotifyDialog();
         }else if(getInfo.getAction().equals("autoLogin")&&user!=null){
             nickName.setText(user.getNickName());
             Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(photo);
