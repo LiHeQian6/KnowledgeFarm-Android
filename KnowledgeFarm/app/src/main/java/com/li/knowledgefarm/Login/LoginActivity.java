@@ -337,16 +337,11 @@ public class LoginActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("openId",openId);
-                    jsonObject.put("nickName","");
-                    jsonObject.put("photo","");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                asyncByJson2(getResources().getString(R.string.URL)+"/user/loginByOpenId",
-                        jsonObject.toString());
+                FormBody formBody = new FormBody.Builder()
+                        .add("openId", openId)
+                        .build();
+                asyncByJson(getResources().getString(R.string.URL)+"/user/loginByOpenId",
+                        formBody);
 
             }
         }.start();
