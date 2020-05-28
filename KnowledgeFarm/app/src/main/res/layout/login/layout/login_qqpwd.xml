@@ -2,71 +2,78 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:padding="20dp"
-    android:background="@drawable/logindialogbac">
+    android:background="@drawable/loginbackground">
 
-    <EditText
-        android:id="@+id/registPwd"
-        android:layout_width="300dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/eradius"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="2"
         android:gravity="center"
-        android:hint="密码"
-        android:textColorHint="@color/editTextCorlor"
-        android:textColor="@color/blackTextColor"
-        android:inputType="textPassword"
-        android:imeOptions="flagNoExtractUi"
-        android:maxLength="16"
-        android:textSize="20sp" />
-    <EditText
-        android:id="@+id/configPwd"
-        android:layout_width="300dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:maxLength="16"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/eradius"
-        android:gravity="center"
-        android:hint="确认密码"
-        android:textColorHint="@color/editTextCorlor"
-        android:textColor="@color/blackTextColor"
-        android:inputType="textPassword"
-        android:imeOptions="flagNoExtractUi"
-        android:textSize="20sp"/>
-    <Spinner
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:id="@+id/spiner"
-        android:entries="@array/sarry"
-        android:textAlignment="center"
-        android:textColorHint="@color/editTextCorlor"
-        android:outlineSpotShadowColor="@color/blackTextColor"
-        android:background="@drawable/grade"
-        android:layout_width="300dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-    <Button
-        android:id="@+id/btnRegist"
-        android:layout_width="200dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:text="注册"
-        android:textAlignment="center"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        android:background="@drawable/buy" />
-
+        android:background="@drawable/diaback">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="为了您的账号安全请完善信息"
+            android:textSize="25dp"
+            android:textColor="@color/ShopTextColor"/>
+        <EditText
+            android:id="@+id/registPwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:gravity="center"
+            android:hint="请输入密码"
+            android:textColor="@color/ShopTextColor"
+            android:inputType="textPassword"
+            android:imeOptions="flagNoExtractUi"
+            android:maxLength="16"
+            android:textSize="20sp" />
+        <EditText
+            android:id="@+id/configPwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="16"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:gravity="center"
+            android:hint="确认密码"
+            android:textColor="@color/ShopTextColor"
+            android:inputType="textPassword"
+            android:imeOptions="flagNoExtractUi"
+            android:textSize="20sp"/>
+        <Spinner
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:id="@+id/spiner"
+            android:entries="@array/sarry"
+            android:textAlignment="center"
+            android:textColorHint="@color/editTextCorlor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btnRegist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp"
+            android:text="完成"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:textSize="25sp"
+            android:background="@drawable/buy" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"/>
 </LinearLayout>

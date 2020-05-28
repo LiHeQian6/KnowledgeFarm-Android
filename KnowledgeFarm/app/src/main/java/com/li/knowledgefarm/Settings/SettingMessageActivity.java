@@ -1,8 +1,10 @@
 package com.li.knowledgefarm.Settings;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDoneException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -81,7 +83,6 @@ public class SettingMessageActivity extends AppCompatActivity {
     private Handler handler;
     /** 用户信息*/
     private UserInfo mInfo;
-    private TextView message_title;//标题文字
     private Button my_message; //我的信息按钮
     private Button system_setting; //系统设置按钮
     private Button about;//版权信息按钮
@@ -100,7 +101,6 @@ public class SettingMessageActivity extends AppCompatActivity {
     private Button change_password;
     private ImageView user_photo; //用户头像
     private User user;
-    private EditText email_edit; //邮箱输入框
     private OkHttpClient okHttpClient;
     private ChangeEmailPopUpWindow popUpWindow; //修改邮箱弹出框
     private ChangeNicknamePop nicknamePop; //修改昵称弹出框
@@ -114,6 +114,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     private Button log_out;
     private WindowManager wm;
     private DisplayMetrics ds;
+    private Button check_update;//检查更新按钮
 
 
     @Override
@@ -169,6 +170,7 @@ public class SettingMessageActivity extends AppCompatActivity {
             change_Email.setText("去绑定");
         }
         if(!(user.getUserAuthority() == null)){
+            user_QQ.setText("已绑定");
             change_QQ.setText("解绑");
         }else {
             user_QQ.setText("未绑定");
@@ -194,6 +196,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         returns_message.setOnClickListener(new CustomerOnclickListener());
         change_password.setOnClickListener(new CustomerOnclickListener());
         log_out.setOnClickListener(new CustomerOnclickListener());
+        check_update.setOnClickListener(new CustomerOnclickListener());
         select_grade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -215,7 +218,6 @@ public class SettingMessageActivity extends AppCompatActivity {
      * @return void
      */
     private void getViews() {
-        message_title = findViewById(R.id.message_title);
         my_message = findViewById(R.id.my_message_btn);
         system_setting = findViewById(R.id.system_setting);
         about = findViewById(R.id.about);
@@ -233,12 +235,12 @@ public class SettingMessageActivity extends AppCompatActivity {
         change_password = findViewById(R.id.change_password);
         user_QQ = findViewById(R.id.showQQ);
         user_Email = findViewById(R.id.showEmail);
-        email_edit = findViewById(R.id.bindingEmail_edit);
         change_nickname = findViewById(R.id.change_nickname);
         log_out = findViewById(R.id.btn_logout);
         mTencent = Tencent.createInstance(mAppId, getApplicationContext());
         spin = getResources().getStringArray(R.array.sarry);
         returns_message = findViewById(R.id.returns_message);
+        check_update = findViewById(R.id.check_update);
         wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
         ds = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(ds);
@@ -560,8 +562,6 @@ public class SettingMessageActivity extends AppCompatActivity {
         });
     }
 
-
-
     /**
      * @Description 展示修改昵称窗口
      * @Author 孙建旺
@@ -692,6 +692,21 @@ public class SettingMessageActivity extends AppCompatActivity {
         return 0;
     }
 
+    /**
+     * @Description 检查更新
+     * @Author 孙建旺
+     * @Date 上午10:55 2020/05/27
+     * @Param []
+     * @return void
+     */
+    private void checkUpdate(){
+        DownloadManager.Request downLoad = new DownloadManager.Request(Uri.parse(getResources().getString(R.string.UPDATE)));
+        downLoad.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        downloadManager.enqueue(downLoad);
+    }
+
     private class CustomerOnclickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
@@ -700,19 +715,16 @@ public class SettingMessageActivity extends AppCompatActivity {
                     user_mess_li.setVisibility(View.VISIBLE);
                     system_setting_li.setVisibility(View.GONE);
                     system_about.setVisibility(View.GONE);
-                    message_title.setText("个人信息");
                     break;
                 case R.id.system_setting:
                     user_mess_li.setVisibility(View.GONE);
                     system_about.setVisibility(View.GONE);
                     system_setting_li.setVisibility(View.VISIBLE);
-                    message_title.setText("系统设置");
                     break;
                 case R.id.about:
                     user_mess_li.setVisibility(View.GONE);
                     system_about.setVisibility(View.VISIBLE);
                     system_setting_li.setVisibility(View.GONE);
-                    message_title.setText("版权信息");
                     break;
                 case R.id.btnUpdateGrade:
                     if(change_grade.getText().toString().equals("修改")) {
@@ -750,6 +762,9 @@ public class SettingMessageActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_logout:
                     ShowIfDoPop("LogOut");
+                    break;
+                case R.id.check_update:
+
                     break;
             }
         }

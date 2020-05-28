@@ -149,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         okHttpClient = OkHttpUtils.getInstance(this);
         UserUtil.setUser(null);
+        System.out.println("***********************************************************");
         autoLogin();
         FullScreen.NavigationBarStatusBar(LoginActivity.this,true);
         getViews();

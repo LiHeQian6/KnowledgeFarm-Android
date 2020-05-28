@@ -73,6 +73,7 @@ public class RegisteActivity extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            CustomerToast.getInstance(RegisteActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     },1000);

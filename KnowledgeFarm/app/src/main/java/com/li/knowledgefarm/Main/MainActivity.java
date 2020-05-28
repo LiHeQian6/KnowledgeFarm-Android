@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
         FullScreen.NavigationBarStatusBar(MainActivity.this,true);
         setContentView(R.layout.activity_main);
         okHttpClient = OkHttpUtils.getInstance(this);
+        System.out.println("主界面用户信息："+UserUtil.getUser().toString());
         gson = new Gson();
         getViews();
         addListener();
@@ -262,8 +263,8 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).load(UserUtil.getUser().getPhoto()).apply(requestOptions).into(photo);
         nickName.setText(UserUtil.getUser().getNickName());
         account.setText("账号:" + UserUtil.getUser().getAccount());
-        level.setText("Lv:" + UserUtil.getUser().getLevel());
-        money.setText("金币:" + UserUtil.getUser().getMoney());
+        level.setText(" Lv" + UserUtil.getUser().getLevel());
+        money.setText(" 金币:" + UserUtil.getUser().getMoney());
         waterCount.setText(UserUtil.getUser().getWater() + "");
         fertilizerCount.setText(UserUtil.getUser().getFertilizer() + "");
         int[] levelExperience = getResources().getIntArray(R.array.levelExperience);
