@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -32,6 +33,7 @@ import com.li.knowledgefarm.Study.Util.AppUtil;
 import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
@@ -387,16 +389,11 @@ public class LoginActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            JSONObject jsonObject = new JSONObject();
-                            try {
-                                jsonObject.put("openId",openID);
-                                jsonObject.put("nickName",Nickname);
-                                jsonObject.put("photo",Path);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            FormBody formBody = new FormBody.Builder()
+                                    .add("openId", openID)
+                                    .build();
                             asyncByJson(getResources().getString(R.string.URL)+"/user/loginByOpenId",
-                                    jsonObject.toString());
+                                    formBody);
 
                         }
                     }.start();
@@ -414,13 +411,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     //授权（点击）登录
-    private void asyncByJson(final String urlPath, final String Json) {
+    private void asyncByJson(final String urlPath, final FormBody body) {
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                MediaType type = MediaType.parse("text/plain");
-                RequestBody body = RequestBody.create(Json,type);
                 Request request = new Request.Builder()
                         .url(urlPath)
                         .post(body)
