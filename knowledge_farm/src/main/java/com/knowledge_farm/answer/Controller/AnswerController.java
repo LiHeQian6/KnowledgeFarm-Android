@@ -264,6 +264,13 @@ public class AnswerController {
         return list;
     }
 
+    /**
+     * @description: 英语填空题
+     * @author :景光赞
+     * @date :2020/5/28 22:08
+     * @param :[list]
+     * @return :java.util.List<com.knowledge_farm.entity.Question>
+     */
     @ResponseBody
     @GetMapping("/englishTk")
     public List<Question> getEnglishTk(List<Question> list){
