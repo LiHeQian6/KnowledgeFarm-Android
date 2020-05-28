@@ -73,6 +73,8 @@ public class QuestionActivity extends AppCompatActivity implements StudyInterfac
     private TextView judge_question;//判断题问题
     private TextView judge_A; //A选项
     private TextView judge_B; //B选项
+    private CheckBox judgeBox_A; //A选项单选框
+    private CheckBox judgeBox_B; //B选项单选框
     private ImageView judge_isTrue; //是否判断正确提示
 
     private QuestionUtil questionUtil;
@@ -125,6 +127,8 @@ public class QuestionActivity extends AppCompatActivity implements StudyInterfac
         judge_isTrue = findViewById(R.id.judge_isTrue);
         judge_A = findViewById(R.id.judge_A);
         judge_B = findViewById(R.id.judge_B);
+        judgeBox_A = findViewById(R.id.judge_box_A);
+        judgeBox_B = findViewById(R.id.judge_box_B);
     }
 
     /**
@@ -209,6 +213,7 @@ public class QuestionActivity extends AppCompatActivity implements StudyInterfac
                         }
                     }
                     switch (datalist.get(QuestionUtil.POSITION).getQuestionType().getId()){
+                        case 3:
                         case 1:
                             if(QuestionUtil.POSITION < datalist.size() - 1) {
                                 QuestionUtil.PositionAdd();
@@ -217,8 +222,6 @@ public class QuestionActivity extends AppCompatActivity implements StudyInterfac
                             break;
                         case 2:
                             questionUtil.CompletionIfTrue();
-                            break;
-                        case 3:
                             break;
                     }
                     break;

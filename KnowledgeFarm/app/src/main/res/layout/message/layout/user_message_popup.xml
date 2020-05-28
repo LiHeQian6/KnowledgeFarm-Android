@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="20dp"
-    android:background="@drawable/shopitem">
+    android:background="@drawable/diaback">
 
     <LinearLayout
         android:layout_width="wrap_content"

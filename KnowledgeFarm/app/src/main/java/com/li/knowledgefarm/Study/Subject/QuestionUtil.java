@@ -83,6 +83,8 @@ public class QuestionUtil {
     private TextView judge_question;//判断题问题
     private TextView judge_A; //A选项
     private TextView judge_B; //B选项
+    private CheckBox judgeBox_A; //A选项单选框
+    private CheckBox judgeBox_B; //B选项单选框
     private ImageView judge_isTrue; //是否判断正确提示
 
     public QuestionUtil(Context context, Activity activity, List<Question> datalist) {
@@ -132,6 +134,8 @@ public class QuestionUtil {
         judge_isTrue = activity.findViewById(R.id.judge_isTrue);
         judge_A = activity.findViewById(R.id.judge_A);
         judge_B = activity.findViewById(R.id.judge_B);
+        judgeBox_A = activity.findViewById(R.id.judge_box_A);
+        judgeBox_B = activity.findViewById(R.id.judge_box_B);
         your_answer = activity.findViewById(R.id.your_answer);
     }
 
@@ -395,6 +399,48 @@ public class QuestionUtil {
         }
     }
 
+    /**
+     * @Description 判断判断题是否正确
+     * @Author 孙建旺
+     * @Date 上午10:06 2020/05/27
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void JudgementIfTrue(){
+        String choose_answer = "";
+        if(judgeBox_A.isChecked())
+            choose_answer = choice_A.getText().toString();
+        if(judgeBox_B.isChecked())
+            choose_answer = choice_B.getText().toString();
+        if(choose_answer.equals(((Judgment)datalist.get(POSITION)).getAnswer())){
+            TRUE_ANSWER_COUNT++;
+            judge_isTrue.setVisibility(View.VISIBLE);
+            judge_isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.duigou,null));
+            StudyUtil.PlayTrueSound(context);
+            if((POSITION+1)<=datalist.size()-1) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        datalist.get(POSITION).setIfDone(1);
+                        PositionAdd();
+                        showQuestion();
+                    }
+                }, 1000);
+            }else {
+                getWaterAndFertilizer();
+                btnNextQuestion.setClickable(false);
+            }
+        }else {
+            btnPreQuestion.setClickable(true);
+            btnNextQuestion.setClickable(true);
+            judge_isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.cha,null));
+            judge_isTrue.setVisibility(View.VISIBLE);
+            StudyUtil.PlayFalseSound(context);
+        }
+    }
+
     public void getWaterAndFertilizer(){
         new Thread(){
             @Override
@@ -496,7 +542,7 @@ public class QuestionUtil {
         attrs.gravity = Gravity.CENTER;
         final float scale = context.getResources().getDisplayMetrics().density;
         attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(300*scale+0.5f);
+        attrs.height =(int)(200*scale+0.5f);
         ifReturn.getWindow().setAttributes(attrs);
         Window dialogWindow = ifReturn.getWindow();
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);

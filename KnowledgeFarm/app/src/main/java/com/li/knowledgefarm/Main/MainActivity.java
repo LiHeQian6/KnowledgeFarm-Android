@@ -254,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
      * 展示用户信息
      */
     private void showUserInfo() {
+        User user = UserUtil.getUser();
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.huancun2)
                 .error(R.drawable.meigui)
