@@ -85,4 +85,5 @@ dependencies {
     implementation 'com.android.support:design:29.0.0'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     implementation 'com.shizhefei:GuideHelper:1.0.5'
+    implementation 'com.belerweb:pinyin4j:2.5.0'
 }

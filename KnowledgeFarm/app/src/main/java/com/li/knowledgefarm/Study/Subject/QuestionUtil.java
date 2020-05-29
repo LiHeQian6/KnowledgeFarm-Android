@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,12 @@ import com.li.knowledgefarm.entity.QuestionEntity.Completion;
 import com.li.knowledgefarm.entity.QuestionEntity.Judgment;
 import com.li.knowledgefarm.entity.QuestionEntity.Question;
 import com.li.knowledgefarm.entity.QuestionEntity.SingleChoice;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -140,6 +147,46 @@ public class QuestionUtil {
     }
 
     /**
+     * @Description 判断是否为中文
+     * @Author 孙建旺
+     * @Date 下午10:46 2020/05/28
+     * @Param [c]
+     * @return boolean
+     */
+    private boolean isChineseChar(char c) {
+        return String.valueOf(c).matches("[\u4e00-\u9fa5]");
+    }
+
+    /**
+     * @Description 汉字转拼音
+     * @Author 孙建旺
+     * @Date 下午10:52 2020/05/28
+     * @Param [to]
+     * @return java.lang.String
+     */
+    private String chineseToPinyin(String to){
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);  //转小写
+        format.setToneType(HanyuPinyinToneType.WITH_TONE_MARK); //不带音标
+        format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
+        char[] chars = to.toCharArray();
+        StringBuffer buffer = new StringBuffer();
+        String result = "";
+        for(int i = 0; i < chars.length; ++i){
+            if(chars[i] > 128){
+                try{
+                    result = PinyinHelper.toHanyuPinyinStringArray(chars[i],format)[0];  //转换出的结果包含了多音字，这里简单粗暴的取了第一个拼音。
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else{ //非汉字
+                buffer.append(chars[i]);
+            }
+        }
+        return result;
+    }
+
+    /**
      * @Description 位置减1
      * @Author 孙建旺
      * @Date 下午5:21 2020/05/13
@@ -248,10 +295,16 @@ public class QuestionUtil {
     public void ShowSingleChoice(){
         btnPreQuestion.setClickable(true);
         btnNextQuestion.setClickable(true);
+        String title = datalist.get(POSITION).getQuestionTitle().getTitle();
         if(datalist.get(POSITION).getIfDone() == 1){
             choice_isTrue.setVisibility(View.INVISIBLE);
             choice_question.setVisibility(View.VISIBLE);
-            choice_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            if(!isChineseChar(title.charAt(0)) && datalist.get(POSITION).getSubject().equals("Chinese")){
+                Log.e("chinese",chineseToPinyin(((SingleChoice)datalist.get(POSITION)).getAnswer()));
+                choice_question.setText(chineseToPinyin(((SingleChoice)datalist.get(POSITION)).getAnswer()));
+            }else {
+                choice_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            }
             choice_A.setVisibility(View.INVISIBLE);
             checkBox_C.setVisibility(View.INVISIBLE);
             checkBox_A.setVisibility(View.INVISIBLE);
@@ -265,7 +318,13 @@ public class QuestionUtil {
             choice_A.setVisibility(View.VISIBLE);
             choice_C.setVisibility(View.VISIBLE);
             choice_isTrue.setVisibility(View.INVISIBLE);
-            choice_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            if(!isChineseChar(title.charAt(0)) && datalist.get(POSITION).getSubject().equals("Chinese")){
+//                Log.e("chinese",chineseToPinyin(((SingleChoice)datalist.get(POSITION)).getAnswer()));
+                String pinyin = "zhuǎn";
+                choice_question.setText(chineseToPinyin(((SingleChoice)datalist.get(POSITION)).getAnswer()));
+            }else {
+                choice_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            }
             switch (new Random().nextInt(3)){
                 case 0:
                     choice_A.setText(((SingleChoice)datalist.get(POSITION)).getAnswer());
