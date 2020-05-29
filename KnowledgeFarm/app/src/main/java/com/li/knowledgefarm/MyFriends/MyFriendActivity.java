@@ -45,16 +45,12 @@ import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.Main.MainActivity;
-import com.li.knowledgefarm.Main.bgsound.BgSoundService;
 import com.li.knowledgefarm.Util.CustomerToast;
-import com.li.knowledgefarm.Util.DisplayUtils;
-import com.li.knowledgefarm.Util.GuideHelper;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.notify.NotifyActivity;
 import com.li.knowledgefarm.Main.UserMessagePopUp;
 import com.li.knowledgefarm.R;
-import com.li.knowledgefarm.Settings.SettingActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
 import com.li.knowledgefarm.Util.FullScreen;
@@ -672,11 +668,6 @@ public class MyFriendActivity extends AppCompatActivity {
                 case R.id.pet:
                     Intent back = new Intent(MyFriendActivity.this, MainActivity.class);
                     startActivity(back);
-                    break;
-                case R.id.setting:
-                    intent = new Intent();
-                    intent.setClass(MyFriendActivity.this, SettingActivity.class);
-                    startActivity(intent);
                     break;
                 case R.id.friends:
                     if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){

@@ -649,7 +649,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     private void ShowIfDoPop(String type){
         ifDoPop = new IfDoPop(this,type);
         ifDoPop.setHeight((int)(ds.heightPixels*0.55));
-        ifDoPop.setWidth((int)(ds.widthPixels*0.35));
+        ifDoPop.setWidth((int)(ds.widthPixels*0.4));
         ifDoPop.showAtLocation(change_Email, Gravity.CENTER,0,0);
         ifDoPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
