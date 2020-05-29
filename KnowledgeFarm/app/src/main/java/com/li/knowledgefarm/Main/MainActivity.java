@@ -57,6 +57,8 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingMessageActivity;
 import com.li.knowledgefarm.Shop.ShopActivity;
 import com.li.knowledgefarm.Study.SubjectListActivity;
+import com.li.knowledgefarm.Study.Util.AppUtil;
+import com.li.knowledgefarm.Study.Util.setDensityLand;
 import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.DisplayUtils;
 import com.li.knowledgefarm.Util.FullScreen;
@@ -85,8 +87,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -188,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
 //        intent.setAction(action);
 //        startService(intent);
         FullScreen.NavigationBarStatusBar(MainActivity.this,true);
+        setDensityLand.setDensity(getApplication());
+        setDensityLand.setOrientation(this, AppUtil.HEIGHT);
         getUserInfo();
         showUserInfo();
         haveNewNotifications();

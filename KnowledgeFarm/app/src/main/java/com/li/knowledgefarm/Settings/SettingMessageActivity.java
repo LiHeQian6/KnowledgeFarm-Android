@@ -737,11 +737,11 @@ public class SettingMessageActivity extends AppCompatActivity {
      * @return void
      */
     private void checkUpdate(){
-        DownloadManager.Request downLoad = new DownloadManager.Request(Uri.parse(getResources().getString(R.string.UPDATE)));
-        downLoad.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        downloadManager.enqueue(downLoad);
+//        DownloadManager.Request downLoad = new DownloadManager.Request(Uri.parse(getResources().getString(R.string.UPDATE)));
+//        downLoad.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//
+//        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//        downloadManager.enqueue(downLoad);
     }
 
     private class CustomerOnclickListener implements View.OnClickListener{
