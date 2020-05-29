@@ -4,14 +4,15 @@
     android:background="@drawable/friendbackground"
     android:layout_width="match_parent"
     android:padding="20dp"
+    android:gravity="center_horizontal"
     android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/layout_search"
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="60dp"
         android:layout_height="wrap_content">
         <EditText
             android:inputType="number"
@@ -21,7 +22,7 @@
             android:theme="@style/MyEditText"
             android:textCursorDrawable="@color/ShopTextColor"
             android:layout_width="wrap_content"
-            android:hint="请输入要搜索的账号"
+            android:hint="搜索"
             android:layout_height="wrap_content"/>
         <Button
             android:layout_width="40dp"
@@ -42,13 +43,15 @@
             android:text="我的好友"
             android:checked="true"
             android:id="@+id/my"
-            android:textSize="12sp"
+            android:textSize="12dp"
+            android:button="@drawable/radio_btn_style"
             android:layout_height="wrap_content"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:text="推荐好友"
             android:id="@+id/all"
-            android:textSize="12sp"
+            android:textSize="12dp"
+            android:button="@drawable/radio_btn_style"
             android:layout_height="wrap_content"/>
     </RadioGroup>
     <LinearLayout
