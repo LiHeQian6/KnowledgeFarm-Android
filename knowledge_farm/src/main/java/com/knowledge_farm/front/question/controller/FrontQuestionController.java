@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName FrontQuestionController
@@ -43,15 +45,9 @@ public class FrontQuestionController {
                 model.addAttribute("questionType", questionType);
             }
         }
-        List<Grade> gradeList = new ArrayList<>();
-        Grade grade1 = new Grade(1, "一年级上");
-        Grade grade2 = new Grade(2, "一年级下");
-        Grade grade3 = new Grade(3, "二年级上");
-        Grade grade4 = new Grade(4, "二年级下");
-        Grade grade5 = new Grade(5, "三年级上");
-        Grade grade6 = new Grade(6, "三年级下");
-        gradeList.add(grade1);gradeList.add(grade2);gradeList.add(grade3);gradeList.add(grade4);gradeList.add(grade5);gradeList.add(grade6);
-        model.addAttribute("grades", gradeList);
+        Map<Integer,String> gradeMap = new HashMap<>();
+        gradeMap.put(1, "一年级上"); gradeMap.put(2, "一年级下"); gradeMap.put(3, "二年级上"); gradeMap.put(4, "二年级下"); gradeMap.put(5, "三年级上"); gradeMap.put(6, "三年级下");
+        model.addAttribute("grades", gradeMap);
         model.addAttribute("subjects", subjects);
         return "question-add";
     }
@@ -60,15 +56,9 @@ public class FrontQuestionController {
     public String toEdit(@RequestParam("id") Integer id, Model model){
         Question question = this.frontQuestionService.findQuestionById(id);
         if(question != null){
-            List<Grade> gradeList = new ArrayList<>();
-            Grade grade1 = new Grade(1, "一年级上");
-            Grade grade2 = new Grade(2, "一年级下");
-            Grade grade3 = new Grade(3, "二年级上");
-            Grade grade4 = new Grade(4, "二年级下");
-            Grade grade5 = new Grade(5, "三年级上");
-            Grade grade6 = new Grade(6, "三年级下");
-            gradeList.add(grade1);gradeList.add(grade2);gradeList.add(grade3);gradeList.add(grade4);gradeList.add(grade5);gradeList.add(grade6);
-            model.addAttribute("grades", gradeList);
+            Map<Integer,String> gradeMap = new HashMap<>();
+            gradeMap.put(1, "一年级上"); gradeMap.put(2, "一年级下"); gradeMap.put(3, "二年级上"); gradeMap.put(4, "二年级下"); gradeMap.put(5, "三年级上"); gradeMap.put(6, "三年级下");
+            model.addAttribute("grades", gradeMap);
             model.addAttribute("question", question);
             switch(question.getQuestionType().getId()){
                 case 1:
@@ -97,15 +87,9 @@ public class FrontQuestionController {
         PageUtil<Question> pageUtil = new PageUtil<>(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
         pageUtil.setList(page.getContent());
-        List<Grade> gradeList = new ArrayList<>();
-        Grade grade1 = new Grade(1, "一年级上");
-        Grade grade2 = new Grade(2, "一年级下");
-        Grade grade3 = new Grade(3, "二年级上");
-        Grade grade4 = new Grade(4, "二年级下");
-        Grade grade5 = new Grade(5, "三年级上");
-        Grade grade6 = new Grade(6, "三年级下");
-        gradeList.add(grade1);gradeList.add(grade2);gradeList.add(grade3);gradeList.add(grade4);gradeList.add(grade5);gradeList.add(grade6);
-        model.addAttribute("grades", gradeList);
+        Map<Integer,String> gradeMap = new HashMap<>();
+        gradeMap.put(1, "一年级上"); gradeMap.put(2, "一年级下"); gradeMap.put(3, "二年级上"); gradeMap.put(4, "二年级下"); gradeMap.put(5, "三年级上"); gradeMap.put(6, "三年级下");
+        model.addAttribute("grades", gradeMap);
         model.addAttribute("subjects", subjects);
         model.addAttribute("questionPage", pageUtil);
         switch (questionTypeId){
