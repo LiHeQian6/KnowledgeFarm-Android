@@ -42,7 +42,7 @@
     <Button
         android:id="@+id/todo"
         android:text="去完成"
-        android:background="@color/editTextCorlor"
+        android:background="@drawable/button"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="45dp"/>
 </LinearLayout>

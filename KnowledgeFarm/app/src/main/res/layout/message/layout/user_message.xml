@@ -58,20 +58,28 @@
 
                 <Button
                     android:id="@+id/my_message_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="个人信息" />
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:text="个人信息"
+                    android:textColor="@color/buttonColor"
+                    android:background="@drawable/button"/>
 
                 <Button
                     android:id="@+id/system_setting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="系统设置" />
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:text="系统设置"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/buttonColor"
+                    android:background="@drawable/button"/>
                 <Button
                     android:id="@+id/about"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="关于"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="5dp"
+                    android:text="关于"
+                    android:textColor="@color/buttonColor"
+                    android:background="@drawable/button"/>
             </LinearLayout>
 
             <LinearLayout
@@ -194,12 +202,13 @@
                                     <Button
                                         android:layout_width="60dp"
                                         android:layout_height="30dp"
-                                        android:background="@drawable/buttonbackground"
+                                        android:background="@drawable/button"
                                         android:text="修改"
+                                        android:textColor="@color/buttonColor"
                                         android:layout_marginLeft="10dp"
                                         android:id="@+id/btnUpdateGrade"
                                         android:gravity="center"
-                                        android:textSize="20dp"
+                                        android:textSize="16dp"
                                         android:layout_toRightOf="@+id/change_grade_li"/>
                                 </RelativeLayout>
                                 <RelativeLayout
@@ -231,9 +240,10 @@
                                         android:layout_height="30dp"
                                         android:layout_marginLeft="10dp"
                                         android:text="绑定"
-                                        android:textSize="20dp"
+                                        android:textSize="16dp"
                                         android:id="@+id/btnUpdateQQ"
-                                        android:background="@drawable/buttonbackground"
+                                        android:textColor="@color/buttonColor"
+                                        android:background="@drawable/button"
                                         android:layout_toRightOf="@+id/bangding_qq_li"/>
                                 </RelativeLayout>
                                 <RelativeLayout
@@ -263,11 +273,12 @@
                                         android:layout_width="60dp"
                                         android:layout_height="30dp"
                                         android:layout_marginLeft="10dp"
-                                        android:background="@drawable/buttonbackground"
+                                        android:background="@drawable/button"
                                         android:layout_toRightOf="@id/bangding_email_li"
                                         android:text="去绑定"
                                         android:id="@+id/btnUpdateEmail"
-                                        android:autoSizeMaxTextSize="20dp"
+                                        android:textColor="@color/buttonColor"
+                                        android:autoSizeMaxTextSize="16dp"
                                         android:maxLines="1"
                                         android:autoSizeTextType="uniform"/>
                                 </RelativeLayout>
@@ -292,11 +303,11 @@
                                         android:layout_height="30dp"
                                         android:layout_marginLeft="10dp"
                                         android:text="修改"
-                                        android:textSize="20dp"
+                                        android:textSize="16dp"
                                         android:id="@+id/change_password"
                                         android:layout_toRightOf="@id/change_password_li"
-                                        android:background="@drawable/buttonbackground"
-                                        android:textColor="@color/ShopTextColor"/>
+                                        android:background="@drawable/button"
+                                        android:textColor="@color/buttonColor"/>
                                 </RelativeLayout>
                             </LinearLayout>
                         </LinearLayout>

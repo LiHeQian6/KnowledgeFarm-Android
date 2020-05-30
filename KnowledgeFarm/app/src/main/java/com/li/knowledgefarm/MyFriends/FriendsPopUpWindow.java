@@ -172,12 +172,11 @@ public class FriendsPopUpWindow extends PopupWindow {
         params_button.gravity = Gravity.CENTER;
         search.setLayoutParams(params_button);
         search.setTextColor(ContextCompat.getColor(context,R.color.ShopTextColor));
-        search.setTextSize((int)(displayHeight*0.02));
+        search.setTextSize((int)(displayHeight*0.012));
         search.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.06));
-        params_select.setMargins((int)(displayWidth*0.02),0,0,0);
-        searchSelected.setLayoutParams(params_select);
+//        LinearLayout.LayoutParams params_select = new LinearLayout.LayoutParams((int)(displayWidth*0.1),(int)(displayHeight*0.06));
+//        searchSelected.setLayoutParams(params_select);
 
         LinearLayout.LayoutParams params_listview = new LinearLayout.LayoutParams((int)(displayWidth*0.3),(int)(displayHeight*0.6));
         params_listview.gravity = Gravity.CENTER_HORIZONTAL;

@@ -94,7 +94,7 @@ class DayTaskAdapter extends BaseAdapter {
             viewHolder.todo.setVisibility(View.VISIBLE);
             viewHolder.done.setVisibility(View.GONE);
             viewHolder.todo.setText("领取奖励");
-            viewHolder.todo.setBackgroundResource(R.drawable.buttonbackground);
+            viewHolder.todo.setBackgroundResource(R.drawable.button);
             viewHolder.todo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -102,7 +102,7 @@ class DayTaskAdapter extends BaseAdapter {
                 }
             });
         }else if (taskItem.getStatus()==0){
-            viewHolder.todo.setBackgroundResource(R.color.editTextCorlor);
+            viewHolder.todo.setBackgroundResource(R.drawable.button);
             viewHolder.todo.setVisibility(View.VISIBLE);
             viewHolder.done.setVisibility(View.GONE);
             viewHolder.todo.setText("去完成");

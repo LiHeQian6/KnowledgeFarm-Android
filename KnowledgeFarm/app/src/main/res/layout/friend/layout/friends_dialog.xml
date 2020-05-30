@@ -29,28 +29,32 @@
             android:text="搜"
             android:id="@+id/search"
             android:textAlignment="center"
-            android:background="@drawable/buttonbackground"
+            android:background="@drawable/button"
             android:layout_height="40dp"
+            android:textColor="@color/buttonColor"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
     <RadioGroup
         android:layout_width="wrap_content"
         android:id="@+id/searchSelected"
         android:orientation="horizontal"
+        android:gravity="center"
         android:layout_height="wrap_content">
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:text="我的好友"
             android:checked="true"
             android:id="@+id/my"
-            android:textSize="12dp"
+            android:textSize="10dp"
+            android:layout_weight="1"
             android:button="@drawable/radio_btn_style"
             android:layout_height="wrap_content"/>
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:text="推荐好友"
             android:id="@+id/all"
-            android:textSize="12dp"
+            android:textSize="10dp"
+            android:layout_weight="1"
             android:button="@drawable/radio_btn_style"
             android:layout_height="wrap_content"/>
     </RadioGroup>

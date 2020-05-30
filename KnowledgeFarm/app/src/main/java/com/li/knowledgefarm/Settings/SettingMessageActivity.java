@@ -133,7 +133,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //ShowUserMessage();
+        ShowUserMessage();
     }
 
     @Override
@@ -266,8 +266,6 @@ public class SettingMessageActivity extends AppCompatActivity {
                         switch ((String)msg.obj){
                             case "true":
                                 /** 存入SharedPreferences*/
-                                UserUtil.getUser().setUserAuthority(new UserAuthority());
-                                UserUtil.getUser().getUserAuthority().setOpenId("123");
                                 SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("opId",openId);
@@ -278,6 +276,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                                 CustomerToast.getInstance(getApplicationContext(),"绑定QQ成功",Toast.LENGTH_SHORT).show();
                                 break;
                             case "false":
+                                UserUtil.getUser().setUserAuthority(null);
                                 CustomerToast.getInstance(getApplicationContext(),"绑定QQ失败",Toast.LENGTH_SHORT).show();
                                 break;
                             case "already":
@@ -370,7 +369,6 @@ public class SettingMessageActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                     /** 将openId发送至后台*/
                     new Thread() {
                         @Override
@@ -416,12 +414,11 @@ public class SettingMessageActivity extends AppCompatActivity {
     private void bindingQQ(){
         if (!mTencent.isSessionValid()) {
             Log.i("lww", "onClickLogin session无效");
-
             loginListener = new IUiListener() {
                 @Override
                 public void onComplete(Object o) {
                     JSONObject response = (JSONObject) o;
-                    Log.i("lww",response.toString());
+                    UserUtil.getUser().setUserAuthority(new UserAuthority());
                     try {
                         int ret = response.getInt("ret");
                         Log.i("lww",""+ret);
