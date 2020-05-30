@@ -30,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.NavigationBarUtil;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.BagPetUtilItem;
 import com.li.knowledgefarm.entity.UserPetHouse;

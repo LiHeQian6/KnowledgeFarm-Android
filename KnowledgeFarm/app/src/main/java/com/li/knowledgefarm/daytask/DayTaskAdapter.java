@@ -4,8 +4,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +20,7 @@ import android.widget.Toast;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.CustomerToast;
+import com.li.knowledgefarm.Util.NavigationBarUtil;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.DoTaskBean;
 import com.li.knowledgefarm.entity.EventBean;
@@ -32,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -214,6 +220,16 @@ class DayTaskAdapter extends BaseAdapter {
                             }
                         }
                         notifyDataSetChanged();
+                    }else if(message.equals("up")){
+                        upLevel();
+                        CustomerToast.getInstance(context,"领取成功！",Toast.LENGTH_SHORT).show();
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getType().equals(taskName)){
+                                list.get(i).setStatus(2);
+                                Collections.sort(list);
+                            }
+                        }
+                        notifyDataSetChanged();
                     }else
                         CustomerToast.getInstance(context,"领取失败！",Toast.LENGTH_SHORT).show();
                 }else {
@@ -235,6 +251,33 @@ class DayTaskAdapter extends BaseAdapter {
             }
         }
         return sb.toString().toLowerCase();
+    }
+
+    /**
+     * 用户升级,弹窗提示
+     */
+    private void upLevel() {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        View layout = LayoutInflater.from(context).inflate(R.layout.up_level_dialog, null);
+        //Button right = layout.findViewById(R.id.right);
+        alertBuilder.setView(layout);
+        final AlertDialog upDiaLog = alertBuilder.create();
+        NavigationBarUtil.focusNotAle(upDiaLog.getWindow());
+        upDiaLog.show();
+        NavigationBarUtil.hideNavigationBar(upDiaLog.getWindow());
+        NavigationBarUtil.clearFocusNotAle(upDiaLog.getWindow());
+        WindowManager.LayoutParams attrs = upDiaLog.getWindow().getAttributes();
+        if (upDiaLog.getWindow() != null) {
+            //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            upDiaLog.getWindow().setDimAmount(0f);//去除遮罩
+        }
+        attrs.gravity = Gravity.CENTER;
+        final float scale = context.getResources().getDisplayMetrics().density;
+        attrs.width = (int) (300 * scale + 0.5f);
+        attrs.height = (int) (250 * scale + 0.5f);
+        upDiaLog.getWindow().setAttributes(attrs);
+        Window dialogWindow = upDiaLog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
 }
