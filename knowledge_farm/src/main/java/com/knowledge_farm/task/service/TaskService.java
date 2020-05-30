@@ -53,46 +53,46 @@ public class TaskService {
     }
 
     @Transactional(readOnly = false)
-    public int updateTask(User user,String taskName){
+    public boolean updateTask(User user,String taskName){
         Task task = user.getTask();
+        int exp = 50;
         if(taskName.equals("sign_in")&&task.getSignIn()==0){
             task.setSignIn(2);
             user.setMoney(user.getMoney()+200);
-            user.setExperience(user.getExperience()+100);
-            return taskDao.saveAndFlush(task).getSignIn();
+            user.setExperience(user.getExperience()+exp);
+            taskDao.saveAndFlush(task).getSignIn();
         }else if(taskName.equals("water")&&task.getWater()==1){
             task.setWater(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+50);
-            return taskDao.saveAndFlush(task).getWater();
+            user.setExperience(user.getExperience()+exp);
+            taskDao.saveAndFlush(task).getWater();
         }else if(taskName.equals("fertilize")&&task.getFertilize()==1){
             task.setFertilize(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+50);
-            return taskDao.saveAndFlush(task).getFertilize();
+            user.setExperience(user.getExperience()+exp);
+            taskDao.saveAndFlush(task).getFertilize();
         }else if(taskName.equals("crop")&&task.getCrop()==1){
             task.setCrop(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+50);
-            return taskDao.saveAndFlush(task).getCrop();
+            user.setExperience(user.getExperience()+exp);
+            taskDao.saveAndFlush(task).getCrop();
         }else if(taskName.equals("harvest")&&task.getHarvest()==1){
             task.setHarvest(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+50);
-            return taskDao.saveAndFlush(task).getHarvest();
+            user.setExperience(user.getExperience()+exp);
+            taskDao.saveAndFlush(task).getHarvest();
         }else if(taskName.equals("help_water")&&task.getHelpWater()==1){
             task.setHelpWater(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+50);
-            return taskDao.saveAndFlush(task).getHelpWater();
+            user.setExperience(user.getExperience()+exp);
+            taskDao.saveAndFlush(task).getHelpWater();
         }else if(taskName.equals("help_fertilize")&&task.getHelpFertilize()==1){
             task.setHelpFertilize(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+50);
-            return taskDao.saveAndFlush(task).getHelpFertilize();
-        }else {
-            return -1;
+            user.setExperience(user.getExperience()+exp);
+            taskDao.saveAndFlush(task).getHelpFertilize();
         }
+        return updateLevel(user,exp);
     }
 
     @Transactional(readOnly = false)
