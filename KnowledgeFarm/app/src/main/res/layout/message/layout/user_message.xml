@@ -351,55 +351,56 @@
                     android:layout_height="match_parent"
                     android:layout_weight="5"
                     android:orientation="vertical"
+                    android:layout_marginRight="40dp"
                     android:id="@+id/system_about_li"
                     android:visibility="gone">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/ShopTextColor"
-                        android:textSize="18dp"
+                        android:textColor="@color/permitColor"
+                        android:textSize="17dp"
                         android:autoSizeMaxTextSize="35dp"
                         android:maxLines="1"
+                        android:gravity="center"
                         android:autoSizeTextType="uniform"
-                        android:text="本产品由知识农场项目组所有，侵权必究"/>
-
+                        android:text="本产品由"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:textSize="18dp"
-                        android:textColor="@color/ShopTextColor"
+                        android:textColor="@color/permitColor"
+                        android:textSize="17dp"
                         android:autoSizeMaxTextSize="35dp"
+                        android:maxLines="1"
                         android:autoSizeTextType="uniform"
-                        android:text="团队成员信息如下(排名不分先后)"/>
+                        android:text="(河北师范大学)知识农场项目组所有，侵权必究"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="3"
-                        android:textSize="18dp"
+                        android:textSize="17dp"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/ShopTextColor"
+                        android:textColor="@color/permitColor"
                         android:autoSizeMaxTextSize="35dp"
                         android:autoSizeTextType="uniform"
-                        android:text="前端界面开发：\n\u3000李和谦(河北师范大学软件学院)，\n\u3000孙建旺(河北师范大学软件学院)"/>
+                        android:text="前端界面开发：\n\u3000李和谦(软件学院)，\n\u3000孙建旺(软件学院)"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="3"
-                        android:textSize="18dp"
-                        android:textColor="@color/ShopTextColor"
+                        android:textSize="17dp"
+                        android:textColor="@color/permitColor"
                         android:autoSizeMaxTextSize="35dp"
                         android:autoSizeTextType="uniform"
-                        android:text="后端服务开发：\n\u3000张帅华(河北师范大学软件学院)，\n\u3000景光赞(河北师范大学软件学院)"/>
+                        android:text="后端服务开发：\n\u3000张帅华(软件学院)，\n\u3000景光赞(软件学院)"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="3"
-                        android:textSize="18dp"
-                        android:textColor="@color/ShopTextColor"
+                        android:textSize="17dp"
+                        android:textColor="@color/permitColor"
                         android:autoSizeMaxTextSize="35dp"
                         android:autoSizeTextType="uniform"
-                        android:text="界面设计及美术开发：\n\u3000乔开元(河北师范大学美术与设计学院)，\n\u3000杨云婷(河北师范大学美术与设计学院)"/>
+                        android:text="界面设计及美术开发：\n\u3000乔开元(美术与设计学院)，\n\u3000杨云婷(美术与设计学院)"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
