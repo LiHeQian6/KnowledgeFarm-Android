@@ -45,7 +45,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             String result = (String) msg.obj;
-            String tip = "添加成功！";
+            String tip = "操作失败！";
             if(!result.equals("") && result.equals("true")){
                 list.getList().remove(msg.what);
                 switch (msg.arg1){

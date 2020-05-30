@@ -295,6 +295,31 @@ public class QuestionActivity extends AppCompatActivity implements StudyInterfac
                 }
             }
         });
+        judgeBox_A.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    judgeBox_B.setChecked(false);
+                    btnPreQuestion.setClickable(false);
+                    btnNextQuestion.setClickable(false);
+                    questionUtil.JudgementIfTrue();
+                }
+            }
+        });
+
+        judgeBox_B.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    judgeBox_A.setChecked(false);
+                    btnPreQuestion.setClickable(false);
+                    btnNextQuestion.setClickable(false);
+                    questionUtil.JudgementIfTrue();
+                }
+            }
+        });
     }
 
     @Override
