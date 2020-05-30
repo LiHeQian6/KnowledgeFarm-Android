@@ -21,8 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.persistence.criteria.*;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -41,10 +40,12 @@ public class FrontQuestionService {
     private String[] singleChoiceHeader;
     @Value("${excel.completionHeader}")
     private String[] completionHeader;
-    @Value("${excel.judgmentHeader}")
-    private String[] judgmentHeader;
+    @Value("${excel.judgementHeader}")
+    private String[] JudgementHeader;
     @Value("${excel.subjects}")
     private String[] subjects;
+    @Value("#{${excel.grades}}")
+    private Map<Integer,String> grades = new HashMap<>();
     Logger logger = LoggerFactory.getLogger(getClass());
     Gson gson = new Gson();
 
@@ -119,7 +120,7 @@ public class FrontQuestionService {
                 break;
             case 3:
                 //构造判断题表
-                exportJudgmentExcelModel(workbook, cellStyleHeader);
+                exportJudgementExcelModel(workbook, cellStyleHeader);
                 break;
         }
         return workbook;
@@ -149,7 +150,7 @@ public class FrontQuestionService {
                 break;
             case 3:
                 //构造判断题表
-                exportJudgmentExcelData(workbook, questionList, cellStyleHeader, cellStyle);
+                exportJudgementExcelData(workbook, questionList, cellStyleHeader, cellStyle);
                 break;
         }
         return workbook;
@@ -195,7 +196,7 @@ public class FrontQuestionService {
                     if(sheet2.getLastRowNum() == 0){
                         return gson.toJson("上传文件数据为空");
                     }
-                    return importJudgmentToEdit(sheet2);
+                    return importJudgementToEdit(sheet2);
             }
 //            if(sheet0.getLastRowNum() == 0 && sheet1.getLastRowNum() == 0 && sheet2.getLastRowNum() == 0){
 //                return "上传文件数据为空";
@@ -204,7 +205,7 @@ public class FrontQuestionService {
 //            if(result1.equals("succeed")){
 //                String result2 = importCompletionToEdit(sheet1);
 //                if(result2.equals("succeed")){
-//                    String result3 = importJudgmentToEdit(sheet2);
+//                    String result3 = importJudgementToEdit(sheet2);
 //                    return result3;
 //                }
 //                return result2;
@@ -254,7 +255,7 @@ public class FrontQuestionService {
                     if(sheet2.getLastRowNum() == 0){
                         return gson.toJson("上传文件数据为空");
                     }
-                    return importJudgmentToAdd(sheet2, questionType);
+                    return importJudgementToAdd(sheet2, questionType);
             }
 //            if(sheet0.getLastRowNum() == 0 && sheet1.getLastRowNum() == 0 && sheet2.getLastRowNum() == 0){
 //                return "上传文件数据为空";
@@ -263,7 +264,7 @@ public class FrontQuestionService {
 //            if(result1.equals("succeed")){
 //                String result2 = importCompletionToAdd(sheet1);
 //                if(result2.equals("succeed")){
-//                    String result3 = importJudgmentToAdd(sheet2);
+//                    String result3 = importJudgementToAdd(sheet2);
 //                    return result3;
 //                }
 //                return result2;
@@ -293,13 +294,13 @@ public class FrontQuestionService {
             cell.setCellStyle(cellStyleHeader);
         }
     }
-    public void exportJudgmentExcelModel(XSSFWorkbook workbook, CellStyle cellStyleHeader) {
+    public void exportJudgementExcelModel(XSSFWorkbook workbook, CellStyle cellStyleHeader) {
         Sheet sheet = workbook.createSheet("判断题");
         sheet.setColumnWidth(1, 6000);//给第5列设置宽度(tel栏)
         Row row = sheet.createRow(0);
-        for (int i = 0; i < this.judgmentHeader.length; i++) {
+        for (int i = 0; i < this.JudgementHeader.length; i++) {
             Cell cell = row.createCell(i);
-            cell.setCellValue(this.judgmentHeader[i]);
+            cell.setCellValue(this.JudgementHeader[i]);
             cell.setCellStyle(cellStyleHeader);
         }
     }
@@ -365,32 +366,32 @@ public class FrontQuestionService {
             rowNum++;
         }
     }
-    public void exportJudgmentExcelData(XSSFWorkbook workbook, List<Question> questionList, CellStyle cellStyleHeader, CellStyle cellStyle){
+    public void exportJudgementExcelData(XSSFWorkbook workbook, List<Question> questionList, CellStyle cellStyleHeader, CellStyle cellStyle){
         Sheet sheet = workbook.createSheet("判断题");
         sheet.setColumnWidth(1,6000);//给第5列设置宽度(tel栏)
         Row row = sheet.createRow(0);
-        for(int i = 0;i < this.judgmentHeader.length;i++){
+        for(int i = 0;i < this.JudgementHeader.length;i++){
             Cell cell = row.createCell(i);
-            cell.setCellValue(this.judgmentHeader[i]);
+            cell.setCellValue(this.JudgementHeader[i]);
             cell.setCellStyle(cellStyleHeader);
         }
         int rowNum = 1;
         //在表中存放查询到的数据放入对应的列
         for (Question question : questionList) {
-            Judgment judgment = (Judgment) question;
+            Judgement judgement = (Judgement) question;
             Row row1 = sheet.createRow(rowNum);
             List<Cell> cellList = new ArrayList<>();
-            for(int i = 0;i < this.judgmentHeader.length;i++){
+            for(int i = 0;i < this.JudgementHeader.length;i++){
                 Cell cell = row1.createCell(i);
                 cell.setCellStyle(cellStyle);
                 cellList.add(cell);
             }
-            cellList.get(0).setCellValue(judgment.getId());
-            cellList.get(1).setCellValue(judgment.getQuestionTitle().getTitle());
-            cellList.get(2).setCellValue(judgment.getSubject());
-            cellList.get(3).setCellValue(judgment.getQuestionType().getName());
-            cellList.get(4).setCellValue(changeGrade1(judgment.getGrade()));
-            cellList.get(5).setCellValue((judgment.getAnswer() == 1 ? "正确" : "错误"));
+            cellList.get(0).setCellValue(judgement.getId());
+            cellList.get(1).setCellValue(judgement.getQuestionTitle().getTitle());
+            cellList.get(2).setCellValue(judgement.getSubject());
+            cellList.get(3).setCellValue(judgement.getQuestionType().getName());
+            cellList.get(4).setCellValue(changeGrade1(judgement.getGrade()));
+            cellList.get(5).setCellValue((judgement.getAnswer() == 1 ? "正确" : "错误"));
             rowNum++;
         }
     }
@@ -477,7 +478,7 @@ public class FrontQuestionService {
         }
         return gson.toJson("succeed");
     }
-    public String importJudgmentToEdit(Sheet sheet){
+    public String importJudgementToEdit(Sheet sheet){
         int rowLength = sheet.getLastRowNum();
         logger.info("sheet3总数据行数有多少行"+rowLength);
         if(rowLength == 0) {
@@ -494,7 +495,7 @@ public class FrontQuestionService {
             count1 = i + 1;
             Row row = sheet.getRow(i);
             List<Cell> cellList = new ArrayList<>();
-            for(int n = 0;n < this.judgmentHeader.length;n++){
+            for(int n = 0;n < this.JudgementHeader.length;n++){
                 count2 = n + 1;
                 Cell cell = row.getCell(n);
                 //判空
@@ -514,7 +515,7 @@ public class FrontQuestionService {
                 }
                 cellList.add(cell);
             }
-            updateJudgment(cellList);
+            updateJudgement(cellList);
         }
         return gson.toJson("succeed");
     }
@@ -535,9 +536,9 @@ public class FrontQuestionService {
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer(cellList.get(5).getStringCellValue());
     }
-    public void updateJudgment(List<Cell> cellList){
+    public void updateJudgement(List<Cell> cellList){
         Integer questionId = Integer.parseInt(cellList.get(0).getStringCellValue());
-        Judgment question = (Judgment)this.questionRepository.findQuestionById(questionId);
+        Judgement question = (Judgement)this.questionRepository.findQuestionById(questionId);
         question.getQuestionTitle().setTitle(cellList.get(1).getStringCellValue());
         question.setGrade(changeGrade2(cellList.get(4).getStringCellValue()));
         question.setAnswer((cellList.get(5).getStringCellValue().equals("正确") ? 1 : 0));
@@ -631,7 +632,7 @@ public class FrontQuestionService {
         this.questionRepository.saveAll(completionList);
         return gson.toJson("succeed");
     }
-    public String importJudgmentToAdd(Sheet sheet, Integer questionTypeId){
+    public String importJudgementToAdd(Sheet sheet, Integer questionTypeId){
         int rowLength = sheet.getLastRowNum();
         logger.info("sheet3总数据行数有多少行"+rowLength);
         if(rowLength == 0) {
@@ -644,13 +645,13 @@ public class FrontQuestionService {
         logger.info("sheet3总列数有多少列"+colLength);
         int count1 = 0;
         int count2 = 0;
-        List<Judgment> judgmentList = new ArrayList<>();
+        List<Judgement> judgementList = new ArrayList<>();
         for(int i = 1;i <= rowLength;i++) {
             count1 = i + 1;
             Row row = sheet.getRow(i);
             List<Cell> cellList = new ArrayList<>();
             cellList.add(row.getCell(0));
-            for(int n = 1;n < this.judgmentHeader.length;n++){
+            for(int n = 1;n < this.JudgementHeader.length;n++){
                 count2 = n + 1;
                 Cell cell = row.getCell(n);
                 //判空
@@ -670,9 +671,9 @@ public class FrontQuestionService {
                 }
                 cellList.add(cell);
             }
-            judgmentList.add(saveJudgment(cellList, questionTypeId));
+            judgementList.add(saveJudgement(cellList, questionTypeId));
         }
-        this.questionRepository.saveAll(judgmentList);
+        this.questionRepository.saveAll(judgementList);
         return gson.toJson("succeed");
     }
     public SingleChoice saveSingleChoice(List<Cell> cellList, Integer questionTypeId){
@@ -704,8 +705,8 @@ public class FrontQuestionService {
         questionTitle.setQuestion(question);
         return question;
     }
-    public Judgment saveJudgment(List<Cell> cellList, Integer questionTypeId){
-        Judgment question = new Judgment();
+    public Judgement saveJudgement(List<Cell> cellList, Integer questionTypeId){
+        Judgement question = new Judgement();
         QuestionTitle questionTitle = new QuestionTitle();
         questionTitle.setTitle(cellList.get(1).getStringCellValue());
         question.setSubject(cellList.get(2).getStringCellValue());
@@ -844,40 +845,24 @@ public class FrontQuestionService {
     }
 
     public String changeGrade1(Integer grade){
-        switch (grade){
-            case 1:
-                return "一年级上";
-            case 2:
-                return "一年级下";
-            case 3:
-                return "二年级上";
-            case 4:
-                return "二年级下";
-            case 5:
-                return "三年级上";
-            case 6:
-                return "三年级下";
-            default:
-                return "年级错误";
+        Iterator<Map.Entry<Integer, String>> it = grades.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<Integer, String> m = it.next();
+            if(m.getKey() == grade){
+                return m.getValue();
+            }
         }
+        return "年级错误";
     }
     public Integer changeGrade2(String grade){
-        switch (grade){
-            case "一年级上":
-                return 1;
-            case "一年级下":
-                return 2;
-            case "二年级上":
-                return 3;
-            case "二年级下":
-                return 4;
-            case "三年级上":
-                return 5;
-            case "三年级下":
-                return 6;
-            default:
-                return 0;
+        Iterator<Map.Entry<Integer, String>> it = grades.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<Integer, String> m = it.next();
+            if(m.getValue().equals(grade)){
+                return m.getKey();
+            }
         }
+       return 0;
     }
 
 }

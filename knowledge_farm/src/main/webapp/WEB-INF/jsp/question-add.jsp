@@ -175,8 +175,8 @@
             "                </div>";
     }
     if(${questionType.id == 3}){
-        addUrl += "addJudgmentQuestion";
-        div.innerHTML = "<div id=\"judgment\" class=\"layui-form-item\">\n" +
+        addUrl += "addJudgementQuestion";
+        div.innerHTML = "<div id=\"judgement\" class=\"layui-form-item\">\n" +
             "                    <label class=\"layui-form-label\">\n" +
             "                        <font color=\"red\">*</font>答案\n" +
             "                    </label>\n" +

@@ -96,14 +96,12 @@
                         <font color="red">*</font>年级
                     </label>
                     <div class="layui-input-inline">
-                        <select id="grade" name="interest" lay-filter="aihao">
-					        <option value="1" selected="">一年级上</option>
-					        <option value="2">一年级下</option>
-					        <option value="3">二年级上</option>
-					        <option value="4">二年级下</option>
-					        <option value="5">三年级上</option>
-					        <option value="6">三年级下</option>
-					     </select>
+                        <select id="grade" name="grade">
+                            <option value="0" selected="">请选择年级</option>
+                            <c:forEach var="grade" items="${grades}">
+                                <option value="${grade.key}">${grade.value}</option>
+                            </c:forEach>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">

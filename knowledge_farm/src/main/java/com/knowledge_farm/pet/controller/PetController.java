@@ -112,7 +112,7 @@ public class PetController {
         }
         return Result.FALSE;
     }
-    @RequestMapping("/test")
+    @GetMapping("/test")
     public String fightResult2(HttpServletRequest request){
         try {
             String editResult = this.petService.updateData(109, 1);
@@ -123,7 +123,7 @@ public class PetController {
         }
         return Result.FALSE;
     }
-    @RequestMapping("/test2")
+    @GetMapping("/test2")
     public String fightResult3(HttpServletRequest request){
         try {
             String editResult = this.petService.updateData(109, 0);

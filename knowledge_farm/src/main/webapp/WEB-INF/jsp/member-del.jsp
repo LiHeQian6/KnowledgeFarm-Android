@@ -379,16 +379,11 @@
 									</c:if>
 	                        	</div>
 	                        </td>
-	                        <td>
-	                        	<c:choose>
-	                        		<c:when test="${page.grade == '1'}">一年级上</c:when>
-	                        		<c:when test="${page.grade == '2'}">一年级下</c:when>
-	                        		<c:when test="${page.grade == '3'}">二年级上</c:when>
-	                        		<c:when test="${page.grade == '4'}">二年级下</c:when>
-	                        		<c:when test="${page.grade == '5'}">三年级上</c:when>
-	                        		<c:when test="${page.grade == '6'}">三年级下</c:when>
-	                        	</c:choose>
-	                        </td>
+							<c:forEach var="grade" items="${grades}">
+								<c:if test="${grade.key == page.grade}">
+									<td>${grade.value}</td>
+								</c:if>
+							</c:forEach>
 	                        <td>${page.email}</td>
 	                        <td>${page.level}</td>
 	                        <td>${page.experience}</td>

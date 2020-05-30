@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,9 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ClassName UserController
@@ -40,9 +39,14 @@ public class FrontUserController {
     private String userPhotoLocation;
     @Value("${file.userDefaultFileName}")
     private String userDefaultFileName;
+    @Value("#{${excel.grades}}")
+    private Map<Integer,String> grades = new HashMap<>();
+    @Value("${level.experienceList}")
+    private List<Integer> experienceList = new ArrayList<>();
 
     @GetMapping("/toAdd")
-    public String toAdd(){
+    public String toAdd(Model model){
+        model.addAttribute("grades", grades);
         return "member-add";
     }
 
@@ -50,9 +54,9 @@ public class FrontUserController {
     public String toEdit(@RequestParam("id") Integer id, HttpServletRequest request) {
         User user = this.frontUserService.findUserById(id);
         if(user != null){
-//            user.setPassword("");
             request.setAttribute("user", user);
         }
+        request.setAttribute("grades", grades);
         return "member-edit";
     }
 
@@ -60,7 +64,6 @@ public class FrontUserController {
     public String toPassword(@RequestParam("id") Integer id, HttpServletRequest request){
         User user = this.frontUserService.findUserById(id);
         if(user != null){
-//            user.setPassword("");
             request.setAttribute("user", user);
         }
         return "member-password";
@@ -75,12 +78,9 @@ public class FrontUserController {
         Page<User> page =  this.frontUserService.findUserPage(account, exist, pageNumber, pageSize);
         PageUtil<User> pageUtil = new PageUtil(pageNumber, pageSize);
         pageUtil.setTotalCount((int) page.getTotalElements());
-//        for(User user : page.getContent()){
-//            user.setPassword("");
-//        }
         pageUtil.setList(page.getContent());
         request.setAttribute("userPage", pageUtil);
-
+        request.setAttribute("grades", grades);
         if(exist == 1){
             return "member-list";
         }else if(exist == 0){
@@ -217,12 +217,12 @@ public class FrontUserController {
     }
 
     public User varyUserToUser(User user, User editUser){
+        Integer experience = editUser.getExperience();
         user.setNickName(editUser.getNickName());
         user.setAccount(editUser.getAccount());
         user.setEmail(editUser.getEmail());
         user.setGrade(editUser.getGrade());
-        user.setLevel(editUser.getLevel());
-        user.setExperience(editUser.getExperience());
+        user.setExperience(experience);
         user.setMoney(editUser.getMoney());
         user.setMathRewardCount(editUser.getMathRewardCount());
         user.setEnglishRewardCount(editUser.getEnglishRewardCount());
@@ -230,7 +230,12 @@ public class FrontUserController {
         user.setWater(editUser.getWater());
         user.setFertilizer(editUser.getFertilizer());
         user.setOnline(editUser.getOnline());
-        user.setPhoto(editUser.getPhoto());
+        for(int i = 0;i < experienceList.size()-1;i++){
+            if(experience >= experienceList.get(i) && experience < experienceList.get(i+1)){
+                user.setLevel(i + 1);
+                break;
+            }
+        }
         return user;
     }
 
