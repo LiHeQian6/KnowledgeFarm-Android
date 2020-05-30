@@ -294,12 +294,6 @@ public class MainActivity extends AppCompatActivity {
         //Button right = layout.findViewById(R.id.right);
         alertBuilder.setView(layout);
         final AlertDialog upDiaLog = alertBuilder.create();
-//        right.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                upDiaLog.cancel();
-//            }
-//        });
         NavigationBarUtil.focusNotAle(upDiaLog.getWindow());
         upDiaLog.show();
         NavigationBarUtil.hideNavigationBar(upDiaLog.getWindow());

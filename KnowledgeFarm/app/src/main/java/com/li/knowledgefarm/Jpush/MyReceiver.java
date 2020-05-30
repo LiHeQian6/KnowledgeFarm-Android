@@ -8,6 +8,7 @@ import com.li.knowledgefarm.entity.EventBean;
 import org.greenrobot.eventbus.EventBus;
 
 import cn.jpush.android.api.CustomMessage;
+import cn.jpush.android.api.NotificationMessage;
 import cn.jpush.android.service.JPushMessageReceiver;
 
 /**
@@ -30,5 +31,11 @@ public class MyReceiver extends JPushMessageReceiver {
         eventBean.setMessage(title);
         eventBean.setNotifyType(message);
         EventBus.getDefault().post(eventBean);
+    }
+
+    @Override
+    public void onNotifyMessageArrived(Context context, NotificationMessage notificationMessage) {
+        super.onNotifyMessageArrived(context, notificationMessage);
+
     }
 }
