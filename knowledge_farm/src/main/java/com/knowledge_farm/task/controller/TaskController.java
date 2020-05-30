@@ -86,7 +86,7 @@ public class TaskController {
      * @return :int
      */
     @GetMapping("/getReward2")
-    public boolean getReward2(@RequestParam("taskName") String taskName,
+    public String getReward2(@RequestParam("taskName") String taskName,
                           HttpSession session, HttpServletResponse response){
         try {
             Integer userId = (Integer) session.getAttribute("userId");
@@ -97,7 +97,7 @@ public class TaskController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+        return Result.FALSE;
     }
 
 }
