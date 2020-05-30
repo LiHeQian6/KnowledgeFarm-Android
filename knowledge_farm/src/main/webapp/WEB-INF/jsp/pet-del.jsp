@@ -302,6 +302,21 @@
                         </li>
                     </ul>
                 </li>
+                <li class="list">
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
+                        更新管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initVersionUploadManager" class="sub-menu">
+                        <li id="initVersionUploadManager1">
+                            <a href="${ctx}/admin/versionUpload/toVersionUpload">
+                                <i class="iconfont">&#xe6a7;</i>
+                                APK更新
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

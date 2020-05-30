@@ -311,6 +311,21 @@
                         </li>
                     </ul>
                 </li>
+                <li class="list">
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6a3;</i>
+                        更新管理
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul id="initVersionUploadManager" class="sub-menu">
+                        <li id="initVersionUploadManager1">
+                            <a href="${ctx}/admin/versionUpload/toVersionUpload">
+                                <i class="iconfont">&#xe6a7;</i>
+                                APK更新
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>
@@ -342,11 +357,11 @@
                             <select name="grade">
                                 <option value="0" selected="">请选择年级</option>
                                 <c:forEach var="grade" items="${grades}">
-                                    <c:if test="${grade.id == param.grade}">
-                                        <option value="${grade.id}" selected>${grade.name}</option>
+                                    <c:if test="${grade.key == param.grade}">
+                                        <option value="${grade.key}" selected>${grade.value}</option>
                                     </c:if>
-                                    <c:if test="${grade.id != param.grade}">
-                                        <option value="${grade.id}">${grade.name}</option>
+                                    <c:if test="${grade.key != param.grade}">
+                                        <option value="${grade.key}">${grade.value}</option>
                                     </c:if>
                                 </c:forEach>
                             </select>
@@ -411,8 +426,8 @@
                         <td>${questionPage.questionTitle.title}</td>
                         <td>${questionPage.subject}</td>
                         <c:forEach var="grade" items="${grades}">
-                            <c:if test="${grade.id == questionPage.grade}">
-                                <td>${grade.name}</td>
+                            <c:if test="${grade.key == questionPage.grade}">
+                                <td>${grade.value}</td>
                             </c:if>
                         </c:forEach>
                         <td>${questionPage.answer}</td>

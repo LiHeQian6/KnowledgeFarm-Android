@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "completion")
-@PrimaryKeyJoinColumn(name = "completion_id")
+@PrimaryKeyJoinColumn(name = "completion_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
 public class Completion extends Question{
     private String answer;
 

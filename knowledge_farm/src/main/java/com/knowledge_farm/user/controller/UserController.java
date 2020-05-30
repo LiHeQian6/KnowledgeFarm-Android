@@ -63,7 +63,7 @@ public class UserController {
             session.setAttribute("userId", ((User) obj).getId());
         }
         return obj;
-    }
+}
 
     /**
      * @Author 张帅华
@@ -112,9 +112,13 @@ public class UserController {
                             @RequestParam("nickName") String nickName,
                             @RequestParam("grade") Integer grade,
                             @RequestParam(value = "email", defaultValue = "") String email,
-                            @RequestParam("password") String password){
+                            @RequestParam("password") String password,
+                            HttpSession session){
         try {
             Object obj = this.userService.addQQUser(openId, photo, nickName, grade, email, password);
+            if(obj instanceof User){
+                session.setAttribute("userId", ((User) obj).getId());
+            }
             return obj;
         }catch (Exception e){
             e.printStackTrace();
@@ -161,11 +165,15 @@ public class UserController {
     })
     @PostMapping("/registAccount")
     public Object registerAccount(@RequestParam("nickName") String nickName,
-                                @RequestParam("grade") Integer grade,
-                                @RequestParam(value = "email", defaultValue = "") String email,
-                                @RequestParam("password") String password){
+                                  @RequestParam("grade") Integer grade,
+                                  @RequestParam(value = "email", defaultValue = "") String email,
+                                  @RequestParam("password") String password,
+                                  HttpSession session){
         try {
             Object obj = this.userService.registAccount(nickName, grade, email, password);
+            if(obj instanceof User){
+                session.setAttribute("userId", ((User) obj).getId());
+            }
             return obj;
         } catch (Exception e){
             e.printStackTrace();

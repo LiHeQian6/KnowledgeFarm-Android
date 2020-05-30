@@ -85,23 +85,16 @@
                         <font color="red">*</font>年级
                     </label>
                     <div class="layui-input-inline">
-                        <select id="grade" name="grade" lay-filter="aihao">
-					        <option value="1" selected="">一年级上</option>
-					        <option value="2">一年级下</option>
-					        <option value="3">二年级上</option>
-					        <option value="4">二年级下</option>
-					        <option value="5">三年级上</option>
-					        <option value="6">三年级下</option>
-					     </select>
-                    </div>
-                </div>
-                 <div class="layui-form-item">
-                    <label class="layui-form-label">
-                    	<font color="red">*</font>等级
-                    </label>
-                    <div class="layui-input-inline">
-                        <input id="level" type="text" name="level" required lay-verify="required"
-                        autocomplete="off" class="layui-input" value="${user.level}">
+                        <select name="grade">
+                            <c:forEach var="grade" items="${grades}">
+                                <c:if test="${grade.key == user.grade}">
+                                    <option value="${grade.key}" selected>${grade.value}</option>
+                                </c:if>
+                                <c:if test="${grade.key != user.grade}">
+                                    <option value="${grade.key}">${grade.value}</option>
+                                </c:if>
+                            </c:forEach>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-form-item">

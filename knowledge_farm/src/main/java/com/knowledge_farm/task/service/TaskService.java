@@ -5,6 +5,7 @@ import com.knowledge_farm.entity.User;
 import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.task.dao.TaskDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ import java.util.HashMap;
 public class TaskService {
     @Resource
     private TaskDao taskDao;
+    @Value("${level.experienceList}")
+    private Integer experienceList[];
 
     @Transactional(readOnly = false)
     public int finishTask(User user,String taskName){
@@ -91,9 +94,30 @@ public class TaskService {
             return -1;
         }
     }
+
     @Transactional(readOnly = false)
     public int updateTaskEveryDay(){
         return taskDao.updateTaskEveryDay();
+    }
+
+    public boolean updateLevel(User user, int experience){
+        int userLevel = user.getLevel();
+        int userExperience = user.getExperience();
+        boolean isLevel = false;
+        if(userLevel < experienceList.length-1){
+            if(userExperience + experience >= experienceList[userLevel]){
+                user.setLevel(userLevel + 1);
+                isLevel = true;
+            }
+            user.setExperience(userExperience + experience);
+        }else{
+            if(userExperience + experience <= experienceList[userLevel]){
+                user.setExperience(userExperience + experience);
+            }else{
+                user.setExperience(experienceList[userLevel]);
+            }
+        }
+        return isLevel;
     }
 
 }

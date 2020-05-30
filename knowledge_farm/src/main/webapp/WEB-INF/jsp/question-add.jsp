@@ -95,7 +95,7 @@
                         <select id="grade" name="grade">
                             <option value="0" selected="">请选择年级</option>
                             <c:forEach var="grade" items="${grades}">
-                                <option value="${grade.id}">${grade.name}</option>
+                                <option value="${grade.key}">${grade.value}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -175,8 +175,8 @@
             "                </div>";
     }
     if(${questionType.id == 3}){
-        addUrl += "addJudgmentQuestion";
-        div.innerHTML = "<div id=\"judgment\" class=\"layui-form-item\">\n" +
+        addUrl += "addJudgementQuestion";
+        div.innerHTML = "<div id=\"judgement\" class=\"layui-form-item\">\n" +
             "                    <label class=\"layui-form-label\">\n" +
             "                        <font color=\"red\">*</font>答案\n" +
             "                    </label>\n" +

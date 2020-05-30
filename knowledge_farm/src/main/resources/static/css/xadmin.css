@@ -14,10 +14,10 @@ html{
 body{
 	width: 100%;
 	background-color: #54364a;
-    background-image: url(../images/a.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: #ffffff;
+	background-image: url(../images/a.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: #ffffff;
 }
 /*layer弹出层背景设置*/
 
@@ -33,7 +33,7 @@ body{
 	top: -110px;
 	width: 100%;
 	/*height: 100px;*/
-	
+
 }
 .bg-changer #changer-set{
 	position: fixed;
@@ -48,43 +48,43 @@ body{
 	text-align: center;
 	line-height: 33px;
 	cursor: pointer;
-	
+
 }
 .bg-changer #changer-set i{
 	display: block;
 	font-size: 25px;
 	/* 设置默认样式，开启3d硬件加速 */
-    -webkit-transform:translate3d(0,0,0);
-    -moz-transform:translate3d(0,0,0);
-    transform:translate3d(0,0,0);
-    /* 设置动画，animation:动画名称 动画播放时长单位秒或微秒 动画播放的速度曲线linear为匀速 动画播放次数infinite为循环播放; */
-    -webkit-animation:play 3s linear infinite;
-    -moz-animation:play 3s linear infinite;
-    animation:play 3s linear infinite;
+	-webkit-transform:translate3d(0,0,0);
+	-moz-transform:translate3d(0,0,0);
+	transform:translate3d(0,0,0);
+	/* 设置动画，animation:动画名称 动画播放时长单位秒或微秒 动画播放的速度曲线linear为匀速 动画播放次数infinite为循环播放; */
+	-webkit-animation:play 3s linear infinite;
+	-moz-animation:play 3s linear infinite;
+	animation:play 3s linear infinite;
 }
 
 @-webkit-keyframes play{
 	0%  {
-	    -webkit-transform:rotateZ(0deg);
+		-webkit-transform:rotateZ(0deg);
 	}
 	100% {
-	    -webkit-transform:rotateZ(360deg);
+		-webkit-transform:rotateZ(360deg);
 	}
 }
 @-moz-keyframes play{
 	0%  {
-	    -moz-transform:rotateZ(0deg);
+		-moz-transform:rotateZ(0deg);
 	}
 	100% {
-	    -moz-transform:rotateZ(360deg);
+		-moz-transform:rotateZ(360deg);
 	}
 }
 @keyframes play{
 	0%  {
-	    transform:rotateZ(0deg);
+		transform:rotateZ(0deg);
 	}
 	100% {
-	    transform:rotateZ(360deg);
+		transform:rotateZ(360deg);
 	}
 }
 .bg-changer .changer-list{
@@ -133,29 +133,29 @@ body{
 	width: 310px;
 	height: 350px;
 	padding: 20px 15px 15px;
-    background-color: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255,255,255, 0.3);
-    margin: 0 auto;
+	background-color: rgba(0, 0, 0, 0.25);
+	border: 1px solid rgba(255,255,255, 0.3);
+	margin: 0 auto;
 }
 .login-box h3{
 	font-weight: 300;
-    margin-bottom: 25px;
-    color: #fff;
-    margin-left: 0;
-    font-size: 22px;
-    margin-top: 20px;
+	margin-bottom: 25px;
+	color: #fff;
+	margin-left: 0;
+	font-size: 22px;
+	margin-top: 20px;
 }
 .layui-form-item{
 	margin-top: 15px;
 }
 .layui-form-pane .layui-form-label{
-	
+
 	border-radius: 6px;
 	background-color: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-right: 0px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-right: 0px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 
 }
 .layui-form-pane .login-form{
@@ -173,7 +173,7 @@ body{
 }
 @media screen and (max-width: 450px){
 	.layui-form-item .layui-input-inline {
-	    margin: 0 0 10px 56px;
+		margin: 0 0 10px 56px;
 	}
 }
 
@@ -185,16 +185,16 @@ body{
 .layui-form-pane .layui-input,.layui-form-pane .layui-textarea,.layui-form-pane .layui-select{
 	background-color: rgba(0, 0, 0, 0.25);
 	border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    color: #fff;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	color: #fff;
 }
 .layui-input:focus, .layui-textarea:focus, .layui-select:focus {
-    border-color: #66afe9;
-    outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	border-color: #66afe9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 
 .layui-input::-webkit-input-placeholder, .layui-textarea::-webkit-input-placeholder, .layui-select::-webkit-input-placeholder { color:#fff; }
@@ -202,53 +202,53 @@ body{
 
 
 .login-title {
-    font-weight: bold;
-    color: #fff;
-    font-size: 14px;
+	font-weight: bold;
+	color: #fff;
+	font-size: 14px;
 }
 
 
 .form-actions {
-    background-color: rgba(0, 0, 0, 0.25);
-    margin-left: -15px;
-    margin-right: -15px;
-    text-align: center;
-    margin-top: 20px;
-    padding: 19px 20px 20px;
+	background-color: rgba(0, 0, 0, 0.25);
+	margin-left: -15px;
+	margin-right: -15px;
+	text-align: center;
+	margin-top: 20px;
+	padding: 19px 20px 20px;
 }
 
 .forgot {
 	width: 100%;
-    padding: 15px 0;
-    text-align: center;
-    color: #fff;
+	padding: 15px 0;
+	text-align: center;
+	color: #fff;
 }
 .forgot:hover {
-    color: #fff;
+	color: #fff;
 }
 
 .btn {
-    /*display: inline-block;*/
-    padding: 6px 12px;
-    margin-bottom: 0;
-    font-size: 14px;
-    font-weight: normal;
-    line-height: 1.428571429;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    cursor: pointer;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-    color: #ffffff;
-    background-color: rgba(240, 173, 78, 0.55);
-    border-color: #eea236;
-    margin:0 auto;
+	/*display: inline-block;*/
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1.428571429;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	color: #ffffff;
+	background-color: rgba(240, 173, 78, 0.55);
+	border-color: #eea236;
+	margin:0 auto;
 }
 
 /*头部*/
@@ -264,7 +264,7 @@ body{
 	padding-left: 10px;
 	display: none;
 	cursor: pointer;
-	
+
 }
 .container .open-nav i{
 	cursor: pointer;
@@ -287,12 +287,12 @@ body{
 }
 .wrapper .left-nav{
 	background-color: rgba(0, 0, 0, 0.20);
-    color: #FFF;
-    display: table-cell;
-    float: none!important;
-    vertical-align: top;
-    max-width: 250px;
-    /*width: 0px;*/
+	color: #FFF;
+	display: table-cell;
+	float: none!important;
+	vertical-align: top;
+	max-width: 250px;
+	/*width: 0px;*/
 }
 .wrapper .left-nav #nav li{
 	width: 250px;
@@ -343,11 +343,11 @@ body{
 }
 .wrapper .page-content{
 	color: #FFF;
-    padding: 20px 30px;
-    display: table-cell;
-    float: none!important;
-    word-wrap:break-word;
-    word-break:break-all;
+	padding: 20px 30px;
+	display: table-cell;
+	float: none!important;
+	word-wrap:break-word;
+	word-break:break-all;
 
 }
 .wrapper .page-content .content{
@@ -358,16 +358,16 @@ body{
 }
 
 xblock{
-    display: block;
-    margin-bottom: 10px;
-    padding: 5px;
-    line-height: 22px;
-    /* border-left: 5px solid #009688; */
-    border-radius: 0 2px 2px 0;
-    background-color: rgba(0,0,0,0.2);
+	display: block;
+	margin-bottom: 10px;
+	padding: 5px;
+	line-height: 22px;
+	/* border-left: 5px solid #009688; */
+	border-radius: 0 2px 2px 0;
+	background-color: rgba(0,0,0,0.2);
 }
 .x-right{
-  float: right;
+	float: right;
 }
 
 .footer{

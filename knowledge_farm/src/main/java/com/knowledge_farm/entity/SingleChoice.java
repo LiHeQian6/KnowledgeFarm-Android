@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "single_choice")
-@PrimaryKeyJoinColumn(name = "single_choice_id")
+@PrimaryKeyJoinColumn(name = "single_choice_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
 public class SingleChoice extends Question{
     private String answer;
     private String choice1;

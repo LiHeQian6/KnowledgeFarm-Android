@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -34,7 +35,7 @@ public class AdminController {
     @Resource
     private AdminServiceImpl adminService;
 
-    @GetMapping("toLogin")
+    @GetMapping("/toLogin")
     public String toLogin() {
         return "login";
     }
@@ -58,7 +59,7 @@ public class AdminController {
         return "admin-edit";
     }
 
-    @GetMapping("toPassword")
+    @GetMapping("/toPassword")
     public String toPassword(@RequestParam("id") Integer id, HttpServletRequest request) {
         Admin admin = this.adminService.findById(id);
         if (admin != null) {
@@ -73,7 +74,7 @@ public class AdminController {
         return "redirect:toLogin";
     }
 
-    @GetMapping("generateTestCode")
+    @GetMapping("/generateTestCode")
     public void generateTestCode(HttpServletResponse response, HttpSession session) throws IOException {
         //获得随机数
         String code = "";

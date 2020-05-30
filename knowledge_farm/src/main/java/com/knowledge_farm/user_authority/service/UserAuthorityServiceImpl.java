@@ -33,4 +33,9 @@ public class UserAuthorityServiceImpl {
         return this.userAuthorityDao.findUserAuthoritiesByOpenId(openId);
     }
 
+    @Transactional(readOnly = false)
+    public void deleteUserAuthority(UserAuthority userAuthority){
+        this.userAuthorityDao.delete(userAuthority);
+    }
+
 }

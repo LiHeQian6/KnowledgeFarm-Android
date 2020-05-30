@@ -48,6 +48,7 @@ public class User {
     private Set<UserPetUtilBag> userPetUtilBags = new HashSet<>();
 
     public User(){
+        this.email = "";
         this.level = 1;
         this.experience = 0;
         this.money = 1000;
@@ -105,6 +106,7 @@ public class User {
         this.photo = photo;
     }
 
+    @Column(columnDefinition = "string default ''")
     public String getEmail() {
         return email;
     }

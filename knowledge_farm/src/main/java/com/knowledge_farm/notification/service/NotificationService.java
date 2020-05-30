@@ -110,7 +110,7 @@ public class NotificationService {
             return Result.TRUE;
         }
         String title = "新朋友";
-        String content = friendUser.getNickName() + "请求添加你为好友";
+        String content = user.getNickName() + "请求添加你为好友";
         Map extra = new HashMap<>();
         Notification notification = new Notification();
         NotificationType notificationType = this.notificationTypeService.findNotificationTypeById(2);
@@ -131,7 +131,7 @@ public class NotificationService {
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserById(friendId);
         String title = "新消息";
-        String content = friendUser.getNickName() + "给你浇水了";
+        String content = user.getNickName() + "给你浇水了";
         Map extra = new HashMap<>();
         Notification notification = new Notification();
         NotificationType notificationType = this.notificationTypeService.findNotificationTypeById(3);
@@ -151,7 +151,7 @@ public class NotificationService {
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserById(friendId);
         String title = "新消息";
-        String content = friendUser.getNickName() + "给你施肥了";
+        String content = user.getNickName() + "给你施肥了";
         Map extra = new HashMap<>();
         Notification notification = new Notification();
         NotificationType notificationType = this.notificationTypeService.findNotificationTypeById(3);

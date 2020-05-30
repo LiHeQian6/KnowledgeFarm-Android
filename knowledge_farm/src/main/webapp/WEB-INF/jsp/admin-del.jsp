@@ -27,7 +27,7 @@
 		window.onload = function(){
 			$("#initAdminManager").attr("class","sub-menu opened");
 			$("#initAdminManager2").attr("class","current");
-		}
+		};
 		
 		//恢复单个管理员信息
         function recoveryOneAdmin(id){
@@ -291,6 +291,21 @@
 								<a href="${ctx}/admin/findAdminPage?exist=0">
 									<i class="iconfont">&#xe6a7;</i>
 									管理员删除
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="list">
+						<a href="javascript:;">
+							<i class="iconfont">&#xe6a3;</i>
+							更新管理
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul id="initVersionUploadManager" class="sub-menu">
+							<li id="initVersionUploadManager1">
+								<a href="${ctx}/admin/versionUpload/toVersionUpload">
+									<i class="iconfont">&#xe6a7;</i>
+									APK更新
 								</a>
 							</li>
 						</ul>

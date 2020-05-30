@@ -4,10 +4,7 @@ import com.knowledge_farm.answer.entity.Mix;
 import com.knowledge_farm.answer.entity.Multiple;
 import com.knowledge_farm.answer.entity.Question3Num;
 import com.knowledge_farm.answer.service.AnswerService;
-import com.knowledge_farm.entity.Completion;
-import com.knowledge_farm.entity.Question;
-import com.knowledge_farm.entity.QuestionTitle;
-import com.knowledge_farm.entity.QuestionType;
+import com.knowledge_farm.entity.*;
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -276,10 +273,10 @@ public class AnswerController {
     public List<Question> getEnglishTk(List<Question> list){
         int i = 3;
         while (i-->0){
+            SingleChoice choice = answerService.findSingleChoice(list.get(i).getId());
             String question_title = list.get(i).getQuestionTitle().getTitle();
-            int size = question_title.length();
             int grade = list.get(i).getGrade();
-            Question question = new Completion(new QuestionTitle(question_title),"English",new QuestionType(2,"填空题"),grade,new Random().nextInt(size)+1+"");
+            Question question = new Completion(new QuestionTitle(question_title),"English",new QuestionType(2,"填空题"),grade,choice.getAnswer());
             list.set(i,question);
         }
         return list;

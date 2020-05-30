@@ -297,6 +297,7 @@ public class UserServiceImpl {
         user.setUserAuthority(null);
         if(userAuthority != null){
             userAuthority.setUser(null);
+            this.userAuthorityService.deleteUserAuthority(userAuthority);
         }
     }
 
