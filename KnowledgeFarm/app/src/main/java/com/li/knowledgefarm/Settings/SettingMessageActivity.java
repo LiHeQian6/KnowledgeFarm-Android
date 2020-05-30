@@ -37,6 +37,7 @@ import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
+import com.li.knowledgefarm.entity.UserAuthority;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
@@ -193,6 +194,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_photo.setOnClickListener(new CustomerOnclickListener());
         change_Email.setOnClickListener(new CustomerOnclickListener());
         change_nickname.setOnClickListener(new CustomerOnclickListener());
+        change_QQ.setOnClickListener(new CustomerOnclickListener());
         returns_message.setOnClickListener(new CustomerOnclickListener());
         change_password.setOnClickListener(new CustomerOnclickListener());
         log_out.setOnClickListener(new CustomerOnclickListener());
@@ -230,7 +232,7 @@ public class SettingMessageActivity extends AppCompatActivity {
         user_photo = findViewById(R.id.btnUpdatePhoto);
         user_account = findViewById(R.id.user_account);
         user_nickName = findViewById(R.id.user_nickname);
-        change_Email = findViewById(R.id.btnBindingEmail);
+        change_Email = findViewById(R.id.btnUpdateEmail);
         change_QQ = findViewById(R.id.btnUpdateQQ);
         change_password = findViewById(R.id.change_password);
         user_QQ = findViewById(R.id.showQQ);
@@ -264,6 +266,8 @@ public class SettingMessageActivity extends AppCompatActivity {
                         switch ((String)msg.obj){
                             case "true":
                                 /** 存入SharedPreferences*/
+                                UserUtil.getUser().setUserAuthority(new UserAuthority());
+                                ShowUserMessage();
                                 SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("opId",openId);
@@ -286,6 +290,8 @@ public class SettingMessageActivity extends AppCompatActivity {
                             case "true":
                                 mTencent.logout(getApplicationContext());
                                 /** 删除SharedPreferences内Token信息*/
+                                UserUtil.getUser().setUserAuthority(null);
+                                ShowUserMessage();
                                 SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.clear();
@@ -452,6 +458,37 @@ public class SettingMessageActivity extends AppCompatActivity {
     }
 
     /**
+     * 解绑QQ
+     */
+    private void unBindingQQ(){
+
+        new Thread(){
+            @Override
+            public void run() {
+                FormBody formBody = new FormBody.Builder().build();
+                final Request request = new Request.Builder().post(formBody).url(getResources().getString(R.string.URL)+"/user/unBindingQQ").build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i("lww","请求失败");
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
+                        String result = response.body().string();
+                        Message message = Message.obtain();
+                        message.obj = result;
+                        message.what = 2;
+                        handler.sendMessage(message);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    /**
      * 打开相册
      */
     public void openPhonePhoto(){
@@ -612,7 +649,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     private void ShowIfDoPop(String type){
         ifDoPop = new IfDoPop(this,type);
         ifDoPop.setHeight((int)(ds.heightPixels*0.55));
-        ifDoPop.setWidth((int)(ds.widthPixels*0.35));
+        ifDoPop.setWidth((int)(ds.widthPixels*0.4));
         ifDoPop.showAtLocation(change_Email, Gravity.CENTER,0,0);
         ifDoPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -700,11 +737,11 @@ public class SettingMessageActivity extends AppCompatActivity {
      * @return void
      */
     private void checkUpdate(){
-        DownloadManager.Request downLoad = new DownloadManager.Request(Uri.parse(getResources().getString(R.string.UPDATE)));
-        downLoad.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        downloadManager.enqueue(downLoad);
+//        DownloadManager.Request downLoad = new DownloadManager.Request(Uri.parse(getResources().getString(R.string.UPDATE)));
+//        downLoad.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//
+//        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//        downloadManager.enqueue(downLoad);
     }
 
     private class CustomerOnclickListener implements View.OnClickListener{
@@ -741,15 +778,19 @@ public class SettingMessageActivity extends AppCompatActivity {
                 case R.id.btnUpdatePhoto:
                     openPhonePhoto();
                     break;
-                case R.id.btnBindingEmail:
+                case R.id.btnUpdateEmail:
                     if(change_Email.getText().toString().equals("去绑定")){
                         ShowChangeMessagePop("Email");
                     }else {
                         ShowIfDoPop("UnBindEmail");
                     }
                     break;
-                case R.id.btnBindingQQ:
-                    bindingQQ();
+                case R.id.btnUpdateQQ:
+                    if(change_QQ.getText().toString().equals("去绑定")) {
+                        bindingQQ();
+                    }else {
+                        unBindingQQ();
+                    }
                     break;
                 case R.id.change_nickname:
                     ShowChangeNickNamePop();

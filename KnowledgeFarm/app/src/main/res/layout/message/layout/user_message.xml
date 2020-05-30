@@ -266,7 +266,7 @@
                                         android:background="@drawable/buttonbackground"
                                         android:layout_toRightOf="@id/bangding_email_li"
                                         android:text="去绑定"
-                                        android:id="@+id/btnBindingEmail"
+                                        android:id="@+id/btnUpdateEmail"
                                         android:autoSizeMaxTextSize="20dp"
                                         android:maxLines="1"
                                         android:autoSizeTextType="uniform"/>

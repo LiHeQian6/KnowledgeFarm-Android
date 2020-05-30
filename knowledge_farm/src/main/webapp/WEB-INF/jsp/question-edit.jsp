@@ -72,11 +72,11 @@
                     <div class="layui-input-inline">
                         <select name="grade">
                             <c:forEach var="grade" items="${grades}">
-                                <c:if test="${grade.id == question.grade}">
-                                    <option value="${grade.id}" selected>${grade.name}</option>
+                                <c:if test="${grade.key == question.grade}">
+                                    <option value="${grade.key}" selected>${grade.value}</option>
                                 </c:if>
-                                <c:if test="${grade.id != question.grade}">
-                                    <option value="${grade.id}">${grade.name}</option>
+                                <c:if test="${grade.key != question.grade}">
+                                    <option value="${grade.key}">${grade.value}</option>
                                 </c:if>
                             </c:forEach>
                         </select>

@@ -342,11 +342,11 @@
                             <select name="grade">
                                 <option value="0" selected="">请选择年级</option>
                                 <c:forEach var="grade" items="${grades}">
-                                    <c:if test="${grade.id == param.grade}">
-                                        <option value="${grade.id}" selected>${grade.name}</option>
+                                    <c:if test="${grade.key == param.grade}">
+                                        <option value="${grade.key}" selected>${grade.value}</option>
                                     </c:if>
-                                    <c:if test="${grade.id != param.grade}">
-                                        <option value="${grade.id}">${grade.name}</option>
+                                    <c:if test="${grade.key != param.grade}">
+                                        <option value="${grade.key}">${grade.value}</option>
                                     </c:if>
                                 </c:forEach>
                             </select>
@@ -411,8 +411,8 @@
                         <td>${questionPage.questionTitle.title}</td>
                         <td>${questionPage.subject}</td>
                         <c:forEach var="grade" items="${grades}">
-                            <c:if test="${grade.id == questionPage.grade}">
-                                <td>${grade.name}</td>
+                            <c:if test="${grade.key == questionPage.grade}">
+                                <td>${grade.value}</td>
                             </c:if>
                         </c:forEach>
                         <td>${(questionPage.answer == 1) ? "正确" : "错误"}</td>

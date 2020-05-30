@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/notify_title"
-            android:textColor="@color/blackTextColor"
+            android:textColor="@color/ShopTextColor"
             android:textSize="30dp"
             android:text="通知标题"/>
 
@@ -27,7 +27,7 @@
                 android:textSize="25dp"
                 android:maxEms="10"
                 android:maxLines="1"
-                android:textColor="@color/blackTextColor"
+                android:textColor="@color/ShopTextColor"
                 android:text="通知大致内容"/>
             <TextView
                 android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:layout_weight="2"
                 android:id="@+id/notify_time"
                 android:text="2020-20-20  20-20-20"
-                android:textColor="@color/blackTextColor"
+                android:textColor="@color/ShopTextColor"
                 android:textSize="22dp">
             </TextView>
         </LinearLayout>

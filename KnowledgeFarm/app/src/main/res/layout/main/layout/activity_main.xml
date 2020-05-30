@@ -28,6 +28,8 @@
             android:id="@+id/lands"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
             android:scaleY="0.8"
             android:scaleX="0.8"
             android:rotationX="10"
@@ -46,23 +48,21 @@
     <RelativeLayout android:layout_width="match_parent"
                   android:gravity="center_vertical"
                   android:layout_height="wrap_content">
-        <LinearLayout android:layout_width="220dp"
+        <LinearLayout android:layout_width="180dp"
                       android:layout_alignParentLeft="true"
                       android:id="@+id/userInfo"
-                      android:paddingLeft="10dp"
-                      android:gravity="center_vertical"
-                      android:layout_height="100dp"
+                      android:gravity="center"
+                      android:layout_height="80dp"
             android:background="@drawable/notice">
-            <ImageView android:layout_width="50dp"
+            <ImageView android:layout_width="40dp"
                        android:id="@+id/photo"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="6dp"
+                       android:layout_marginTop="4dp"
                        android:src="@drawable/photo"
-                       android:layout_height="50dp"/>
+                       android:layout_height="40dp"/>
             <LinearLayout android:layout_width="wrap_content"
                           android:orientation="vertical"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                           android:layout_height="wrap_content">
                 <HorizontalScrollView
                     android:layout_width="100dp"
@@ -71,7 +71,7 @@
                     <TextView android:layout_width="wrap_content"
                         android:text="昵称:景宝宝"
                         android:id="@+id/nickName"
-                        android:textSize="18dp"
+                        android:textSize="15dp"
                         android:textColor="@color/ShopTextColor"
                         android:layout_height="wrap_content"/>
                 </HorizontalScrollView>
@@ -82,15 +82,16 @@
                     android:layout_marginTop="3dp">
                     <TextView android:layout_width="wrap_content"
                         android:text="Lv:16"
+                        android:textSize="12dp"
                         android:id="@+id/level"
                         android:textColor="@color/ShopTextColor"
                         android:layout_height="wrap_content"/>
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp">
+                        android:layout_marginLeft="3dp">
                         <ProgressBar
-                            android:layout_width="100dp"
+                            android:layout_width="80dp"
                             android:progress="50"
                             android:id="@+id/experience"
                             android:layout_centerInParent="true"
@@ -100,7 +101,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="20/500"
-                            android:textSize="10sp"
+                            android:textSize="10dp"
                             android:id="@+id/experienceValue"
                             android:textColor="@android:color/black"
                             android:layout_centerInParent="true"
@@ -116,11 +117,11 @@
                           android:layout_height="wrap_content"/>
                 <TextView android:layout_width="wrap_content"
                     android:text="金币：6666"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="6dp"
                     android:textColor="@color/ShopTextColor"
                     android:layout_toRightOf="@+id/userInfo"
                     android:id="@+id/money"
-                    android:textSize="15dp"
+                    android:textSize="12dp"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 

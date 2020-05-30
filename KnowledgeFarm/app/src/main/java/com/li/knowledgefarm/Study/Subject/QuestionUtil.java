@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,12 @@ import com.li.knowledgefarm.entity.QuestionEntity.Completion;
 import com.li.knowledgefarm.entity.QuestionEntity.Judgment;
 import com.li.knowledgefarm.entity.QuestionEntity.Question;
 import com.li.knowledgefarm.entity.QuestionEntity.SingleChoice;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -83,6 +90,8 @@ public class QuestionUtil {
     private TextView judge_question;//判断题问题
     private TextView judge_A; //A选项
     private TextView judge_B; //B选项
+    private CheckBox judgeBox_A; //A选项单选框
+    private CheckBox judgeBox_B; //B选项单选框
     private ImageView judge_isTrue; //是否判断正确提示
 
     public QuestionUtil(Context context, Activity activity, List<Question> datalist) {
@@ -132,7 +141,49 @@ public class QuestionUtil {
         judge_isTrue = activity.findViewById(R.id.judge_isTrue);
         judge_A = activity.findViewById(R.id.judge_A);
         judge_B = activity.findViewById(R.id.judge_B);
+        judgeBox_A = activity.findViewById(R.id.judge_box_A);
+        judgeBox_B = activity.findViewById(R.id.judge_box_B);
         your_answer = activity.findViewById(R.id.your_answer);
+    }
+
+    /**
+     * @Description 判断是否为中文
+     * @Author 孙建旺
+     * @Date 下午10:46 2020/05/28
+     * @Param [c]
+     * @return boolean
+     */
+    private boolean isChineseChar(char c) {
+        return String.valueOf(c).matches("[\u4e00-\u9fa5]");
+    }
+
+    /**
+     * @Description 汉字转拼音
+     * @Author 孙建旺
+     * @Date 下午10:52 2020/05/28
+     * @Param [to]
+     * @return java.lang.String
+     */
+    private String chineseToPinyin(String to){
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);  //转小写
+        format.setToneType(HanyuPinyinToneType.WITH_TONE_MARK); //不带音标
+        format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
+        char[] chars = to.toCharArray();
+        StringBuffer buffer = new StringBuffer();
+        String result = "";
+        for(int i = 0; i < chars.length; ++i){
+            if(chars[i] > 128){
+                try{
+                    result = PinyinHelper.toHanyuPinyinStringArray(chars[i],format)[0];  //转换出的结果包含了多音字，这里简单粗暴的取了第一个拼音。
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else{ //非汉字
+                buffer.append(chars[i]);
+            }
+        }
+        return result;
     }
 
     /**
@@ -244,10 +295,16 @@ public class QuestionUtil {
     public void ShowSingleChoice(){
         btnPreQuestion.setClickable(true);
         btnNextQuestion.setClickable(true);
+        String title = datalist.get(POSITION).getQuestionTitle().getTitle();
         if(datalist.get(POSITION).getIfDone() == 1){
             choice_isTrue.setVisibility(View.INVISIBLE);
             choice_question.setVisibility(View.VISIBLE);
-            choice_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            if(!isChineseChar(title.charAt(0)) && datalist.get(POSITION).getSubject().equals("Chinese")){
+                Log.e("chinese",chineseToPinyin(((SingleChoice)datalist.get(POSITION)).getAnswer()));
+                choice_question.setText(chineseToPinyin(((SingleChoice)datalist.get(POSITION)).getAnswer()));
+            }else {
+                choice_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            }
             choice_A.setVisibility(View.INVISIBLE);
             checkBox_C.setVisibility(View.INVISIBLE);
             checkBox_A.setVisibility(View.INVISIBLE);
@@ -261,7 +318,13 @@ public class QuestionUtil {
             choice_A.setVisibility(View.VISIBLE);
             choice_C.setVisibility(View.VISIBLE);
             choice_isTrue.setVisibility(View.INVISIBLE);
-            choice_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            if(!isChineseChar(title.charAt(0)) && datalist.get(POSITION).getSubject().equals("Chinese")){
+//                Log.e("chinese",chineseToPinyin(((SingleChoice)datalist.get(POSITION)).getAnswer()));
+                String pinyin = "zhuǎn";
+                choice_question.setText(chineseToPinyin(((SingleChoice)datalist.get(POSITION)).getAnswer()));
+            }else {
+                choice_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            }
             switch (new Random().nextInt(3)){
                 case 0:
                     choice_A.setText(((SingleChoice)datalist.get(POSITION)).getAnswer());
@@ -395,6 +458,48 @@ public class QuestionUtil {
         }
     }
 
+    /**
+     * @Description 判断判断题是否正确
+     * @Author 孙建旺
+     * @Date 上午10:06 2020/05/27
+     * @Param []
+     * @return void
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void JudgementIfTrue(){
+        String choose_answer = "";
+        if(judgeBox_A.isChecked())
+            choose_answer = choice_A.getText().toString();
+        if(judgeBox_B.isChecked())
+            choose_answer = choice_B.getText().toString();
+        if(choose_answer.equals(((Judgment)datalist.get(POSITION)).getAnswer())){
+            TRUE_ANSWER_COUNT++;
+            judge_isTrue.setVisibility(View.VISIBLE);
+            judge_isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.duigou,null));
+            StudyUtil.PlayTrueSound(context);
+            if((POSITION+1)<=datalist.size()-1) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        datalist.get(POSITION).setIfDone(1);
+                        PositionAdd();
+                        showQuestion();
+                    }
+                }, 1000);
+            }else {
+                getWaterAndFertilizer();
+                btnNextQuestion.setClickable(false);
+            }
+        }else {
+            btnPreQuestion.setClickable(true);
+            btnNextQuestion.setClickable(true);
+            judge_isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.cha,null));
+            judge_isTrue.setVisibility(View.VISIBLE);
+            StudyUtil.PlayFalseSound(context);
+        }
+    }
+
     public void getWaterAndFertilizer(){
         new Thread(){
             @Override
@@ -496,7 +601,7 @@ public class QuestionUtil {
         attrs.gravity = Gravity.CENTER;
         final float scale = context.getResources().getDisplayMetrics().density;
         attrs.width = (int)(300*scale+0.5f);
-        attrs.height =(int)(300*scale+0.5f);
+        attrs.height =(int)(200*scale+0.5f);
         ifReturn.getWindow().setAttributes(attrs);
         Window dialogWindow = ifReturn.getWindow();
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);

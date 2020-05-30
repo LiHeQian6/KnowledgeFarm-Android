@@ -4,8 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    android:background="@drawable/shopitem"
+    android:background="@drawable/notice"
     tools:context=".notify.NotifyActivity">
 
     <LinearLayout
@@ -33,7 +32,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -119,23 +120,25 @@
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:background="@color/blackTextColor"/>
+                android:background="@color/ShopTextColor"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:layout_marginRight="25dp"
                 android:layout_weight="1">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:layout_weight="1"
-                    android:layout_marginLeft="10dp">
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp">
                     <ListView
                         android:id="@+id/notify_list_view"
                         android:layout_width="match_parent"
                         android:dividerHeight="1dp"
-                        android:divider="@color/blackTextColor"
+                        android:divider="@color/ShopTextColor"
                         android:visibility="visible"
                         android:layout_height="match_parent"/>
                     <TextView
@@ -145,7 +148,7 @@
                         android:id="@+id/none_notify"
                         android:text="暂时没有通知"
                         android:visibility="gone"
-                        android:textColor="@color/blackTextColor"
+                        android:textColor="@color/ShopTextColor"
                         android:textSize="25dp"/>
 
                 </LinearLayout>

@@ -95,7 +95,7 @@
                         <select id="grade" name="grade">
                             <option value="0" selected="">请选择年级</option>
                             <c:forEach var="grade" items="${grades}">
-                                <option value="${grade.id}">${grade.name}</option>
+                                <option value="${grade.key}">${grade.value}</option>
                             </c:forEach>
                         </select>
                     </div>

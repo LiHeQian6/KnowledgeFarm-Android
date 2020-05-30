@@ -228,7 +228,7 @@ public class PhotoAspect {
     public void findAllUser(JoinPoint joinPoint, Object result) {
         if(result instanceof PageUtil){
             for(User user : ((PageUtil<User>) result).getList()){
-                changeUser3(user);
+                changeUser2(user);
             }
         }
     }
