@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2020/5/5 0005
-  Time: 15:17
+  Date: 2020/5/14 0014
+  Time: 16:29
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -17,6 +17,7 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="${ctx}/css/font.css">
     <link rel="stylesheet" href="${ctx}/css/xadmin.css">
+    <link rel="stylesheet" href="${ctx}/css/layui1.0.9.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/Swiper/3.4.2/css/swiper.min.css">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.jquery.min.js"></script>
@@ -24,73 +25,35 @@
     <script type="text/javascript" src="${ctx}/js/xadmin.js"></script>
 
     <style>
-        .page{
-            margin-right:25px;
+        .mask{
+            width: 100%;
+            height: 1300px;
+            background-color: #000000; /*background-color: #dedcd8;*/
+            opacity: 0.5;
+            position: fixed;
+            left: 0px;
+            top:0px;
+        }
+        .progressDialog {
+            width: 50%;
+            position: fixed;
+            left: 28%;
+            top: 35%;
         }
     </style>
-
-    <script>
-        //初始化左侧菜单（作物管理）
-        window.onload = function(){
-            $("#initPetUtilManager").attr("class","sub-menu opened");
-            $("#initPetUtilManager1").attr("class","current");
-        }
-
-        //删除单个作物信息
-        function deleteOnePetUtil(id){
-            layer.confirm('确认要删除吗？',function(index){
-                $.post("${ctx}/admin/petUtil/deleteOnePetUtil",{"id":id},function(data){
-                    if(data == "succeed"){
-                        window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageUtilSize=${petPage.pageSize}&&exist=${param.exist}";
-                    }else if(data == "fail"){
-                        layer.msg('删除失败');
-                    }
-                })
-            });
-        }
-
-        //删除批量作物信息
-        function deleteMultiPetUtil() {
-            var arrDelete = document.getElementsByName("checkBox");
-            var deleteStr="";
-            for(i in arrDelete){
-                if(arrDelete[i].checked){
-                    deleteStr = deleteStr + arrDelete[i].value + ",";
-                }
-            }
-            layer.confirm('确认要批量删除吗？',function(index){
-                if(deleteStr != ""){
-                    $.post("${ctx}/admin/petUtil/deleteMultiPetUtil",{"deleteStr":deleteStr},function(data){
-                        if(data == "succeed"){
-                            window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}";
-                        }else if(data == "fail"){
-                            layer.msg('删除失败');
-                        }
-                    })
-                }else{
-                    layer.msg('删除不能为空');
-                }
-            });
-        }
-
-        //添加作物信息
-        function addPetUtil(title,url,w,h){
-            x_admin_show(title,url,w,h);
-        }
-
-        //修改作物信息
-        function updatePetUtil(title,url,w,h) {
-            x_admin_show(title,url,w,h);
-        }
-
-    </script>
-
 </head>
+<script>
+    //初始化左侧菜单
+    window.onload = function(){
+        $("#initVersionUploadManager").attr("class","sub-menu opened");
+        $("#initVersionUploadManager1").attr("class","current");
+    };
+</script>
 <body>
 <!-- 顶部开始 -->
-<%--    	<%@ include file="/layout/header.jsp"%>--%>
+<%--<%@ include file="/layout/header.jsp"%>--%>
 <div class="container">
-    <div class="logo"><a href="${ctx}/admin/toIndex">知识农场后台管理系统</a></div>
+    <div class="logo"><a href="${ctx}/admin/toIndex"><font color="#fff">知识农场后台管理系统</font></a></div>
     <div class="open-nav"><i class="iconfont">&#xe699;</i></div>
     <ul class="layui-nav right" lay-filter="">
         <li class="layui-nav-item">
@@ -106,7 +69,7 @@
 <!-- 中部开始 -->
 <div class="wrapper">
     <!-- 左侧菜单开始 -->
-    <%--        	<%@ include file="/layout/menuLeft.jsp"%>--%>
+    <%--    <%@ include file="/layout/menuLeft.jsp"%>--%>
     <div class="left-nav">
         <div id="side-nav">
             <ul id="nav">
@@ -322,114 +285,47 @@
     <!-- 右侧主体开始 -->
     <div class="page-content">
         <div class="content">
-            <!-- 右侧内容框架，更改从这里开始 -->
-            <form class="layui-form xbs" action="${ctx}/admin/petUtil/findPetUtilPage">
-                <div class="layui-form-pane" style="text-align: center;">
-                    <div class="layui-form-item" style="display: inline-block;">
-                        <div class="layui-input-inline">
-                            <input type="text" name="name" placeholder="请输入宠物道具名称" autocomplete="off" class="layui-input" value="${param.name}">
-                        </div>
-                        <div class="layui-input-inline">
-                            <select name="petUtilTypeId">
-                                <option value="0" selected="">请选择宠物道具类型</option>
-                                <c:forEach var="petUtilType" items="${petUtilTypes}">
-                                    <c:if test="${petUtilType.id == param.petUtilTypeId}">
-                                        <option value="${petUtilType.id}" selected>${petUtilType.name}</option>
-                                    </c:if>
-                                    <c:if test="${petUtilType.id != param.petUtilTypeId}">
-                                        <option value="${petUtilType.id}">${petUtilType.name}</option>
-                                    </c:if>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <input type="hidden" name="exist" value="1"/>
-                        <div class="layui-input-inline" style="width:80px">
-                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
-                        </div>
+            <form id="form1" class="layui-form" enctype="multipart/form-data" method="post">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>请上传文件
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="file" type="file" name="file">
                     </div>
                 </div>
-            </form>
-
-            <xblock>
-                <button class="layui-btn layui-btn-danger" onclick="deleteMultiPetUtil()">
-                    <i class="layui-icon">&#xe640;</i>批量删除
-                </button>
-                <button class="layui-btn" onclick="addPetUtil('添加宠物工具','${ctx}/admin/petUtil/toAdd','600','500')">
-                    <i class="layui-icon">&#xe608;</i>添加
-                </button>
-                <a href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">
-                    <button class="layui-btn" style="margin-left:11px;">
-                        <i class="layui-icon">
-                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/save.png"/>
-                        </i>刷新
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <button id="submit" class="layui-btn" key="set-mine" lay-filter="save" lay-submit>
+                        保存
                     </button>
-                </a>
-                <span class="x-right" style="line-height:40px">共有数据：${petUtilPage.totalCount} 条</span>
-            </xblock>
-            <table class="layui-table">
-                <thead >
-                <tr>
-                    <th></th>
-                    <th style="text-align:center;">工具ID</th>
-                    <th style="text-align:center;">名称</th>
-                    <th style="text-align:center;">描述</th>
-                    <th style="text-align:center;">img</th>
-                    <th style="text-align:center;">价格</th>
-                    <th style="text-align:center;">提升值</th>
-                    <th style="text-align:center;">类型</th>
-                    <th style="text-align:center;">状态</th>
-                    <th style="text-align:center;">操作</th>
-                </tr>
-                </thead>
-                <tbody align="center">
-                <c:forEach var="petUtilPage" items="${petUtilPage.list}">
-                    <tr>
-                        <td><input type="checkbox" value="${petUtilPage.id}" name="checkBox"></td>
-                        <td>${petUtilPage.id}</td>
-                        <td>${petUtilPage.name}</td>
-                        <td>${petUtilPage.description}</td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petUtilPage.img}"/></td>
-                        <td>${petUtilPage.price}金币</td>
-                        <td>${petUtilPage.value}</td>
-                        <td>${petUtilPage.petUtilType.id == 1 ? '生命值' : (petUtilPage.petUtilType.id == 2 ? '体力值' : '智力值')}</td>
-                        <td class="td-status">
-                            <span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
-                        </td>
-                        <td class="td-manage" align="center">
-                            <a style="text-decoration:none"  onclick="updatePetUtil('编辑','${ctx}/admin/petUtil/toEdit?id=${petUtilPage.id}','600','400')" href="javascript:;" title="编辑">
-                                <i class="layui-icon">&#xe642;</i>
-                            </a>
-                            <a title="删除" href="javascript:;" onclick="deleteOnePetUtil(${petUtilPage.id})" style="text-decoration:none">
-                                <i class="layui-icon">&#xe640;</i>
-                            </a>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+                </div>
+            </form>
             <!-- 右侧内容框架，更改从这里结束 -->
         </div>
-        <!-- 分页处理开始 -->
-        <div align="center">
-            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=1&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">首页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.prePageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">上一页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.nextPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">下一页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.totalPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">末页</a>
-        </div>
-        <div align="center" style="margin-top:20px;">
-            <span style="margin-right:10px;">${petUtilPage.currentPageNum}</span>
-            <span>/</span>
-            <span style="margin-left:10px;">${petUtilPage.totalPageNum}</span>
-        </div>
-        <!-- 分页处理结束 -->
     </div>
     <!-- 右侧主体结束 -->
+</div>
+<div id="mask" class="mask" hidden></div>
+<div id="progressDialog" class="progressDialog" hidden>
+    <div align="right">
+        <a id="closeMask"><i class="layui-icon" style="font-size: 30px; color: #fff;">&#x1006;</i></a>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>文件上传进度</legend>
+        <div class="layui-field-box" style><font color="#00CD00"><h4 id="uploadTime"></h4></font></div>
+    </fieldset>
+    <div id="progressModal" class="layui-progress layui-progress-big">
+        <div id="progress_rate" class="layui-progress-bar" style="width: 0%">
+            <span id="percent">0%</span>
+        </div>
+    </div>
 </div>
 <!-- 中部结束 -->
 <!-- 底部开始 -->
 <!-- 底部结束 -->
 <!-- 背景切换开始 -->
-<%--    	<%@ include file="/layout/background.jsp"%>--%>
+<%--<%@ include file="/layout/background.jsp"%>--%>
 <div class="bg-changer">
     <div class="swiper-container changer-list">
         <div class="swiper-wrapper">
@@ -451,6 +347,95 @@
     <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
 </div>
 <!-- 背景切换结束 -->
+<script>
+    var xhr = new XMLHttpRequest();
+    $("#submit").attr("disabled",false);
+    $("#submit").click(function() {
+        //判断文件是否为空
+        var fileValue = $("#file").val();
+        if (fileValue == null || fileValue == "") {
+            layer.msg("请先选择文件");
+            return false;
+        }
+
+        // 判断文件类型
+        var obj = $("#file");
+        var photoExt = obj.val().substr(obj.val().lastIndexOf(".")).toLowerCase();//获得文件后缀名
+        if (photoExt != ".apk") {
+            layer.msg("请选择apk格式的文件，不支持其他格式文件");
+            return false;
+        }
+
+        // 判断文件大小
+        var fileSize = 0;
+        var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
+        if (isIE && !obj.files) {
+            var filePath = obj.val();
+            var fileSystem = new ActiveXObject("Scripting.FileSystemObject");
+            var file = fileSystem.GetFile(filePath);
+            fileSize = file.Size;
+        } else {
+            fileSize = obj.get(0).files[0].size;
+        }
+        fileSize = fileSize / 1024;
+        fileSize = fileSize / 1024;
+        console.log(fileSize);
+        if (fileSize > 100) {
+            layer.msg("文件不能大于100M");
+            return false;
+        }
+
+        $(this).attr("disabled", true);
+        $("#progress_rate").width("0%");
+        $("#mask").show();
+        $("#progressDialog").show();
+        uploadFile();
+    });
+
+    function uploadFile() {
+        var fileObj = $("#file").get(0).files[0]; // js 获取文件对象
+        // FormData 对象
+        var form = new FormData();
+        // form.append("author", "hooyes"); // 可以增加表单数据
+        form.append("file", fileObj); // 文件对象
+        // XMLHttpRequest 对象
+        xhr.open("post", "${ctx}/admin/versionUpload/upload", true);
+        xhr.onload = function() {
+            var data = this.response;
+            $("#submit").attr('disabled', false);
+            switch (data) {
+                case "null":
+                    layer.msg("上传文件为空")
+                    break;
+                case "fail":
+                    layer.msg("文件上传失败");
+                    break;
+                default:
+                    $("#uploadTime").text("文件上传成功，共用时" + data);
+                    layer.msg("上传文件成功");
+            }
+        };
+        xhr.upload.addEventListener("progress", progressFunction, false);
+        xhr.send(form);
+    }
+
+    function progressFunction(evt) {
+        var progressBar = $("#progress_rate");
+        if (evt.lengthComputable) {
+            var completePercent = Math.round(evt.loaded / evt.total * 100)+ "%";
+            progressBar.width(completePercent);
+            $("#percent").text(completePercent);
+        }
+    }
+
+    $("#closeMask").click(function () {
+        xhr.abort();
+        $("#uploadTime").text("");
+        $("#percent").text("");
+        $("#mask").hide();
+        $("#progressDialog").hide();
+        $("#submit").attr('disabled', false);
+    });
+</script>
 </body>
-</html>
 </html>
