@@ -72,10 +72,10 @@ public class AnswerService {
         return questionRepository.findByGradeAndSubject(grade,subject,pageable);
     }
     //查询语文,英语,数学2年级题
-    public Question findQuestion2(int grade,String subject,QuestionType type){
+    public List<Question> findQuestion2(int grade,String subject,QuestionType type){
         List<Question> list = questionRepository.findByGradeAndSubjectAndQuestionType(grade,subject,type);
         Collections.shuffle(list);
-        return list.get(0);
+        return list.subList(0,1);
     }
 
     //一年级上册数学

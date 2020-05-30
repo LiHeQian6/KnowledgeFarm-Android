@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2020/5/5 0005
-  Time: 15:17
+  Date: 2020/5/17 0017
+  Time: 13:27
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -32,16 +32,16 @@
     <script>
         //初始化左侧菜单（作物管理）
         window.onload = function(){
-            $("#initPetUtilManager").attr("class","sub-menu opened");
-            $("#initPetUtilManager1").attr("class","current");
+            $("#initQuestionManager").attr("class","sub-menu opened");
+            $("#initQuestionManager3").attr("class","current");
         }
 
-        //删除单个作物信息
-        function deleteOnePetUtil(id){
-            layer.confirm('确认要删除吗？',function(index){
-                $.post("${ctx}/admin/petUtil/deleteOnePetUtil",{"id":id},function(data){
+        //删除单个题目
+        function deleteOneQuestion(id){
+            layer.confirm('删除后无法恢复，确认要删除数据吗？',function(index){
+                $.post("${ctx}/admin/question/deleteOneQuestion",{"id":id},function(data){
                     if(data == "succeed"){
-                        window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageUtilSize=${petPage.pageSize}&&exist=${param.exist}";
+                        window.location.href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageUtilSize=${questionPage.pageSize}";
                     }else if(data == "fail"){
                         layer.msg('删除失败');
                     }
@@ -49,8 +49,8 @@
             });
         }
 
-        //删除批量作物信息
-        function deleteMultiPetUtil() {
+        //删除批量题目
+        function deleteMultiQuestion() {
             var arrDelete = document.getElementsByName("checkBox");
             var deleteStr="";
             for(i in arrDelete){
@@ -58,11 +58,11 @@
                     deleteStr = deleteStr + arrDelete[i].value + ",";
                 }
             }
-            layer.confirm('确认要批量删除吗？',function(index){
+            layer.confirm('删除后无法恢复，确认要批量删除吗？',function(index){
                 if(deleteStr != ""){
-                    $.post("${ctx}/admin/petUtil/deleteMultiPetUtil",{"deleteStr":deleteStr},function(data){
+                    $.post("${ctx}/admin/question/deleteMultiQuestion",{"deleteStr":deleteStr},function(data){
                         if(data == "succeed"){
-                            window.location.href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}";
+                            window.location.href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageUtilSize=${questionPage.pageSize}";
                         }else if(data == "fail"){
                             layer.msg('删除失败');
                         }
@@ -73,13 +73,24 @@
             });
         }
 
-        //添加作物信息
-        function addPetUtil(title,url,w,h){
+        //添加题目
+        function addQuestion(title,url,w,h){
             x_admin_show(title,url,w,h);
         }
 
-        //修改作物信息
-        function updatePetUtil(title,url,w,h) {
+        //添加批量题目
+        function addMultiQuestion(){
+            $.post("${ctx}/admin/question/deleteOneQuestion",{"id":id},function(data){
+                if(data == "succeed"){
+
+                }else if(data == "fail"){
+                    layer.msg('删除失败');
+                }
+            })
+        }
+
+        //修改题目
+        function updateQuestion(title,url,w,h) {
             x_admin_show(title,url,w,h);
         }
 
@@ -323,26 +334,39 @@
     <div class="page-content">
         <div class="content">
             <!-- 右侧内容框架，更改从这里开始 -->
-            <form class="layui-form xbs" action="${ctx}/admin/petUtil/findPetUtilPage">
+            <form class="layui-form xbs" action="${ctx}/admin/question/findAllQuestion">
                 <div class="layui-form-pane" style="text-align: center;">
                     <div class="layui-form-item" style="display: inline-block;">
                         <div class="layui-input-inline">
-                            <input type="text" name="name" placeholder="请输入宠物道具名称" autocomplete="off" class="layui-input" value="${param.name}">
+                            <input type="text" name="questionTitle" placeholder="请输入题目有关词" autocomplete="off" class="layui-input" value="${param.questionTitle}">
                         </div>
                         <div class="layui-input-inline">
-                            <select name="petUtilTypeId">
-                                <option value="0" selected="">请选择宠物道具类型</option>
-                                <c:forEach var="petUtilType" items="${petUtilTypes}">
-                                    <c:if test="${petUtilType.id == param.petUtilTypeId}">
-                                        <option value="${petUtilType.id}" selected>${petUtilType.name}</option>
+                            <select name="subject">
+                                <option value="" selected="">请选择学科</option>
+                                <c:forEach var="subject" items="${subjects}">
+                                    <c:if test="${subject == param.subject}">
+                                        <option value="${subject}" selected>${subject}</option>
                                     </c:if>
-                                    <c:if test="${petUtilType.id != param.petUtilTypeId}">
-                                        <option value="${petUtilType.id}">${petUtilType.name}</option>
+                                    <c:if test="${subject != param.subject}">
+                                        <option value="${subject}">${subject}</option>
                                     </c:if>
                                 </c:forEach>
                             </select>
                         </div>
-                        <input type="hidden" name="exist" value="1"/>
+                        <div class="layui-input-inline">
+                            <select name="grade">
+                                <option value="0" selected="">请选择年级</option>
+                                <c:forEach var="grade" items="${grades}">
+                                    <c:if test="${grade.key == param.grade}">
+                                        <option value="${grade.key}" selected>${grade.value}</option>
+                                    </c:if>
+                                    <c:if test="${grade.key != param.grade}">
+                                        <option value="${grade.key}">${grade.value}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <input type="hidden" name="questionTypeId" value="${param.questionTypeId}"/>
                         <div class="layui-input-inline" style="width:80px">
                             <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
@@ -351,55 +375,67 @@
             </form>
 
             <xblock>
-                <button class="layui-btn layui-btn-danger" onclick="deleteMultiPetUtil()">
+                <a href="${ctx}/admin/question/exportExcelData?questionTypeId=${param.questionTypeId}">
+                    <button class="layui-btn layui-btn-normal" id="exportData">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/download.png"/>
+                        </i>导出Excel数据
+                    </button>
+                </a>
+                <a href="${ctx}/admin/question/exportExcelModel?questionTypeId=${param.questionTypeId}">
+                    <button class="layui-btn layui-btn-normal" id="exportHeader">
+                        <i class="layui-icon">
+                            <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/download.png"/>
+                        </i>导出Excel表头
+                    </button>
+                </a>
+                <button class="layui-btn layui-btn-danger" onclick="deleteMultiQuestion()">
                     <i class="layui-icon">&#xe640;</i>批量删除
                 </button>
-                <button class="layui-btn" onclick="addPetUtil('添加宠物工具','${ctx}/admin/petUtil/toAdd','600','500')">
+                <input id="addMulti" type="file" lay-type="file" name="file" class="layui-upload-file">
+                <input id="editMulti" type="file" lay-type="file" name="file" class="layui-upload-file">
+                <button class="layui-btn" onclick="addQuestion('添加题目','${ctx}/admin/question/toAdd?questionTypeId=${param.questionTypeId}','600','500')">
                     <i class="layui-icon">&#xe608;</i>添加
                 </button>
-                <a href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.currentPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">
-                    <button class="layui-btn" style="margin-left:11px;">
+                <a href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.currentPageNum}&&pageSize=${questionPage.pageSize}">
+                    <button class="layui-btn">
                         <i class="layui-icon">
                             <img style="width:20px;height:20px;margin-top:5px" src="${ctx}/images/save.png"/>
                         </i>刷新
                     </button>
                 </a>
-                <span class="x-right" style="line-height:40px">共有数据：${petUtilPage.totalCount} 条</span>
+                <span class="x-right" style="line-height:40px">共有数据：${questionPage.totalCount} 条</span>
             </xblock>
             <table class="layui-table">
                 <thead >
                 <tr>
                     <th></th>
-                    <th style="text-align:center;">工具ID</th>
-                    <th style="text-align:center;">名称</th>
-                    <th style="text-align:center;">描述</th>
-                    <th style="text-align:center;">img</th>
-                    <th style="text-align:center;">价格</th>
-                    <th style="text-align:center;">提升值</th>
-                    <th style="text-align:center;">类型</th>
-                    <th style="text-align:center;">状态</th>
+                    <th style="text-align:center;">ID</th>
+                    <th style="text-align:center;">题目</th>
+                    <th style="text-align:center;">学科</th>
+                    <th style="text-align:center;">年级</th>
+                    <th style="text-align:center;">答案</th>
                     <th style="text-align:center;">操作</th>
                 </tr>
                 </thead>
                 <tbody align="center">
-                <c:forEach var="petUtilPage" items="${petUtilPage.list}">
+                <c:forEach var="questionPage" items="${questionPage.list}">
                     <tr>
-                        <td><input type="checkbox" value="${petUtilPage.id}" name="checkBox"></td>
-                        <td>${petUtilPage.id}</td>
-                        <td>${petUtilPage.name}</td>
-                        <td>${petUtilPage.description}</td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petUtilPage.img}"/></td>
-                        <td>${petUtilPage.price}金币</td>
-                        <td>${petUtilPage.value}</td>
-                        <td>${petUtilPage.petUtilType.id == 1 ? '生命值' : (petUtilPage.petUtilType.id == 2 ? '体力值' : '智力值')}</td>
-                        <td class="td-status">
-                            <span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
-                        </td>
+                        <td><input type="checkbox" value="${questionPage.id}" name="checkBox"></td>
+                        <td>${questionPage.id}</td>
+                        <td>${questionPage.questionTitle.title}</td>
+                        <td>${questionPage.subject}</td>
+                        <c:forEach var="grade" items="${grades}">
+                            <c:if test="${grade.key == questionPage.grade}">
+                                <td>${grade.value}</td>
+                            </c:if>
+                        </c:forEach>
+                        <td>${(questionPage.answer == 1) ? "正确" : "错误"}</td>
                         <td class="td-manage" align="center">
-                            <a style="text-decoration:none"  onclick="updatePetUtil('编辑','${ctx}/admin/petUtil/toEdit?id=${petUtilPage.id}','600','400')" href="javascript:;" title="编辑">
+                            <a style="text-decoration:none"  onclick="updateQuestion('编辑','${ctx}/admin/question/toEdit?id=${questionPage.id}','600','400')" href="javascript:;" title="编辑">
                                 <i class="layui-icon">&#xe642;</i>
                             </a>
-                            <a title="删除" href="javascript:;" onclick="deleteOnePetUtil(${petUtilPage.id})" style="text-decoration:none">
+                            <a title="删除" href="javascript:;" onclick="deleteOneQuestion(${questionPage.id})" style="text-decoration:none">
                                 <i class="layui-icon">&#xe640;</i>
                             </a>
                         </td>
@@ -411,15 +447,15 @@
         </div>
         <!-- 分页处理开始 -->
         <div align="center">
-            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=1&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">首页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.prePageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">上一页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.nextPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">下一页</a>
-            <a  class="page" href="${ctx}/admin/petUtil/findPetUtilPage?name=${param.name}&&petUtilTypeId=${param.petUtilTypeId}&&pageNumber=${petUtilPage.totalPageNum}&&pageSize=${petUtilPage.pageSize}&&exist=${param.exist}">末页</a>
+            <a  class="page" style="margin-left:25px;" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=1&&pageSize=${questionPage.pageSize}&&exist=1">首页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.prePageNum}&&pageSize=${questionPage.pageSize}&&exist=1">上一页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.nextPageNum}&&pageSize=${questionPage.pageSize}&&exist=1">下一页</a>
+            <a  class="page" href="${ctx}/admin/question/findAllQuestion?questionTitle=${param.questionTitle}&&questionTypeId=${param.questionTypeId}&&subject=${param.subject}&&grade=${param.grade}&&pageNumber=${questionPage.totalPageNum}&&pageSize=${questionPage.pageSize}&&exist=1">末页</a>
         </div>
         <div align="center" style="margin-top:20px;">
-            <span style="margin-right:10px;">${petUtilPage.currentPageNum}</span>
+            <span style="margin-right:10px;">${questionPage.currentPageNum}</span>
             <span>/</span>
-            <span style="margin-left:10px;">${petUtilPage.totalPageNum}</span>
+            <span style="margin-left:10px;">${questionPage.totalPageNum}</span>
         </div>
         <!-- 分页处理结束 -->
     </div>
@@ -451,6 +487,38 @@
     <div id="changer-set"><i class="iconfont">&#xe696;</i></div>
 </div>
 <!-- 背景切换结束 -->
+<script type="text/javascript">
+    layui.use('upload', function(){
+        layui.upload({
+            elem: '#addMulti' //绑定元素
+            ,url: '${ctx}/admin/question/importExcelToAdd?questionTypeId=${param.questionTypeId}' //上传接口
+            ,ext: 'xls|xlsx'
+            ,method: 'post'
+            ,title: '批量添加'
+            ,success: function(res, input){
+                if(res == "succeed"){
+                    layer.msg("上传成功");
+                }else{
+                    layer.msg(res);
+                }
+            }
+        });
+
+        layui.upload({
+            elem: '#editMulti' //绑定元素
+            ,url: '${ctx}/admin/question/importExcelToEdit?questionTypeId=${param.questionTypeId}' //上传接口
+            ,ext: 'xls|xlsx'
+            ,method: 'post'
+            ,title: '批量修改'
+            ,success: function(res, input){
+                if(res == "succeed"){
+                    layer.msg("上传成功");
+                }else{
+                    layer.msg(res);
+                }
+            }
+        });
+    });
+</script>
 </body>
-</html>
 </html>

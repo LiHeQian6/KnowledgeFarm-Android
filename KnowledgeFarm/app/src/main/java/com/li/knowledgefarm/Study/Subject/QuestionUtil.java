@@ -38,7 +38,9 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
@@ -59,6 +61,7 @@ public class QuestionUtil {
     private Context context;
     private Activity activity;
     private List<Question> datalist; //题目List
+    private Map<Integer,Character> map;
     private OkHttpClient okHttpClient;
     private Handler getWAF; //接收增加水和肥料结果
     private Boolean returnHandlerFinish = false; //返回条件
@@ -117,6 +120,7 @@ public class QuestionUtil {
         btnPreQuestion = activity.findViewById(R.id.btnPreQuestion);
         btnNextQuestion = activity.findViewById(R.id.btnNextQuestion);
         finish_do = activity.findViewById(R.id.finish_do);
+        map = new HashMap<>();
         //填空题布局
         completion_layout = activity.findViewById(R.id.completion_layout);
         //选择题布局
@@ -282,7 +286,19 @@ public class QuestionUtil {
             isTrue.setVisibility(View.INVISIBLE);
             your_answer.setVisibility(View.VISIBLE);
             completion_answer.setVisibility(View.VISIBLE);
-            completion_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
+            if(datalist.get(POSITION).getQuestionType().getId() == 2 && datalist.get(POSITION).getSubject().equals("English")) {
+                String question = datalist.get(POSITION).getQuestionTitle().getTitle();
+                char a;
+                if(map.containsKey(POSITION)){
+                    a = map.get(POSITION);
+                }else{
+                    a = question.charAt(new Random().nextInt(question.length()));
+                    map.put(POSITION,a);
+                }
+                question = question.replace(a,'▁');
+                completion_question.setText(question+" ["+((Completion)datalist.get(POSITION)).getAnswer()+"]");
+            }else
+                completion_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
         }
     }
 
@@ -365,12 +381,12 @@ public class QuestionUtil {
             judge_A.setVisibility(View.VISIBLE);
             switch (new Random().nextInt(1)){
                 case 0:
-                    judge_A.setText(((Judgment)datalist.get(POSITION)).getAnswer()+"");
-                    judge_B.setText(((Judgment)datalist.get(POSITION)).getChoice()+"");
+                    judge_A.setText("对");
+                    judge_B.setText("错");
                     break;
                 case 1:
-                    judge_B.setText(((Judgment)datalist.get(POSITION)).getAnswer()+"");
-                    judge_A.setText(((Judgment)datalist.get(POSITION)).getChoice()+"");
+                    judge_B.setText("对");
+                    judge_A.setText("错");
                     break;
             }
         }
@@ -428,7 +444,7 @@ public class QuestionUtil {
             }
             return;
         }
-        if(inputRes.equals(((Completion)datalist.get(POSITION)).getAnswer()+"")) {
+        if(inputRes.equals(((Completion)datalist.get(POSITION)).getAnswer()+"") || inputRes.equals(map.get(POSITION).toString())) {
             TRUE_ANSWER_COUNT++;
             isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.duigou,null));
             isTrue.setVisibility(View.VISIBLE);

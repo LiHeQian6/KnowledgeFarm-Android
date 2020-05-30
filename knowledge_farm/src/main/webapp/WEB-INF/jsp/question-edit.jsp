@@ -157,15 +157,15 @@
             "                </div>";
     }
     if(${question.questionType.id == 3}){
-        editUrl += "editJudgmentQuestion";
-        div.innerHTML = "<div id=\"judgment\" class=\"layui-form-item\">\n" +
+        editUrl += "editJudgementQuestion";
+        div.innerHTML = "<div id=\"judgement\" class=\"layui-form-item\">\n" +
             "                    <label class=\"layui-form-label\">\n" +
             "                        <font color=\"red\">*</font>答案\n" +
             "                    </label>\n" +
             "                    <div class=\"layui-input-inline\">\n" +
             "                        <select id=\"answerSelect\" name=\"answer\" lay-filter=\"answer\">\n" +
-            "                            <option value=\"1\" ${(judgment.answer == 1) ? "selected" : ""}>正确</option>\n" +
-            "                            <option value=\"0\" ${(judgment.answer == 0) ? "selected" : ""}>错误</option>\n" +
+            "                            <option value=\"1\" ${(judgement.answer == 1) ? "selected" : ""}>正确</option>\n" +
+            "                            <option value=\"0\" ${(judgement.answer == 0) ? "selected" : ""}>错误</option>\n" +
             "                        </select>\n" +
             "                    </div>\n" +
             "                </div>";

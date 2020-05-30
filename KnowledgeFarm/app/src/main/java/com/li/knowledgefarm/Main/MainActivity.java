@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
         FullScreen.NavigationBarStatusBar(MainActivity.this,true);
         setContentView(R.layout.activity_main);
         okHttpClient = OkHttpUtils.getInstance(this);
-        System.out.println("主界面用户信息："+UserUtil.getUser().toString());
         gson = new Gson();
         getViews();
         addListener();

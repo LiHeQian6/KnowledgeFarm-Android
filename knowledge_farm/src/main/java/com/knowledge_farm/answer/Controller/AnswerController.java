@@ -63,8 +63,8 @@ public class AnswerController {
     @GetMapping("/mathOneUp")
     public List OneUpMath() {
         List<Question> list = answerService.getQuestion3OneUpMath();
-        list.add(answerService.findQuestion2(1,"Math",new QuestionType(1,"单选题")));
-        list.add(answerService.findQuestion2(1,"Math",new QuestionType(3,"判断题")));
+        list.addAll(answerService.findQuestion2(1,"Math",new QuestionType(1,"单选题")));
+        list.addAll(answerService.findQuestion2(1,"Math",new QuestionType(3,"判断题")));
         Collections.shuffle(list);
         return list;
     }
@@ -79,8 +79,8 @@ public class AnswerController {
     @GetMapping("/mathOneDown")
     public List OneDownMath() {
         List<Question> list = answerService.getQuestion3OneDownMath();
-        list.add(answerService.findQuestion2(2,"Math",new QuestionType(1,"单选题")));
-        list.add(answerService.findQuestion2(2,"Math",new QuestionType(3,"判断题")));
+        list.addAll(answerService.findQuestion2(2,"Math",new QuestionType(1,"单选题")));
+        list.addAll(answerService.findQuestion2(2,"Math",new QuestionType(3,"判断题")));
         Collections.shuffle(list);
         return list;
     }
@@ -141,8 +141,8 @@ public class AnswerController {
     @GetMapping("/mathThreeUp")
     public List<Question> mathThreeUp23Num(){
         List<Question> list = answerService.get23Multiple();
-        list.add(answerService.findQuestion2(5,"Math",new QuestionType(1,"单选题")));
-        list.add(answerService.findQuestion2(5,"Math",new QuestionType(3,"判断题")));
+        list.addAll(answerService.findQuestion2(5,"Math",new QuestionType(1,"单选题")));
+        list.addAll(answerService.findQuestion2(5,"Math",new QuestionType(3,"判断题")));
         Collections.shuffle(list);
         return list;
     }
@@ -158,8 +158,8 @@ public class AnswerController {
     @GetMapping("/mathThreeDown")
     public List<Question> mathThreeDown(){
         List<Question> list = answerService.doubleMutiple();
-        list.add(answerService.findQuestion2(6,"Math",new QuestionType(1,"单选题")));
-        list.add(answerService.findQuestion2(6,"Math",new QuestionType(3,"判断题")));
+        list.addAll(answerService.findQuestion2(6,"Math",new QuestionType(1,"单选题")));
+        list.addAll(answerService.findQuestion2(6,"Math",new QuestionType(3,"判断题")));
         Collections.shuffle(list);
         return list;
     }
