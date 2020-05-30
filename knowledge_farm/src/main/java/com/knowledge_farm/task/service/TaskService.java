@@ -1,5 +1,6 @@
 package com.knowledge_farm.task.service;
 
+import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.Task;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.jpush.service.JpushService;
@@ -53,46 +54,83 @@ public class TaskService {
     }
 
     @Transactional(readOnly = false)
-    public boolean updateTask(User user,String taskName){
+    public String updateTask(User user,String taskName){
         Task task = user.getTask();
         int exp = 50;
         if(taskName.equals("sign_in")&&task.getSignIn()==0){
             task.setSignIn(2);
             user.setMoney(user.getMoney()+200);
-            user.setExperience(user.getExperience()+exp);
-            taskDao.saveAndFlush(task).getSignIn();
+            user.setExperience(user.getExperience()+100);
+            int status = taskDao.saveAndFlush(task).getSignIn();
+            if(updateLevel(user,exp)){
+                return Result.UP;
+            }else {
+                return  status +"";
+            }
+
         }else if(taskName.equals("water")&&task.getWater()==1){
             task.setWater(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+exp);
-            taskDao.saveAndFlush(task).getWater();
+            user.setExperience(user.getExperience()+50);
+            int status = taskDao.saveAndFlush(task).getWater();
+            if(updateLevel(user,exp)){
+                return Result.UP;
+            }else {
+                return  status +"";
+            }
         }else if(taskName.equals("fertilize")&&task.getFertilize()==1){
             task.setFertilize(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+exp);
-            taskDao.saveAndFlush(task).getFertilize();
+            user.setExperience(user.getExperience()+50);
+            int status = taskDao.saveAndFlush(task).getFertilize();
+            if(updateLevel(user,exp)){
+                return Result.UP;
+            }else {
+                return  status +"";
+            }
         }else if(taskName.equals("crop")&&task.getCrop()==1){
             task.setCrop(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+exp);
-            taskDao.saveAndFlush(task).getCrop();
+            user.setExperience(user.getExperience()+50);
+            int status = taskDao.saveAndFlush(task).getCrop();
+            if(updateLevel(user,exp)){
+                return Result.UP;
+            }else {
+                return  status +"";
+            }
         }else if(taskName.equals("harvest")&&task.getHarvest()==1){
             task.setHarvest(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+exp);
-            taskDao.saveAndFlush(task).getHarvest();
+            user.setExperience(user.getExperience()+50);
+            int status = taskDao.saveAndFlush(task).getHarvest();
+            if(updateLevel(user,exp)){
+                return Result.UP;
+            }else {
+                return  status +"";
+            }
         }else if(taskName.equals("help_water")&&task.getHelpWater()==1){
             task.setHelpWater(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+exp);
-            taskDao.saveAndFlush(task).getHelpWater();
+            user.setExperience(user.getExperience()+50);
+            int status = taskDao.saveAndFlush(task).getHelpWater();
+            if(updateLevel(user,exp)){
+                return Result.UP;
+            }else {
+                return  status +"";
+            }
         }else if(taskName.equals("help_fertilize")&&task.getHelpFertilize()==1){
             task.setHelpFertilize(2);
             user.setMoney(user.getMoney()+100);
-            user.setExperience(user.getExperience()+exp);
-            taskDao.saveAndFlush(task).getHelpFertilize();
+            user.setExperience(user.getExperience()+50);
+            int status = taskDao.saveAndFlush(task).getHelpFertilize();
+            if(updateLevel(user,exp)){
+                return Result.UP;
+            }else {
+                return  status +"";
+            }
+        }else {
+            return -1+"";
         }
-        return updateLevel(user,exp);
     }
 
     @Transactional(readOnly = false)
