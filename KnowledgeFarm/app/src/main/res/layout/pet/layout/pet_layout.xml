@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="20dp"
-    android:background="@drawable/shopitem"
+    android:padding="60dp"
+    android:background="@drawable/notice"
     android:theme="@style/customApp"
     android:layout_height="match_parent">
     <ListView
@@ -21,7 +21,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="10dp"
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,8 +31,8 @@
             <TextView
                 android:text="宠物"
                 android:gravity="center"
-                android:textSize="30sp"
-                android:textColor="@color/blackTextColor"
+                android:textSize="25dp"
+                android:textColor="@color/buttonColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <LinearLayout
@@ -227,10 +226,11 @@
                 <Button
                     android:text="更换"
                     android:id="@+id/use"
-                    android:background="@drawable/buttonbackground"
+                    android:background="@drawable/button"
                     android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textColor="@color/buttonColor"
+                    android:layout_width="110dp"
+                    android:layout_height="45dp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

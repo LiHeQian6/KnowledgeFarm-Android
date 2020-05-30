@@ -331,18 +331,18 @@
                             android:layout_width="120dp"
                             android:layout_height="50dp"
                             android:text="切换账号"
-                            android:textSize="20dp"
+                            android:textSize="16dp"
                             android:id="@+id/btn_logout"
-                            android:textColor="@color/ShopTextColor"
-                            android:background="@drawable/buttonbackground"/>
+                            android:textColor="@color/buttonColor"
+                            android:background="@drawable/button"/>
                         <Button
                             android:layout_width="120dp"
                             android:layout_height="50dp"
                             android:text="检查更新"
-                            android:textSize="20dp"
+                            android:textSize="16dp"
                             android:id="@+id/check_update"
-                            android:textColor="@color/ShopTextColor"
-                            android:background="@drawable/buy"/>
+                            android:textColor="@color/buttonColor"
+                            android:background="@drawable/button"/>
                     </LinearLayout>
                 </LinearLayout>
 

@@ -55,6 +55,7 @@
             android:id="@+id/all"
             android:textSize="10dp"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
             android:button="@drawable/radio_btn_style"
             android:layout_height="wrap_content"/>
     </RadioGroup>

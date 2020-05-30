@@ -73,7 +73,7 @@ public class DayTaskPopUpWindow extends PopupWindow {
      **/
     private void Init(){
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                300, context.getResources().getDisplayMetrics());
+                350, context.getResources().getDisplayMetrics());
         int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 500, context.getResources().getDisplayMetrics());
         this.setHeight(height);
