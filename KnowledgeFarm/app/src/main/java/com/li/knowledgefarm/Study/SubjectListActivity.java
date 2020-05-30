@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import com.li.knowledgefarm.R;
@@ -13,7 +15,9 @@ import com.li.knowledgefarm.Study.GetSubjectQuestion.GetChineseQuestion;
 import com.li.knowledgefarm.Study.GetSubjectQuestion.GetEnglishQuestion;
 import com.li.knowledgefarm.Study.GetSubjectQuestion.GetMathQuestion;
 import com.li.knowledgefarm.Study.Subject.QuestionActivity;
+import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.UserUtil;
 
 
 public class SubjectListActivity extends AppCompatActivity {
@@ -54,17 +58,29 @@ public class SubjectListActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.iv_math:
+                    if (UserUtil.getUser().getMathRewardCount() <= 0) {
+                        CustomerToast.getInstance(getApplicationContext(), "今天的任务做完了哦", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent intent = new Intent();
                     intent.setClass(SubjectListActivity.this, QuestionActivity.class);
                     GetMathQuestion getMathQuestion = new GetMathQuestion(SubjectListActivity.this,intent);
                     getMathQuestion.getQuestion();
                     break;
                 case R.id.iv_english:
+                    if (UserUtil.getUser().getEnglishRewardCount() <= 0) {
+                        CustomerToast.getInstance(getApplicationContext(), "今天的任务做完了哦", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent intent1 = new Intent(SubjectListActivity.this, QuestionActivity.class);
                     GetEnglishQuestion getEnglishQuestion = new GetEnglishQuestion(SubjectListActivity.this,intent1);
                     getEnglishQuestion.getQuestion();
                     break;
                 case R.id.chinese:
+                    if(UserUtil.getUser().getChineseRewardCount() <= 0) {
+                        CustomerToast.getInstance(getApplicationContext(), "今天的任务做完了哦", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Intent intent2 = new Intent(SubjectListActivity.this, QuestionActivity.class);
                     GetChineseQuestion getChineseQuestion = new GetChineseQuestion(SubjectListActivity.this,intent2);
                     getChineseQuestion.getQuestion();

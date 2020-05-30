@@ -203,27 +203,35 @@ public class QuestionActivity extends AppCompatActivity implements StudyInterfac
                         QuestionUtil.PositionLess();
                         questionUtil.showQuestion();
                     }
+                    if(QuestionUtil.POSITION == datalist.size() - 1) {
+                        btnNextQuestion.setText("我答完啦");
+                    }else
+                        btnNextQuestion.setText("下一题");
                     break;
                 case R.id.btnNextQuestion:
-                    if(btnNextQuestion.getText().toString().equals("我答完啦")){
-                        if(QuestionUtil.TRUE_ANSWER_COUNT == datalist.size())
-                            questionUtil.getWaterAndFertilizer();
-                        else {
-                            CustomerToast.getInstance(QuestionActivity.this,"你还没有答完哦！",Toast.LENGTH_SHORT).show();
+                    if(QuestionUtil.TRUE_ANSWER_COUNT == datalist.size()){
+                        questionUtil.getWaterAndFertilizer();
+                        return;
+                    }else {
+                        switch (datalist.get(QuestionUtil.POSITION).getQuestionType().getId()){
+                            case 3:
+                            case 1:
+                                if(QuestionUtil.POSITION < datalist.size() - 1) {
+                                    QuestionUtil.PositionAdd();
+                                    questionUtil.showQuestion();
+                                }
+                                break;
+                            case 2:
+                                questionUtil.CompletionIfTrue();
+                                break;
                         }
+                        if(btnNextQuestion.getText().toString().equals("我答完啦"))
+                            CustomerToast.getInstance(QuestionActivity.this,"你还没有答完哦！",Toast.LENGTH_SHORT).show();
                     }
-                    switch (datalist.get(QuestionUtil.POSITION).getQuestionType().getId()){
-                        case 3:
-                        case 1:
-                            if(QuestionUtil.POSITION < datalist.size() - 1) {
-                                QuestionUtil.PositionAdd();
-                                questionUtil.showQuestion();
-                            }
-                            break;
-                        case 2:
-                            questionUtil.CompletionIfTrue();
-                            break;
-                    }
+                    if(QuestionUtil.POSITION == datalist.size() - 1) {
+                        btnNextQuestion.setText("我答完啦");
+                    }else
+                        btnNextQuestion.setText("下一题");
                     break;
             }
         }

@@ -104,6 +104,7 @@ public class QuestionUtil {
         POSITION = 0;
         TRUE_ANSWER_COUNT = 0;
         getViews();
+        map.clear();
     }
 
     /**
@@ -229,11 +230,6 @@ public class QuestionUtil {
                 checkBox_A.setChecked(false);
                 checkBox_B.setChecked(false);
                 checkBox_C.setChecked(false);
-                if(POSITION == datalist.size()-1){
-                    btnNextQuestion.setText("我答完啦");
-                }else{
-                    btnNextQuestion.setText("下一题");
-                }
                 ShowSingleChoice();
                 break;
             case 2:
@@ -241,22 +237,12 @@ public class QuestionUtil {
                 choice_layout.setVisibility(View.GONE);
                 judgement_layout.setVisibility(View.GONE);
                 number_tip.setText(POSITION+1 + " / " + datalist.size());
-                if(POSITION == datalist.size()-1){
-                    btnNextQuestion.setText("我答完啦");
-                }else{
-                    btnNextQuestion.setText("下一题");
-                }
                 ShowCompletion();
                 break;
             case 3:
                 judgement_layout.setVisibility(View.VISIBLE);
                 choice_layout.setVisibility(View.GONE);
                 completion_layout.setVisibility(View.GONE);
-                if(POSITION == datalist.size()-1){
-                    btnNextQuestion.setText("我答完啦");
-                }else{
-                    btnNextQuestion.setText("下一题");
-                }
                 ShowJudgement();
                 break;
         }
@@ -294,7 +280,7 @@ public class QuestionUtil {
                     a = question.charAt(new Random().nextInt(question.length()));
                     map.put(POSITION,a);
                 }
-                question = question.replace(a,'▁');
+                question = question.replaceFirst(a+"",'▁'+"");
                 completion_question.setText(question+" ["+((Completion)datalist.get(POSITION)).getAnswer()+"]");
             }else
                 completion_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
@@ -371,6 +357,7 @@ public class QuestionUtil {
     public void ShowJudgement(){
         btnPreQuestion.setClickable(true);
         btnNextQuestion.setClickable(true);
+        judge_question.setText(datalist.get(POSITION).getQuestionTitle().getTitle());
         if(datalist.get(POSITION).getIfDone() == 1){
             judge_isTrue.setVisibility(View.GONE);
             judge_A.setVisibility(View.GONE);
@@ -431,6 +418,7 @@ public class QuestionUtil {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void CompletionIfTrue(){
         String inputRes = completion_answer.getText().toString().trim();
+        String answer = "";
         if(inputRes.equals("")) {
             completion_answer.setText("");
             if((POSITION+1)<=datalist.size()-1) {
@@ -443,7 +431,9 @@ public class QuestionUtil {
             }
             return;
         }
-        if(inputRes.equals(((Completion)datalist.get(POSITION)).getAnswer()+"") || inputRes.equals(map.get(POSITION).toString())) {
+        if(map.get(POSITION) != null)
+            answer = map.get(POSITION).toString();
+        if(inputRes.equals(((Completion)datalist.get(POSITION)).getAnswer()+"") || inputRes.equals(answer)) {
             TRUE_ANSWER_COUNT++;
             isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.duigou,null));
             isTrue.setVisibility(View.VISIBLE);

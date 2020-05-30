@@ -61,51 +61,45 @@ public class GetChineseQuestion extends SubjectInterface {
             @Override
             public void run() {
                 super.run();
-                if (UserUtil.getUser().getChineseRewardCount() <= 0) {
-                    Looper.prepare();
-                    CustomerToast.getInstance(context, "今天的任务做完了哦", Toast.LENGTH_SHORT).show();
-                    Looper.loop();
-                } else {
-                    Request request = null;
-                    switch (UserUtil.getUser().getGrade()) {
-                        case 1:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseOneUp").build();
-                            break;
-                        case 2:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseOneDown").build();
-                            break;
-                        case 3:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseTwoUp").build();
-                            break;
-                        case 4:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseTwoDown").build();
-                            break;
-                        case 5:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseThreeUp").build();
-                            break;
-                        case 6:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseThreeDown").build();
-                            break;
-                    }
-                    Call call = okHttpClient.newCall(request);
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Message message = Message.obtain();
-                            message.obj = "Fail";
-                            getMath.sendMessage(message);
-                        }
-
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            OkHttpUtils.unauthorized(response.code());
-                            Message message = Message.obtain();
-                            message.obj = response.body().string();
-                            message.arg1 = response.code();
-                            getMath.sendMessage(message);
-                        }
-                    });
+                Request request = null;
+                switch (UserUtil.getUser().getGrade()) {
+                    case 1:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseOneUp").build();
+                        break;
+                    case 2:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseOneDown").build();
+                        break;
+                    case 3:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseTwoUp").build();
+                        break;
+                    case 4:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseTwoDown").build();
+                        break;
+                    case 5:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseThreeUp").build();
+                        break;
+                    case 6:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/ChineseThreeDown").build();
+                        break;
                 }
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        getMath.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        OkHttpUtils.unauthorized(response.code());
+                        Message message = Message.obtain();
+                        message.obj = response.body().string();
+                        message.arg1 = response.code();
+                        getMath.sendMessage(message);
+                    }
+                });
             }
         }.start();
     }

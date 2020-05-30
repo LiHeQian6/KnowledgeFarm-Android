@@ -68,51 +68,45 @@ public class GetEnglishQuestion extends SubjectInterface {
             @Override
             public void run() {
                 super.run();
-                if (UserUtil.getUser().getEnglishRewardCount() <= 0) {
-                    Looper.prepare();
-                    CustomerToast.getInstance(context, "今天的任务做完了哦", Toast.LENGTH_SHORT).show();
-                    Looper.loop();
-                } else {
-                    Request request = null;
-                    switch (UserUtil.getUser().getGrade()) {
-                        case 1:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishOneUp").build();
-                            break;
-                        case 2:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishOneDown").build();
-                            break;
-                        case 3:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishTwoUp").build();
-                            break;
-                        case 4:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishTwoDown").build();
-                            break;
-                        case 5:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishThreeUp").build();
-                            break;
-                        case 6:
-                            request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishThreeDown").build();
-                            break;
-                    }
-                    Call call = okHttpClient.newCall(request);
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Message message = Message.obtain();
-                            message.obj = "Fail";
-                            getMath.sendMessage(message);
-                        }
-
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        OkHttpUtils.unauthorized(response.code());
-                            Message message = Message.obtain();
-                            message.obj = response.body().string();
-                            message.arg1 = response.code();
-                            getMath.sendMessage(message);
-                        }
-                    });
+                Request request = null;
+                switch (UserUtil.getUser().getGrade()) {
+                    case 1:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishOneUp").build();
+                        break;
+                    case 2:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishOneDown").build();
+                        break;
+                    case 3:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishTwoUp").build();
+                        break;
+                    case 4:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishTwoDown").build();
+                        break;
+                    case 5:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishThreeUp").build();
+                        break;
+                    case 6:
+                        request = new Request.Builder().url(context.getResources().getString(R.string.URL) + "/answer/englishThreeDown").build();
+                        break;
                 }
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.obj = "Fail";
+                        getMath.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    OkHttpUtils.unauthorized(response.code());
+                        Message message = Message.obtain();
+                        message.obj = response.body().string();
+                        message.arg1 = response.code();
+                        getMath.sendMessage(message);
+                    }
+                });
             }
         }.start();
     }
