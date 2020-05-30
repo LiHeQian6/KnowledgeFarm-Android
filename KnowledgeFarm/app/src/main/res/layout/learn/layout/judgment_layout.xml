@@ -13,6 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_weight="1">
             <TextView
                 android:id="@+id/judge_Question"
@@ -23,6 +24,71 @@
                 android:textSize="25dp"
                 android:textColor="#ffffff"
                 android:text="学校有白粉笔65盒，粉色粉笔27盒，用了73盒，还剩多少盒？" />
+
+            <LinearLayout
+                android:id="@+id/Classifier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="15dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/judge_box_A"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="A："
+                        android:layout_weight="2"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="35dp"
+                        android:autoSizeTextType="uniform"/>
+                    <TextView
+                        android:id="@+id/judge_A"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="19"
+                        android:gravity="center"
+                        android:textColor="#ffffff"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="35dp"
+                        android:autoSizeTextType="uniform"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/judge_box_B"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="B："
+                        android:layout_weight="2"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="35dp"
+                        android:autoSizeTextType="uniform"/>
+                    <TextView
+                        android:id="@+id/judge_B"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="19"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="#ffffff"
+                        android:maxLines="1"
+                        android:autoSizeMaxTextSize="35dp"
+                        android:autoSizeTextType="uniform"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,66 +102,6 @@
                 android:layout_toRightOf="@+id/question_re"
                 android:src="@drawable/duigou">
             </ImageView>
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/Classifier"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="15dp">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <CheckBox
-                android:id="@+id/judge_box_A"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="A："
-                android:maxLines="1"
-                android:autoSizeMaxTextSize="35dp"
-                android:autoSizeTextType="uniform"/>
-            <TextView
-                android:id="@+id/judge_A"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="19"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:maxLines="1"
-                android:autoSizeMaxTextSize="35dp"
-                android:autoSizeTextType="uniform"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <CheckBox
-                android:id="@+id/judge_box_B"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="B："
-                android:maxLines="1"
-                android:autoSizeMaxTextSize="35dp"
-                android:autoSizeTextType="uniform"/>
-            <TextView
-                android:id="@+id/judge_B"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="19"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:maxLines="1"
-                android:autoSizeMaxTextSize="35dp"
-                android:autoSizeTextType="uniform"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

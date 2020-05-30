@@ -133,7 +133,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ShowUserMessage();
+        //ShowUserMessage();
     }
 
     @Override
@@ -159,7 +159,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                 .fallback(R.drawable.photo)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(this).load(user.getPhoto()).apply(requestOptions).into(user_photo);
+        Glide.with(getApplicationContext()).load(user.getPhoto()).apply(requestOptions).into(user_photo);
         user_account.setText("账号："+user.getAccount());
         user_nickName.setText("昵称："+user.getNickName());
         show_grade.setText(DoubleToString(user.getGrade()));
@@ -267,7 +267,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                             case "true":
                                 /** 存入SharedPreferences*/
                                 UserUtil.getUser().setUserAuthority(new UserAuthority());
-                                ShowUserMessage();
+                                UserUtil.getUser().getUserAuthority().setOpenId("123");
                                 SharedPreferences sp = getSharedPreferences("token",MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("opId",openId);
