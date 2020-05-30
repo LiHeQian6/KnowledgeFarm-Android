@@ -21,13 +21,6 @@
                 android:layout_gravity="center"
                 android:id="@+id/goBack_notify"
                 android:src="@drawable/returns"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="邮件"
-                android:layout_gravity="center"
-                android:textColor="@color/blackTextColor"
-                android:textSize="30dp"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,37 +32,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
-                android:padding="15dp"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <Button
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="47dp"
                         android:text="系统通知"
-                        android:textSize="17dp"
+                        android:textSize="15dp"
                         android:id="@+id/system_btn"
                         android:layout_marginTop="10dp"
+                        android:textColor="@color/buttonColor"
                         android:layout_centerHorizontal="true"
-                        android:background="@drawable/buttonbackground"/>
+                        android:background="@drawable/button"/>
                     <ImageView
                         android:src="@drawable/red"
                         android:visibility="gone"
                         android:id="@+id/system_notify_red"
                         android:layout_width="10dp"
+                        android:textColor="@color/buttonColor"
                         android:layout_alignParentRight="true"
                         android:layout_height="10dp"/>
                     <Button
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="47dp"
                         android:text="好友申请"
-                        android:textSize="17dp"
+                        android:textSize="15dp"
                         android:layout_marginTop="8dp"
                         android:id="@+id/friend_btn"
+                        android:textColor="@color/buttonColor"
                         android:layout_centerHorizontal="true"
                         android:layout_below="@+id/system_btn"
-                        android:background="@drawable/buttonbackground"/>
+                        android:background="@drawable/button"/>
                     <ImageView
                         android:src="@drawable/red"
                         android:visibility="gone"
@@ -80,14 +78,15 @@
                         android:layout_height="10dp"/>
                     <Button
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="47dp"
                         android:text="添加好友"
-                        android:textSize="17dp"
+                        android:textSize="15dp"
                         android:id="@+id/add_btn"
                         android:layout_marginTop="6dp"
+                        android:textColor="@color/buttonColor"
                         android:layout_below="@+id/friend_btn"
                         android:layout_centerHorizontal="true"
-                        android:background="@drawable/buttonbackground"/>
+                        android:background="@drawable/button"/>
                     <ImageView
                         android:src="@drawable/red"
                         android:visibility="gone"
@@ -98,14 +97,15 @@
                         android:layout_height="10dp"/>
                     <Button
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="47dp"
                         android:text="消息通知"
-                        android:textSize="17dp"
+                        android:textSize="15dp"
                         android:layout_marginTop="6dp"
                         android:id="@+id/message_btn"
                         android:layout_below="@+id/add_btn"
+                        android:textColor="@color/buttonColor"
                         android:layout_centerHorizontal="true"
-                        android:background="@drawable/buttonbackground"/>
+                        android:background="@drawable/button"/>
                     <ImageView
                         android:src="@drawable/red"
                         android:visibility="gone"
@@ -119,13 +119,15 @@
             <LinearLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="50dp"
                 android:orientation="vertical"
-                android:background="@color/ShopTextColor"/>
+                android:background="@color/blackTextColor"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_marginRight="25dp"
+                android:layout_marginRight="45dp"
                 android:layout_weight="1">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -137,7 +139,6 @@
                     <ListView
                         android:id="@+id/notify_list_view"
                         android:layout_width="match_parent"
-                        android:dividerHeight="1dp"
                         android:divider="@color/ShopTextColor"
                         android:visibility="visible"
                         android:layout_height="match_parent"/>
@@ -148,30 +149,33 @@
                         android:id="@+id/none_notify"
                         android:text="暂时没有通知"
                         android:visibility="gone"
-                        android:textColor="@color/ShopTextColor"
+                        android:textColor="@color/buttonColor"
                         android:textSize="25dp"/>
 
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
-                    android:gravity="right">
+                    android:layout_gravity="right">
                     <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/buttonbackground"
+                        android:layout_width="110dp"
+                        android:layout_height="45dp"
+                        android:background="@drawable/button"
                         android:layout_gravity="center"
                         android:id="@+id/all_have_read"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
+                        android:textColor="@color/buttonColor"
                         android:text="一键已读"/>
                     <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/buttonbackground"
+                        android:layout_width="110dp"
+                        android:layout_height="45dp"
+                        android:background="@drawable/button"
                         android:id="@+id/delete_all_btn"
                         android:layout_gravity="center"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/buttonColor"
                         android:text="删除已读"/>
                 </LinearLayout>
             </LinearLayout>

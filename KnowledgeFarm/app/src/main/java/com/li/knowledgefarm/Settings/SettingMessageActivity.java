@@ -276,6 +276,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                                 CustomerToast.getInstance(getApplicationContext(),"绑定QQ成功",Toast.LENGTH_SHORT).show();
                                 break;
                             case "false":
+                                UserUtil.getUser().setUserAuthority(null);
                                 CustomerToast.getInstance(getApplicationContext(),"绑定QQ失败",Toast.LENGTH_SHORT).show();
                                 break;
                             case "already":
