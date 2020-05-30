@@ -4,10 +4,8 @@ import com.knowledge_farm.answer.entity.Mix;
 import com.knowledge_farm.answer.entity.Multiple;
 import com.knowledge_farm.answer.entity.Question3Num;
 import com.knowledge_farm.answer.repository.QuestionRepository;
-import com.knowledge_farm.entity.Completion;
-import com.knowledge_farm.entity.Question;
-import com.knowledge_farm.entity.QuestionTitle;
-import com.knowledge_farm.entity.QuestionType;
+import com.knowledge_farm.answer.repository.SingleChoiceRepository;
+import com.knowledge_farm.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +29,12 @@ import java.util.Random;
 public class AnswerService {
     @Resource
     private QuestionRepository questionRepository;
+    @Resource
+    private SingleChoiceRepository singleChoiceRepository;
+
+    public SingleChoice findSingleChoice(int id){
+        return singleChoiceRepository.findById(id);
+    }
 
     public List<Question> findByGrade(int grade){
         List<Question> questions = questionRepository.findByGrade(grade);
