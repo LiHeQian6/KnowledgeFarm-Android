@@ -14,6 +14,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.NavigationBarUtil;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.entity.Notification;
 
@@ -52,6 +54,7 @@ public class NotifyPopUpWindow extends PopupWindow {
         this.setAnimationStyle(R.style.notify_pop_animation);
         final View contentView = LayoutInflater.from(context).inflate(R.layout.notify_message_pop,
                 null, false);
+        FullScreen.hideBottomUIMenu(contentView);
         this.setContentView(contentView);
         okHttpClient = OkHttpUtils.getInstance(context);
         getViews(contentView);

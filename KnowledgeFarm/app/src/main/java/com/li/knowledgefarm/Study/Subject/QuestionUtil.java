@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.CustomerToast;
+import com.li.knowledgefarm.Util.NavigationBarUtil;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.QuestionEntity.Completion;
@@ -596,7 +597,10 @@ public class QuestionUtil {
             }
         });
         ifReturn.setContentView(layout);
+        NavigationBarUtil.focusNotAle(ifReturn.getWindow());
         ifReturn.show();
+        NavigationBarUtil.hideNavigationBar(ifReturn.getWindow());
+        NavigationBarUtil.clearFocusNotAle(ifReturn.getWindow());
         WindowManager.LayoutParams attrs = ifReturn.getWindow().getAttributes();
         attrs.gravity = Gravity.CENTER;
         final float scale = context.getResources().getDisplayMetrics().density;
