@@ -174,7 +174,7 @@ public class FrontPetController {
             String img[] = new String[3];
             int count = 1;
             for(MultipartFile multipartFile : files){
-                String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
                 img[count-1] = this.petPhotoFolderName + "/" + fileName;
                 FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName));
                 count++;
@@ -217,7 +217,7 @@ public class FrontPetController {
                             if (file.exists()) {
                                 file.delete();
                             }
-                            String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                            String fileName = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
                             pet.setImg1(this.petPhotoFolderName + "/" + fileName);
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName));
                             break;
@@ -226,7 +226,7 @@ public class FrontPetController {
                             if (file2.exists()) {
                                 file2.delete();
                             }
-                            String fileName2 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                            String fileName2 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
                             pet.setImg2(this.petPhotoFolderName + "/" + fileName2);
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName2));
                             break;
@@ -235,7 +235,7 @@ public class FrontPetController {
                             if (file3.exists()) {
                                 file3.delete();
                             }
-                            String fileName3 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                            String fileName3 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
                             pet.setImg3(this.petPhotoFolderName + "/" + fileName3);
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName3));
                             break;

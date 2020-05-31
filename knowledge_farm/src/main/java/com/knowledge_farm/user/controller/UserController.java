@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,6 +58,8 @@ public class UserController {
     private String userDefaultFileName;
     @Value("${file.apkFileLocation}")
     private String apkFileLocation;
+    @Value("${file.apkFolderName}")
+    private String apkFolderName;
 
     /**
      * @Author 张帅华
@@ -364,7 +365,7 @@ public class UserController {
                             file1.delete();
                         }
                     }
-                    String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+                    String photoName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
                     FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
                     photo = this.userPhotoFolderName + "/" + photoName;
                     this.userService.editPhotoById(id, photo);
@@ -847,23 +848,26 @@ public class UserController {
         return "{}";
     }
 
-    @ApiOperation(value = "检查更新", notes = "返回值： （String）false：无版本更新 || Map<String,String>：{\"description\":描述, \"versionName\":版本名}")
+    @ApiOperation(value = "检查更新", notes = "返回值： （String）false：无版本更新 || Map<String,String>：{\"description\":描述, \"versionName\":版本名")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "version", value = "版本号", dataType = "string", paramType = "query", required = true)
     })
     @GetMapping(value = "/checkVersion")
     public String checkVersion(@RequestParam("version") String version) {
         try {
-            Version lastVersion = this.frontVersionService.findLastVersion();
+            Version newestVersion = this.frontVersionService.findNewestVersion();
+            String brr[] = newestVersion.getVersionName().split("\\.");
+            if(brr == null){
+                return Result.FALSE;
+            }
             String arr[] = version.split("\\.");
-            String brr[] = lastVersion.getVersionName().split("\\.");
             for(int i = 0;i < arr.length;i++){
                 if(Integer.parseInt(arr[i]) >= Integer.parseInt(brr[i])){
                     continue;
                 }
                 Map<String, String> resultMap = new HashMap<>();
-                resultMap.put("description", lastVersion.getDescription());
-                resultMap.put("versionName", lastVersion.getVersionName());
+                resultMap.put("description", newestVersion.getDescription());
+                resultMap.put("versionName", newestVersion.getVersionName());
                 return new Gson().toJson(resultMap);
             }
         }catch (Exception e){
@@ -877,7 +881,7 @@ public class UserController {
     @ResponseBody
     public Object downloadVersion(){
         try {
-            Version version = this.frontVersionService.findLastVersion();
+            Version version = this.frontVersionService.findNewestVersion();
             FileSystemResource file = new FileSystemResource(this.apkFileLocation + "/" + version.getFileName());
             if(file.exists()){
                 HttpHeaders headers = new HttpHeaders();
@@ -889,6 +893,7 @@ public class UserController {
                 return ResponseEntity
                         .ok()
                         .headers(headers)
+                        .contentLength(file.contentLength())
                         .contentType(MediaType.parseMediaType("application/octet-stream"))
                         .body(new InputStreamResource(file.getInputStream()));
             }

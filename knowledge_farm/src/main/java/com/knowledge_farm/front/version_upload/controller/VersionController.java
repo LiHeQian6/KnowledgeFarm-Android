@@ -6,7 +6,6 @@ import com.knowledge_farm.front.version_upload.service.FrontVersionService;
 import com.knowledge_farm.util.ApkInfoUtil;
 import com.knowledge_farm.util.PageUtil;
 import io.swagger.annotations.Api;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -68,7 +66,7 @@ public class VersionController {
     @PostMapping(value = "/upload")
     @ResponseBody
     public String upload(@RequestParam("description") String description, @RequestParam("file") MultipartFile file) {
-        String fileName = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+        String fileName = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
         try{
             if(file.getSize() <= 0){
                 return Result.NULL;
