@@ -46,8 +46,6 @@ public class NotifyPopUpWindow extends PopupWindow {
     public NotifyPopUpWindow(final Context context,Notification notification) {
         super(context);
         this.notification = notification;
-        this.setHeight(800);
-        this.setWidth(1200);
         this.setOutsideTouchable(false);
         this.setFocusable(true);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -69,7 +67,7 @@ public class NotifyPopUpWindow extends PopupWindow {
 
     private void setText(){
         not_title.setText(notification.getTitle());
-        not_content.setText("内容："+notification.getContent());
+        not_content.setText("内容：\n"+"\u3000\u3000"+notification.getContent());
         not_time.setText(new SimpleDateFormat("yyyy-MM-dd").format(notification.getCreateTime()));
     }
 }
