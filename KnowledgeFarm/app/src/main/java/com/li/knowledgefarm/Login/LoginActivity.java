@@ -35,6 +35,7 @@ import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.Md5Encode;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UpdateUtil;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
 import com.tencent.connect.UserInfo;
@@ -148,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         okHttpClient = OkHttpUtils.getInstance(this);
+        UpdateUtil.checkUpdate(this);
         UserUtil.setUser(null);
         System.out.println("***********************************************************");
         autoLogin();

@@ -35,6 +35,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.Util.OkHttpUtils;
+import com.li.knowledgefarm.Util.UpdateUtil;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserAuthority;
@@ -726,21 +727,6 @@ public class SettingMessageActivity extends AppCompatActivity {
         return 0;
     }
 
-    /**
-     * @Description 检查更新
-     * @Author 孙建旺
-     * @Date 上午10:55 2020/05/27
-     * @Param []
-     * @return void
-     */
-    private void checkUpdate(){
-//        DownloadManager.Request downLoad = new DownloadManager.Request(Uri.parse(getResources().getString(R.string.UPDATE)));
-//        downLoad.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//
-//        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-//        downloadManager.enqueue(downLoad);
-    }
-
     private class CustomerOnclickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
@@ -802,7 +788,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                     ShowIfDoPop("LogOut");
                     break;
                 case R.id.check_update:
-
+                    UpdateUtil.checkUpdate(SettingMessageActivity.this);
                     break;
             }
         }
