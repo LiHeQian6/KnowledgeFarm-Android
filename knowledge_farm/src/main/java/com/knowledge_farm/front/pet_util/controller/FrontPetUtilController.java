@@ -172,7 +172,7 @@ public class FrontPetUtilController {
             PetUtil petUtil = new PetUtil(name, description, value, price, petUtilType);
             Integer id = this.frontPetUtilService.save(petUtil);
             entityManager.clear();
-            String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+            String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
             img = this.petUtilPhotoFolderName + "/" + fileName;
             FileCopyUtils.copy(file.getBytes(), new File(this.petUtilPhotoFileLocation, fileName));
             PetUtil editPetUtil = this.frontPetUtilService.findPetUtilById(id);
@@ -202,7 +202,7 @@ public class FrontPetUtilController {
                 if (file1.exists()) {
                     file1.delete();
                 }
-                String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+                String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
                 FileCopyUtils.copy(file.getBytes(), new File(this.petUtilPhotoFileLocation, fileName));
                 petUtil.setImg(this.petUtilPhotoFolderName + "/" + fileName);
             }

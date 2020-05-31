@@ -8,6 +8,7 @@ import com.knowledge_farm.front.version_upload.dao.VersionDao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,19 +46,36 @@ public class FrontVersionService {
                 return cb.and(list.toArray(arr));
             }
         };
-        return this.versionDao.findAll(spec, PageRequest.of(pageNumber - 1, pageSize));
-    }
-
-    public List<String> findAllVersionName(){
-        return this.versionDao.findAllVersionName();
+        return this.versionDao.findAll(spec, PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "uploadTime")));
     }
 
     public Version findVersionById(Integer id){
         return this.versionDao.findVersionById(id);
     }
 
-    public Version findLastVersion(){
-        return this.versionDao.findLastVersion();
+    public List<String> findAllVersionName(){
+        return this.versionDao.findAllVersionName();
+    }
+
+    public Version findNewestVersion(){
+        List<Version> versionList = this.versionDao.findAll();
+        if(versionList.size() != 0){
+            String arr[] = versionList.get(0).getVersionName().split("\\.");
+            int count = versionList.get(0).getId();
+            for(int i = 1;i < versionList.size();i++){
+                String brr[] = versionList.get(i).getVersionName().split("\\.");
+                for(int j = 0;j < arr.length;j++) {
+                    if (Integer.parseInt(arr[j]) >= Integer.parseInt(brr[j])) {
+                        continue;
+                    }
+                    exchangeArray(arr, brr);
+                    count = versionList.get(i).getId();
+                    break;
+                }
+            }
+            return this.versionDao.findVersionById(count);
+        }
+        return null;
     }
 
     @Transactional(readOnly = false)
@@ -75,6 +93,15 @@ public class FrontVersionService {
     @Transactional(readOnly = false)
     public void save(Version version){
         this.versionDao.save(version);
+    }
+
+    public void exchangeArray(String arr[], String brr[]){
+        String temp;
+        for(int i = 0;i < arr.length;i++){
+            temp = arr[i];
+            arr[i] = brr[i];
+            brr[i] = temp;
+        }
     }
 
 }

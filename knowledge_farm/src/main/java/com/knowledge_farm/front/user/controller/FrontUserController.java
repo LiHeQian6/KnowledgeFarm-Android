@@ -190,7 +190,7 @@ public class FrontUserController {
                             file1.delete();
                         }
                     }
-                    String photoName = user.getId() + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+                    String photoName = user.getId() + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
                     FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
                     user.setPhoto(this.userPhotoFolderName + "/" + photoName);
                 }
