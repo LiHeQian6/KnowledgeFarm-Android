@@ -13,7 +13,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.li.knowledgefarm"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -28,6 +28,10 @@ android {
                 JPUSH_APPKEY : "07918bd1054b5a60977773b8", //JPush 上注册的包名对应的 Appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
         ]
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
     buildTypes {
         release {
@@ -86,4 +90,5 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     implementation 'com.shizhefei:GuideHelper:1.0.5'
     implementation 'com.belerweb:pinyin4j:2.5.0'
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.6'
 }
