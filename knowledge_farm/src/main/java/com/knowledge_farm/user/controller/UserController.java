@@ -1,8 +1,11 @@
 package com.knowledge_farm.user.controller;
 
+import com.google.gson.Gson;
 import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserPetHouse;
+import com.knowledge_farm.entity.Version;
+import com.knowledge_farm.front.version_upload.service.FrontVersionService;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import com.knowledge_farm.util.Email;
 import io.swagger.annotations.Api;
@@ -10,6 +13,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ClassName UserController
@@ -34,6 +45,8 @@ import java.util.Date;
 public class UserController {
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private FrontVersionService frontVersionService;
     @Value("${file.photoUrl}")
     private String photoUrl;
     @Value("${file.photoLocation}")
@@ -44,6 +57,8 @@ public class UserController {
     private String userPhotoLocation;
     @Value("${file.userDefaultFileName}")
     private String userDefaultFileName;
+    @Value("${file.apkFileLocation}")
+    private String apkFileLocation;
 
     /**
      * @Author 张帅华
@@ -830,6 +845,57 @@ public class UserController {
             e.printStackTrace();
         }
         return "{}";
+    }
+
+    @ApiOperation(value = "检查更新", notes = "返回值： （String）false：无版本更新 || Map<String,String>：{\"description\":描述, \"versionName\":版本名}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "version", value = "版本号", dataType = "string", paramType = "query", required = true)
+    })
+    @GetMapping(value = "/checkVersion")
+    public String checkVersion(@RequestParam("version") String version) {
+        try {
+            Version lastVersion = this.frontVersionService.findLastVersion();
+            String arr[] = version.split("\\.");
+            String brr[] = lastVersion.getVersionName().split("\\.");
+            for(int i = 0;i < arr.length;i++){
+                if(Integer.parseInt(arr[i]) >= Integer.parseInt(brr[i])){
+                    continue;
+                }
+                Map<String, String> resultMap = new HashMap<>();
+                resultMap.put("description", lastVersion.getDescription());
+                resultMap.put("versionName", lastVersion.getVersionName());
+                return new Gson().toJson(resultMap);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.FALSE;
+    }
+
+    @ApiOperation(value = "下载Apk", notes = "返回值： 文件 || （String）服务器文件错误")
+    @GetMapping("/downloadVersion")
+    @ResponseBody
+    public Object downloadVersion(){
+        try {
+            Version version = this.frontVersionService.findLastVersion();
+            FileSystemResource file = new FileSystemResource(this.apkFileLocation + "/" + version.getFileName());
+            if(file.exists()){
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+                headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", "KnowledgeFarm.apk"));
+                headers.add("Pragma", "no-cache");
+                headers.add("Expires", "0");
+
+                return ResponseEntity
+                        .ok()
+                        .headers(headers)
+                        .contentType(MediaType.parseMediaType("application/octet-stream"))
+                        .body(new InputStreamResource(file.getInputStream()));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "服务器文件错误";
     }
 
 }

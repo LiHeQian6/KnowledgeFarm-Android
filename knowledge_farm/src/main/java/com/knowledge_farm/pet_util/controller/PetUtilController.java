@@ -2,6 +2,7 @@ package com.knowledge_farm.pet_util.controller;
 
 import com.knowledge_farm.entity.PetUtil;
 import com.knowledge_farm.pet_util.service.PetUtilService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-05-04 10:03
  */
+@Api(description = "前台宠物道具接口")
 @RestController
 @RequestMapping("/petutil")
 public class PetUtilController {

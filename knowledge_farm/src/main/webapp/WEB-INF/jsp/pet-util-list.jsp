@@ -303,14 +303,14 @@
                 <li class="list">
                     <a href="javascript:;">
                         <i class="iconfont">&#xe6a3;</i>
-                        更新管理
+                        版本更新管理
                         <i class="iconfont nav_right">&#xe697;</i>
                     </a>
-                    <ul id="initVersionUploadManager" class="sub-menu">
-                        <li id="initVersionUploadManager1">
-                            <a href="${ctx}/admin/versionUpload/toVersionUpload">
+                    <ul id="initVersionManager" class="sub-menu">
+                        <li id="initVersionManager1">
+                            <a href="${ctx}/admin/version/findVersionPage">
                                 <i class="iconfont">&#xe6a7;</i>
-                                APK更新
+                                版本列表
                             </a>
                         </li>
                     </ul>
@@ -349,7 +349,6 @@
                     </div>
                 </div>
             </form>
-
             <xblock>
                 <button class="layui-btn layui-btn-danger" onclick="deleteMultiPetUtil()">
                     <i class="layui-icon">&#xe640;</i>批量删除

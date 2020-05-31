@@ -3,6 +3,7 @@ package com.knowledge_farm.front.question.controller;
 import com.knowledge_farm.entity.*;
 import com.knowledge_farm.front.question.service.FrontQuestionService;
 import com.knowledge_farm.util.PageUtil;
+import io.swagger.annotations.Api;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import java.util.Map;
  * @Author 张帅华
  * @Date 2020-05-14 16:25
  */
+@Api(description = "后台题目接口")
 @Controller
 @RequestMapping("/admin/question")
 public class FrontQuestionController {
