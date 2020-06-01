@@ -97,6 +97,7 @@ public class QuestionUtil {
     private CheckBox judgeBox_A; //A选项单选框
     private CheckBox judgeBox_B; //B选项单选框
     private ImageView judge_isTrue; //是否判断正确提示
+    private String answer;
 
     public QuestionUtil(Context context, Activity activity, List<Question> datalist) {
         this.context = context;
@@ -476,10 +477,10 @@ public class QuestionUtil {
     public void JudgementIfTrue(){
         String choose_answer = "";
         if(judgeBox_A.isChecked())
-            choose_answer = choice_A.getText().toString();
+            choose_answer = judge_A.getText().toString();
         if(judgeBox_B.isChecked())
-            choose_answer = choice_B.getText().toString();
-        if(choose_answer.equals(((Judgment)datalist.get(POSITION)).getAnswer())){
+            choose_answer = judge_B.getText().toString();
+        if(choose_answer.equals(answer = ((Judgment)datalist.get(POSITION)).getAnswer() == 1 ? "对" : "错")){
             TRUE_ANSWER_COUNT++;
             judge_isTrue.setVisibility(View.VISIBLE);
             judge_isTrue.setImageDrawable(context.getResources().getDrawable(R.drawable.duigou,null));

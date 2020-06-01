@@ -405,7 +405,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        setDialogSize(view);
         dialog.setContentView(view);
         NavigationBarUtil.focusNotAle(dialog.getWindow());
         dialog.show();
@@ -848,7 +847,6 @@ public class MainActivity extends AppCompatActivity {
         ImageView cancel = layout.findViewById(R.id.cancel_return);
         ImageView sure = layout.findViewById(R.id.sure_return);
         TextView waring = layout.findViewById(R.id.waringText);
-        setDialogSize(layout);
         ExtensionLandMoney = (200 * position - 800);
         waring.setText("你是否要花费" + ExtensionLandMoney + "金币来扩建这块土地？");
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -1401,40 +1399,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
-    }
-
-    /**
-     * @return void
-     * @Description 设置弹窗控件大小
-     * @Auther 孙建旺
-     * @Date 下午 4:13 2019/12/18
-     * @Param [view]
-     */
-    private void setDialogSize(View view) {
-//        获取屏幕显示区域尺寸
-//        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-//        DisplayMetrics ds = new DisplayMetrics();
-//        wm.getDefaultDisplay().getMetrics(ds);
-//        displayHeight = ds.heightPixels;
-//        displayWidth = ds.widthPixels;
-//
-//        ImageView cancel = view.findViewById(R.id.cancel_return);
-//        ImageView sure = view.findViewById(R.id.sure_return);
-//        TextView warning = view.findViewById(R.id.waringText);
-//        LinearLayout panduan = view.findViewById(R.id.panduan);
-//
-//        LinearLayout.LayoutParams params_cancel = new LinearLayout.LayoutParams((int) (displayWidth * 0.065), (int) (displayWidth * 0.065));
-//        params_cancel.setMargins(0, 0, (int) (displayWidth * 0.08), 0);
-//        cancel.setLayoutParams(params_cancel);
-//
-//        LinearLayout.LayoutParams params_sure = new LinearLayout.LayoutParams((int) (displayWidth * 0.065), (int) (displayWidth * 0.065));
-//        sure.setLayoutParams(params_sure);
-//
-//        warning.setTextSize((int) (displayWidth * 0.012));
-//
-//        LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        params_layout.setMargins(0, (int) (displayHeight * 0.12), 0, 0);
-//        panduan.setLayoutParams(params_layout);
     }
 
     //退出时的时间

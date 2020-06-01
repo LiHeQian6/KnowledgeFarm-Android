@@ -44,15 +44,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tab_layout"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="8dp"
         android:layout_toRightOf="@+id/goBack"
         android:layout_marginTop="15dp"
         app:tabTextAppearance="@style/TabTextSize"
         app:tabIndicatorColor="@color/ShopTextColor"
         app:tabBackground="@drawable/lab_bac"
-        app:tabTextColor="@color/buttonColor"
+        app:tabTextColor="#89481C"
         app:tabMinWidth="80dp"
         app:tabIndicatorHeight="0dp"
+        app:tabSelectedTextColor="@color/buttonColor"
         app:tabRippleColor="@android:color/transparent">
     </com.google.android.material.tabs.TabLayout>
 </RelativeLayout>

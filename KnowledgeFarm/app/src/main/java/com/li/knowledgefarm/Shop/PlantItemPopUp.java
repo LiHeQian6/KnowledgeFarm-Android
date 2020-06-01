@@ -146,7 +146,9 @@ public class PlantItemPopUp extends PopupWindow {
             @Override
             public void afterTextChanged(Editable s) {
                 if(!shopNumber.getText().toString().equals("")) {
-                    if (Integer.parseInt(shopNumber.getText().toString()) >= 1)
+                    if(Integer.parseInt(shopNumber.getText().toString()) == 1)
+                        imgBtnJian.setImageDrawable(context.getDrawable(R.drawable.jianhui));
+                    if (Integer.parseInt(shopNumber.getText().toString()) > 1)
                         imgBtnJian.setImageDrawable(context.getDrawable(R.drawable.jian));
                     if (Integer.parseInt(shopNumber.getText().toString()) <= 999)
                         imgBtnPlus.setImageDrawable(context.getDrawable(R.drawable.plus));

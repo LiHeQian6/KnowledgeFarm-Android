@@ -13,16 +13,19 @@
     <ImageView
         android:tag="plant"
         android:layout_width="wrap_content"
-        android:layout_marginTop="-30dp"
+        android:layout_marginTop="-35dp"
         android:visibility="gone"
+        android:src="@drawable/meigui"
         android:rotationY="4"
         android:rotationX="-16"
-        android:rotation="10"
+        android:rotation="5"
         android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
         android:layout_height="101dp"/>
     <FrameLayout
-        android:layout_marginTop="-70dp"
+        android:layout_marginTop="-100dp"
         android:rotation="10"
+        android:layout_marginLeft="5dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
