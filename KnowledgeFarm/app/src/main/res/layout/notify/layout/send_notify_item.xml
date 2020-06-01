@@ -46,14 +46,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:id="@+id/send_result"
                     android:text="已添加"
+                    android:gravity="center"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:textColor="@color/permitColor"
-                    android:textSize="25dp">
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMaxTextSize="25dp"
+                    android:maxLines="1">
                 </TextView>
                 <ImageView
                     android:src="@drawable/red"
