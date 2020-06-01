@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:text="玫瑰花"
             android:textSize="25sp"
-            android:textColor="@color/ShopTextColor"
+            android:textColor="@color/buttonColor"
             android:layout_marginBottom="10dp">
         </TextView>
 
@@ -34,7 +34,7 @@
             android:text="500金币"
             android:textSize="18sp"
             android:layout_marginTop="10dp"
-            android:textColor="@color/ShopTextColor">
+            android:textColor="@color/permitColor">
         </TextView>
 
     </LinearLayout>

@@ -30,15 +30,23 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.Engine;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FullScreen;
+import com.li.knowledgefarm.Util.GlideEngine;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UpdateUtil;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.entity.UserAuthority;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.engine.ImageEngine;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.tools.ToastUtils;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
@@ -56,6 +64,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -550,19 +559,37 @@ public class SettingMessageActivity extends AppCompatActivity {
                 mTencent.handleResultData(data, loginListener);
             }
         }
-        if(requestCode == 1){
-            if (data != null) {
-                final Uri uri = data.getData();
+        if(requestCode == PictureConfig.CHOOSE_REQUEST){
+//            if (data != null) {
+//                final Uri uri = data.getData();
+//                Bitmap bitmap = null;
+//                try {
+//                    bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(uri));
+//                    updatePhoto(saveBitmapFile(bitmap));
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                Log.i("lww", uri.getPath());
+//            } else {
+//                Log.i("lww", "打开相册返回data为null");
+//            }
+            if(data != null) {
+                List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                 Bitmap bitmap = null;
+                File file = null;
                 try {
-                    bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(uri));
-                    updatePhoto(saveBitmapFile(bitmap));
+                    bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(Uri.parse(selectList.get(0).getPath())));
+                    if (selectList.size() > 0) {
+                        if (selectList.get(0).isCompressed())
+                            file = new File(selectList.get(0).getCompressPath());
+                        else
+                            file = new File(selectList.get(0).getAndroidQToPath());
+                        updatePhoto(file);
+                    }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    CustomerToast.getInstance(getApplicationContext(), "获取图片失败", Toast.LENGTH_SHORT).show();
                 }
-                Log.i("lww", uri.getPath());
-            } else {
-                Log.i("lww", "打开相册返回data为null");
             }
         }
     }
@@ -759,7 +786,16 @@ public class SettingMessageActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.btnUpdatePhoto:
-                    openPhonePhoto();
+                    //openPhonePhoto();
+                    PictureSelector.create(SettingMessageActivity.this)
+                            .openGallery(PictureMimeType.ofImage())
+                            .imageEngine(GlideEngine.createGlideEngine())
+                            .imageSpanCount(4)
+                            .selectionMode(PictureConfig.SINGLE)
+                            .minimumCompressSize(300)
+                            .cutOutQuality(30)
+                            .isCompress(true)
+                            .forResult(PictureConfig.CHOOSE_REQUEST);
                     break;
                 case R.id.btnUpdateEmail:
                     if(change_Email.getText().toString().equals("去绑定")){

@@ -3,6 +3,7 @@ package com.li.knowledgefarm.Shop;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -156,9 +158,9 @@ public class ShopActivity extends AppCompatActivity {
     private void setViewPagerAdapter() {
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),itemList);
         viewPager.setAdapter(adapter);
-        tabLayout.addTab(tabLayout.newTab().setText("植物"));
-        tabLayout.addTab(tabLayout.newTab().setText("宠物"));
-        tabLayout.addTab(tabLayout.newTab().setText("道具"));
+        tabLayout.addTab(tabLayout.newTab().setText(" 植物 "));
+        tabLayout.addTab(tabLayout.newTab().setText(" 宠物 "));
+        tabLayout.addTab(tabLayout.newTab().setText(" 道具 "));
         tabLayout.setupWithViewPager(viewPager);
         adapter.notifyDataSetChanged();
         guide();
@@ -177,7 +179,7 @@ public class ShopActivity extends AppCompatActivity {
         displayHeight = ds.heightPixels;
         displayWidth = ds.widthPixels;
 
-        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.7),(int)(displayHeight*0.7));
+        LinearLayout.LayoutParams params_gridview = new LinearLayout.LayoutParams((int)(displayWidth*0.8),(int)(displayHeight*0.7));
         params_gridview.gravity = Gravity.CENTER_HORIZONTAL;
         viewPager.setLayoutParams(params_gridview);
     }

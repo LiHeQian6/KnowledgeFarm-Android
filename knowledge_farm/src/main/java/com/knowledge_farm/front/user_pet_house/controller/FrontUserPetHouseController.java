@@ -6,6 +6,7 @@ import com.knowledge_farm.entity.User;
 import com.knowledge_farm.entity.UserPetHouse;
 import com.knowledge_farm.front.user_pet_house.service.FrontUserPetHouseService;
 import com.knowledge_farm.util.PageUtil;
+import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-05-27 18:09
  */
+@Api(description = "后台用户宠物接口")
 @Controller
 @RequestMapping("/admin/user_pet_house")
 public class FrontUserPetHouseController {

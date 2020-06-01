@@ -1,11 +1,14 @@
 package com.li.knowledgefarm.notify;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -77,6 +80,8 @@ public class NotifyActivity extends AppCompatActivity {
     private ImageView other_notify_red; //其他通知提示红点
     private OkHttpClient okHttpClient;
     private OtherNotifyAdapter otherNotifyAdapter;
+    private WindowManager wm;
+    private DisplayMetrics ds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -214,6 +219,8 @@ public class NotifyActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(current_type.equals("1")) {
                     NotifyPopUpWindow popUpWindow = new NotifyPopUpWindow(getApplicationContext(), notify_list.getList().get(position));
+                    popUpWindow.setHeight((int)(ds.heightPixels));
+                    popUpWindow.setWidth((int)(ds.widthPixels*0.5));
                     popUpWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
                 }
             }
@@ -247,6 +254,9 @@ public class NotifyActivity extends AppCompatActivity {
         other_notify_red = findViewById(R.id.other_notify_red);
         delete_all_btn.setVisibility(View.INVISIBLE);
         all_have_read.setVisibility(View.INVISIBLE);
+        wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        ds = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(ds);
     }
 
     /**

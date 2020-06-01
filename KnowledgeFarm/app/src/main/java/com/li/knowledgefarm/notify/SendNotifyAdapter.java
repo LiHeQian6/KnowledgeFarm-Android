@@ -87,7 +87,7 @@ public class SendNotifyAdapter extends BaseAdapter {
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.photo)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(context).load(list.getList().get(position).getFrom().getPhoto()).apply(requestOptions).into(viewHolder.photo);
+        Glide.with(context).load(list.getList().get(position).getTo().getPhoto()).apply(requestOptions).into(viewHolder.photo);
         viewHolder.id.setText("账号："+list.getList().get(position).getTo().getAccount()+"");
         viewHolder.nickName.setText("昵称："+list.getList().get(position).getTo().getNickName());
         //ToDo

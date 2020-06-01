@@ -20,7 +20,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/other_notify_title"
                     android:text="小完能"
-                    android:textColor="@color/ShopTextColor"
+                    android:textColor="@color/permitColor"
                     android:textSize="20dp"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
                     android:id="@+id/other_notify_content"
                     android:text="Id:123456"
                     android:layout_below="@+id/other_notify_title"
-                    android:textColor="@color/ShopTextColor"
+                    android:textColor="@color/permitColor"
                     android:textSize="20dp"/>
             </RelativeLayout>
             <ImageView

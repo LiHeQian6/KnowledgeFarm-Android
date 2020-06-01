@@ -6,6 +6,7 @@ import com.knowledge_farm.entity.Result;
 import com.knowledge_farm.front.pet_util.service.FrontPetUtilService;
 import com.knowledge_farm.pet_util_type.service.PetUtilTypeService;
 import com.knowledge_farm.util.PageUtil;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ import java.util.List;
  * @Author 张帅华
  * @Date 2020-05-05 09:42
  */
+@Api(description = "后台宠物道具接口")
 @Controller
 @RequestMapping("/admin/petUtil")
 public class FrontPetUtilController {
@@ -170,7 +172,7 @@ public class FrontPetUtilController {
             PetUtil petUtil = new PetUtil(name, description, value, price, petUtilType);
             Integer id = this.frontPetUtilService.save(petUtil);
             entityManager.clear();
-            String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+            String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
             img = this.petUtilPhotoFolderName + "/" + fileName;
             FileCopyUtils.copy(file.getBytes(), new File(this.petUtilPhotoFileLocation, fileName));
             PetUtil editPetUtil = this.frontPetUtilService.findPetUtilById(id);
@@ -200,7 +202,7 @@ public class FrontPetUtilController {
                 if (file1.exists()) {
                     file1.delete();
                 }
-                String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
+                String fileName = id + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + file.getOriginalFilename();
                 FileCopyUtils.copy(file.getBytes(), new File(this.petUtilPhotoFileLocation, fileName));
                 petUtil.setImg(this.petUtilPhotoFolderName + "/" + fileName);
             }
