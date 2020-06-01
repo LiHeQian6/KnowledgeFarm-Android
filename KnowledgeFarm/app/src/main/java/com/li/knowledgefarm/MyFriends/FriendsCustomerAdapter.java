@@ -24,6 +24,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.Main.MainActivity;
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Util.NavigationBarUtil;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.User;
 import com.li.knowledgefarm.pk.PkActivity;
@@ -221,7 +222,10 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         });
         setDialogSize(view);
         dialog.setContentView(view);
+        NavigationBarUtil.focusNotAle(dialog.getWindow());
         dialog.show();
+        NavigationBarUtil.hideNavigationBar(dialog.getWindow());
+        NavigationBarUtil.clearFocusNotAle(dialog.getWindow());
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

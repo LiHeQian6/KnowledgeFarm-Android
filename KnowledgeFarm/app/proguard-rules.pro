@@ -67,6 +67,9 @@
 #GuideHelper
 -keep class com.li.knowledgefarm.Util.GuideHelper { *;}
 
+#XUpdate
+-keep class com.xuexiang.xupdate.entity.** { *; }
+
 #-------------------------3.与js互相调用的类------------------------
 
 

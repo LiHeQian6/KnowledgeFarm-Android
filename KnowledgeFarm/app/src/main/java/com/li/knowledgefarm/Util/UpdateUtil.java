@@ -15,11 +15,28 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.R;
+import com.xuexiang.xupdate.XUpdate;
+import com.xuexiang.xupdate._XUpdate;
+import com.xuexiang.xupdate.entity.UpdateError;
+import com.xuexiang.xupdate.listener.OnUpdateFailureListener;
+import com.xuexiang.xupdate.service.OnFileDownloadListener;
+import com.xuexiang.xupdate.utils.UpdateUtils;
+import com.xuexiang.xutil.app.PathUtils;
+import com.xuexiang.xutil.file.FileUtils;
+import com.xuexiang.xutil.tip.ToastUtils;
+
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
-import androidkun.com.versionupdatelibrary.entity.VersionUpdateConfig;
+import java.lang.reflect.Type;
+import java.util.Map;
+
 import androidx.annotation.NonNull;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,8 +53,14 @@ public class UpdateUtil {
             @Override
             public void run() {
                 super.run();
+                PackageInfo pi=null;
+                try {
+                    pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
                 Request request = new Request.Builder()
-                        .url(context.getResources().getString(R.string.URL)+"/userpethouse/showUserPetHouse").build();
+                        .url(context.getResources().getString(R.string.URL)+"/user/checkVersion?version="+pi.versionName).build();
                 Call call = OkHttpUtils.getInstance(context).newCall(request);
                 call.enqueue(new Callback() {
                     @Override
@@ -66,7 +89,10 @@ public class UpdateUtil {
                 Log.e("检查更新",message);
                 if (!message.equals("Fail")){
                     if (!message.equals("false")){
-//                        ifUpdate(context,"xxx");
+                        Type type = new TypeToken<Map<String,String>>() {}.getType();
+                        Map<String, String> apkInfo =new Gson().fromJson(message, type);
+                        apkInfo.put("url",context.getResources().getString(R.string.URL)+"/user/downloadVersion");
+                        ifUpdate(context,apkInfo);
                     }else{
                         if (isStart!=0){
                             CustomerToast.getInstance(context, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
@@ -83,12 +109,14 @@ public class UpdateUtil {
     /**
      * @Author li
      * @param context
+     * @param info
      * @return void
-     * @Description 询问有新版本是否进行更新
-     * @Date 11:30 2020/5/31
+     * @Description 询问是否进行更新
+     * @Date 15:21 2020/5/31
      **/
-    private static void ifUpdate(final Context context, final String url) {
+    private static void ifUpdate(final Context context, final Map<String, String> info) {
         final Dialog dialog = new Dialog(context);
+        dialog.setCanceledOnTouchOutside(false);
         View layout = LayoutInflater.from(context).inflate(R.layout.math_return_dialog, null);
         ImageView cancel = layout.findViewById(R.id.cancel_return);
         ImageView sure = layout.findViewById(R.id.sure_return);
@@ -100,7 +128,7 @@ public class UpdateUtil {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        waring.setText("检查到有新的版本是否进行更新？\n当前版本："+pi.versionName+"\n最新版本：");
+        waring.setText("检查到有新的版本是否进行更新？\n\n当前版本："+pi.versionName+"\n最新版本："+info.get("versionName")+"\n更新内容："+info.get("description"));
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,15 +138,33 @@ public class UpdateUtil {
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VersionUpdateConfig.getInstance()//获取配置实例
-                        .setContext(context)//设置上下文
-                        .setDownLoadURL(url)//设置文件下载链接
-                        .setNewVersion("1.0.1")//设置即将下载的APK的版本号,避免重复下载
-//                        .setFileSavePath(savePath)//设置文件保存路径（可不设置）
-                        .setNotificationIconRes(R.drawable.farmimg)//设置通知图标
-                        .setNotificationSmallIconRes(R.drawable.farmimg)//设置通知小图标
-                        .setNotificationTitle("知识农场正在更新...")//设置通知标题
-                        .startDownLoad();//开始下载
+                XUpdate.newBuild(context)
+                        .apkCacheDir(PathUtils.getAppExtDownloadPath()) //设置下载缓存的根目录
+                        .build()
+                        .download(info.get("url"), new OnFileDownloadListener() {   //设置下载的地址和下载的监听
+                            @Override
+                            public void onStart() {
+                                HProgressDialogUtils.showHorizontalProgressDialog(context, "下载进度", false);
+                            }
+
+                            @Override
+                            public void onProgress(float progress, long total) {
+                                HProgressDialogUtils.setProgress(Math.round(progress*100));
+                            }
+
+                            @Override
+                            public boolean onCompleted(File file) {
+                                HProgressDialogUtils.cancel();
+//                                ToastUtils.toast("apk下载完毕，文件路径：" + file.getPath());
+                                _XUpdate.startInstallApk(context, FileUtils.getFileByPath(file.getPath())); //填写文件所在的路径
+                                return false;
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                HProgressDialogUtils.cancel();
+                            }
+                        });
             }
         });
         dialog.setContentView(layout);

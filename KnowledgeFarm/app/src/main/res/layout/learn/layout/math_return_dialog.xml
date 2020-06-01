@@ -22,14 +22,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"></TextView>
 
-            <TextView
-                android:id="@+id/waringText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <ScrollView
+                android:layout_width="wrap_content"
                 android:layout_weight="4"
-                android:text="你还没有答完题哦，现在退出无法获得全部奖励哦"
-                android:textColor="@color/ShopTextColor"
-                android:textSize="20sp"></TextView>
+                android:padding="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/waringText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你还没有答完题哦，现在退出无法获得全部奖励哦"
+                    android:textColor="@color/ShopTextColor"
+                    android:textSize="20sp"/>
+            </ScrollView>
 
             <TextView
                 android:layout_width="0dp"

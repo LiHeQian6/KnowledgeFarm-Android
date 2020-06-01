@@ -4,9 +4,9 @@ android {
     signingConfigs {
         release {
             storeFile file('../keyStore.jks')
-            storePassword 'li040011'
+            storePassword '040011'
             keyAlias = 'key0'
-            keyPassword 'li040011'
+            keyPassword '040011'
         }
     }
     compileSdkVersion 29
@@ -16,7 +16,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。
@@ -86,5 +86,7 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     implementation 'com.shizhefei:GuideHelper:1.0.5'
     implementation 'com.belerweb:pinyin4j:2.5.0'
-    implementation 'com.androidkun:xversionupdate:1.0.6'
+    implementation 'com.github.xuexiangjys:XUpdate:1.1.4'
+    implementation 'com.github.xuexiangjys.XUtil:xutil-core:1.1.7'
+    implementation 'com.zhy:okhttputils:2.6.2'
 }

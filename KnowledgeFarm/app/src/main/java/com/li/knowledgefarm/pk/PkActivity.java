@@ -285,7 +285,6 @@ public class PkActivity extends AppCompatActivity{
                     alertDialog.dismiss();
                     break;
                 case R.id.sure_go_away:
-                    //ToDO 上传数据
                     finish();
                     break;
             }
