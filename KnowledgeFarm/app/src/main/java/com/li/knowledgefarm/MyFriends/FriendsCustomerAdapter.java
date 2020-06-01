@@ -219,7 +219,6 @@ public class FriendsCustomerAdapter extends BaseAdapter {
                 }
             }
         });
-        setDialogSize(view);
         dialog.setContentView(view);
         dialog.show();
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -236,36 +235,10 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         attrs.gravity = Gravity.CENTER;
         final float scale = context.getResources().getDisplayMetrics().density;
         attrs.width = (int) (300 * scale + 0.5f);
-        attrs.height = (int) (300 * scale + 0.5f);
+        attrs.height = (int) (200 * scale + 0.5f);
         dialog.getWindow().setAttributes(attrs);
         Window dialogWindow = dialog.getWindow();
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-    }
-    private void setDialogSize(View view) {
-//        获取屏幕显示区域尺寸
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics ds = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(ds);
-        displayHeight = ds.heightPixels;
-        displayWidth = ds.widthPixels;
-
-        ImageView cancel = view.findViewById(R.id.cancel_return);
-        ImageView sure = view.findViewById(R.id.sure_return);
-        TextView warning = view.findViewById(R.id.waringText);
-        LinearLayout panduan = view.findViewById(R.id.panduan);
-
-        LinearLayout.LayoutParams params_cancel = new LinearLayout.LayoutParams((int) (displayWidth * 0.065), (int) (displayWidth * 0.065));
-        params_cancel.setMargins(0, 0, (int) (displayWidth * 0.08), 0);
-        cancel.setLayoutParams(params_cancel);
-
-        LinearLayout.LayoutParams params_sure = new LinearLayout.LayoutParams((int) (displayWidth * 0.065), (int) (displayWidth * 0.065));
-        sure.setLayoutParams(params_sure);
-
-        warning.setTextSize((int) (displayWidth * 0.012));
-
-        LinearLayout.LayoutParams params_layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params_layout.setMargins(0, (int) (displayHeight * 0.12), 0, 0);
-        panduan.setLayoutParams(params_layout);
     }
 }
 

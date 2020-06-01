@@ -125,6 +125,7 @@ public class SettingMessageActivity extends AppCompatActivity {
     private WindowManager wm;
     private DisplayMetrics ds;
     private Button check_update;//检查更新按钮
+    private File userPhoto = null;
 
 
     @Override
@@ -321,14 +322,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                             CustomerToast.getInstance(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
                         }else{
                             UserUtil.getUser().setPhoto(aString);
-                            RequestOptions options = new RequestOptions();
-                            options.placeholder(R.drawable.huancun2) //加载图片时
-                                    .error(R.drawable.huancun2) //请求出错（图片资源不存在，无访问权限）
-                                    .fallback(R.drawable.huancun2) //请求资源为null
-                                    .circleCrop() //转换图片效果
-                                    .diskCacheStrategy(DiskCacheStrategy.NONE);//缓存策略
-                            Glide.with(getApplicationContext()).load(UserUtil.getUser().getPhoto()).apply(options).into(user_photo);
-                            Log.e("photo","上传头像成功");
+                            Glide.with(getApplicationContext()).load(userPhoto).into(user_photo);
                             CustomerToast.getInstance(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -559,31 +553,17 @@ public class SettingMessageActivity extends AppCompatActivity {
             }
         }
         if(requestCode == PictureConfig.CHOOSE_REQUEST){
-//            if (data != null) {
-//                final Uri uri = data.getData();
-//                Bitmap bitmap = null;
-//                try {
-//                    bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(uri));
-//                    updatePhoto(saveBitmapFile(bitmap));
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//                Log.i("lww", uri.getPath());
-//            } else {
-//                Log.i("lww", "打开相册返回data为null");
-//            }
             if(data != null) {
                 List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                 Bitmap bitmap = null;
-                File file = null;
                 try {
                     bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(Uri.parse(selectList.get(0).getPath())));
                     if (selectList.size() > 0) {
                         if (selectList.get(0).isCompressed())
-                            file = new File(selectList.get(0).getCompressPath());
+                            userPhoto = new File(selectList.get(0).getCompressPath());
                         else
-                            file = new File(selectList.get(0).getAndroidQToPath());
-                        updatePhoto(file);
+                            userPhoto = new File(selectList.get(0).getAndroidQToPath());
+                        updatePhoto(userPhoto);
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

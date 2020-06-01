@@ -50,9 +50,10 @@
         app:tabTextAppearance="@style/TabTextSize"
         app:tabIndicatorColor="@color/ShopTextColor"
         app:tabBackground="@drawable/lab_bac"
-        app:tabTextColor="@color/buttonColor"
+        app:tabTextColor="@android:color/transparent"
         app:tabMinWidth="80dp"
         app:tabIndicatorHeight="0dp"
+        app:tabSelectedTextColor="@color/buttonColor"
         app:tabRippleColor="@android:color/transparent">
     </com.google.android.material.tabs.TabLayout>
 </RelativeLayout>
