@@ -381,7 +381,7 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     Nickname = nkname;
-                    Path = URLEncoder.encode(npath);
+                    Path = npath;
                     new Thread() {
                         @Override
                         public void run() {
@@ -440,7 +440,7 @@ public class LoginActivity extends AppCompatActivity {
                             mHandler.sendMessage(message);
                         }else {                          //非第一次登录，自动
                             message.what = 3;
-                            message.obj = parsr(URLDecoder.decode(result), User.class);
+                            message.obj = parsr(result, User.class);
                             UserUtil.setUser((User) message.obj);
                             mHandler.sendMessage(message);
                         }
@@ -485,7 +485,7 @@ public class LoginActivity extends AppCompatActivity {
                             ;
                         }else {
                             message.what = 3;        //非第一次登录，自动登录
-                            message.obj = parsr(URLDecoder.decode(result), User.class);
+                            message.obj = parsr(result, User.class);
                             UserUtil.setUser((User) message.obj);
                             mHandler.sendMessage(message);
                         }
