@@ -312,7 +312,7 @@ public class PkActivity extends AppCompatActivity{
         UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
         String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
         Glide.with(this).load(url).into(my_pet_image);
-        String url2=friend_pet.getGrowPeriod() == 0 ? friend_pet.getPet().getImg1() : friend_pet.getGrowPeriod()==1? friend_pet.getPet().getImg2() : friend_pet.getPet().getImg3();
+        String url2=friend_pet.getGrowPeriod() == 0 ? friend_pet.getPet().getGif1() : friend_pet.getGrowPeriod()==1? friend_pet.getPet().getGif2() : friend_pet.getPet().getGif3();
         Glide.with(this).load(url2).into(other_pet_image);
     }
 

@@ -49,7 +49,6 @@ public class UpdateUtil {
     public static int isStart=0;
 
     public static void checkUpdate(final Context context){
-        isStart=1;
         new Thread(){
             @Override
             public void run() {
@@ -98,6 +97,7 @@ public class UpdateUtil {
                         if (isStart!=0){
                             CustomerToast.getInstance(context, "已经是最新版本啦！", Toast.LENGTH_SHORT).show();
                         }
+                        isStart++;
                     }
                 }else {
                     CustomerToast.getInstance(context, "网络异常！", Toast.LENGTH_SHORT).show();
