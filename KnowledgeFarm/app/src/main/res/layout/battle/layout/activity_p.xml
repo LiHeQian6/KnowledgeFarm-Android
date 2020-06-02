@@ -168,9 +168,9 @@
                 android:id="@+id/other_pet_image"
                 android:layout_centerInParent="true"/>
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/buy"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/button"
                 android:text="离开"
                 android:id="@+id/run_away"
                 android:layout_alignParentRight="true"

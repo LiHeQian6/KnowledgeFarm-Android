@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
         if (petHouses.size()!=0) {
             UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
             String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
-            Glide.with(this).load(url).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
+            Glide.with(this).load(url).error(R.drawable.dog).into(dog);
         }else
             Glide.with(this).load(R.drawable.dog).into(dog);
     }
@@ -730,7 +730,15 @@ public class MainActivity extends AppCompatActivity {
                                                 land.setImageResource(R.drawable.land);
                                         } else {
                                             Glide.with(MainActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
-                                            operating(0);//浇水
+                                            if (UserUtil.getUser().getWater() == 0){
+                                                CustomerToast.getInstance(MainActivity.this,"水不够了哦！快去学习中心获得吧！",Toast.LENGTH_SHORT).show();
+                                                if (finalCrop.getStatus() == 0) {
+                                                    land.setImageResource(R.drawable.land_gan);
+                                                } else
+                                                    land.setImageResource(R.drawable.land);
+                                            }else{
+                                                operating(0);//浇水
+                                            }
                                         }
                                     } else if (selected == -1) {
                                         selectedPlant = finalI;
@@ -742,7 +750,15 @@ public class MainActivity extends AppCompatActivity {
                                                 land.setImageResource(R.drawable.land);
                                         } else {
                                             Glide.with(MainActivity.this).asGif().load(R.drawable.shifei).into(animation);
-                                            operating(-1);//施肥
+                                            if (UserUtil.getUser().getFertilizer() == 0){
+                                                CustomerToast.getInstance(MainActivity.this,"肥料不够了哦！快去学习中心获得吧！",Toast.LENGTH_SHORT).show();
+                                                if (finalCrop.getStatus() == 0) {
+                                                    land.setImageResource(R.drawable.land_gan);
+                                                } else
+                                                    land.setImageResource(R.drawable.land);
+                                            }else {
+                                                operating(-1);//施肥
+                                            }
                                         }
                                     } else {
                                         selectedPlant = finalI;
@@ -1038,9 +1054,9 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 Request request = null;
-                if (operating == 0)
+                if (operating == 0) {
                     request = new Request.Builder().url(getResources().getString(R.string.URL) + "/user/waterCrop?landNumber=land" + selectedPlant).build();
-                else if (operating == -1) {
+                }else if (operating == -1) {
                     request = new Request.Builder().url(getResources().getString(R.string.URL) + "/user/fertilizerCrop?landNumber=land" + selectedPlant).build();
                 } else {
                     request = new Request.Builder().url(getResources().getString(R.string.URL) + "/user/harvest?landNumber=land" + selectedPlant).build();
@@ -1184,7 +1200,7 @@ public class MainActivity extends AppCompatActivity {
      **/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setRedPoint(EventBean eventBean){
-        if (eventBean.getMessage().equals("notification")){
+        if ("notification".equals(eventBean.getMessage())){
             switch (eventBean.getNotifyType()){
                 case "system":
                     notifyStatus.set(0,true);
@@ -1287,6 +1303,7 @@ public class MainActivity extends AppCompatActivity {
                     public void handleMessage(@NonNull Message msg) {
                         super.handleMessage(msg);
                         UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+                        userPetHouse.setGrowPeriod(userPetHouse.getGrowPeriod()+1);
                         String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
                         Glide.with(MainActivity.this).load(url).into(pet);
                     }
@@ -1296,7 +1313,10 @@ public class MainActivity extends AppCompatActivity {
         }
         alertBuilder.setView(layout);
         final AlertDialog upDiaLog = alertBuilder.create();
+        NavigationBarUtil.focusNotAle(upDiaLog.getWindow());
         upDiaLog.show();
+        NavigationBarUtil.hideNavigationBar(upDiaLog.getWindow());
+        NavigationBarUtil.clearFocusNotAle(upDiaLog.getWindow());
         WindowManager.LayoutParams attrs = upDiaLog.getWindow().getAttributes();
         if (upDiaLog.getWindow() != null) {
             //bagDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

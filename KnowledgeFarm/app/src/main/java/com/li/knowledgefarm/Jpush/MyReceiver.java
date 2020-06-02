@@ -1,8 +1,11 @@
 package com.li.knowledgefarm.Jpush;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
+import com.li.knowledgefarm.Login.LoginActivity;
 import com.li.knowledgefarm.entity.EventBean;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,6 +39,5 @@ public class MyReceiver extends JPushMessageReceiver {
     @Override
     public void onNotifyMessageArrived(Context context, NotificationMessage notificationMessage) {
         super.onNotifyMessageArrived(context, notificationMessage);
-
     }
 }

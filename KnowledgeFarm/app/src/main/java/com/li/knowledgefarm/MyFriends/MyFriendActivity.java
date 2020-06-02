@@ -315,7 +315,7 @@ public class MyFriendActivity extends AppCompatActivity {
         experienceValue.setText("" + user.getExperience() + "/" + levelExperience[l]);
         List<UserPetHouse> petHouses = user.getPetHouses();
         if (petHouses.size()!=0) {
-            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(dog);
+            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).into(dog);
         }else
             Glide.with(this).load(R.drawable.dog).into(dog);
     }
@@ -450,7 +450,15 @@ public class MyFriendActivity extends AppCompatActivity {
                                         }
                                         else{
                                             Glide.with(MyFriendActivity.this).asGif().load(R.drawable.jiaoshui).into(animation);
-                                            operating(0);//浇水
+                                            if (UserUtil.getUser().getWater() == 0){
+                                                CustomerToast.getInstance(MyFriendActivity.this,"水不够了哦！快去学习中心获得吧！",Toast.LENGTH_SHORT).show();
+                                                if (finalCrop.getStatus() == 0) {
+                                                    land.setImageResource(R.drawable.land_gan);
+                                                } else
+                                                    land.setImageResource(R.drawable.land);
+                                            }else{
+                                                operating(0);//浇水
+                                            }
                                         }
                                     }else if(selected==-1){
                                         selectedPlant=finalI;
@@ -462,7 +470,15 @@ public class MyFriendActivity extends AppCompatActivity {
                                                 land.setImageResource(R.drawable.land);
                                         }else{
                                             Glide.with(MyFriendActivity.this).asGif().load(R.drawable.shifei).into(animation);
-                                            operating(-1);//施肥
+                                            if (UserUtil.getUser().getFertilizer() == 0){
+                                                CustomerToast.getInstance(MyFriendActivity.this,"肥料不够了哦！快去学习中心获得吧！",Toast.LENGTH_SHORT).show();
+                                                if (finalCrop.getStatus() == 0) {
+                                                    land.setImageResource(R.drawable.land_gan);
+                                                } else
+                                                    land.setImageResource(R.drawable.land);
+                                            }else {
+                                                operating(-1);//施肥
+                                            }
                                         }
                                     }else{
                                         selectedPlant=finalI;

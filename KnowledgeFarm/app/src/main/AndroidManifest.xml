@@ -33,6 +33,7 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity android:name=".pk.PkActivity" android:screenOrientation="landscape"></activity>

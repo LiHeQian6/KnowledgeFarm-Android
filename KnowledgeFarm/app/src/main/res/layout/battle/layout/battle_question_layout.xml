@@ -95,13 +95,13 @@
             android:gravity="center"
             android:layout_marginTop="20dp">
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Battle"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:text="确定"
                 android:textSize="20dp"
                 android:id="@+id/commit_battle"
                 android:textColor="@color/ShopTextColor"
-                android:background="@drawable/buy"/>
+                android:background="@drawable/button"/>
         </LinearLayout>
     </LinearLayout>
 

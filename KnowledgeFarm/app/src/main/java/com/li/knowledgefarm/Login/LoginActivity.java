@@ -149,7 +149,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         okHttpClient = OkHttpUtils.getInstance(this);
-        UpdateUtil.checkUpdate(this);
+        if (UpdateUtil.isStart==0)
+            UpdateUtil.checkUpdate(this);
         UserUtil.setUser(null);
         System.out.println("***********************************************************");
         autoLogin();

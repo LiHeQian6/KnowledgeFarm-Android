@@ -333,13 +333,12 @@ public class ShopActivity extends AppCompatActivity {
         TextView hello = new TextView(this);
         hello.setText("点击选择要购买的商品类型\n或者直接滑动屏幕切换");
         hello.setTextSize(30);
-        TipData tipData = new TipData(hello, Gravity.END,tabLayout);
-        tipData.setLocation(-DisplayUtils.dipToPix(this,100),0);
+        TipData tipData = new TipData(hello, Gravity.CENTER);
         guideHelper.addPage(tipData);
         //第二页
         TextView textView = new TextView(this);
         textView.setText("点击心仪的种子进行购买！");
-        textView.setTextSize(26);
+        textView.setTextSize(30);
         TipData tipData1 = new TipData(textView, Gravity.CENTER);
         guideHelper.addPage(tipData1);
         guideHelper.show(false);

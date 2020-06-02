@@ -5,6 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.li.knowledgefarm.R;
+
+import java.util.StringJoiner;
+
 /**
  * Created by Vector on 2016/8/12 0012.
  */

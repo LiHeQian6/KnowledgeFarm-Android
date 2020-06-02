@@ -42,6 +42,7 @@ import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.BitmapCut;
 import com.li.knowledgefarm.Util.CustomerToast;
 import com.li.knowledgefarm.Util.FromJson;
+import com.li.knowledgefarm.Util.NavigationBarUtil;
 import com.li.knowledgefarm.Util.OkHttpUtils;
 import com.li.knowledgefarm.Util.UserUtil;
 import com.li.knowledgefarm.entity.EventBean;
@@ -375,7 +376,10 @@ public class PkActivity extends AppCompatActivity{
                     }
                 });
                 pkQuestionDialog.setQuestion(list.get(position));
+                NavigationBarUtil.focusNotAle(pkQuestionDialog.getWindow());
                 pkQuestionDialog.show();
+                NavigationBarUtil.hideNavigationBar(pkQuestionDialog.getWindow());
+                NavigationBarUtil.clearFocusNotAle(pkQuestionDialog.getWindow());
                 pkQuestionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @RequiresApi(api = Build.VERSION_CODES.P)
                     @Override

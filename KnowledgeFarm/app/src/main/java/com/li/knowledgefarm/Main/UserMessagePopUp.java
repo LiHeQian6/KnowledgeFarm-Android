@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.entity.User;
 
@@ -37,6 +38,7 @@ public class UserMessagePopUp extends PopupWindow {
     private TextView id;
     private TextView level;
     private TextView grade;
+    private ImageView user_image;
 
     public UserMessagePopUp(Context context,User user) {
         super(context);
@@ -46,8 +48,8 @@ public class UserMessagePopUp extends PopupWindow {
     }
 
     private void Init(){
-        this.setHeight(600);
-        this.setWidth(1000);
+        this.setHeight(1000);
+        this.setWidth(1400);
         this.setOutsideTouchable(true);
         this.setFocusable(false);
         this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -61,10 +63,11 @@ public class UserMessagePopUp extends PopupWindow {
     }
 
     private void setText(){
+        Glide.with(context).load(user.getPhoto()).into(user_image);
         nickName.setText("昵称："+user.getNickName());
         id.setText("账号："+user.getAccount()+"");
         level.setText("等级："+user.getLevel());
-        grade.setText("年级："+user.getGrade());
+        grade.setText("年级："+(user.getGrade()-(user.getGrade()/2)));
     }
 
     private void registListener(){
@@ -73,6 +76,7 @@ public class UserMessagePopUp extends PopupWindow {
     }
 
     private void getViews(View view){
+        user_image=view.findViewById(R.id.user_image);
         nickName = view.findViewById(R.id.this_user_nickname);
         id = view.findViewById(R.id.this_user_id);
         level = view.findViewById(R.id.this_user_level);

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="20dp"
-    android:background="@drawable/diaback">
+    android:background="@drawable/notice">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -36,6 +36,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_weight="8">
 
             <LinearLayout
@@ -74,6 +75,7 @@
                                         android:layout_height="wrap_content"
                                         android:id="@+id/this_user_nickname"
                                         android:textColor="@color/ShopTextColor"
+                                        android:textSize="22dp"
                                         android:text="昵称:小完能"/>
                                 </LinearLayout>
                                 <LinearLayout
@@ -84,23 +86,25 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Id:123456"
+                                        android:textSize="22dp"
                                         android:id="@+id/this_user_id"
                                         android:textColor="@color/ShopTextColor"/>
                                 </LinearLayout>
                             </LinearLayout>
-                            <LinearLayout
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_marginLeft="65dp">
+
+                            <TextView
+                                android:id="@+id/this_user_level"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:layout_marginLeft="20dp">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="等级"
-                                    android:id="@+id/this_user_level"
-                                    android:textColor="@color/ShopTextColor"
-                                    android:textSize="22dp"/>
-                            </LinearLayout>
+                                android:layout_height="wrap_content"
+                                android:text="等级"
+                                android:textColor="@color/ShopTextColor"
+                                android:textSize="22dp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -112,19 +116,20 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
                                 android:text="年级"
+                                android:layout_marginLeft="65dp"
                                 android:id="@+id/this_user_grade"
                                 android:textColor="@color/ShopTextColor"
-                                android:textSize="25dp"/>
+                                android:textSize="22dp"/>
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_marginTop="15dp"
                                 android:layout_height="wrap_content">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="绑定QQ"
-                                    android:textColor="@color/ShopTextColor"
-                                    android:textSize="25dp"/>
+<!--                                <TextView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="绑定QQ"-->
+<!--                                    android:textColor="@color/ShopTextColor"-->
+<!--                                    android:textSize="25dp"/>-->
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"/>
