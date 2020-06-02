@@ -141,7 +141,7 @@ public class FriendNotifyAdapter extends BaseAdapter {
                 super.run();
                 Request request = new Request.Builder()
                         .url(context.getResources().getString(R.string.URL)+"/userfriend/refuseUserFriend?account="+list.getList().get(position).getFrom().getAccount()).build();
-                Call call = new OkHttpClient().newCall(request);
+                Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
