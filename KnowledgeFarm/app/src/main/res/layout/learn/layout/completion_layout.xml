@@ -16,7 +16,7 @@
             android:text=" "/>
         <TextView
             android:id="@+id/completion_Question"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:autoSizeMaxTextSize="35dp"
             android:autoSizeTextType="uniform"
