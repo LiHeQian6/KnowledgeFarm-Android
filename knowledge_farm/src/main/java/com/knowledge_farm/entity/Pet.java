@@ -22,6 +22,9 @@ public class Pet {
     private String img1;
     private String img2;
     private String img3;
+    private String gif1;
+    private String gif2;
+    private String gif3;
     private Integer exist;
 
     public Pet() {
@@ -118,6 +121,30 @@ public class Pet {
 
     public void setImg3(String img3) {
         this.img3 = img3;
+    }
+
+    public String getGif1() {
+        return gif1;
+    }
+
+    public void setGif1(String gif1) {
+        this.gif1 = gif1;
+    }
+
+    public String getGif2() {
+        return gif2;
+    }
+
+    public void setGif2(String gif2) {
+        this.gif2 = gif2;
+    }
+
+    public String getGif3() {
+        return gif3;
+    }
+
+    public void setGif3(String gif3) {
+        this.gif3 = gif3;
     }
 
     @OneToOne(mappedBy = "pet",cascade = CascadeType.ALL)

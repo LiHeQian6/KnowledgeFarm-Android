@@ -61,19 +61,15 @@ public class FrontVersionService {
         List<Version> versionList = this.versionDao.findAll();
         if(versionList.size() != 0){
             String arr[] = versionList.get(0).getVersionName().split("\\.");
-            int count = versionList.get(0).getId();
+            int count = 0;
             for(int i = 1;i < versionList.size();i++){
                 String brr[] = versionList.get(i).getVersionName().split("\\.");
-                for(int j = 0;j < arr.length;j++) {
-                    if (Integer.parseInt(arr[j]) >= Integer.parseInt(brr[j])) {
-                        continue;
-                    }
+                if(compareArray(arr, brr)){
                     exchangeArray(arr, brr);
-                    count = versionList.get(i).getId();
-                    break;
+                    count = i;
                 }
             }
-            return this.versionDao.findVersionById(count);
+            return versionList.get(count);
         }
         return null;
     }
@@ -93,6 +89,26 @@ public class FrontVersionService {
     @Transactional(readOnly = false)
     public void save(Version version){
         this.versionDao.save(version);
+    }
+
+    /**
+     * @Author 张帅华
+     * @Description 比较两个版本的大小
+     * @Date 10:12 2020/6/2 0002
+     * @Param [arr, brr]
+     * @return boolean 返回false说明arr > brr，返回true说明arr < brr
+     **/
+    public boolean compareArray(String arr[], String brr[]){
+        for(int i = 0;i < arr.length;i++){
+            int a = Integer.parseInt(arr[i]);
+            int b = Integer.parseInt(brr[i]);
+            if(a < b){
+                return true;
+            }else if(a > b){
+                return false;
+            }
+        }
+        return false;
     }
 
     public void exchangeArray(String arr[], String brr[]){

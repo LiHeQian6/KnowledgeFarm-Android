@@ -66,6 +66,7 @@ public class FrontQuestionController {
             }
         }
         model.addAttribute("grades", grades);
+        model.addAttribute("question", question);
         return "question-edit";
     }
 

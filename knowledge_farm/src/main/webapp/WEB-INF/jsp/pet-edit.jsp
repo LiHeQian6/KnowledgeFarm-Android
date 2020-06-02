@@ -60,6 +60,9 @@
                 <input type="hidden" name="img1" value="${pet.img1}"/>
                 <input type="hidden" name="img2" value="${pet.img2}"/>
                 <input type="hidden" name="img3" value="${pet.img3}"/>
+                <input type="hidden" name="gif1" value="${pet.gif1}"/>
+                <input type="hidden" name="gif2" value="${pet.gif2}"/>
+                <input type="hidden" name="gif3" value="${pet.gif3}"/>
                 <input type="hidden" name="exist" value="${pet.exist}"/>
                 <input type="hidden" name="petFunctionId" value="${pet.petFunction.petFunctionId}"/>
                 <div class="layui-form-item">
@@ -205,6 +208,30 @@
                     </label>
                     <div class="layui-input-inline">
                         <input type="file" id="img3" name="upload" accept="image/*" style="margin-top:5px;"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>gif1
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="file" id="gif1" name="upload" accept="image/gif" style="margin-top:5px;"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>gif2
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="file" id="gif2" name="upload" accept="image/gif" style="margin-top:5px;"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>gif3
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="file" id="gif3" name="upload" accept="image/gif" style="margin-top:5px;"/>
                     </div>
                 </div>
                 <div class="layui-form-item">

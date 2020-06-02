@@ -83,6 +83,57 @@
             x_admin_show(title,url,w,h);
         }
 
+        function changePetForm1(id,count,picture1,picture2){
+            switch (count) {
+                case 1:
+                    var id1 = "#" + id + "1";
+                    var picture = $(id1).attr('src');
+                    if(picture.endsWith(".gif")){
+                        $(id1).attr('src', "${ctx}/photo/"+picture1);
+                    }else{
+                        $(id1).attr('src', "${ctx}/photo/"+picture2);
+                    }
+                    break;
+                case 2:
+                    var id2 = "#" + id + "2";
+                    var picture = $(id2).attr('src');
+                    if(picture.endsWith(".gif")){
+                        $(id2).attr('src', "${ctx}/photo/"+picture1);
+                    }else{
+                        $(id2).attr('src', "${ctx}/photo/"+picture2);
+                    }
+                    break;
+                case 3:
+                    var id3 = "#" + id + "3";
+                    var picture = $(id3).attr('src');
+                    if(picture.endsWith(".gif")){
+                        $(id3).attr('src', "${ctx}/photo/"+picture1);
+                    }else{
+                        $(id3).attr('src', "${ctx}/photo/"+picture2);
+                    }
+                    break;
+            }
+        }
+
+        function changePetForm2(id,picture1,picture2,picture3,picture4,picture5,picture6) {
+            var id1 = "#" + id + "1";
+            var id2 = "#" + id + "2";
+            var id3 = "#" + id + "3";
+
+            var picture01 = $(id1).attr('src');
+            var picture02 = $(id2).attr('src');
+            var picture03 = $(id3).attr('src');
+
+            if(picture01.endsWith(".gif") || picture02.endsWith(".gif") || picture03.endsWith(".gif")){
+                $(id1).attr('src', "${ctx}/photo/"+picture1);
+                $(id2).attr('src', "${ctx}/photo/"+picture2);
+                $(id3).attr('src', "${ctx}/photo/"+picture3);
+            }else{
+                $(id1).attr('src', "${ctx}/photo/"+picture4);
+                $(id2).attr('src', "${ctx}/photo/"+picture5);
+                $(id3).attr('src', "${ctx}/photo/"+picture6);
+            }
+        }
     </script>
 
 </head>
@@ -372,6 +423,7 @@
                     <th style="text-align:center;">生长1</th>
                     <th style="text-align:center;">生长2</th>
                     <th style="text-align:center;">生长3</th>
+                    <th style="text-align:center;">切换</th>
                     <th style="text-align:center;">状态</th>
                     <th style="text-align:center;">操作</th>
                 </tr>
@@ -383,9 +435,9 @@
                         <td>${petPage.id}</td>
                         <td>${petPage.name}</td>
                         <td>${petPage.description}</td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img1}"/></td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img2}"/></td>
-                        <td><img style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img3}"/></td>
+                        <td><img id="${"".concat(petPage.id).concat("1")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img1}" onclick="changePetForm1(${petPage.id},1,'${petPage.img1}','${petPage.gif1}')"/></td>
+                        <td><img id="${"".concat(petPage.id).concat("2")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img2}" onclick="changePetForm1(${petPage.id},2,'${petPage.img2}','${petPage.gif2}')"/></td>
+                        <td><img id="${"".concat(petPage.id).concat("3")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img3}" onclick="changePetForm1(${petPage.id},3,'${petPage.img3}','${petPage.gif3}')"/></td>
                         <td>${petPage.price}金币</td>
                         <td>${petPage.life}</td>
                         <td>${petPage.intelligence}</td>
@@ -396,6 +448,9 @@
                         <td>${petPage.petFunction.growHour1}</td>
                         <td>${petPage.petFunction.growHour2}</td>
                         <td>${petPage.petFunction.growHour3}</td>
+                        <td class="td-status">
+                            <span class="layui-btn layui-btn-normal layui-btn-mini" onclick="changePetForm2(${petPage.id},'${petPage.img1}','${petPage.img2}','${petPage.img3}','${petPage.gif1}','${petPage.gif2}','${petPage.gif3}')">切换</span>
+                        </td>
                         <td class="td-status">
                             <span class="layui-btn layui-btn-normal layui-btn-mini">存在</span>
                         </td>
