@@ -12,6 +12,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
@@ -60,6 +62,7 @@ public class UserController {
     private String apkFileLocation;
     @Value("${file.apkFolderName}")
     private String apkFolderName;
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * @Author 张帅华
@@ -152,7 +155,7 @@ public class UserController {
     @ApiOperation(value = "账号登陆", notes = "返回值：User || (String)PasswordError：密码错误 || (String)notEffect：账号不可用")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "account", value = "账号", dataType = "String", paramType = "form", required = true),
-            @ApiImplicitParam(name = "password", value = "面膜", dataType = "String", paramType = "form", required = true)
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", paramType = "form", required = true)
     })
     @PostMapping("/loginByAccount")
     public Object loginByAccount(@RequestParam("account") String account,
@@ -361,7 +364,9 @@ public class UserController {
                     photo = photo.substring((this.photoUrl).length());//URLDecoder.decode(photo).
                     if (!photo.equals(defaultFileName)) {
                         File file1 = new File(this.photoLocation + "/" + photo);
+                        logger.info("photo:" + photo);
                         if (file1.exists()) {
+                            logger.info("头像存在，photo:" + photo);
                             file1.delete();
                         }
                     }
@@ -848,7 +853,7 @@ public class UserController {
         return "{}";
     }
 
-    @ApiOperation(value = "检查更新", notes = "返回值： （String）false：无版本更新 || Map<String,String>：{\"description\":描述, \"versionName\":版本名")
+    @ApiOperation(value = "检查更新", notes = "返回值： （String）false：无版本更新 || （String）fail：发生错误 || Map<String,String>：{\"description\":描述, \"versionName\":版本名")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "version", value = "版本号", dataType = "string", paramType = "query", required = true)
     })
@@ -856,30 +861,27 @@ public class UserController {
     public String checkVersion(@RequestParam("version") String version) {
         try {
             Version newestVersion = this.frontVersionService.findNewestVersion();
-            String brr[] = newestVersion.getVersionName().split("\\.");
-            if(brr == null){
-                return Result.FALSE;
-            }
-            String arr[] = version.split("\\.");
-            for(int i = 0;i < arr.length;i++){
-                if(Integer.parseInt(arr[i]) >= Integer.parseInt(brr[i])){
-                    continue;
+            if(newestVersion != null){
+                String arr[] = version.split("\\.");
+                String brr[] = newestVersion.getVersionName().split("\\.");
+                if(compareArray(arr, brr)){
+                    Map<String, String> resultMap = new HashMap<>();
+                    resultMap.put("description", newestVersion.getDescription());
+                    resultMap.put("versionName", newestVersion.getVersionName());
+                    return new Gson().toJson(resultMap);
                 }
-                Map<String, String> resultMap = new HashMap<>();
-                resultMap.put("description", newestVersion.getDescription());
-                resultMap.put("versionName", newestVersion.getVersionName());
-                return new Gson().toJson(resultMap);
             }
+            return Result.FALSE;
         }catch (Exception e){
             e.printStackTrace();
         }
-        return Result.FALSE;
+        return Result.FAIL;
     }
 
     @ApiOperation(value = "下载Apk", notes = "返回值： 文件 || （String）服务器文件错误")
     @GetMapping("/downloadVersion")
     @ResponseBody
-    public Object downloadVersion(){
+    public ResponseEntity downloadVersion(){
         try {
             Version version = this.frontVersionService.findNewestVersion();
             FileSystemResource file = new FileSystemResource(this.apkFileLocation + "/" + version.getFileName());
@@ -900,7 +902,27 @@ public class UserController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return "服务器文件错误";
+        return null;
+    }
+
+    /**
+     * @Author 张帅华
+     * @Description 比较两个版本的大小
+     * @Date 10:12 2020/6/2 0002
+     * @Param [arr, brr]
+     * @return boolean 返回false说明arr > brr，返回true说明arr < brr
+     **/
+    public boolean compareArray(String arr[], String brr[]){
+        for(int i = 0;i < arr.length;i++){
+            int a = Integer.parseInt(arr[i]);
+            int b = Integer.parseInt(brr[i]);
+            if(a < b){
+                return true;
+            }else if(a > b){
+                return false;
+            }
+        }
+        return false;
     }
 
 }

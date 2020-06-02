@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,6 +73,13 @@ public class FrontPetController {
             return "pet-list";
         }
         return "pet-del";
+    }
+
+    @PostMapping("/changePerForm")
+    @ResponseBody
+    public Pet changePerForm(@RequestParam("id") Integer id, HttpServletRequest request){
+        request.setAttribute("changePetId", id);
+        return this.frontPetService.findPetById(id);
     }
 
     @PostMapping("/deleteOnePet")
@@ -183,6 +191,9 @@ public class FrontPetController {
             editPet.setImg1(img[0]);
             editPet.setImg2(img[1]);
             editPet.setImg3(img[2]);
+            editPet.setGif1(img[3]);
+            editPet.setGif2(img[4]);
+            editPet.setGif3(img[5]);
             PetFunction petFunction = new PetFunction(editPet, harvestHour1, harvestHour2, harvestHour3, growHour1, growHour2, growHour3);
             editPet.setPetFunction(petFunction);
             frontPetService.updatePet(editPet);
@@ -238,6 +249,33 @@ public class FrontPetController {
                             String fileName3 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
                             pet.setImg3(this.petPhotoFolderName + "/" + fileName3);
                             FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName3));
+                            break;
+                        case 4:
+                            File file4 = new File(this.photoLocation + "/" + pet.getGif1());
+                            if (file4.exists()) {
+                                file4.delete();
+                            }
+                            String fileName4 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                            pet.setGif1(this.petPhotoFolderName + "/" + fileName4);
+                            FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName4));
+                            break;
+                        case 5:
+                            File file5 = new File(this.photoLocation + "/" + pet.getGif2());
+                            if (file5.exists()) {
+                                file5.delete();
+                            }
+                            String fileName5 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                            pet.setGif2(this.petPhotoFolderName + "/" + fileName5);
+                            FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName5));
+                            break;
+                        case 6:
+                            File file6 = new File(this.photoLocation + "/" + pet.getGif3());
+                            if (file6.exists()) {
+                                file6.delete();
+                            }
+                            String fileName6 = id + "_" + count + "_" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + "_" + multipartFile.getOriginalFilename();
+                            pet.setGif3(this.petPhotoFolderName + "/" + fileName6);
+                            FileCopyUtils.copy(multipartFile.getBytes(), new File(this.petPhotoFileLocation, fileName6));
                             break;
                     }
                 }

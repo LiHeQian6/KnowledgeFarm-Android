@@ -66,8 +66,9 @@ public class RateRandomNumber {
         if (totalPercent != 100) {
             throw new IllegalArgumentException("百分比之和必须为100");
         }
-        for (double s : separates) {
+        for (int s : separates) {
             if (s <= min || s >= max) {
+                System.out.println("s:" + s);
                 throw new IllegalArgumentException("分割数值必须在(min,max)之间");
             }
         }

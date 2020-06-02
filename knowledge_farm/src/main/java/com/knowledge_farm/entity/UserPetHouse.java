@@ -55,7 +55,7 @@ public class UserPetHouse {
         double maxIntelligence = pet.getIntelligence();
         List<Integer> intelligenceSeparates = new ArrayList<>();
         intelligenceSeparates.add((int) Math.ceil(minIntelligence + 0.2 * (maxIntelligence - minIntelligence)));
-        intelligenceSeparates.add((int) Math.ceil(maxLife - 0.2 * (maxLife - minLife)));
+        intelligenceSeparates.add((int) Math.ceil(maxIntelligence - 0.2 * (maxIntelligence - maxIntelligence)));
         List<Integer> intelligencePercents = new ArrayList<>();
         intelligencePercents.add(10);
         intelligencePercents.add(80);

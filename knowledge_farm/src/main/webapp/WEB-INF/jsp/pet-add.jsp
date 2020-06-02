@@ -213,6 +213,30 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
+                        <font color="red">*</font>gif1
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="file" id="gif1" name="upload" accept="image/gif" style="margin-top:5px;"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>gif2
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="file" id="gif2" name="upload" accept="image/gif" style="margin-top:5px;"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        <font color="red">*</font>gif3
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="file" id="gif3" name="upload" accept="image/gif" style="margin-top:5px;"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
                     </label>
                     <button  class="layui-btn" lay-filter="add" lay-submit="">
                         添加
