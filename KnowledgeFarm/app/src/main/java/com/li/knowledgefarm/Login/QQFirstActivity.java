@@ -162,7 +162,7 @@ public class QQFirstActivity extends AppCompatActivity {
                     mHandler.sendMessage(message);
                 }else {
                     message.what = 4;
-                    message.obj = parsr(URLDecoder.decode(result), User.class);
+                    message.obj = parsr(result, User.class);
                     UserUtil.setUser((User) message.obj);
                     mHandler.sendMessage(message);
                 }
