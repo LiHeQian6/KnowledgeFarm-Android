@@ -462,6 +462,7 @@ public class PkActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        pkTimeLimit.cancel(true);
         if (user_pet.getNowLife()>0&&friend_pet.getNowLife()>0)
             sendResult(false);
         if (user_pet.getNowLife()>0&&friend_pet.getNowLife()<=0){
@@ -469,7 +470,6 @@ public class PkActivity extends AppCompatActivity{
         }
         if (user_pet.getNowLife()<=0&&friend_pet.getNowLife()>0)
             sendResult(false);
-        pkTimeLimit.cancel(true);
     }
 
     /**
