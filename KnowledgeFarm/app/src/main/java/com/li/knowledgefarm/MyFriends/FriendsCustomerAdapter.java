@@ -210,7 +210,7 @@ public class FriendsCustomerAdapter extends BaseAdapter {
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (user.getPetHouses().get(0).getPhysical()!=0){
+                if (UserUtil.getUser().getPetHouses().get(0).getPhysical()!=0){
                     Intent go = new Intent(context, PkActivity.class);
                     go.putExtra("friend", user);
                     dialog.dismiss();

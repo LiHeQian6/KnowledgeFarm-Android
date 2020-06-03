@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Util.BitmapCut;
@@ -310,10 +311,10 @@ public class PkActivity extends AppCompatActivity{
         ROUND_COUNT=1;
         showData();
         UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
-        String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
-        Glide.with(this).load(url).into(my_pet_image);
-        String url2=friend_pet.getGrowPeriod() == 0 ? friend_pet.getPet().getImg1() : friend_pet.getGrowPeriod()==1? friend_pet.getPet().getImg2() : friend_pet.getPet().getImg3();
-        Glide.with(this).load(url2).into(other_pet_image);
+        String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getGif1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getGif2() : userPetHouse.getPet().getGif3();
+        Glide.with(this).asGif().load(url).diskCacheStrategy(DiskCacheStrategy.RESOURCE).error(R.drawable.erhah).into(my_pet_image);
+        String url2=friend_pet.getGrowPeriod() == 0 ? friend_pet.getPet().getGif1() : friend_pet.getGrowPeriod()==1? friend_pet.getPet().getGif2() : friend_pet.getPet().getGif3();
+        Glide.with(this).asGif().load(url2).diskCacheStrategy(DiskCacheStrategy.RESOURCE).error(R.drawable.erhah).into(other_pet_image);
     }
 
     /**

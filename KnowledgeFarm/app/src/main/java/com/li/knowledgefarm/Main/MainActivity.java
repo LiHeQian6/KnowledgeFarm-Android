@@ -1217,7 +1217,7 @@ public class MainActivity extends AppCompatActivity {
             }
             notify_red.setVisibility(View.VISIBLE);
         }
-        if (eventBean.getMessage().equals("task")){
+        if ("task".equals(eventBean.getMessage())){
             daytask_red.setVisibility(View.VISIBLE);
         }
     }
