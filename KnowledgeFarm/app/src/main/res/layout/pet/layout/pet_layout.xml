@@ -32,7 +32,8 @@
                 android:text="宠物"
                 android:gravity="center"
                 android:textSize="25dp"
-                android:textColor="@color/buttonColor"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/permitColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <LinearLayout
@@ -78,7 +79,7 @@
                             <TextView
                                 android:text="名称："
                                 android:textSize="20sp"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -87,7 +88,7 @@
                                 android:textSize="20sp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -97,7 +98,7 @@
                             <TextView
                                 android:text="阶段："
                                 android:textSize="20sp"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <TextView
@@ -106,7 +107,7 @@
                                 android:id="@+id/growth"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -116,7 +117,7 @@
                             <TextView
                                 android:text="智力值："
                                 android:textSize="20sp"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <RelativeLayout
@@ -129,7 +130,7 @@
                                     android:textSize="20sp"
                                     android:id="@+id/intelligence_value"
                                     android:gravity="center"
-                                    android:textColor="@color/blackTextColor"
+                                    android:textColor="@color/permitColor"
                                     android:layout_width="100dp"
                                     android:layout_height="wrap_content"/>
                             </RelativeLayout>
@@ -140,7 +141,7 @@
                             <TextView
                                 android:text="生命值："
                                 android:textSize="20sp"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <RelativeLayout
@@ -153,7 +154,7 @@
                                     android:textSize="20sp"
                                     android:gravity="center"
                                     android:id="@+id/life_value"
-                                    android:textColor="@color/blackTextColor"
+                                    android:textColor="@color/permitColor"
                                     android:layout_width="100dp"
                                     android:layout_height="wrap_content"/>
                             </RelativeLayout>
@@ -164,7 +165,7 @@
                             <TextView
                                 android:text="体力值："
                                 android:textSize="20sp"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <RelativeLayout
@@ -184,7 +185,7 @@
                                     android:text="50/100"
                                     android:gravity="center"
                                     android:id="@+id/physical_value"
-                                    android:textColor="@color/blackTextColor"
+                                    android:textColor="@color/permitColor"
                                     android:layout_width="100dp"
                                     android:layout_height="wrap_content"/>
                             </RelativeLayout>
@@ -195,14 +196,14 @@
                             <TextView
                                 android:text="描述："
                                 android:textSize="20sp"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <TextView
                                 android:text="这是一段非常宇宙无敌吊炸天的高端描述"
                                 android:textSize="20sp"
                                 android:id="@+id/description"
-                                android:textColor="@color/blackTextColor"
+                                android:textColor="@color/permitColor"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>

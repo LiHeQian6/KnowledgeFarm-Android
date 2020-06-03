@@ -124,14 +124,14 @@ public class UtilItemPopUp extends PopupWindow {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(context).load(petUtil.getImg()).apply(requestOptions).into(util_image);
         util_name.setText(petUtil.getName());
-        util_price.setText("价格："+petUtil.getPrice()+"");
+        util_price.setText("价格："+petUtil.getPrice()+"金币");
         util_Number.setText("1");
         switch (petUtil.getPetUtilType().getId()){
             case 1:
-                util_type.setText("作用：恢复生命值"+petUtil.getValue()+"点");
+                util_type.setText("作用：\n\u3000恢复生命值"+petUtil.getValue()+"点");
                 break;
             case 2:
-                util_type.setText("作用：恢复体力"+petUtil.getValue()+"点");
+                util_type.setText("作用：\n\u3000恢复体力"+petUtil.getValue()+"点");
                 break;
         }
         util_description.setText("\u3000\u3000"+petUtil.getDescription());

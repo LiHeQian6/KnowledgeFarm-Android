@@ -26,7 +26,6 @@ public class CustomerToast extends Toast {
         synchronized (CustomerToast.class) {
             if (customerToast == null) {
                 customerToast = Toast.makeText(context.getApplicationContext(), "", type);
-                customerToast.setGravity(Gravity.BOTTOM, 0, 0);
             }
             customerToast.setText(toastText);
         }

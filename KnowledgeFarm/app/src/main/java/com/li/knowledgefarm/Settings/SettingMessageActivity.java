@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDoneException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -422,8 +423,9 @@ public class SettingMessageActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(Object o) {
                     JSONObject response = (JSONObject) o;
-                    UserUtil.getUser().setUserAuthority(new UserAuthority());
                     try {
+                        UserUtil.getUser().setUserAuthority(new UserAuthority());
+                        ShowUserMessage();
                         int ret = response.getInt("ret");
                         Log.i("lww",""+ret);
                         if (ret == 0) {
@@ -562,8 +564,12 @@ public class SettingMessageActivity extends AppCompatActivity {
                     if (selectList.size() > 0) {
                         if (selectList.get(0).isCompressed())
                             userPhoto = new File(selectList.get(0).getCompressPath());
-                        else
-                            userPhoto = new File(selectList.get(0).getAndroidQToPath());
+                        else {
+                            if (Build.VERSION.SDK_INT == 29)
+                                userPhoto = new File(selectList.get(0).getAndroidQToPath());
+                            else
+                                userPhoto = new File(selectList.get(0).getRealPath());
+                        }
                         updatePhoto(userPhoto);
                     }
                 } catch (FileNotFoundException e) {
