@@ -68,11 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="价格"
-                        android:maxHeight="20dp"
-                        android:minHeight="20dp"
-                        android:maxLines="1"
-                        android:autoSizeMaxTextSize="20dp"
-                        android:autoSizeTextType="uniform"
+                        android:textSize="16dp"
                         android:id="@+id/this_util_price"
                         android:layout_marginTop="6dp"
                         android:textColor="@color/ShopTextColor"/>
@@ -83,11 +79,7 @@
                         android:layout_marginTop="6dp"
                         android:id="@+id/this_util_type"
                         android:textColor="@color/ShopTextColor"
-                        android:maxHeight="20dp"
-                        android:minHeight="20dp"
-                        android:maxLines="1"
-                        android:autoSizeMaxTextSize="20dp"
-                        android:autoSizeTextType="uniform"/>
+                        android:textSize="16dp" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

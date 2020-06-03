@@ -245,6 +245,7 @@ public class QuestionUtil {
                 judgement_layout.setVisibility(View.VISIBLE);
                 choice_layout.setVisibility(View.GONE);
                 completion_layout.setVisibility(View.GONE);
+                number_tip.setText(POSITION+1 + " / " + datalist.size());
                 ShowJudgement();
                 break;
         }

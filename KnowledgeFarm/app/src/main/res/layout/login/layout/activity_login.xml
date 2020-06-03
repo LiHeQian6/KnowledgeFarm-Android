@@ -52,7 +52,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_login2"
                 android:text="账号登录"
-                android:textColor="#ffffff"
+                android:textColor="@color/ShopTextColor"
                 android:textSize="18dp"/>
             <TextView
                 android:layout_width="0dp"
