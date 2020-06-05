@@ -315,7 +315,9 @@ public class MyFriendActivity extends AppCompatActivity {
         experienceValue.setText("" + user.getExperience() + "/" + levelExperience[l]);
         List<UserPetHouse> petHouses = user.getPetHouses();
         if (petHouses.size()!=0) {
-            Glide.with(this).load(petHouses.get(0).getPet().getImg1()).error(R.drawable.dog).into(dog);
+            UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
+            String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getGif1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getGif2() : userPetHouse.getPet().getGif3();
+            Glide.with(this).load(url).error(R.drawable.dog).into(dog);
         }else
             Glide.with(this).load(R.drawable.dog).into(dog);
     }

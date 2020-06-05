@@ -1,11 +1,8 @@
 package com.li.knowledgefarm.pk;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,6 +97,7 @@ public class PkActivity extends AppCompatActivity{
     private ImageView attack;
     private Bitmap attack_image;
     private Handler result_handler;
+    private Handler[] handlers=new Handler[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -394,7 +391,7 @@ public class PkActivity extends AppCompatActivity{
                         //展示攻击、被攻击动画
                         for (int i = 0; i < 5; i++) {
                             final int finalI = i;
-                            new Handler(){
+                            handlers[0]=new Handler(){
                                 @Override
                                 public void handleMessage(@NonNull Message msg) {
                                     super.handleMessage(msg);
@@ -408,9 +405,11 @@ public class PkActivity extends AppCompatActivity{
                                     }
                                     attack.setImageBitmap(bitmap);
                                 }
-                            }.postDelayed(null,200*i);
+                            };
+                            handlers[0].postDelayed(null,200*i);
                         }
-                        new Handler().postDelayed(new Runnable() {
+                        handlers[1]=new Handler();
+                        handlers[1].postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 //得到扣除的血量并设置
@@ -424,7 +423,8 @@ public class PkActivity extends AppCompatActivity{
                                     less_my_pet.setVisibility(View.VISIBLE);
                                     less_my_pet.setText(""+pk);
                                 }
-                                new Handler().postDelayed(new Runnable() {
+                                handlers[2]=new Handler();
+                                handlers[2].postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         center_text.setVisibility(View.GONE);
@@ -443,13 +443,14 @@ public class PkActivity extends AppCompatActivity{
 //                                    } else{
 //                                        center_text.setText("要继续加油哦！");
 //                                    }
-                                    new Handler(){
+                                    handlers[3]=new Handler(){
                                         @Override
                                         public void handleMessage(@NonNull Message msg) {
                                             super.handleMessage(msg);
                                             finish();
                                         }
-                                    }.postDelayed(null,2000);
+                                    };
+                                    handlers[3].postDelayed(null,2000);
                                 }
                             }
                         },1000);
@@ -462,6 +463,10 @@ public class PkActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        for (int i = 0; i < handlers.length; i++) {
+            if (handlers[i]!=null)
+                handlers[i].removeCallbacksAndMessages(null);
+        }
         pkTimeLimit.cancel(true);
         if (user_pet.getNowLife()>0&&friend_pet.getNowLife()>0)
             sendResult(false);
