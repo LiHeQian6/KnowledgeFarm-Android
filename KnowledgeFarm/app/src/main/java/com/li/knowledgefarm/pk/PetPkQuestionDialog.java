@@ -365,7 +365,7 @@ public class PetPkQuestionDialog extends Dialog {
             char a;
             a = ques.charAt(new Random().nextInt(ques.length()));
             ques = ques.replaceFirst(a+"",'▁'+"");
-            completion_question.setText(question+" ["+((Completion)question).getAnswer()+"]");
+            completion_question.setText(ques+" ["+((Completion)question).getAnswer()+"]");
         }else
             completion_question.setText(question.getQuestionTitle().getTitle());
     }
