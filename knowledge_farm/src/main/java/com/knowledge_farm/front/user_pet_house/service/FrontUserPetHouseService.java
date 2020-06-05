@@ -65,7 +65,10 @@ public class FrontUserPetHouseService {
         UserPetHouse userPetHouse = this.userPetHouseDao.findUserPetHouseById(id);
         Pet pet = userPetHouse.getPet();
         if(userPetHouse.getIfUsing() == 1 && ifUsing == 0){
-            return Result.FALSE;
+            return "不可修改为未使用状态";
+        }
+        if(physical > pet.getPhysical()){
+            return "该宠物体力上限为" + pet.getPhysical();
         }
         userPetHouse.setLife(life);
         userPetHouse.setPhysical(physical);

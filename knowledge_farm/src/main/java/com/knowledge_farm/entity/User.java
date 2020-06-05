@@ -286,7 +286,7 @@ public class User {
         this.userFriends = userFriends;
     }
 
-    @OneToMany(mappedBy = "from")
+    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)
     @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<Notification> getSendNotifications() {
@@ -297,7 +297,7 @@ public class User {
         this.sendNotifications = sendNotifications;
     }
 
-    @OneToMany(mappedBy = "to")
+    @OneToMany(mappedBy = "to", cascade = CascadeType.ALL)
     @org.hibernate.annotations.ForeignKey(name = "none")
     @JsonIgnore
     public Set<Notification> getReceiveNotifications() {

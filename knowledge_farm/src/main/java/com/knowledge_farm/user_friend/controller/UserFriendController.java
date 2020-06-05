@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName UserFriendController
@@ -78,7 +79,7 @@ public class UserFriendController {
      * @Param [account, pageNumber, pageSize]
      * @return com.atguigu.farm.util.UserVOPage<com.atguigu.farm.entity.UserVO>
      **/
-    @ApiOperation(value = "查询所有人", notes = "返回值：Page（User）")
+    @ApiOperation(value = "查询陌生人", notes = "返回值：Page（User）")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "account", value = "查询的账号", dataType = "String", paramType = "query", required = false),
             @ApiImplicitParam(name = "pageNumber", value = "页码", dataType = "int", paramType = "query", defaultValue = "1"),
@@ -105,6 +106,26 @@ public class UserFriendController {
         pageUtil.setTotalCount(0);
         pageUtil.setList(new ArrayList<>());
         return pageUtil;
+    }
+
+    @ApiOperation(value = "查询陌生人", notes = "返回值：List（User）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "查询的账号", dataType = "String", paramType = "query", required = false)
+    })
+    @GetMapping("/findStranger")
+    public List<User> findStranger(@RequestParam(value = "account", required = false) String account,
+                                   HttpSession session,
+                                   HttpServletResponse response){
+        try {
+            Integer userId = (Integer) session.getAttribute("userId");
+            if(userId != null) {
+                return this.userFriendService.findStrangerByAccount(userId, account);
+            }
+            response.sendError(401);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     @ApiOperation(value = "添加好友", notes = "返回值：(String)true || (String)false：失败")
