@@ -490,7 +490,7 @@ public class PkActivity extends AppCompatActivity{
             @Override
             public void run() {
                 super.run();
-                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/fightResult?result="+(result?1:0)).build();
+                Request request = new Request.Builder().url(getResources().getString(R.string.URL)+"/pet/fightResult?result="+(result?1:0)+"&account="+friend_pet.getUser().getAccount()).build();
                 okHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
