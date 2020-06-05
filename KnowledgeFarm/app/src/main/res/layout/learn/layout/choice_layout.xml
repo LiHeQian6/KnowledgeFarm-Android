@@ -67,6 +67,7 @@
                 android:gravity="center"
                 android:textColor="#ffffff"
                 android:maxLines="1"
+                android:autoSizeMinTextSize="1dp"
                 android:autoSizeMaxTextSize="35dp"
                 android:autoSizeTextType="uniform"/>
 
@@ -94,6 +95,7 @@
                 android:textColor="#ffffff"
                 android:maxLines="1"
                 android:autoSizeMaxTextSize="35dp"
+                android:autoSizeMinTextSize="1dp"
                 android:autoSizeTextType="uniform" />
 
         </LinearLayout>
@@ -120,6 +122,7 @@
                 android:textColor="#ffffff"
                 android:maxLines="1"
                 android:autoSizeMaxTextSize="35dp"
+                android:autoSizeMinTextSize="1dp"
                 android:autoSizeTextType="uniform" />
         </LinearLayout>
     </LinearLayout>
