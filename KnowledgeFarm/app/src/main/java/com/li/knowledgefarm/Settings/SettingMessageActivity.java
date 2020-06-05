@@ -47,6 +47,7 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.engine.ImageEngine;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.tools.PictureFileUtils;
 import com.luck.picture.lib.tools.ToastUtils;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -326,6 +327,7 @@ public class SettingMessageActivity extends AppCompatActivity {
                             UserUtil.getUser().setPhoto(aString);
                             Glide.with(getApplicationContext()).load(userPhoto).into(user_photo);
                             CustomerToast.getInstance(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
+                            PictureFileUtils.deleteAllCacheDirFile(getApplicationContext());
                         }
                         break;
                     case 5: // 修改年级判断
@@ -558,23 +560,20 @@ public class SettingMessageActivity extends AppCompatActivity {
         if(requestCode == PictureConfig.CHOOSE_REQUEST){
             if(data != null) {
                 List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
-                Bitmap bitmap = null;
-                try {
-                    bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(Uri.parse(selectList.get(0).getPath())));
-                    if (selectList.size() > 0) {
-                        if (selectList.get(0).isCompressed())
-                            userPhoto = new File(selectList.get(0).getCompressPath());
-                        else {
-                            if (Build.VERSION.SDK_INT == 29)
-                                userPhoto = new File(selectList.get(0).getAndroidQToPath());
-                            else
-                                userPhoto = new File(selectList.get(0).getRealPath());
-                        }
-                        updatePhoto(userPhoto);
+                if (selectList.size() > 0) {
+                    if (selectList.get(0).isCompressed())
+                        userPhoto = new File(selectList.get(0).getCompressPath());
+                    else {
+                        if (Build.VERSION.SDK_INT == 29)
+                            userPhoto = new File(selectList.get(0).getAndroidQToPath());
+                        else
+                            userPhoto = new File(selectList.get(0).getRealPath());
                     }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    CustomerToast.getInstance(getApplicationContext(), "获取图片失败", Toast.LENGTH_SHORT).show();
+                    if(userPhoto.exists()) {
+                        updatePhoto(userPhoto);
+                    }else {
+                        CustomerToast.getInstance(getApplicationContext(),"获取图片失败",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -778,8 +777,8 @@ public class SettingMessageActivity extends AppCompatActivity {
                             .imageEngine(GlideEngine.createGlideEngine())
                             .imageSpanCount(4)
                             .selectionMode(PictureConfig.SINGLE)
-                            .minimumCompressSize(300)
-                            .cutOutQuality(30)
+                            .minimumCompressSize(30)
+                            .cutOutQuality(10)
                             .isCompress(true)
                             .forResult(PictureConfig.CHOOSE_REQUEST);
                     break;
