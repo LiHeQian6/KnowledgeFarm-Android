@@ -127,9 +127,12 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = false)
-    public void addWaterForFriendNotification(Integer userId, Integer friendId){
+    public String addWaterForFriendNotification(Integer userId, Integer friendId){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserById(friendId);
+        if(user == null || friendUser == null){
+            return Result.FALSE;
+        }
         String title = "新消息";
         String content = user.getNickName() + "给你浇水了";
         Map extra = new HashMap<>();
@@ -144,12 +147,16 @@ public class NotificationService {
         notification.setHaveRead(0);
         notification.setNotificationType(notificationType);
         this.notificationDao.save(notification);
+        return Result.TRUE;
     }
 
     @Transactional(readOnly = false)
-    public void addFertilizerForFriendNotification(Integer userId, Integer friendId){
+    public String addFertilizerForFriendNotification(Integer userId, Integer friendId){
         User user = this.userService.findUserById(userId);
         User friendUser = this.userService.findUserById(friendId);
+        if(user == null || friendUser == null){
+            return Result.FALSE;
+        }
         String title = "新消息";
         String content = user.getNickName() + "给你施肥了";
         Map extra = new HashMap<>();
@@ -164,6 +171,36 @@ public class NotificationService {
         notification.setHaveRead(0);
         notification.setNotificationType(notificationType);
         this.notificationDao.save(notification);
+        return Result.TRUE;
+    }
+
+    @Transactional(readOnly = false)
+    public Object addConfrontationNotification(Integer userId, Integer friendId, Integer result){
+        User user = this.userService.findUserById(userId);
+        User friendUser = this.userService.findUserById(friendId);
+        if(user == null || friendUser == null){
+            return null;
+        }
+        String title = "新消息";
+        String content = "";
+        if(result == 1){
+            content = "你的宠物被" + user.getNickName() + "欺负了";
+        }else{
+            content = "你的宠物成功防守住了" + user.getNickName() + "的进攻";
+        }
+        Map extra = new HashMap<>();
+        Notification notification = new Notification();
+        NotificationType notificationType = this.notificationTypeService.findNotificationTypeById(3);
+        notification.setFrom(user);
+        notification.setTo(friendUser);
+        notification.setTitle(title);
+        notification.setContent(content);
+        notification.setExtra(new Gson().toJson(extra));
+        notification.setCreateTime(new Date());
+        notification.setHaveRead(0);
+        notification.setNotificationType(notificationType);
+        this.notificationDao.save(notification);
+        return user;
     }
 
     @Transactional(readOnly = false)

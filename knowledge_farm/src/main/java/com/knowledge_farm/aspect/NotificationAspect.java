@@ -11,8 +11,11 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import java.util.HashMap;
 
@@ -24,7 +27,7 @@ import java.util.HashMap;
  */
 @Component
 @Aspect
-public class UserFriendNotificationAspect {
+public class NotificationAspect {
     @Resource
     private UserServiceImpl userService;
     @Resource
@@ -49,6 +52,10 @@ public class UserFriendNotificationAspect {
 
     @Pointcut(value = "execution(* com.knowledge_farm.user_friend.controller.UserFriendController.fertilizerForFriend(..))")
     private void fertilizerForFriend() {
+    }
+
+    @Pointcut(value = "execution(* com.knowledge_farm.pet.controller.PetController.fightResult(..))")
+    private void fightResult() {
     }
 
     @AfterReturning(pointcut = "addUserFriendNotification()", returning="result")
@@ -123,6 +130,21 @@ public class UserFriendNotificationAspect {
             return;
         }
         logger.info("给好友施肥失败");
+    }
+
+    @AfterReturning(pointcut = "fightResult()", returning="result")
+    public void fightResult(JoinPoint joinPoint, Object result) {
+        if (result != Result.FALSE) {
+            try {
+                Object[] args = joinPoint.getArgs();
+                jpushService.sendCustomPush("notification", "message", new HashMap<>(), (String) args[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info("对战结束发送通知失败");
+            }
+            return;
+        }
+        logger.info("对战结束操作失败");
     }
 
 }

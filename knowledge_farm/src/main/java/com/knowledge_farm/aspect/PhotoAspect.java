@@ -133,6 +133,9 @@ public class PhotoAspect {
                 petVO.setImg1(photoUrl + petVO.getImg1());
                 petVO.setImg2(photoUrl + petVO.getImg2());
                 petVO.setImg3(photoUrl + petVO.getImg3());
+                petVO.setGif1(photoUrl + petVO.getGif1());
+                petVO.setGif2(photoUrl + petVO.getGif2());
+                petVO.setGif3(photoUrl + petVO.getGif3());
             }
         }
     }
@@ -148,6 +151,9 @@ public class PhotoAspect {
                 pet.setImg1(photoUrl + pet.getImg1());
                 pet.setImg2(photoUrl + pet.getImg2());
                 pet.setImg3(photoUrl + pet.getImg3());
+                pet.setGif1(photoUrl + pet.getGif1());
+                pet.setGif2(photoUrl + pet.getGif2());
+                pet.setGif3(photoUrl + pet.getGif3());
             }
         }
     }
@@ -162,6 +168,9 @@ public class PhotoAspect {
             pet.setImg1(photoUrl + pet.getImg1());
             pet.setImg2(photoUrl + pet.getImg2());
             pet.setImg3(photoUrl + pet.getImg3());
+            pet.setGif1(photoUrl + pet.getGif1());
+            pet.setGif2(photoUrl + pet.getGif2());
+            pet.setGif3(photoUrl + pet.getGif3());
         }
     }
 
@@ -251,6 +260,9 @@ public class PhotoAspect {
             pet.setImg1(photoUrl + pet.getImg1());
             pet.setImg2(photoUrl + pet.getImg2());
             pet.setImg3(photoUrl + pet.getImg3());
+            pet.setGif1(photoUrl + pet.getGif1());
+            pet.setGif2(photoUrl + pet.getGif2());
+            pet.setGif3(photoUrl + pet.getGif3());
         }
         return user;
     }
@@ -274,6 +286,9 @@ public class PhotoAspect {
             pet.setImg1(photoUrl + pet.getImg1());
             pet.setImg2(photoUrl + pet.getImg2());
             pet.setImg3(photoUrl + pet.getImg3());
+            pet.setGif1(photoUrl + pet.getGif1());
+            pet.setGif2(photoUrl + pet.getGif2());
+            pet.setGif3(photoUrl + pet.getGif3());
         }
         return user;
     }

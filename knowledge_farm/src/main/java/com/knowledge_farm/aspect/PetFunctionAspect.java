@@ -45,9 +45,9 @@ public class PetFunctionAspect {
     private void changePet() {
     }
 
-    @Pointcut(value = "execution(* com.knowledge_farm.pet.controller.PetController.fightResult(..))")
-    private void fightResult() {
-    }
+//    @Pointcut(value = "execution(* com.knowledge_farm.pet.controller.PetController.fightResult(..))")
+//    private void fightResult() {
+//    }
 
     @AfterReturning(pointcut = "changePet()", returning="result")
     public void changePet(JoinPoint joinPoint, Object result){

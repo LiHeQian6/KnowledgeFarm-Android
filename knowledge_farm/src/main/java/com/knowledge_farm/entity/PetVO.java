@@ -17,6 +17,9 @@ public class PetVO {
     private String img1;
     private String img2;
     private String img3;
+    private String gif1;
+    private String gif2;
+    private String gif3;
     private Integer own;
     private Integer exist;
 
@@ -30,6 +33,9 @@ public class PetVO {
         this.img1 = pet.getImg1();
         this.img2 = pet.getImg2();
         this.img3 = pet.getImg3();
+        this.gif1 = pet.getGif1();
+        this.gif2 = pet.getGif2();
+        this.gif3 = pet.getGif3();
         this.name = pet.getName();
         this.description = pet.getDescription();
         this.life = pet.getLife();
@@ -118,6 +124,30 @@ public class PetVO {
 
     public void setImg3(String img3) {
         this.img3 = img3;
+    }
+
+    public String getGif1() {
+        return gif1;
+    }
+
+    public void setGif1(String gif1) {
+        this.gif1 = gif1;
+    }
+
+    public String getGif2() {
+        return gif2;
+    }
+
+    public void setGif2(String gif2) {
+        this.gif2 = gif2;
+    }
+
+    public String getGif3() {
+        return gif3;
+    }
+
+    public void setGif3(String gif3) {
+        this.gif3 = gif3;
     }
 
     public Integer getExist() {
