@@ -8,10 +8,15 @@ import com.knowledge_farm.user_crop.service.UserCropServiceImpl;
 import com.knowledge_farm.user_friend.dao.UserFriendDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +51,15 @@ public class UserFriendServiceImpl {
             return this.userFriendDao.findAllUserByAccountAndExcludeMeFriendUser(userId, account, PageRequest.of(pageNumber - 1, pageSize));
         }
         return this.userFriendDao.findAllUserAndExcludeMeFriendUser(userId, PageRequest.of(pageNumber - 1, pageSize));
+    }
+
+    public List<User> findStrangerByAccount(Integer userId, String account){
+        List<Integer> idList = null;
+        if(account != null && !account.equals("")){
+            return null;
+        }
+        idList = this.userFriendDao.findRandom();
+        return null;
     }
 
     @Transactional(readOnly = false)

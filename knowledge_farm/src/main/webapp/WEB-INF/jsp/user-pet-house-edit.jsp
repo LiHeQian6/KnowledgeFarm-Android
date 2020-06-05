@@ -40,8 +40,8 @@
                         x_admin_close();
                     }else if(data == "fail"){
                         layer.msg('修改失败');
-                    }else if(data == "false"){
-                        layer.msg('不可修改为未使用状态');
+                    }else{
+                        layer.msg(data);
                     }
                 }
             })
