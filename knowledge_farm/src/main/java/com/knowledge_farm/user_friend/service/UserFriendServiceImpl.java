@@ -109,20 +109,22 @@ public class UserFriendServiceImpl {
             int progress = userCrop.getProgress();
             int matureTime = crop.getMatureTime();
             if(progress < matureTime){
-                if(progress+5 >= matureTime){
-                    userCrop.setProgress(crop.getMatureTime());
-                }else{
-                    userCrop.setProgress(progress + 5);
+                String result =  this.notificationService.addWaterForFriendNotification(userId, friendId);;
+                if(result == Result.TRUE){
+                    if(progress+5 >= matureTime){
+                        userCrop.setProgress(crop.getMatureTime());
+                    }else{
+                        userCrop.setProgress(progress + 5);
+                    }
+                    user.setWater(user.getWater() - 1);
+                    user.setMoney(user.getMoney() + 10);
+                    //修改作物干枯湿润状态
+                    if(userCrop.getStatus() == 0){
+                        userCrop.setStatus(1);
+                        return userCrop.getId();
+                    }
+                    return 0;
                 }
-                user.setWater(user.getWater() - 1);
-                user.setMoney(user.getMoney() + 10);
-                //修改作物干枯湿润状态
-                if(userCrop.getStatus() == 0){
-                    userCrop.setStatus(1);
-                    return userCrop.getId();
-                }
-                this.notificationService.addWaterForFriendNotification(userId, friendId);
-                return 0;
             }
         }
         return -1;
@@ -143,15 +145,17 @@ public class UserFriendServiceImpl {
                 int progress = userCrop.getProgress();
                 int matureTime = crop.getMatureTime();
                 if(progress < matureTime) {
-                    if (progress+10 >= matureTime) {
-                        userCrop.setProgress(crop.getMatureTime());
-                    }else {
-                        userCrop.setProgress(progress + 10);
+                    String result = this.notificationService.addFertilizerForFriendNotification(userId, friendId);
+                    if(result == Result.TRUE){
+                        if (progress+10 >= matureTime) {
+                            userCrop.setProgress(crop.getMatureTime());
+                        }else {
+                            userCrop.setProgress(progress + 10);
+                        }
+                        user.setFertilizer(user.getFertilizer() - 1);
+                        user.setMoney(user.getMoney() + 20);
+                        return Result.TRUE;
                     }
-                    user.setFertilizer(user.getFertilizer() - 1);
-                    user.setMoney(user.getMoney() + 20);
-                    this.notificationService.addFertilizerForFriendNotification(userId, friendId);
-                    return Result.TRUE;
                 }
             }
         }

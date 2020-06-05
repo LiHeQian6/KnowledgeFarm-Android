@@ -1,6 +1,7 @@
 package com.knowledge_farm.pet.service;
 
 import com.knowledge_farm.entity.*;
+import com.knowledge_farm.notification.service.NotificationService;
 import com.knowledge_farm.pet.dao.PetDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ public class PetService {
     private PetDao petDao;
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private NotificationService notificationService;
 
     public List<PetVO> showAllPetInStore(Integer userId){
         User user = this.userService.findUserById(userId);
@@ -102,8 +105,9 @@ public class PetService {
     }
 
     @Transactional(readOnly = false)
-    public String updateData(Integer userId, Integer result) {
+    public String updateData(String account, Integer userId, Integer result) {
         User user = this.userService.findUserById(userId);
+        User friendUser = this.userService.findUserByAccount(account);
         Set<UserPetHouse> userPetHouses = user.getPetHouses();
         for(UserPetHouse userPetHouse : userPetHouses) {
             if (userPetHouse.getIfUsing() == 1) {
@@ -115,25 +119,34 @@ public class PetService {
                     return Result.NOT_ENOUGH_PHYSICAL;
                 }
                 if(result == 0){
+                    User user1 = (User) this.notificationService.addConfrontationNotification(userId, friendUser.getId(), result);
+                    user1.getId();
                     return Result.TRUE;
                 }
                 //智力操作
                 Integer userPetIntelligence = userPetHouse.getIntelligence();
                 Integer petIntelligence = userPetHouse.getPet().getIntelligence();
                 userPetHouse.setIntelligence(userPetIntelligence + 5);
+                boolean isLevel = false;
                 if(userPetHouse.getGrowPeriod() <= 1) {
                     switch (userPetHouse.getGrowPeriod()) {
                         case 0:
                             if (userPetHouse.getIntelligence() >= petIntelligence * 3) {
                                 userPetHouse.setGrowPeriod(1);
-                                return Result.UP;
+                                isLevel = true;
                             }
                         case 1:
                             if (userPetHouse.getIntelligence() >= petIntelligence * 5) {
                                 userPetHouse.setGrowPeriod(2);
-                                return Result.UP;
+                                isLevel = true;
                             }
                     }
+                }
+                //添加消息记录
+                User user1 = (User) this.notificationService.addConfrontationNotification(userId, friendUser.getId(), result);
+                user1.getId();
+                if(isLevel){
+                    return Result.UP;
                 }
                 return Result.TRUE;
             }

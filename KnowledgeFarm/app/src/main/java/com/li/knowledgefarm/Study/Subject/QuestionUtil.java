@@ -368,7 +368,7 @@ public class QuestionUtil {
         }else {
             judge_isTrue.setVisibility(View.GONE);
             judge_A.setVisibility(View.VISIBLE);
-            switch (new Random().nextInt(1)){
+            switch (new Random().nextInt(2)){
                 case 0:
                     judge_A.setText("对");
                     judge_B.setText("错");

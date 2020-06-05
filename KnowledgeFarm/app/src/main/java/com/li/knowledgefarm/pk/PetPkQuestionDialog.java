@@ -19,12 +19,21 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.li.knowledgefarm.R;
+import com.li.knowledgefarm.Study.Util.StudyUtil;
 import com.li.knowledgefarm.Util.FullScreen;
 import com.li.knowledgefarm.entity.QuestionEntity.Completion;
 import com.li.knowledgefarm.entity.QuestionEntity.Judgment;
 import com.li.knowledgefarm.entity.QuestionEntity.Question;
 import com.li.knowledgefarm.entity.QuestionEntity.SingleChoice;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.zip.Inflater;
 
@@ -44,6 +53,8 @@ public class PetPkQuestionDialog extends Dialog {
     private View judgement_layout; //判断题布局
     private View choice_layout; //选择题布局
     private TextView battle_tip;//提示信息
+    private TextView your_answer;
+    private Map<Integer,Character> map;
     //填空题
     private TextView completion_question; //填空题问题
     private TextView isFalse; //回答是否错误文字提示
@@ -65,6 +76,9 @@ public class PetPkQuestionDialog extends Dialog {
     private TextView judge_A; //A选项
     private TextView judge_B; //B选项
     private ImageView judge_isTrue; //是否判断正确提示
+    private CheckBox judgeBox_A; //A选项单选框
+    private CheckBox judgeBox_B; //B选项单选框
+    private String answer;
 
     public PetPkQuestionDialog(@NonNull Context context) {
         super(context);
@@ -120,6 +134,46 @@ public class PetPkQuestionDialog extends Dialog {
     }
 
     /**
+     * @Description 判断是否为中文
+     * @Author 孙建旺
+     * @Date 下午10:46 2020/05/28
+     * @Param [c]
+     * @return boolean
+     */
+    private boolean isChineseChar(char c) {
+        return String.valueOf(c).matches("[\u4e00-\u9fa5]");
+    }
+
+    /**
+     * @Description 汉字转拼音
+     * @Author 孙建旺
+     * @Date 下午10:52 2020/05/28
+     * @Param [to]
+     * @return java.lang.String
+     */
+    private String chineseToPinyin(String to){
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);  //转小写
+        format.setToneType(HanyuPinyinToneType.WITH_TONE_MARK); //不带音标
+        format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
+        char[] chars = to.toCharArray();
+        StringBuffer buffer = new StringBuffer();
+        String result = "";
+        for(int i = 0; i < chars.length; ++i){
+            if(chars[i] > 128){
+                try{
+                    result = PinyinHelper.toHanyuPinyinStringArray(chars[i],format)[0];  //转换出的结果包含了多音字，这里简单粗暴的取了第一个拼音。
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else{ //非汉字
+                buffer.append(chars[i]);
+            }
+        }
+        return result;
+    }
+
+    /**
      * @Description 判断判断题是否正确
      * @Author 孙建旺
      * @Date 上午10:15 2020/05/20
@@ -128,12 +182,37 @@ public class PetPkQuestionDialog extends Dialog {
      */
     private void judgementIfTrue(){
         String choose_answer = "";
-        if(checkBox_A.isChecked())
-            choose_answer = choice_A.getText().toString();
-        if(checkBox_B.isChecked())
-            choose_answer = choice_B.getText().toString();
-        if(checkBox_C.isChecked())
-            choose_answer = choice_C.getText().toString();
+        if(judgeBox_A.isChecked())
+            choose_answer = judge_A.getText().toString();
+        if(judgeBox_B.isChecked())
+            choose_answer = judge_B.getText().toString();
+        if(choose_answer.equals(answer = ((Judgment)question).getAnswer() == 1 ? "对" : "错")){
+            battle_tip.setText("恭喜你答对了");
+            battle_tip.setVisibility(View.VISIBLE);
+            listener.select(true,System.currentTimeMillis()-startTime);
+            timeLimit.cancel(true);
+            new Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            dismiss();
+                        }
+                    }
+                    ,600);
+        }else {
+            battle_tip.setText("你答错了哦");
+            battle_tip.setVisibility(View.VISIBLE);
+            listener.select(false,System.currentTimeMillis()-startTime);
+            timeLimit.cancel(true);
+            new Handler().postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            dismiss();
+                        }
+                    }
+                    ,600);
+        }
     }
 
     /**
@@ -229,12 +308,12 @@ public class PetPkQuestionDialog extends Dialog {
         judge_question.setText(question.getQuestionTitle().getTitle());
         switch (new Random().nextInt(2)){
             case 0:
-                judge_A.setText(((Judgment)question).getAnswer()+"");
-                judge_B.setText(((Judgment)question).getChoice()+"");
+                judge_A.setText("对");
+                judge_B.setText("错");
                 break;
             case 1:
-                judge_B.setText(((Judgment)question).getAnswer()+"");
-                judge_A.setText(((Judgment)question).getChoice()+"");
+                judge_B.setText("对");
+                judge_A.setText("错");
                 break;
         }
     }
@@ -247,7 +326,13 @@ public class PetPkQuestionDialog extends Dialog {
      * @return void
      */
     private void showChoice(){
-        choice_question.setText(question.getQuestionTitle().getTitle());
+        String title = question.getQuestionTitle().getTitle();
+        if(!isChineseChar(title.charAt(0)) && question.getSubject().equals("Chinese")){
+            Log.e("chinese",chineseToPinyin(((SingleChoice)question).getAnswer()));
+            choice_question.setText(chineseToPinyin(((SingleChoice)question).getAnswer()));
+        }else {
+            choice_question.setText(question.getQuestionTitle().getTitle());
+        }
         switch (new Random().nextInt(3)){
             case 0:
                 choice_A.setText(((SingleChoice)question).getAnswer());
@@ -275,7 +360,14 @@ public class PetPkQuestionDialog extends Dialog {
      * @return void
      */
     private void showCompletion(){
-        completion_question.setText(question.getQuestionTitle().getTitle());
+        if(question.getQuestionType().getId() == 2 && question.getSubject().equals("English")) {
+            String ques = question.getQuestionTitle().getTitle();
+            char a;
+            a = ques.charAt(new Random().nextInt(ques.length()));
+            ques = ques.replaceFirst(a+"",'▁'+"");
+            completion_question.setText(ques+" ["+((Completion)question).getAnswer()+"]");
+        }else
+            completion_question.setText(question.getQuestionTitle().getTitle());
     }
 
     /**
@@ -301,12 +393,13 @@ public class PetPkQuestionDialog extends Dialog {
                 battle_tip.setVisibility(View.GONE);
                 showCompletion();
                 break;
-//            case 3:
-//                choice_layout.setVisibility(View.GONE);
-//                completion_layout.setVisibility(View.GONE);
-//                judgement_layout.setVisibility(View.VISIBLE);
-//                showJudgement();
-//                break;
+            case 3:
+                choice_layout.setVisibility(View.GONE);
+                completion_layout.setVisibility(View.GONE);
+                judgement_layout.setVisibility(View.VISIBLE);
+                battle_tip.setVisibility(View.GONE);
+                showJudgement();
+                break;
         }
     }
 
@@ -318,7 +411,7 @@ public class PetPkQuestionDialog extends Dialog {
      * @return void
      */
     private void getViews() {
-
+        map = new HashMap<>();
         battle = findViewById(R.id.commit_battle);
         time_limit = findViewById(R.id.time_limit);
         battle_tip = findViewById(R.id.battle_tip);
@@ -343,11 +436,15 @@ public class PetPkQuestionDialog extends Dialog {
         checkBox_A = findViewById(R.id.checkbox_A);
         checkBox_B = findViewById(R.id.checkbox_B);
         checkBox_C = findViewById(R.id.checkbox_C);
-//        //判断题
-//        judge_question = findViewById(R.id.judge_Question);
-//        judge_isTrue = findViewById(R.id.judge_isTrue);
-//        judge_A = findViewById(R.id.judge_A);
-//        judge_B = findViewById(R.id.judge_B);
+        //判断题
+        judge_question = findViewById(R.id.judge_Question);
+        judge_isTrue = findViewById(R.id.judge_isTrue);
+        judge_isTrue.setVisibility(View.INVISIBLE);
+        judge_A = findViewById(R.id.judge_A);
+        judge_B = findViewById(R.id.judge_B);
+        judgeBox_A = findViewById(R.id.judge_box_A);
+        judgeBox_B = findViewById(R.id.judge_box_B);
+        your_answer = findViewById(R.id.your_answer);
     }
 
     /**
@@ -359,36 +456,11 @@ public class PetPkQuestionDialog extends Dialog {
      */
     private void registerListener(){
         battle.setOnClickListener(new CustomerOnclickListener());
-        checkBox_A.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    checkBox_B.setChecked(false);
-                    checkBox_C.setChecked(false);
-                }
-            }
-        });
-        checkBox_B.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    checkBox_A.setChecked(false);
-                    checkBox_C.setChecked(false);
-                }
-            }
-        });
-        checkBox_C.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    checkBox_A.setChecked(false);
-                    checkBox_B.setChecked(false);
-                }
-            }
-        });
+        checkBox_A.setOnCheckedChangeListener(new CustomerCheckChangeListener());
+        checkBox_B.setOnCheckedChangeListener(new CustomerCheckChangeListener());
+        checkBox_C.setOnCheckedChangeListener(new CustomerCheckChangeListener());
+        judgeBox_A.setOnCheckedChangeListener(new CustomerCheckChangeListener());
+        judgeBox_B.setOnCheckedChangeListener(new CustomerCheckChangeListener());
     }
 
     /**
@@ -415,6 +487,9 @@ public class PetPkQuestionDialog extends Dialog {
                         case 2:
                             completionIfTrue();
                             break;
+                        case 3:
+                            judgementIfTrue();
+                            break;
                     }
                     break;
             }
@@ -423,5 +498,34 @@ public class PetPkQuestionDialog extends Dialog {
 
     public static interface OnAnswerSelectListener {
         public void select(boolean isRight,long time);
+    }
+
+    private class CustomerCheckChangeListener implements CompoundButton.OnCheckedChangeListener{
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(isChecked) {
+                switch (buttonView.getId()) {
+                    case R.id.checkbox_A:
+                        checkBox_B.setChecked(false);
+                        checkBox_C.setChecked(false);
+                        break;
+                    case R.id.checkbox_B:
+                        checkBox_A.setChecked(false);
+                        checkBox_C.setChecked(false);
+                        break;
+                    case R.id.checkbox_C:
+                        checkBox_A.setChecked(false);
+                        checkBox_B.setChecked(false);
+                        break;
+                    case R.id.judge_box_A:
+                        judgeBox_B.setChecked(false);
+                        break;
+                    case R.id.judge_box_B:
+                        judgeBox_A.setChecked(false);
+                        break;
+                }
+            }
+        }
     }
 }
