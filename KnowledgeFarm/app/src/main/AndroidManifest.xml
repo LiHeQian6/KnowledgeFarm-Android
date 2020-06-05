@@ -40,7 +40,7 @@
         <activity android:name=".pk.PkActivity" android:screenOrientation="landscape"></activity>
 
         <service
-            android:name=".Main.bgsound.BgSoundService"
+            android:name=".Main.bgsound.BackgroundSoundService"
             android:exported="false" />
 
         <activity

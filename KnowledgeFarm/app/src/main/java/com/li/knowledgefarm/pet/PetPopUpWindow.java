@@ -381,7 +381,9 @@ public class PetPopUpWindow extends PopupWindow {
                                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        userPetUtil(pets.get(selectItem).getId(),pet_utils.get(i).getId(),i);
+                                        if (pet_utils.size()>0) {
+                                            userPetUtil(pets.get(selectItem).getId(),pet_utils.get(i).getId(),i);
+                                        }
                                         return false;
                                     }
                                 });

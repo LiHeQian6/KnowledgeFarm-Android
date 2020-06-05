@@ -52,6 +52,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.li.knowledgefarm.Login.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.li.knowledgefarm.Main.bgsound.BackgroundSoundService;
 import com.li.knowledgefarm.MyFriends.FriendsPopUpWindow;
 import com.li.knowledgefarm.R;
 import com.li.knowledgefarm.Settings.SettingMessageActivity;
@@ -149,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
     private FriendsPopUpWindow friendsPopUpWindow;
     private PetPopUpWindow petPopUpWindow;
     private ImageView dog;
-    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,11 +182,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // 启动服务播放背景音乐
-//        intent = new Intent(MainActivity.this, BgSoundService.class);
-//        String action = BgSoundService.ACTION_MUSIC;
-//        // 设置action
-//        intent.setAction(action);
-//        startService(intent);
+        Intent myService = new Intent(MainActivity.this, BackgroundSoundService.class);
+        startService(myService);
         FullScreen.NavigationBarStatusBar(MainActivity.this,true);
         setDensityLand.setDensity(getApplication());
         setDensityLand.setOrientation(this, AppUtil.HEIGHT);
@@ -278,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
         List<UserPetHouse> petHouses = UserUtil.getUser().getPetHouses();
         if (petHouses.size()!=0) {
             UserPetHouse userPetHouse = UserUtil.getUser().getPetHouses().get(0);
-            String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getImg1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getImg2() : userPetHouse.getPet().getImg3();
+            String url = userPetHouse.getGrowPeriod() == 0 ? userPetHouse.getPet().getGif1() : userPetHouse.getGrowPeriod()==1? userPetHouse.getPet().getGif2() : userPetHouse.getPet().getGif3();
             Glide.with(this).load(url).error(R.drawable.dog).into(dog);
         }else
             Glide.with(this).load(R.drawable.dog).into(dog);
