@@ -16,7 +16,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
-        versionName "1.1.0"
+        versionName "1.0.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。

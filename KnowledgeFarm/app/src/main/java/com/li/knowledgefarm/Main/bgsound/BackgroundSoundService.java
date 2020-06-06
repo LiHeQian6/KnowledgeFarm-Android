@@ -24,7 +24,7 @@ public class BackgroundSoundService extends Service {
         super.onCreate();
         player = MediaPlayer.create(this, R.raw.backgroundsound);
         player.setLooping(true); // Set looping
-        player.setVolume(100,100);
+        player.setVolume(160,160);
 //        Toast.makeText(this, "Service started...", Toast.LENGTH_SHORT).show();
         Log.i(TAG, "onCreate() , service started...");
 
