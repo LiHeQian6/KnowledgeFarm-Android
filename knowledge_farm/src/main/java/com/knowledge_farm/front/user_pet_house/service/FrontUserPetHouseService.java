@@ -95,4 +95,26 @@ public class FrontUserPetHouseService {
         return this.userService.findUserById(userId);
     }
 
+    @Transactional(readOnly = false)
+    public String deleteOne(Integer id){
+        UserPetHouse userPetHouse = this.userPetHouseDao.findUserPetHouseById(id);
+        if(userPetHouse.getIfUsing() == 1){
+            return "该宠物正在使用，不可删除";
+        }
+        this.userPetHouseDao.delete(userPetHouse);
+        return Result.SUCCEED;
+    }
+
+    @Transactional(readOnly = false)
+    public String deleteMulti(List<Integer> idList){
+        List<UserPetHouse> userPetHouseList = this.userPetHouseDao.findAllById(idList);
+        for(UserPetHouse userPetHouse : userPetHouseList){
+            if(userPetHouse.getIfUsing() == 1){
+                return "宠物正在使用，不可删除";
+            }
+        }
+        this.userPetHouseDao.deleteAll(userPetHouseList);
+        return Result.SUCCEED;
+    }
+
 }

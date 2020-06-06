@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,6 +67,33 @@ public class FrontUserPetHouseController {
             e.printStackTrace();
         }
         return Result.FAIL;
+    }
+
+    @PostMapping("/deleteOne")
+    @ResponseBody
+    public String deleteOne(@RequestParam("id") Integer id){
+        try {
+            return this.frontUserPetHouseService.deleteOne(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
+    }
+
+    @PostMapping("/deleteMulti")
+    @ResponseBody
+    public String deleteMulti(@RequestParam("deleteStr") String deleteStr){
+        String deleteIds[] = deleteStr.split(",");
+        List<Integer> idList = new ArrayList<>();
+        for(String id : deleteIds){
+            idList.add(Integer.parseInt(id));
+        }
+        try {
+            return this.frontUserPetHouseService.deleteMulti(idList);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.FAIL;
+        }
     }
 
 }

@@ -34,6 +34,46 @@
         window.onload = function(){
             $("#initUserPetHouseManager").attr("class","sub-menu opened");
             $("#initUserPetHouseManager1").attr("class","current");
+        };
+
+        function deleteOne(id){
+            layer.confirm('彻底删除无法恢复，确认要删除数据吗？？',function(index){
+                $.post("${ctx}/admin/user_pet_house/deleteOne",{"id":id},function(data){
+                    if(data == "succeed"){
+                        window.location.href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.currentPageNum}&&pageSize=${userPetHousePage.pageSize}";
+                    }else if(data == "fail"){
+                        layer.msg('删除失败');
+                    }else{
+                        layer.msg(data);
+                    }
+                })
+            });
+        }
+
+        //删除批量作物信息
+        function deleteMulti() {
+            var arrDelete = document.getElementsByName("checkBox");
+            var deleteStr="";
+            for(i in arrDelete){
+                if(arrDelete[i].checked){
+                    deleteStr = deleteStr + arrDelete[i].value + ",";
+                }
+            }
+            layer.confirm('彻底删除无法恢复，确认要批量删除吗？',function(index){
+                if(deleteStr != ""){
+                    $.post("${ctx}/admin/user_pet_house/deleteMulti",{"deleteStr":deleteStr},function(data){
+                        if(data == "succeed"){
+                            window.location.href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.currentPageNum}&&pageSize=${userPetHousePage.pageSize}";
+                        }else if(data == "fail") {
+                            layer.msg('删除失败');
+                        }else{
+                            layer.msg(data);
+                        }
+                    })
+                }else{
+                    layer.msg('删除不能为空');
+                }
+            });
         }
 
         //修改作物信息
@@ -308,6 +348,9 @@
             </form>
 
             <xblock>
+                <button class="layui-btn layui-btn-danger" onclick="deleteMulti()">
+                    <i class="layui-icon">&#xe640;</i>批量删除
+                </button>
                 <a href="${ctx}/admin/user_pet_house/findUserPetHousePage?account=${param.account}&&petId=${param.petId}&&pageNumber=${userPetHousePage.currentPageNum}&&pageSize=${userPetHousePage.pageSize}">
                     <button class="layui-btn" style="margin-left:11px;">
                         <i class="layui-icon">
@@ -356,6 +399,9 @@
                         <td class="td-manage" align="center">
                             <a style="text-decoration:none"  onclick="updateUserPetHouse('编辑','${ctx}/admin/user_pet_house/toEdit?id=${userPetHouse.id}','600','400')" href="javascript:;" title="编辑">
                                 <i class="layui-icon">&#xe642;</i>
+                            </a>
+                            <a title="删除" href="javascript:;" onclick="deleteOne(${userPetHouse.id})" style="text-decoration:none">
+                                <i class="layui-icon">&#xe640;</i>
                             </a>
                         </td>
                     </tr>
