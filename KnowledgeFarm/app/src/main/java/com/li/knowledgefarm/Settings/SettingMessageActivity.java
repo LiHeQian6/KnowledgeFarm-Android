@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDoneException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,6 +63,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -150,6 +153,12 @@ public class SettingMessageActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PictureFileUtils.deleteAllCacheDirFile(getApplicationContext());
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(null!=popUpWindow&&popUpWindow.isShowing()){
             return false;
@@ -167,11 +176,11 @@ public class SettingMessageActivity extends AppCompatActivity {
     private void ShowUserMessage(){
         user = UserUtil.getUser();
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.photo)
-                .error(R.drawable.photo)
-                .fallback(R.drawable.photo)
+                .placeholder(R.drawable.loading)
+                .error(R.drawable.loading)
+                .fallback(R.drawable.loading)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(getApplicationContext()).load(user.getPhoto()).apply(requestOptions).into(user_photo);
         user_account.setText("账号："+user.getAccount());
         user_nickName.setText("昵称："+user.getNickName());
@@ -324,10 +333,9 @@ public class SettingMessageActivity extends AppCompatActivity {
                             Log.e("photo","上传头像失败2");
                             CustomerToast.getInstance(getApplicationContext(), "图片为空", Toast.LENGTH_SHORT).show();
                         }else{
-                            UserUtil.getUser().setPhoto(aString);
-                            Glide.with(getApplicationContext()).load(userPhoto).into(user_photo);
+                            UserUtil.getUser().setPhoto(getResources().getString(R.string.URL)+"/photo/"+aString);
+                            ShowUserMessage();
                             CustomerToast.getInstance(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
-                            PictureFileUtils.deleteAllCacheDirFile(getApplicationContext());
                         }
                         break;
                     case 5: // 修改年级判断
@@ -494,15 +502,6 @@ public class SettingMessageActivity extends AppCompatActivity {
     }
 
     /**
-     * 打开相册
-     */
-    public void openPhonePhoto(){
-        Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(intent, 1);
-    }
-
-    /**
      * 修改头像
      */
     private void updatePhoto(final File photo){
@@ -577,16 +576,6 @@ public class SettingMessageActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    /**
-     * Bitmap对象保存为图片文件
-     */
-    public File saveBitmapFile(Bitmap bitmap) throws FileNotFoundException {
-        File file = new File(getFilesDir().getAbsolutePath()+"/photo.png");
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-        return file;
     }
 
     /**
