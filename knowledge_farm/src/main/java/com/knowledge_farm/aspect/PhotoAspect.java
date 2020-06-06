@@ -6,9 +6,14 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +28,7 @@ import java.util.List;
 public class PhotoAspect {
     @Value("${file.photoUrl}")
     private String photoUrl;
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Pointcut(value = "execution(* com.knowledge_farm.crop.controller.CropController.initCrop(..))")
     private void showCropInStore() {

@@ -355,7 +355,9 @@ public class UserController {
     @PostMapping("/updatePhoto")
     public String updatePhoto(@RequestParam("upload") MultipartFile file,
                               @RequestParam("photo") String photo,
-                              HttpSession session, HttpServletResponse response) {
+                              HttpSession session,
+                              HttpServletResponse response,
+                              HttpServletRequest request) {
         try {
             Integer id = (Integer) session.getAttribute("userId");
             if(id != null) {
@@ -374,7 +376,7 @@ public class UserController {
                     FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
                     photo = this.userPhotoFolderName + "/" + photoName;
                     this.userService.editPhotoById(id, photo);
-                    return photo;
+                    return this.photoUrl + photo;
                 }
                 return Result.NULL;
             }
