@@ -7,6 +7,7 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!doctype html>
 <html lang="en">
@@ -92,27 +93,51 @@
                     var id1 = "#" + id + "1";
                     var picture = $(id1).attr('src');
                     if(picture.endsWith(".gif")){
-                        $(id1).attr('src', "${ctx}/photo/"+picture1);
+                        if(picture1.startsWith("http")){
+                            $(id1).attr('src', picture1);
+                        }else{
+                            $(id1).attr('src', "${ctx}/photo/"+picture1);
+                        }
                     }else{
-                        $(id1).attr('src', "${ctx}/photo/"+picture2);
+                        if(picture2.startsWith("http")){
+                            $(id1).attr('src', picture2);
+                        }else{
+                            $(id1).attr('src', "${ctx}/photo/"+picture2);
+                        }
                     }
                     break;
                 case 2:
                     var id2 = "#" + id + "2";
                     var picture = $(id2).attr('src');
                     if(picture.endsWith(".gif")){
-                        $(id2).attr('src', "${ctx}/photo/"+picture1);
+                        if(picture1.startsWith("http")){
+                            $(id2).attr('src', picture1);
+                        }else{
+                            $(id2).attr('src', "${ctx}/photo/"+picture1);
+                        }
                     }else{
-                        $(id2).attr('src', "${ctx}/photo/"+picture2);
+                        if(picture2.startsWith("http")){
+                            $(id2).attr('src', picture2);
+                        }else{
+                            $(id2).attr('src', "${ctx}/photo/"+picture2);
+                        }
                     }
                     break;
                 case 3:
                     var id3 = "#" + id + "3";
                     var picture = $(id3).attr('src');
                     if(picture.endsWith(".gif")){
-                        $(id3).attr('src', "${ctx}/photo/"+picture1);
+                        if(picture1.startsWith("http")){
+                            $(id3).attr('src', picture1);
+                        }else{
+                            $(id3).attr('src', "${ctx}/photo/"+picture1);
+                        }
                     }else{
-                        $(id3).attr('src', "${ctx}/photo/"+picture2);
+                        if(picture2.startsWith("http")){
+                            $(id3).attr('src', picture2);
+                        }else{
+                            $(id3).attr('src', "${ctx}/photo/"+picture2);
+                        }
                     }
                     break;
             }
@@ -128,13 +153,40 @@
             var picture03 = $(id3).attr('src');
 
             if(picture01.endsWith(".gif") || picture02.endsWith(".gif") || picture03.endsWith(".gif")){
-                $(id1).attr('src', "${ctx}/photo/"+picture1);
-                $(id2).attr('src', "${ctx}/photo/"+picture2);
-                $(id3).attr('src', "${ctx}/photo/"+picture3);
+                if(picture1.startsWith("http")){
+                    $(id1).attr('src', picture1);
+                }else{
+                    $(id1).attr('src', "${ctx}/photo/"+picture1);
+                }
+                if(picture2.startsWith("http")){
+                    $(id2).attr('src', picture2);
+                }else{
+                    $(id2).attr('src', "${ctx}/photo/"+picture2);
+                }
+                if(picture3.startsWith("http")){
+                    $(id3).attr('src', picture3);
+                }else{
+                    $(id3).attr('src', "${ctx}/photo/"+picture3);
+                }
             }else{
-                $(id1).attr('src', "${ctx}/photo/"+picture4);
-                $(id2).attr('src', "${ctx}/photo/"+picture5);
-                $(id3).attr('src', "${ctx}/photo/"+picture6);
+                if(picture4.startsWith("http")){
+                    $(id1).attr('src', picture4);
+                }else{
+                    $(id1).attr('src', "${ctx}/photo/"+picture4);
+                }
+                if(picture5.startsWith("http")){
+                    $(id2).attr('src', picture5);
+                }else{
+                    $(id2).attr('src', "${ctx}/photo/"+picture5);
+                }
+                if(picture6.startsWith("http")){
+                    $(id3).attr('src', picture6);
+                }else{
+                    $(id3).attr('src', "${ctx}/photo/"+picture6);
+                }
+                <%--$(id1).attr('src', "${ctx}/photo/"+picture4);--%>
+                <%--$(id2).attr('src', "${ctx}/photo/"+picture5);--%>
+                <%--$(id3).attr('src', "${ctx}/photo/"+picture6);--%>
             }
         }
     </script>
@@ -428,9 +480,39 @@
                         <td>${petPage.id}</td>
                         <td>${petPage.name}</td>
                         <td>${petPage.description}</td>
-                        <td><img id="${"".concat(petPage.id).concat("1")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img1}" onclick="changePetForm1(${petPage.id},1,'${petPage.img1}','${petPage.gif1}')"/></td>
-                        <td><img id="${"".concat(petPage.id).concat("2")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img2}" onclick="changePetForm1(${petPage.id},2,'${petPage.img2}','${petPage.gif2}')"/></td>
-                        <td><img id="${"".concat(petPage.id).concat("3")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img3}" onclick="changePetForm1(${petPage.id},3,'${petPage.img3}','${petPage.gif3}')"/></td>
+                        <td>
+                            <div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
+                                <c:if test="${fn:startsWith(petPage.img1, 'http')}">
+                                    <img id="${"".concat(petPage.id).concat("1")}" style="width:50px;height:50px;" src="${petPage.img1}" onclick="changePetForm1(${petPage.id},1,'${petPage.img1}','${petPage.gif1}')"/>
+                                </c:if>
+                                <c:if test="${not fn:startsWith(petPage.img1, 'http')}">
+                                    <img id="${"".concat(petPage.id).concat("1")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img1}" onclick="changePetForm1(${petPage.id},1,'${petPage.img1}','${petPage.gif1}')"/>
+                                </c:if>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
+                                <c:if test="${fn:startsWith(petPage.img2, 'http')}">
+                                    <img id="${"".concat(petPage.id).concat("2")}" style="width:50px;height:50px;" src="${petPage.img2}" onclick="changePetForm1(${petPage.id},2,'${petPage.img2}','${petPage.gif2}')"/>
+                                </c:if>
+                                <c:if test="${not fn:startsWith(petPage.img2, 'http')}">
+                                    <img id="${"".concat(petPage.id).concat("2")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img2}" onclick="changePetForm1(${petPage.id},2,'${petPage.img2}','${petPage.gif2}')"/>
+                                </c:if>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="width:50px;height:50px;border-radius:100%;overflow: hidden;">
+                                <c:if test="${fn:startsWith(petPage.img3, 'http')}">
+                                    <img id="${"".concat(petPage.id).concat("3")}" style="width:50px;height:50px;" src="${petPage.img3}" onclick="changePetForm1(${petPage.id},3,'${petPage.img3}','${petPage.gif3}')"/>
+                                </c:if>
+                                <c:if test="${not fn:startsWith(petPage.img3, 'http')}">
+                                    <img id="${"".concat(petPage.id).concat("3")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img3}" onclick="changePetForm1(${petPage.id},3,'${petPage.img3}','${petPage.gif3}')"/>
+                                </c:if>
+                            </div>
+                        </td>
+<%--                        <td><img id="${"".concat(petPage.id).concat("1")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img1}" onclick="changePetForm1(${petPage.id},1,'${petPage.img1}','${petPage.gif1}')"/></td>--%>
+<%--                        <td><img id="${"".concat(petPage.id).concat("2")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img2}" onclick="changePetForm1(${petPage.id},2,'${petPage.img2}','${petPage.gif2}')"/></td>--%>
+<%--                        <td><img id="${"".concat(petPage.id).concat("3")}" style="width:50px;height:50px;" src="${ctx}/photo/${petPage.img3}" onclick="changePetForm1(${petPage.id},3,'${petPage.img3}','${petPage.gif3}')"/></td>--%>
                         <td>${petPage.price}金币</td>
                         <td>${petPage.life}</td>
                         <td>${petPage.intelligence}</td>

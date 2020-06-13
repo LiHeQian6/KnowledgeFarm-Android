@@ -376,7 +376,8 @@ public class UserController {
                     FileCopyUtils.copy(file.getBytes(), new File(this.userPhotoLocation, photoName));
                     photo = this.userPhotoFolderName + "/" + photoName;
                     this.userService.editPhotoById(id, photo);
-                    return this.photoUrl + photo;
+//                    return this.photoUrl + photo;
+                    return photo;
                 }
                 return Result.NULL;
             }
