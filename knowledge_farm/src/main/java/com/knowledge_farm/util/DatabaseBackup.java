@@ -2,6 +2,7 @@ package com.knowledge_farm.util;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+@PropertySource("classpath:datasource.properties")
 public class DatabaseBackup extends QuartzJobBean {
 
     @Override

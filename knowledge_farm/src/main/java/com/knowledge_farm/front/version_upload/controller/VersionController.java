@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ import java.util.*;
 @Api(description = "后台版本接口")
 @Controller
 @RequestMapping("/admin/version")
+@PropertySource("classpath:photo.properties")
 public class VersionController {
     @Resource
     private FrontVersionService frontVersionService;

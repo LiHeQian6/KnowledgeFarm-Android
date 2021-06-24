@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -43,6 +44,7 @@ import java.util.Map;
 @Api(description = "前台用户接口")
 @RestController
 @RequestMapping("/user")
+@PropertySource("classpath:photo.properties")
 public class UserController {
     @Resource
     private UserServiceImpl userService;

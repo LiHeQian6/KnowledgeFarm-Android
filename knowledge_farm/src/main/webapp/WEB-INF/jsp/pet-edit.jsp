@@ -40,6 +40,8 @@
                         x_admin_close();
                     }else if(data == "fail"){
                         layer.msg('修改失败');
+                    }else{
+                        layer.msg(data);
                     }
                 }
             })
@@ -215,7 +217,7 @@
                         <font color="red">*</font>gif1
                     </label>
                     <div class="layui-input-inline">
-                        <input type="file" id="gif1" name="upload" accept="image/gif" style="margin-top:5px;"/>
+                        <input type="file" id="gif1" name="upload" accept="image/*" style="margin-top:5px;"/>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -223,7 +225,7 @@
                         <font color="red">*</font>gif2
                     </label>
                     <div class="layui-input-inline">
-                        <input type="file" id="gif2" name="upload" accept="image/gif" style="margin-top:5px;"/>
+                        <input type="file" id="gif2" name="upload" accept="image/*" style="margin-top:5px;"/>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -231,7 +233,7 @@
                         <font color="red">*</font>gif3
                     </label>
                     <div class="layui-input-inline">
-                        <input type="file" id="gif3" name="upload" accept="image/gif" style="margin-top:5px;"/>
+                        <input type="file" id="gif3" name="upload" accept="image/*" style="margin-top:5px;"/>
                     </div>
                 </div>
                 <div class="layui-form-item">

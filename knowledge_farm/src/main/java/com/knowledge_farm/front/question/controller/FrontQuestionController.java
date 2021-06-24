@@ -6,6 +6,7 @@ import com.knowledge_farm.util.PageUtil;
 import io.swagger.annotations.Api;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,7 @@ import java.util.Map;
 @Api(description = "后台题目接口")
 @Controller
 @RequestMapping("/admin/question")
+@PropertySource("classpath:excel.properties")
 public class FrontQuestionController {
     @Resource
     private FrontQuestionService frontQuestionService;

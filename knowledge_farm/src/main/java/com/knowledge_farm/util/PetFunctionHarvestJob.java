@@ -6,6 +6,7 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * @Date 2020-05-21 09:47
  */
 @Transactional(readOnly = false)
+@PropertySource("classpath:photo.properties")
 public class PetFunctionHarvestJob extends QuartzJobBean {
     @Resource
     private UserServiceImpl userService;

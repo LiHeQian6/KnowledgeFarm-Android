@@ -5,6 +5,7 @@ import com.knowledge_farm.pet.service.PetService;
 import com.knowledge_farm.user.dao.UserDao;
 import com.knowledge_farm.util.RateRandomNumber;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
+@PropertySource("classpath:photo.properties")
 public class FrontUserServiceImpl {
     @Resource
     private UserDao userDao;

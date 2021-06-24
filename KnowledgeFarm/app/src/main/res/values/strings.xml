@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">知识农场</string>
-<!--            <string name="URL">http://www.zhifou.club:8082/FarmKnowledge</string>-->
-    <string name="URL">http://www.zhifou.club:8082</string>
-<!--    <string name="URL">http://www.zhifou.club:8082/FarmKnowledge</string>-->
-    <string name="UPDATE">http://www.zhifou.club:8082</string>
+<!--            <string name="URL">http://www.zhifou.club:8081/FarmKnowledge</string>-->
+    <string name="URL">http://www.zhifou.club:8081</string>
+<!--    <string name="URL">http://www.zhifou.club:8081/FarmKnowledge</string>-->
+    <string name="UPDATE">http://www.zhifou.club:8081</string>
 </resources>

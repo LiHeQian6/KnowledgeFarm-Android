@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 @Component
 @Aspect
+@PropertySource("classpath:photo.properties")
 public class PhotoAspect {
     @Value("${file.photoUrl}")
     private String photoUrl;

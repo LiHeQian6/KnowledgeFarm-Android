@@ -6,6 +6,7 @@ import com.knowledge_farm.front.user.service.FrontUserServiceImpl;
 import com.knowledge_farm.util.PageUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,8 @@ import java.util.*;
 @Api(description = "后台用户接口")
 @Controller
 @RequestMapping("/admin/user")
+@PropertySource("classpath:photo.properties")
+@PropertySource("classpath:excel.properties")
 public class FrontUserController {
     @Resource
     private FrontUserServiceImpl frontUserService;

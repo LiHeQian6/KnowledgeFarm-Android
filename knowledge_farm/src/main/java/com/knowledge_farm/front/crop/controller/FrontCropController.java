@@ -33,6 +33,7 @@ import java.util.List;
 @Api(description = "后台作物接口")
 @Controller
 @RequestMapping("/admin/crop")
+@PropertySource("classpath:photo.properties")
 public class FrontCropController {
     @Resource
     private FrontCropService frontCropService;

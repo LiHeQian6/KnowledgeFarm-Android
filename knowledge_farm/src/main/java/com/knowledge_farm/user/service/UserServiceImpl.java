@@ -15,6 +15,7 @@ import com.knowledge_farm.util.Email;
 import com.knowledge_farm.util.RateRandomNumber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import java.util.Set;
  */
 @Service
 @Transactional(readOnly = true)
+@PropertySource("classpath:photo.properties")
 public class UserServiceImpl {
     @Resource
     private UserDao userDao;

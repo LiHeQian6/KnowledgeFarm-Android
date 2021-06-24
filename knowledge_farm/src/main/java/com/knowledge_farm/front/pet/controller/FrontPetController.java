@@ -7,6 +7,7 @@ import com.knowledge_farm.front.pet.service.FrontPetService;
 import com.knowledge_farm.util.PageUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +33,7 @@ import java.util.List;
 @Api(description = "后台宠物接口")
 @Controller
 @RequestMapping("/admin/pet")
+@PropertySource("classpath:photo.properties")
 public class FrontPetController {
     @Resource
     private FrontPetService frontPetService;

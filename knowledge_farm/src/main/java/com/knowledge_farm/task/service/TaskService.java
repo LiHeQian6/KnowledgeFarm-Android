@@ -7,6 +7,7 @@ import com.knowledge_farm.jpush.service.JpushService;
 import com.knowledge_farm.task.dao.TaskDao;
 import com.knowledge_farm.user.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.HashMap;
  **/
 @Service
 @Transactional(readOnly = true)
+@PropertySource("classpath:photo.properties")
 public class TaskService {
     @Resource
     private TaskDao taskDao;
